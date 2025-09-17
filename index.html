@@ -36,6 +36,8 @@
   <div class="stats">
     ❤️ Player HP: <span id="playerHP">20</span><br>
     💪 Strength: <span id="strength">5</span><br>
+    ✨ Level: <span id="level">1</span><br>
+    🌟 XP: <span id="xp">0</span><br>
     🧟 Enemy HP: <span id="enemyHP">0</span><br>
     🧪 Potions: <span id="potions">1</span><br>
     💰 Gold: <span id="gold">0</span>
@@ -49,12 +51,16 @@
     let potions = 1;
     let gold = 0;
     let strength = 5;
+    let xp = 0;
+    let level = 1;
     let currentEnemy = null;
 
     const story = document.getElementById("story");
     const choices = document.getElementById("choices");
     const playerHPText = document.getElementById("playerHP");
     const strengthText = document.getElementById("strength");
+    const levelText = document.getElementById("level");
+    const xpText = document.getElementById("xp");
     const enemyHPText = document.getElementById("enemyHP");
     const potionsText = document.getElementById("potions");
     const goldText = document.getElementById("gold");
@@ -85,9 +91,28 @@
     function updateStats() {
       playerHPText.textContent = playerHP;
       strengthText.textContent = strength;
+      levelText.textContent = level;
+      xpText.textContent = xp;
       enemyHPText.textContent = enemyHP;
       potionsText.textContent = potions;
       goldText.textContent = gold;
+    }
+
+    function checkLevelUp() {
+      const xpNeeded = level * 10;
+      if (xp >= xpNeeded) {
+        level++;
+        strength += 2; // Increase strength on level up
+        playerHP = 20; // Full heal on level up
+        xp = 0; // Reset XP for the next level
+        story.textContent = `🌟 You leveled up to level ${level}! Your strength increased!`;
+        setChoices([
+          { text: "Awesome!", action: startGame }
+        ]);
+        updateStats();
+        return true; // Return true to indicate a level up happened
+      }
+      return false;
     }
 
     function setChoices(options) {
@@ -160,7 +185,7 @@
 
     // Rest function
     function rest() {
-      playerHP = 20; // Heals the player to full HP
+      playerHP = 20;
       story.textContent = "You rest and feel your strength return. Your HP is fully restored!";
       updateStats();
       setChoices([
@@ -178,10 +203,13 @@
       playerHP -= enemyDamage;
 
       if (enemyHP <= 0) {
-        story.textContent = `You defeated the ${currentEnemy.name}! 🏆 You found 5 gold.`;
-        gold += 5;
-        enemyHP = 0;
-        setChoices([{ text: "Continue", action: startGame }]);
+        xp += 5; // Gain XP for defeating an enemy
+        if (!checkLevelUp()) { // Only continue if we didn't level up
+          story.textContent = `You defeated the ${currentEnemy.name}! 🏆 You found 5 gold.`;
+          gold += 5;
+          enemyHP = 0;
+          setChoices([{ text: "Continue", action: startGame }]);
+        }
       } else if (playerHP <= 0) {
         story.textContent = "💀 You have been defeated!";
         setChoices([{ text: "Restart", action: () => location.reload() }]);
@@ -192,7 +220,6 @@
           { text: "🏃 Run Away", action: startGame }
         ]);
       }
-
       updateStats();
     }
 
