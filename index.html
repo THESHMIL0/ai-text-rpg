@@ -47,7 +47,7 @@
 
   <script>
     let playerHP = 20;
-    let maxHP = 20;
+    let maxHP = 20; 
     let enemyHP = 0;
     let potions = 1;
     let gold = 0;
@@ -140,7 +140,11 @@
         const savedData = localStorage.getItem("rpgGameSave");
         if (savedData) {
             const data = JSON.parse(savedData);
-            playerHP = data.playerHP;
+            
+            // Correctly load playerHP and maxHP
+            playerHP = data.playerHP !== undefined ? data.playerHP : 20;
+            maxHP = data.maxHP !== undefined ? data.maxHP : 20;
+
             potions = data.potions;
             gold = data.gold;
             strength = data.strength;
@@ -149,7 +153,6 @@
             hasQuest = data.hasQuest;
             hasSword = data.hasSword;
             hasShield = data.hasShield;
-            maxHP = data.maxHP !== undefined ? data.maxHP : 20;
             
             updateStats();
             story.textContent = "Game loaded from a previous save. Welcome back!";
@@ -367,15 +370,18 @@
         if (!checkLevelUp()) {
           setChoices([{ text: "Continue", action: startGame }]);
         }
-      } else if (playerHP <= 0) {
-        story.textContent = "💀 You have been defeated!";
-        setChoices([{ text: "Restart", action: () => location.reload() }]);
       } else {
-        setChoices([
-          { text: "⚔ Attack Again", action: attackEnemy },
-          { text: "🧪 Use Potion", action: usePotion },
-          { text: "🏃 Run Away", action: startGame }
-        ]);
+        playerHP = Math.max(0, playerHP); // Prevents HP from dropping below zero
+        if (playerHP === 0) {
+          story.textContent = "💀 You have been defeated!";
+          setChoices([{ text: "Restart", action: () => location.reload() }]);
+        } else {
+          setChoices([
+            { text: "⚔ Attack Again", action: attackEnemy },
+            { text: "🧪 Use Potion", action: usePotion },
+            { text: "🏃 Run Away", action: startGame }
+          ]);
+        }
       }
       updateStats();
     }
