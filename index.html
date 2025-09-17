@@ -1,128 +1,176 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Text RPG</title>
   <style>
     body {
       background: black;
-      color: limegreen;
-      font-family: monospace;
-      padding: 20px;
+      color: #00ff00;
+      font-family: "Courier New", monospace;
+      text-align: center;
+      margin: 0;
+      padding: 0;
     }
-    #output {
-      white-space: pre-wrap;
+    #game {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      border: 2px solid #00ff00;
+      border-radius: 10px;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    #stats {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    #story {
+      font-size: 1.2em;
       margin-bottom: 20px;
     }
     button {
-      background: limegreen;
-      border: none;
-      padding: 10px;
+      background: #00ff00;
+      color: black;
+      font-size: 1.1em;
+      padding: 10px 20px;
       margin: 5px;
-      cursor: pointer;
+      border: none;
       border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #00cc00;
     }
   </style>
 </head>
 <body>
-  <h1>AI Text RPG</h1>
-  <div id="stats">
-    ❤️ Player HP: <span id="playerHP">20</span><br>
-    💀 Enemy HP: <span id="enemyHP">--</span><br>
-    🎒 Potions: <span id="potions">1</span>
+  <div id="game">
+    <h1>AI Text RPG</h1>
+    <div id="stats">
+      ❤️ Player HP: <span id="playerHP">20</span><br>
+      👾 Enemy HP: <span id="enemyHP">-</span><br>
+      🧪 Potions: <span id="potions">0</span>
+    </div>
+    <div id="story">Welcome to the adventure! Choose your path.</div>
+    <div id="choices"></div>
   </div>
-  <div id="output">Welcome to the adventure! Choose your path.</div>
-
-  <button onclick="choose('forest')">Enter the forest</button>
-  <button onclick="choose('cave')">Explore the cave</button>
-  <button onclick="choose('village')">Visit the village</button>
-  <button id="attackBtn" onclick="attack()" style="display:none;">⚔️ Attack</button>
-  <button id="potionBtn" onclick="usePotion()" style="display:none;">🧪 Use Potion</button>
 
   <script>
     let playerHP = 20;
     let enemyHP = 0;
-    let potions = 1;
-    let inBattle = false;
+    let potions = 0;
 
     function updateStats() {
-      document.getElementById('playerHP').innerText = playerHP;
-      document.getElementById('enemyHP').innerText = enemyHP > 0 ? enemyHP : "--";
-      document.getElementById('potions').innerText = potions;
+      document.getElementById("playerHP").textContent = playerHP;
+      document.getElementById("enemyHP").textContent = enemyHP > 0 ? enemyHP : "-";
+      document.getElementById("potions").textContent = potions;
     }
 
-    function choose(option) {
-      let output = document.getElementById('output');
-      let attackBtn = document.getElementById('attackBtn');
-      let potionBtn = document.getElementById('potionBtn');
-      inBattle = false;
+    function setStory(text) {
+      document.getElementById("story").textContent = text;
+    }
 
-      if(option === 'forest') {
-        output.innerText = "🌲 A goblin jumps out to fight!";
-        enemyHP = 10;
-        inBattle = true;
-      } else if(option === 'cave') {
-        output.innerText = "🐉 A dragon wakes up! This will be tough!";
-        enemyHP = 15;
-        inBattle = true;
-      } else if(option === 'village') {
-        output.innerText = "🏘️ The villagers heal you. +5 HP! They also give you a potion.";
-        playerHP += 5;
-        potions += 1;
-        enemyHP = 0;
-      }
+    function setChoices(options) {
+      const choicesDiv = document.getElementById("choices");
+      choicesDiv.innerHTML = "";
+      options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt.text;
+        btn.onclick = opt.action;
+        choicesDiv.appendChild(btn);
+      });
+    }
 
-      attackBtn.style.display = inBattle ? "inline-block" : "none";
-      potionBtn.style.display = inBattle ? "inline-block" : "none";
+    function startGame() {
+      playerHP = 20;
+      enemyHP = 0;
+      potions = 0;
       updateStats();
+      setStory("You stand at the edge of a dark forest. Where will you go?");
+      setChoices([
+        { text: "Enter the forest", action: forest },
+        { text: "Explore the cave", action: cave },
+        { text: "Visit the village", action: village }
+      ]);
+    }
+
+    function forest() {
+      enemyHP = 10;
+      updateStats();
+      setStory("A wild goblin appears!");
+      setChoices([
+        { text: "Attack", action: attack },
+        { text: "Use Potion", action: usePotion },
+        { text: "Run", action: startGame }
+      ]);
+    }
+
+    function cave() {
+      potions++;
+      updateStats();
+      setStory("You find a healing potion in the cave.");
+      setChoices([
+        { text: "Go back", action: startGame }
+      ]);
+    }
+
+    function village() {
+      setStory("You rest in the village. HP restored!");
+      playerHP = 20;
+      updateStats();
+      setChoices([
+        { text: "Go back", action: startGame }
+      ]);
     }
 
     function attack() {
-      if(!inBattle) return;
-
-      let output = document.getElementById('output');
-
-      // Player attacks
-      let playerDmg = Math.floor(Math.random() * 5) + 1;
-      enemyHP -= playerDmg;
-      output.innerText = `You hit the enemy for ${playerDmg} damage!`;
-
-      if(enemyHP <= 0) {
-        output.innerText += "\n💀 Enemy defeated!";
-        inBattle = false;
-        document.getElementById('attackBtn').style.display = "none";
-        document.getElementById('potionBtn').style.display = "none";
-        updateStats();
+      if (enemyHP <= 0) {
+        setStory("The enemy is already defeated!");
+        setChoices([{ text: "Go back", action: startGame }]);
         return;
       }
-
-      // Enemy attacks back
-      let enemyDmg = Math.floor(Math.random() * 4) + 1;
-      playerHP -= enemyDmg;
-      output.innerText += `\nThe enemy hits you for ${enemyDmg} damage!`;
-
-      if(playerHP <= 0) {
-        output.innerText += "\n☠️ You have been defeated... Game Over!";
-        document.getElementById('attackBtn').style.display = "none";
-        document.getElementById('potionBtn').style.display = "none";
-        inBattle = false;
-      }
-
+      enemyHP -= 5;
+      playerHP -= 3;
       updateStats();
+
+      if (enemyHP <= 0) {
+        setStory("You defeated the goblin!");
+        setChoices([{ text: "Continue", action: startGame }]);
+      } else if (playerHP <= 0) {
+        setStory("You have been defeated! Game Over.");
+        setChoices([{ text: "Restart", action: startGame }]);
+      } else {
+        setStory("You hit the goblin, but it strikes back!");
+        setChoices([
+          { text: "Attack", action: attack },
+          { text: "Use Potion", action: usePotion },
+          { text: "Run", action: startGame }
+        ]);
+      }
     }
 
     function usePotion() {
-      if(potions > 0 && inBattle && playerHP > 0) {
-        let heal = Math.floor(Math.random() * 6) + 5; // heals 5–10 HP
-        playerHP += heal;
-        potions -= 1;
-        let output = document.getElementById('output');
-        output.innerText = `🧪 You used a potion and healed ${heal} HP!`;
+      if (potions > 0) {
+        potions--;
+        playerHP += 10;
+        if (playerHP > 20) playerHP = 20;
         updateStats();
+        setStory("You used a potion and restored HP!");
+      } else {
+        setStory("No potions left!");
       }
+      setChoices([
+        { text: "Attack", action: attack },
+        { text: "Run", action: startGame }
+      ]);
     }
 
-    updateStats();
+    startGame();
   </script>
 </body>
 </html>
