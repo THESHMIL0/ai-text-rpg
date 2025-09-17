@@ -35,6 +35,7 @@
   <h1>AI Text RPG</h1>
   <div class="stats">
     ❤️ Player HP: <span id="playerHP">20</span><br>
+    💪 Strength: <span id="strength">5</span><br>
     🧟 Enemy HP: <span id="enemyHP">0</span><br>
     🧪 Potions: <span id="potions">1</span><br>
     💰 Gold: <span id="gold">0</span>
@@ -47,11 +48,13 @@
     let enemyHP = 0;
     let potions = 1;
     let gold = 0;
-    let currentEnemy = null; // We'll use this to store the enemy object
+    let strength = 5;
+    let currentEnemy = null;
 
     const story = document.getElementById("story");
     const choices = document.getElementById("choices");
     const playerHPText = document.getElementById("playerHP");
+    const strengthText = document.getElementById("strength");
     const enemyHPText = document.getElementById("enemyHP");
     const potionsText = document.getElementById("potions");
     const goldText = document.getElementById("gold");
@@ -81,6 +84,7 @@
 
     function updateStats() {
       playerHPText.textContent = playerHP;
+      strengthText.textContent = strength;
       enemyHPText.textContent = enemyHP;
       potionsText.textContent = potions;
       goldText.textContent = gold;
@@ -139,13 +143,14 @@
       setChoices([
         { text: "🧪 Buy Potion (5 gold)", action: buyPotion },
         { text: "❤️ Heal (10 gold)", action: healPlayer },
+        { text: "💪 Increase Strength (20 gold)", action: buyStrength },
         { text: "🚪 Leave Shop", action: startGame }
       ]);
     }
 
     // Combat
     function attackEnemy() {
-      let playerDamage = Math.floor(Math.random() * 6) + 1;
+      let playerDamage = Math.floor(Math.random() * 6) + 1 + strength;
       let enemyDamage = Math.floor(Math.random() * currentEnemy.damage) + 1;
       
       enemyHP -= playerDamage;
@@ -200,6 +205,18 @@
         gold -= 10;
         playerHP = 20;
         story.textContent = "You are fully healed!";
+      } else {
+        story.textContent = "Not enough gold!";
+      }
+      updateStats();
+      village();
+    }
+
+    function buyStrength() {
+      if (gold >= 20) {
+        gold -= 20;
+        strength++;
+        story.textContent = "Your strength has increased!";
       } else {
         story.textContent = "Not enough gold!";
       }
