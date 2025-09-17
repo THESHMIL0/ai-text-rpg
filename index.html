@@ -55,8 +55,8 @@
     let level = 1;
     let currentEnemy = null;
     let hasQuest = false;
-    let hasSword = false; // New variable for the sword
-    let hasShield = false; // New variable for the shield
+    let hasSword = false;
+    let hasShield = false;
 
     const story = document.getElementById("story");
     const choices = document.getElementById("choices");
@@ -98,6 +98,12 @@
         hp: 50,
         damage: 15,
         isBoss: true
+      },
+      {
+        name: "Swamp Serpent",
+        hp: 30,
+        damage: 12,
+        isBoss: false
       }
     ];
 
@@ -120,8 +126,8 @@
             xp,
             level,
             hasQuest,
-            hasSword, // Save the new variables
-            hasShield // Save the new variables
+            hasSword,
+            hasShield
         };
         localStorage.setItem("rpgGameSave", JSON.stringify(savedData));
         story.textContent = "Game saved successfully!";
@@ -139,8 +145,8 @@
             xp = data.xp;
             level = data.level;
             hasQuest = data.hasQuest;
-            hasSword = data.hasSword; // Load the new variables
-            hasShield = data.hasShield; // Load the new variables
+            hasSword = data.hasSword;
+            hasShield = data.hasShield;
             updateStats();
             story.textContent = "Game loaded from a previous save. Welcome back!";
             startGame();
@@ -183,6 +189,7 @@
       setChoices([
         { text: "🌲 Enter the forest", action: forest },
         { text: "🕳 Explore the cave", action: cave },
+        { text: "💧 Explore the swamp", action: swamp },
         { text: "🏘 Visit the village", action: village }
       ]);
     }
@@ -221,6 +228,19 @@
           { text: "🏃 Escape", action: startGame }
         ]);
       }
+    }
+
+    // New Swamp Location
+    function swamp() {
+      currentEnemy = monsters.find(m => m.name === "Swamp Serpent");
+      story.textContent = `You wade into the murky swamp. A huge ${currentEnemy.name} emerges from the water!`;
+      enemyHP = currentEnemy.hp;
+      updateStats();
+      setChoices([
+        { text: "⚔ Attack", action: attackEnemy },
+        { text: "🧪 Use Potion", action: usePotion },
+        { text: "🏃 Run Away", action: startGame }
+      ]);
     }
 
     // Village (shop + rest)
@@ -327,6 +347,11 @@
             gold += 50;
             xp += 20;
             hasQuest = false;
+        } else if (currentEnemy.name === "Swamp Serpent") {
+            story.textContent = `You defeated the ${currentEnemy.name}! You found a rare Swamp Potion and 20 gold!`;
+            gold += 20;
+            potions += 1;
+            xp += 10;
         } else {
             story.textContent = `You defeated the ${currentEnemy.name}! 🏆 You found 5 gold.`;
             gold += 5;
