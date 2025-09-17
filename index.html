@@ -47,6 +47,7 @@
 
   <script>
     let playerHP = 20;
+    let maxHP = 20; // New variable for max HP
     let enemyHP = 0;
     let potions = 1;
     let gold = 0;
@@ -127,7 +128,8 @@
             level,
             hasQuest,
             hasSword,
-            hasShield
+            hasShield,
+            maxHP // Save the new variable
         };
         localStorage.setItem("rpgGameSave", JSON.stringify(savedData));
         story.textContent = "Game saved successfully!";
@@ -147,6 +149,7 @@
             hasQuest = data.hasQuest;
             hasSword = data.hasSword;
             hasShield = data.hasShield;
+            maxHP = data.maxHP; // Load the new variable
             updateStats();
             story.textContent = "Game loaded from a previous save. Welcome back!";
             startGame();
@@ -161,7 +164,7 @@
       if (xp >= xpNeeded) {
         level++;
         strength += 2;
-        playerHP = 20;
+        playerHP = maxHP; // Restore to max HP on level up
         xp = 0;
         story.textContent = `🌟 You leveled up to level ${level}! Your strength increased!`;
         setChoices([
@@ -312,6 +315,7 @@
       if (gold >= 75) {
         gold -= 75;
         playerHP += 20;
+        maxHP += 20; // Increase max HP
         hasShield = true;
         story.textContent = "You bought a sturdy shield! Your max HP has increased by 20.";
       } else {
@@ -323,7 +327,7 @@
 
     // Rest function
     function rest() {
-      playerHP = 20;
+      playerHP = maxHP; // Restore to max HP
       story.textContent = "You rest and feel your strength return. Your HP is fully restored!";
       updateStats();
       setChoices([
@@ -391,7 +395,8 @@
 
     function usePotion() {
       if (potions > 0) {
-        playerHP += 10;
+        // Heal by 10 or to maxHP, whichever is smaller
+        playerHP = Math.min(playerHP + 10, maxHP);
         potions--;
         story.textContent = "You used a potion and restored 10 HP!";
       } else {
@@ -416,7 +421,7 @@
     function healPlayer() {
       if (gold >= 10) {
         gold -= 10;
-        playerHP = 20;
+        playerHP = maxHP; // Heal to max HP
         story.textContent = "You are fully healed!";
       } else {
         story.textContent = "Not enough gold!";
