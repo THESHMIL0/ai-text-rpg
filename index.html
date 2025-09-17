@@ -47,7 +47,7 @@
 
   <script>
     let playerHP = 20;
-    let maxHP = 20; 
+    let maxHP = 20;
     let enemyHP = 0;
     let potions = 1;
     let gold = 0;
@@ -149,8 +149,6 @@
             hasQuest = data.hasQuest;
             hasSword = data.hasSword;
             hasShield = data.hasShield;
-            
-            // Check if maxHP exists in the save data, if not, set it to the default.
             maxHP = data.maxHP !== undefined ? data.maxHP : 20;
             
             updateStats();
