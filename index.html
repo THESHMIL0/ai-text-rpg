@@ -26,22 +26,83 @@
 </head>
 <body>
   <h1>AI Text RPG</h1>
-  <div id="output">Welcome to the adventure! Click a button to begin.</div>
+  <div id="stats">
+    ❤️ Player HP: <span id="playerHP">20</span><br>
+    💀 Enemy HP: <span id="enemyHP">--</span>
+  </div>
+  <div id="output">Welcome to the adventure! Choose your path.</div>
+
   <button onclick="choose('forest')">Enter the forest</button>
   <button onclick="choose('cave')">Explore the cave</button>
   <button onclick="choose('village')">Visit the village</button>
+  <button id="attackBtn" onclick="attack()" style="display:none;">⚔️ Attack</button>
 
   <script>
+    let playerHP = 20;
+    let enemyHP = 0;
+    let inBattle = false;
+
+    function updateStats() {
+      document.getElementById('playerHP').innerText = playerHP;
+      document.getElementById('enemyHP').innerText = enemyHP > 0 ? enemyHP : "--";
+    }
+
     function choose(option) {
       let output = document.getElementById('output');
+      let attackBtn = document.getElementById('attackBtn');
+      inBattle = false;
+
       if(option === 'forest') {
-        output.innerText = "You enter the forest... 🌲 A wild goblin appears!";
+        output.innerText = "🌲 A goblin jumps out to fight!";
+        enemyHP = 10;
+        inBattle = true;
       } else if(option === 'cave') {
-        output.innerText = "The cave is dark and cold... 🐉 A dragon is sleeping inside.";
+        output.innerText = "🐉 A dragon wakes up! This will be tough!";
+        enemyHP = 15;
+        inBattle = true;
       } else if(option === 'village') {
-        output.innerText = "The village is peaceful... 🏘️ but the villagers whisper of danger.";
+        output.innerText = "🏘️ The villagers heal you. +5 HP!";
+        playerHP += 5;
+        enemyHP = 0;
       }
+
+      attackBtn.style.display = inBattle ? "inline-block" : "none";
+      updateStats();
     }
+
+    function attack() {
+      if(!inBattle) return;
+
+      let output = document.getElementById('output');
+
+      // Player attacks
+      let playerDmg = Math.floor(Math.random() * 5) + 1;
+      enemyHP -= playerDmg;
+      output.innerText = `You hit the enemy for ${playerDmg} damage!`;
+
+      if(enemyHP <= 0) {
+        output.innerText += "\n💀 Enemy defeated!";
+        inBattle = false;
+        document.getElementById('attackBtn').style.display = "none";
+        updateStats();
+        return;
+      }
+
+      // Enemy attacks back
+      let enemyDmg = Math.floor(Math.random() * 4) + 1;
+      playerHP -= enemyDmg;
+      output.innerText += `\nThe enemy hits you for ${enemyDmg} damage!`;
+
+      if(playerHP <= 0) {
+        output.innerText += "\n☠️ You have been defeated... Game Over!";
+        document.getElementById('attackBtn').style.display = "none";
+        inBattle = false;
+      }
+
+      updateStats();
+    }
+
+    updateStats();
   </script>
 </body>
 </html>
