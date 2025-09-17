@@ -137,10 +137,10 @@
             hasQuest = data.hasQuest;
             updateStats();
             story.textContent = "Game loaded from a previous save. Welcome back!";
-            return true;
+            startGame(); // This will display the choices.
         } else {
             story.textContent = "Welcome to the adventure! Choose your path.";
-            return false;
+            startGame();
         }
     }
 
@@ -373,9 +373,7 @@
     }
     
     // Call loadGame and then decide whether to call startGame
-    if (!loadGame()) {
-      startGame();
-    }
+    loadGame();
   </script>
 </body>
 </html>
