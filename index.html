@@ -34,7 +34,7 @@
 <body>
   <h1>AI Text RPG</h1>
   <div class="stats">
-    ❤️ Player HP: <span id="playerHP">20</span><br>
+    ❤️ Player HP: <span id="playerHP">20/20</span><br>
     💪 Strength: <span id="strength">5</span><br>
     ✨ Level: <span id="level">1</span><br>
     🌟 XP: <span id="xp">0</span><br>
@@ -111,7 +111,7 @@
     ];
 
     function updateStats() {
-      playerHPText.textContent = playerHP;
+      playerHPText.textContent = `${playerHP}/${maxHP}`;
       if (isPoisoned) {
           playerHPText.textContent += " (Poisoned)";
       }
@@ -346,7 +346,7 @@
       if (isPoisoned) {
           isPoisoned = false;
           clearInterval(poisonInterval);
-          poisonInterval = null; // Fix: Reset the interval variable
+          poisonInterval = null;
           story.textContent += " The poison has left your system!";
       }
       updateStats();
@@ -377,7 +377,7 @@
         if (isPoisoned) {
             isPoisoned = false;
             clearInterval(poisonInterval);
-            poisonInterval = null; // Fix: Reset the interval variable
+            poisonInterval = null;
         }
         setChoices([{ text: "Restart", action: () => location.reload() }]);
       } else if (enemyHP <= 0) {
@@ -434,7 +434,7 @@
         if (isPoisoned) {
             isPoisoned = false;
             clearInterval(poisonInterval);
-            poisonInterval = null; // Fix: Reset the interval variable
+            poisonInterval = null;
             story.textContent += " The poison has left your system!";
         }
       } else {
@@ -454,12 +454,12 @@
                 story.textContent = "💀 You have been defeated by the poison!";
                 isPoisoned = false;
                 clearInterval(poisonInterval);
-                poisonInterval = null; // Fix: Reset the interval variable
+                poisonInterval = null;
                 setChoices([{ text: "Restart", action: () => location.reload() }]);
             }
         } else if (!isPoisoned) {
             clearInterval(poisonInterval);
-            poisonInterval = null; // Fix: Reset the interval variable
+            poisonInterval = null;
         }
     }
 
@@ -490,7 +490,7 @@
         if (isPoisoned) {
             isPoisoned = false;
             clearInterval(poisonInterval);
-            poisonInterval = null; // Fix: Reset the interval variable
+            poisonInterval = null;
             story.textContent += " The poison has left your system!";
         }
       } else {
