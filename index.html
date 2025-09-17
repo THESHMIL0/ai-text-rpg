@@ -54,7 +54,7 @@
     let xp = 0;
     let level = 1;
     let currentEnemy = null;
-    let hasQuest = false; // New quest tracking variable
+    let hasQuest = false;
 
     const story = document.getElementById("story");
     const choices = document.getElementById("choices");
@@ -71,7 +71,7 @@
         name: "Goblin",
         hp: 10,
         damage: 4,
-        isBoss: false // New property to distinguish bosses
+        isBoss: false
       },
       {
         name: "Skeleton Warrior",
@@ -144,10 +144,6 @@
         { text: "🕳 Explore the cave", action: cave },
         { text: "🏘 Visit the village", action: village }
       ]);
-      // Only show the shrine option if the quest is active
-      if (hasQuest) {
-        setChoices(choices.children).push({ text: "✨ Return to the Shrine", action: shrine });
-      }
     }
 
     // Forest (fight enemies, earn gold)
@@ -215,9 +211,8 @@
     function acceptQuest() {
       hasQuest = true;
       story.textContent = "You accept the quest! You must defeat the Ancient Guardian in the cave to retrieve the sacred relic.";
-      setChoices([
-        { text: "Back to Crossroads", action: startGame }
-      ]);
+      // The fix: Call startGame to display choices again
+      startGame();
     }
     
     // Shop
@@ -256,7 +251,7 @@
             story.textContent = `You defeated the ${currentEnemy.name} and completed the quest! 👑 You found a large chest with 50 gold and 20 XP!`;
             gold += 50;
             xp += 20;
-            hasQuest = false; // Quest is complete
+            hasQuest = false;
         } else {
             story.textContent = `You defeated the ${currentEnemy.name}! 🏆 You found 5 gold.`;
             gold += 5;
