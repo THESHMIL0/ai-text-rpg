@@ -141,7 +141,6 @@
         if (savedData) {
             const data = JSON.parse(savedData);
             
-            // Correctly load playerHP and maxHP
             playerHP = data.playerHP !== undefined ? data.playerHP : 20;
             maxHP = data.maxHP !== undefined ? data.maxHP : 20;
 
@@ -345,10 +344,14 @@
       let enemyDamage = Math.floor(Math.random() * currentEnemy.damage) + 1;
       
       enemyHP -= playerDamage;
-      story.textContent = `You hit the ${currentEnemy.name} for ${playerDamage} damage! It strikes back for ${enemyDamage} damage.`;
       playerHP -= enemyDamage;
 
-      if (enemyHP <= 0) {
+      // This is the new, correct location for the HP check.
+      if (playerHP <= 0) {
+        playerHP = 0; // Ensures the HP display never goes into the negative
+        story.textContent = "💀 You have been defeated!";
+        setChoices([{ text: "Restart", action: () => location.reload() }]);
+      } else if (enemyHP <= 0) {
         xp += 5;
         if (currentEnemy.isBoss) {
             story.textContent = `You defeated the ${currentEnemy.name} and completed the quest! 👑 You found a large chest with 50 gold and 20 XP!`;
@@ -371,17 +374,12 @@
           setChoices([{ text: "Continue", action: startGame }]);
         }
       } else {
-        playerHP = Math.max(0, playerHP); // Prevents HP from dropping below zero
-        if (playerHP === 0) {
-          story.textContent = "💀 You have been defeated!";
-          setChoices([{ text: "Restart", action: () => location.reload() }]);
-        } else {
-          setChoices([
-            { text: "⚔ Attack Again", action: attackEnemy },
-            { text: "🧪 Use Potion", action: usePotion },
-            { text: "🏃 Run Away", action: startGame }
-          ]);
-        }
+        story.textContent = `You hit the ${currentEnemy.name} for ${playerDamage} damage! It strikes back for ${enemyDamage} damage.`;
+        setChoices([
+          { text: "⚔ Attack Again", action: attackEnemy },
+          { text: "🧪 Use Potion", action: usePotion },
+          { text: "🏃 Run Away", action: startGame }
+        ]);
       }
       updateStats();
     }
