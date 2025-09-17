@@ -28,7 +28,8 @@
   <h1>AI Text RPG</h1>
   <div id="stats">
     ❤️ Player HP: <span id="playerHP">20</span><br>
-    💀 Enemy HP: <span id="enemyHP">--</span>
+    💀 Enemy HP: <span id="enemyHP">--</span><br>
+    🎒 Potions: <span id="potions">1</span>
   </div>
   <div id="output">Welcome to the adventure! Choose your path.</div>
 
@@ -36,20 +37,24 @@
   <button onclick="choose('cave')">Explore the cave</button>
   <button onclick="choose('village')">Visit the village</button>
   <button id="attackBtn" onclick="attack()" style="display:none;">⚔️ Attack</button>
+  <button id="potionBtn" onclick="usePotion()" style="display:none;">🧪 Use Potion</button>
 
   <script>
     let playerHP = 20;
     let enemyHP = 0;
+    let potions = 1;
     let inBattle = false;
 
     function updateStats() {
       document.getElementById('playerHP').innerText = playerHP;
       document.getElementById('enemyHP').innerText = enemyHP > 0 ? enemyHP : "--";
+      document.getElementById('potions').innerText = potions;
     }
 
     function choose(option) {
       let output = document.getElementById('output');
       let attackBtn = document.getElementById('attackBtn');
+      let potionBtn = document.getElementById('potionBtn');
       inBattle = false;
 
       if(option === 'forest') {
@@ -61,12 +66,14 @@
         enemyHP = 15;
         inBattle = true;
       } else if(option === 'village') {
-        output.innerText = "🏘️ The villagers heal you. +5 HP!";
+        output.innerText = "🏘️ The villagers heal you. +5 HP! They also give you a potion.";
         playerHP += 5;
+        potions += 1;
         enemyHP = 0;
       }
 
       attackBtn.style.display = inBattle ? "inline-block" : "none";
+      potionBtn.style.display = inBattle ? "inline-block" : "none";
       updateStats();
     }
 
@@ -84,6 +91,7 @@
         output.innerText += "\n💀 Enemy defeated!";
         inBattle = false;
         document.getElementById('attackBtn').style.display = "none";
+        document.getElementById('potionBtn').style.display = "none";
         updateStats();
         return;
       }
@@ -96,10 +104,22 @@
       if(playerHP <= 0) {
         output.innerText += "\n☠️ You have been defeated... Game Over!";
         document.getElementById('attackBtn').style.display = "none";
+        document.getElementById('potionBtn').style.display = "none";
         inBattle = false;
       }
 
       updateStats();
+    }
+
+    function usePotion() {
+      if(potions > 0 && inBattle && playerHP > 0) {
+        let heal = Math.floor(Math.random() * 6) + 5; // heals 5–10 HP
+        playerHP += heal;
+        potions -= 1;
+        let output = document.getElementById('output');
+        output.innerText = `🧪 You used a potion and healed ${heal} HP!`;
+        updateStats();
+      }
     }
 
     updateStats();
