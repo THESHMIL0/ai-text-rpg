@@ -58,8 +58,8 @@
     let hasQuest = false;
     let hasSword = false;
     let hasShield = false;
-    let isPoisoned = false; // New variable for poison status
-    let poisonInterval = null; // To manage the poison damage over time
+    let isPoisoned = false;
+    let poisonInterval = null;
 
     const story = document.getElementById("story");
     const choices = document.getElementById("choices");
@@ -135,7 +135,7 @@
             hasSword,
             hasShield,
             maxHP,
-            isPoisoned // Save the poison status
+            isPoisoned
         };
         localStorage.setItem("rpgGameSave", JSON.stringify(savedData));
         story.textContent = "Game saved successfully!";
@@ -160,7 +160,6 @@
             hasShield = data.hasShield;
             isPoisoned = data.isPoisoned !== undefined ? data.isPoisoned : false;
             
-            // Start poison tick if player was poisoned on save
             if (isPoisoned) {
                 startPoison();
             }
@@ -347,6 +346,7 @@
       if (isPoisoned) {
           isPoisoned = false;
           clearInterval(poisonInterval);
+          poisonInterval = null; // Fix: Reset the interval variable
           story.textContent += " The poison has left your system!";
       }
       updateStats();
@@ -363,11 +363,12 @@
       enemyHP -= playerDamage;
       playerHP -= enemyDamage;
 
-      // Poison attack logic for Swamp Serpent
       if (currentEnemy.name === "Swamp Serpent" && Math.random() < 0.5 && !isPoisoned) {
           isPoisoned = true;
-          story.textContent += ` The ${currentEnemy.name} bites you and you feel the poison enter your veins!`;
+          story.textContent = `You hit the ${currentEnemy.name} for ${playerDamage} damage! It strikes back for ${enemyDamage} damage. The ${currentEnemy.name} bites you and you feel the poison enter your veins!`;
           startPoison();
+      } else {
+        story.textContent = `You hit the ${currentEnemy.name} for ${playerDamage} damage! It strikes back for ${enemyDamage} damage.`;
       }
 
       if (playerHP <= 0) {
@@ -376,6 +377,7 @@
         if (isPoisoned) {
             isPoisoned = false;
             clearInterval(poisonInterval);
+            poisonInterval = null; // Fix: Reset the interval variable
         }
         setChoices([{ text: "Restart", action: () => location.reload() }]);
       } else if (enemyHP <= 0) {
@@ -401,7 +403,6 @@
           setChoices([{ text: "Continue", action: startGame }]);
         }
       } else {
-        story.textContent = `You hit the ${currentEnemy.name} for ${playerDamage} damage! It strikes back for ${enemyDamage} damage.`;
         setChoices([
           { text: "⚔ Attack Again", action: attackEnemy },
           { text: "🧪 Use Potion", action: usePotion },
@@ -433,6 +434,7 @@
         if (isPoisoned) {
             isPoisoned = false;
             clearInterval(poisonInterval);
+            poisonInterval = null; // Fix: Reset the interval variable
             story.textContent += " The poison has left your system!";
         }
       } else {
@@ -452,16 +454,18 @@
                 story.textContent = "💀 You have been defeated by the poison!";
                 isPoisoned = false;
                 clearInterval(poisonInterval);
+                poisonInterval = null; // Fix: Reset the interval variable
                 setChoices([{ text: "Restart", action: () => location.reload() }]);
             }
         } else if (!isPoisoned) {
             clearInterval(poisonInterval);
+            poisonInterval = null; // Fix: Reset the interval variable
         }
     }
 
     function startPoison() {
-        if (isPoisoned && !poisonInterval) {
-            poisonInterval = setInterval(poisonTick, 2000); // 2000ms = 2 seconds
+        if (isPoisoned && poisonInterval === null) {
+            poisonInterval = setInterval(poisonTick, 2000);
         }
     }
 
@@ -486,6 +490,7 @@
         if (isPoisoned) {
             isPoisoned = false;
             clearInterval(poisonInterval);
+            poisonInterval = null; // Fix: Reset the interval variable
             story.textContent += " The poison has left your system!";
         }
       } else {
@@ -507,7 +512,6 @@
       shop();
     }
     
-    // Call loadGame and then decide whether to call startGame
     loadGame();
   </script>
 </body>
