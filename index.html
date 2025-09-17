@@ -54,6 +54,7 @@
     let xp = 0;
     let level = 1;
     let currentEnemy = null;
+    let hasQuest = false; // New quest tracking variable
 
     const story = document.getElementById("story");
     const choices = document.getElementById("choices");
@@ -69,22 +70,32 @@
       {
         name: "Goblin",
         hp: 10,
-        damage: 4
+        damage: 4,
+        isBoss: false // New property to distinguish bosses
       },
       {
         name: "Skeleton Warrior",
         hp: 15,
-        damage: 6
+        damage: 6,
+        isBoss: false
       },
       {
         name: "Giant Spider",
         hp: 8,
-        damage: 8
+        damage: 8,
+        isBoss: false
       },
       {
         name: "Ogre",
         hp: 25,
-        damage: 10
+        damage: 10,
+        isBoss: false
+      },
+      {
+        name: "Ancient Guardian",
+        hp: 50,
+        damage: 15,
+        isBoss: true
       }
     ];
 
@@ -133,11 +144,16 @@
         { text: "🕳 Explore the cave", action: cave },
         { text: "🏘 Visit the village", action: village }
       ]);
+      // Only show the shrine option if the quest is active
+      if (hasQuest) {
+        setChoices(choices.children).push({ text: "✨ Return to the Shrine", action: shrine });
+      }
     }
 
     // Forest (fight enemies, earn gold)
     function forest() {
-      currentEnemy = monsters[Math.floor(Math.random() * monsters.length)];
+      const regularMonsters = monsters.filter(m => !m.isBoss);
+      currentEnemy = regularMonsters[Math.floor(Math.random() * regularMonsters.length)];
       story.textContent = `A wild ${currentEnemy.name} jumps out!`;
       enemyHP = currentEnemy.hp;
       updateStats();
@@ -150,16 +166,24 @@
 
     // Cave (tougher enemies, more gold)
     function cave() {
-      const tougherMonsters = [monsters[1], monsters[3]];
-      currentEnemy = tougherMonsters[Math.floor(Math.random() * tougherMonsters.length)];
-      story.textContent = `A ${currentEnemy.name} blocks your path!`;
-      enemyHP = currentEnemy.hp;
-      updateStats();
-      setChoices([
-        { text: "⚔ Attack", action: attackEnemy },
-        { text: "🧪 Use Potion", action: usePotion },
-        { text: "🏃 Escape", action: startGame }
-      ]);
+      if (hasQuest) {
+        story.textContent = "The cave entrance is lit by a strange, blue light. A powerful presence emanates from within.";
+        setChoices([
+          { text: "Challenge the Guardian!", action: bossFight },
+          { text: "Back to the crossroads", action: startGame }
+        ]);
+      } else {
+        const tougherMonsters = [monsters[1], monsters[3]];
+        currentEnemy = tougherMonsters[Math.floor(Math.random() * tougherMonsters.length)];
+        story.textContent = `A ${currentEnemy.name} blocks your path!`;
+        enemyHP = currentEnemy.hp;
+        updateStats();
+        setChoices([
+          { text: "⚔ Attack", action: attackEnemy },
+          { text: "🧪 Use Potion", action: usePotion },
+          { text: "🏃 Escape", action: startGame }
+        ]);
+      }
     }
 
     // Village (shop + rest)
@@ -168,7 +192,31 @@
       setChoices([
         { text: "🛍 Visit the shop", action: shop },
         { text: "🛌 Rest (Free Health Restore)", action: rest },
+        { text: "✨ Visit the Shrine", action: shrine },
         { text: "🚪 Leave Village", action: startGame }
+      ]);
+    }
+
+    function shrine() {
+      if (hasQuest) {
+        story.textContent = "The Wise Sage thanks you for your efforts. He has nothing more for you.";
+        setChoices([
+          { text: "Leave Shrine", action: startGame }
+        ]);
+      } else {
+        story.textContent = "A Wise Sage stands before an ancient shrine. 'Brave adventurer,' he says, 'a powerful Ancient Guardian has been corrupted and now lurks in the cave, guarding a sacred relic. Will you retrieve it for me?'";
+        setChoices([
+          { text: "Accept the Quest", action: acceptQuest },
+          { text: "Decline", action: startGame }
+        ]);
+      }
+    }
+
+    function acceptQuest() {
+      hasQuest = true;
+      story.textContent = "You accept the quest! You must defeat the Ancient Guardian in the cave to retrieve the sacred relic.";
+      setChoices([
+        { text: "Back to Crossroads", action: startGame }
       ]);
     }
     
@@ -204,10 +252,19 @@
 
       if (enemyHP <= 0) {
         xp += 5;
+        if (currentEnemy.isBoss) {
+            story.textContent = `You defeated the ${currentEnemy.name} and completed the quest! 👑 You found a large chest with 50 gold and 20 XP!`;
+            gold += 50;
+            xp += 20;
+            hasQuest = false; // Quest is complete
+        } else {
+            story.textContent = `You defeated the ${currentEnemy.name}! 🏆 You found 5 gold.`;
+            gold += 5;
+            xp += 5;
+        }
+
+        enemyHP = 0;
         if (!checkLevelUp()) {
-          story.textContent = `You defeated the ${currentEnemy.name}! 🏆 You found 5 gold.`;
-          gold += 5;
-          enemyHP = 0;
           setChoices([{ text: "Continue", action: startGame }]);
         }
       } else if (playerHP <= 0) {
@@ -221,6 +278,20 @@
         ]);
       }
       updateStats();
+    }
+
+    function bossFight() {
+      currentEnemy = monsters.find(m => m.isBoss);
+      if (currentEnemy) {
+        story.textContent = `You stand before the mighty ${currentEnemy.name}! This is the final challenge!`;
+        enemyHP = currentEnemy.hp;
+        updateStats();
+        setChoices([
+          { text: "⚔ Attack", action: attackEnemy },
+          { text: "🧪 Use Potion", action: usePotion },
+          { text: "🏃 Retreat!", action: startGame }
+        ]);
+      }
     }
 
     function usePotion() {
