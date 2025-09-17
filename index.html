@@ -137,8 +137,10 @@
             hasQuest = data.hasQuest;
             updateStats();
             story.textContent = "Game loaded from a previous save. Welcome back!";
+            return true;
         } else {
             story.textContent = "Welcome to the adventure! Choose your path.";
+            return false;
         }
     }
 
@@ -370,12 +372,10 @@
       shop();
     }
     
-    // Call loadGame before starting
-    loadGame();
-    if (localStorage.getItem("rpgGameSave")) {
+    // Call loadGame and then decide whether to call startGame
+    if (!loadGame()) {
       startGame();
     }
-
   </script>
 </body>
 </html>
