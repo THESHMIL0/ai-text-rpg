@@ -47,6 +47,7 @@
     let enemyHP = 0;
     let potions = 1;
     let gold = 0;
+    let currentEnemy = null; // We'll use this to store the enemy object
 
     const story = document.getElementById("story");
     const choices = document.getElementById("choices");
@@ -54,6 +55,29 @@
     const enemyHPText = document.getElementById("enemyHP");
     const potionsText = document.getElementById("potions");
     const goldText = document.getElementById("gold");
+
+    const monsters = [
+      {
+        name: "Goblin",
+        hp: 10,
+        damage: 4
+      },
+      {
+        name: "Skeleton Warrior",
+        hp: 15,
+        damage: 6
+      },
+      {
+        name: "Giant Spider",
+        hp: 8,
+        damage: 8
+      },
+      {
+        name: "Ogre",
+        hp: 25,
+        damage: 10
+      }
+    ];
 
     function updateStats() {
       playerHPText.textContent = playerHP;
@@ -84,8 +108,9 @@
 
     // Forest (fight enemies, earn gold)
     function forest() {
-      story.textContent = "A wild goblin jumps out!";
-      enemyHP = 10;
+      currentEnemy = monsters[Math.floor(Math.random() * monsters.length)];
+      story.textContent = `A wild ${currentEnemy.name} jumps out!`;
+      enemyHP = currentEnemy.hp;
       updateStats();
       setChoices([
         { text: "⚔ Attack", action: attackEnemy },
@@ -96,8 +121,10 @@
 
     // Cave (tougher enemies, more gold)
     function cave() {
-      story.textContent = "A skeleton warrior blocks your path!";
-      enemyHP = 15;
+      const tougherMonsters = [monsters[1], monsters[3]];
+      currentEnemy = tougherMonsters[Math.floor(Math.random() * tougherMonsters.length)];
+      story.textContent = `A ${currentEnemy.name} blocks your path!`;
+      enemyHP = currentEnemy.hp;
       updateStats();
       setChoices([
         { text: "⚔ Attack", action: attackEnemy },
@@ -118,14 +145,15 @@
 
     // Combat
     function attackEnemy() {
-      let damage = Math.floor(Math.random() * 6) + 1;
-      let enemyDamage = Math.floor(Math.random() * 4) + 1;
-      enemyHP -= damage;
-      story.textContent = `You hit the enemy for ${damage} damage! It strikes back for ${enemyDamage} damage.`;
+      let playerDamage = Math.floor(Math.random() * 6) + 1;
+      let enemyDamage = Math.floor(Math.random() * currentEnemy.damage) + 1;
+      
+      enemyHP -= playerDamage;
+      story.textContent = `You hit the ${currentEnemy.name} for ${playerDamage} damage! It strikes back for ${enemyDamage} damage.`;
       playerHP -= enemyDamage;
 
       if (enemyHP <= 0) {
-        story.textContent = "You defeated the enemy! 🏆 You found 5 gold.";
+        story.textContent = `You defeated the ${currentEnemy.name}! 🏆 You found 5 gold.`;
         gold += 5;
         enemyHP = 0;
         setChoices([{ text: "Continue", action: startGame }]);
