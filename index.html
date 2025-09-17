@@ -109,6 +109,39 @@
       goldText.textContent = gold;
     }
 
+    function saveGame() {
+        const savedData = {
+            playerHP,
+            potions,
+            gold,
+            strength,
+            xp,
+            level,
+            hasQuest
+        };
+        localStorage.setItem("rpgGameSave", JSON.stringify(savedData));
+        story.textContent = "Game saved successfully!";
+        setChoices([{ text: "Continue", action: startGame }]);
+    }
+
+    function loadGame() {
+        const savedData = localStorage.getItem("rpgGameSave");
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            playerHP = data.playerHP;
+            potions = data.potions;
+            gold = data.gold;
+            strength = data.strength;
+            xp = data.xp;
+            level = data.level;
+            hasQuest = data.hasQuest;
+            updateStats();
+            story.textContent = "Game loaded from a previous save. Welcome back!";
+        } else {
+            story.textContent = "Welcome to the adventure! Choose your path.";
+        }
+    }
+
     function checkLevelUp() {
       const xpNeeded = level * 10;
       if (xp >= xpNeeded) {
@@ -189,6 +222,7 @@
         { text: "🛍 Visit the shop", action: shop },
         { text: "🛌 Rest (Free Health Restore)", action: rest },
         { text: "✨ Visit the Shrine", action: shrine },
+        { text: "💾 Save Game", action: saveGame },
         { text: "🚪 Leave Village", action: startGame }
       ]);
     }
@@ -211,7 +245,6 @@
     function acceptQuest() {
       hasQuest = true;
       story.textContent = "You accept the quest! You must defeat the Ancient Guardian in the cave to retrieve the sacred relic.";
-      // The fix: Call startGame to display choices again
       startGame();
     }
     
@@ -336,8 +369,13 @@
       updateStats();
       shop();
     }
+    
+    // Call loadGame before starting
+    loadGame();
+    if (localStorage.getItem("rpgGameSave")) {
+      startGame();
+    }
 
-    startGame();
   </script>
 </body>
 </html>
