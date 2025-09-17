@@ -149,7 +149,10 @@
             hasQuest = data.hasQuest;
             hasSword = data.hasSword;
             hasShield = data.hasShield;
-            maxHP = data.maxHP;
+            
+            // Check if maxHP exists in the save data, if not, set it to the default.
+            maxHP = data.maxHP !== undefined ? data.maxHP : 20;
+            
             updateStats();
             story.textContent = "Game loaded from a previous save. Welcome back!";
             startGame();
