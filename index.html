@@ -58,6 +58,8 @@
     let hasQuest = false;
     let hasSword = false;
     let hasShield = false;
+    let isPoisoned = false; // New variable for poison status
+    let poisonInterval = null; // To manage the poison damage over time
 
     const story = document.getElementById("story");
     const choices = document.getElementById("choices");
@@ -110,6 +112,9 @@
 
     function updateStats() {
       playerHPText.textContent = playerHP;
+      if (isPoisoned) {
+          playerHPText.textContent += " (Poisoned)";
+      }
       strengthText.textContent = strength;
       levelText.textContent = level;
       xpText.textContent = xp;
@@ -129,7 +134,8 @@
             hasQuest,
             hasSword,
             hasShield,
-            maxHP
+            maxHP,
+            isPoisoned // Save the poison status
         };
         localStorage.setItem("rpgGameSave", JSON.stringify(savedData));
         story.textContent = "Game saved successfully!";
@@ -152,7 +158,13 @@
             hasQuest = data.hasQuest;
             hasSword = data.hasSword;
             hasShield = data.hasShield;
+            isPoisoned = data.isPoisoned !== undefined ? data.isPoisoned : false;
             
+            // Start poison tick if player was poisoned on save
+            if (isPoisoned) {
+                startPoison();
+            }
+
             updateStats();
             story.textContent = "Game loaded from a previous save. Welcome back!";
             startGame();
@@ -332,6 +344,11 @@
     function rest() {
       playerHP = maxHP;
       story.textContent = "You rest and feel your strength return. Your HP is fully restored!";
+      if (isPoisoned) {
+          isPoisoned = false;
+          clearInterval(poisonInterval);
+          story.textContent += " The poison has left your system!";
+      }
       updateStats();
       setChoices([
         { text: "Continue", action: village }
@@ -346,10 +363,20 @@
       enemyHP -= playerDamage;
       playerHP -= enemyDamage;
 
-      // This is the new, correct location for the HP check.
+      // Poison attack logic for Swamp Serpent
+      if (currentEnemy.name === "Swamp Serpent" && Math.random() < 0.5 && !isPoisoned) {
+          isPoisoned = true;
+          story.textContent += ` The ${currentEnemy.name} bites you and you feel the poison enter your veins!`;
+          startPoison();
+      }
+
       if (playerHP <= 0) {
-        playerHP = 0; // Ensures the HP display never goes into the negative
+        playerHP = 0;
         story.textContent = "💀 You have been defeated!";
+        if (isPoisoned) {
+            isPoisoned = false;
+            clearInterval(poisonInterval);
+        }
         setChoices([{ text: "Restart", action: () => location.reload() }]);
       } else if (enemyHP <= 0) {
         xp += 5;
@@ -403,10 +430,39 @@
         playerHP = Math.min(playerHP + 10, maxHP);
         potions--;
         story.textContent = "You used a potion and restored 10 HP!";
+        if (isPoisoned) {
+            isPoisoned = false;
+            clearInterval(poisonInterval);
+            story.textContent += " The poison has left your system!";
+        }
       } else {
         story.textContent = "You have no potions!";
       }
       updateStats();
+    }
+
+    // Poison Damage Function
+    function poisonTick() {
+        if (isPoisoned && playerHP > 0) {
+            playerHP -= 2;
+            updateStats();
+            story.textContent = "The poison burns! You take 2 damage.";
+            if (playerHP <= 0) {
+                playerHP = 0;
+                story.textContent = "💀 You have been defeated by the poison!";
+                isPoisoned = false;
+                clearInterval(poisonInterval);
+                setChoices([{ text: "Restart", action: () => location.reload() }]);
+            }
+        } else if (!isPoisoned) {
+            clearInterval(poisonInterval);
+        }
+    }
+
+    function startPoison() {
+        if (isPoisoned && !poisonInterval) {
+            poisonInterval = setInterval(poisonTick, 2000); // 2000ms = 2 seconds
+        }
     }
 
     // Shop functions
@@ -427,6 +483,11 @@
         gold -= 10;
         playerHP = maxHP;
         story.textContent = "You are fully healed!";
+        if (isPoisoned) {
+            isPoisoned = false;
+            clearInterval(poisonInterval);
+            story.textContent += " The poison has left your system!";
+        }
       } else {
         story.textContent = "Not enough gold!";
       }
