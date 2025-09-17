@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Text RPG</title>
+  <style>
+    body { font-family: monospace; background: black; color: lime; padding: 20px; }
+    #game { white-space: pre-line; margin-bottom: 20px; }
+    button { margin: 5px; padding: 10px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>AI Text RPG</h1>
+  <div id="game">Welcome, adventurer! Click "Start Game".</div>
+  <br>
+  <button onclick="startGame()">Start Game</button>
+  <button onclick="explore()">Explore</button>
+  <button onclick="stats()">Stats</button>
+  <button onclick="quit()">Quit</button>
+
+  <script>
+    let player = { name:"Hero", hp:20, max_hp:20, atk:4, def:1, gold:0 };
+    let monsters = [
+      {name:"Goblin",hp:8,atk:3,def:0,gold:5},
+      {name:"Wolf",hp:10,atk:4,def:0,gold:7},
+      {name:"Orc",hp:16,atk:6,def:2,gold:15}
+    ];
+
+    function log(msg) {
+      document.getElementById("game").innerText += "\n" + msg;
+    }
+
+    function startGame() {
+      document.getElementById("game").innerText = "Your adventure begins!";
+    }
+
+    function explore() {
+      let monster = {...monsters[Math.floor(Math.random()*monsters.length)]};
+      log("You encounter a " + monster.name + "!");
+      combat(monster);
+    }
+
+    function combat(monster) {
+      let dmg = Math.max(0, player.atk - monster.def);
+      monster.hp -= dmg;
+      log("You attack and deal " + dmg + " damage!");
+      if (monster.hp <= 0) {
+        log("You defeated the " + monster.name + " and found " + monster.gold + " gold.");
+        player.gold += monster.gold;
+        return;
+      }
+      let mdmg = Math.max(0, monster.atk - player.def);
+      player.hp -= mdmg;
+      log("The " + monster.name + " hits you for " + mdmg + " damage!");
+      if (player.hp <= 0) {
+        log("Game Over!");
+      }
+    }
+
+    function stats() {
+      log("HP: " + player.hp + "/" + player.max_hp + " | Gold: " + player.gold);
+    }
+
+    function quit() {
+      log("You quit the adventure.");
+    }
+  </script>
+</body>
+</html>
