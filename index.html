@@ -55,6 +55,8 @@
     let level = 1;
     let currentEnemy = null;
     let hasQuest = false;
+    let hasSword = false; // New variable for the sword
+    let hasShield = false; // New variable for the shield
 
     const story = document.getElementById("story");
     const choices = document.getElementById("choices");
@@ -117,7 +119,9 @@
             strength,
             xp,
             level,
-            hasQuest
+            hasQuest,
+            hasSword, // Save the new variables
+            hasShield // Save the new variables
         };
         localStorage.setItem("rpgGameSave", JSON.stringify(savedData));
         story.textContent = "Game saved successfully!";
@@ -135,9 +139,11 @@
             xp = data.xp;
             level = data.level;
             hasQuest = data.hasQuest;
+            hasSword = data.hasSword; // Load the new variables
+            hasShield = data.hasShield; // Load the new variables
             updateStats();
             story.textContent = "Game loaded from a previous save. Welcome back!";
-            startGame(); // This will display the choices.
+            startGame();
         } else {
             story.textContent = "Welcome to the adventure! Choose your path.";
             startGame();
@@ -253,12 +259,46 @@
     // Shop
     function shop() {
       story.textContent = "Welcome to the village shop. What do you want to buy?";
-      setChoices([
+      const shopChoices = [
         { text: "🧪 Buy Potion (5 gold)", action: buyPotion },
         { text: "❤️ Heal (10 gold)", action: healPlayer },
         { text: "💪 Increase Strength (20 gold)", action: buyStrength },
-        { text: "🚪 Leave Shop", action: village }
-      ]);
+      ];
+      if (!hasSword) {
+          shopChoices.push({ text: "⚔ Buy Sword (+5 Strength, 50 gold)", action: buySword });
+      }
+      if (!hasShield) {
+          shopChoices.push({ text: "🛡 Buy Shield (+20 HP, 75 gold)", action: buyShield });
+      }
+      shopChoices.push({ text: "🚪 Leave Shop", action: village });
+      setChoices(shopChoices);
+    }
+
+    // New item functions
+    function buySword() {
+      if (gold >= 50) {
+        gold -= 50;
+        strength += 5;
+        hasSword = true;
+        story.textContent = "You bought a powerful sword! Your strength has increased by 5.";
+      } else {
+        story.textContent = "Not enough gold!";
+      }
+      updateStats();
+      shop();
+    }
+
+    function buyShield() {
+      if (gold >= 75) {
+        gold -= 75;
+        playerHP += 20;
+        hasShield = true;
+        story.textContent = "You bought a sturdy shield! Your max HP has increased by 20.";
+      } else {
+        story.textContent = "Not enough gold!";
+      }
+      updateStats();
+      shop();
     }
 
     // Rest function
