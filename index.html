@@ -42,7 +42,8 @@
     🧪 Potions: <span id="potions">1</span><br>
     💰 Gold: <span id="gold">0</span>
   </div>
-  <div id="story">Welcome to the adventure! Choose your path.</div>
+  <div id="story"></div>
+  http://googleusercontent.com/generated_image_content/0
   <div id="choices"></div>
 
   <script>
@@ -102,15 +103,15 @@
       const xpNeeded = level * 10;
       if (xp >= xpNeeded) {
         level++;
-        strength += 2; // Increase strength on level up
-        playerHP = 20; // Full heal on level up
-        xp = 0; // Reset XP for the next level
+        strength += 2;
+        playerHP = 20;
+        xp = 0;
         story.textContent = `🌟 You leveled up to level ${level}! Your strength increased!`;
         setChoices([
           { text: "Awesome!", action: startGame }
         ]);
         updateStats();
-        return true; // Return true to indicate a level up happened
+        return true;
       }
       return false;
     }
@@ -203,8 +204,8 @@
       playerHP -= enemyDamage;
 
       if (enemyHP <= 0) {
-        xp += 5; // Gain XP for defeating an enemy
-        if (!checkLevelUp()) { // Only continue if we didn't level up
+        xp += 5;
+        if (!checkLevelUp()) {
           story.textContent = `You defeated the ${currentEnemy.name}! 🏆 You found 5 gold.`;
           gold += 5;
           enemyHP = 0;
