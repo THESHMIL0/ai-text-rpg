@@ -328,8 +328,8 @@
     function buyShield() {
       if (gold >= 75) {
         gold -= 75;
-        playerHP += 20;
-        maxHP += 20;
+        maxHP += 20; // Correctly increases max HP
+        playerHP = maxHP; // Correctly sets current HP to the new max
         hasShield = true;
         story.textContent = "You bought a sturdy shield! Your max HP has increased by 20.";
       } else {
