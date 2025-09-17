@@ -139,12 +139,32 @@
 
     // Village (shop + rest)
     function village() {
+      story.textContent = "Welcome to the village. What do you want to do?";
+      setChoices([
+        { text: "🛍 Visit the shop", action: shop },
+        { text: "🛌 Rest (Free Health Restore)", action: rest },
+        { text: "🚪 Leave Village", action: startGame }
+      ]);
+    }
+    
+    // Shop
+    function shop() {
       story.textContent = "Welcome to the village shop. What do you want to buy?";
       setChoices([
         { text: "🧪 Buy Potion (5 gold)", action: buyPotion },
         { text: "❤️ Heal (10 gold)", action: healPlayer },
         { text: "💪 Increase Strength (20 gold)", action: buyStrength },
-        { text: "🚪 Leave Shop", action: startGame }
+        { text: "🚪 Leave Shop", action: village }
+      ]);
+    }
+
+    // Rest function
+    function rest() {
+      playerHP = 20; // Heals the player to full HP
+      story.textContent = "You rest and feel your strength return. Your HP is fully restored!";
+      updateStats();
+      setChoices([
+        { text: "Continue", action: village }
       ]);
     }
 
@@ -197,7 +217,7 @@
         story.textContent = "Not enough gold!";
       }
       updateStats();
-      village();
+      shop();
     }
 
     function healPlayer() {
@@ -209,7 +229,7 @@
         story.textContent = "Not enough gold!";
       }
       updateStats();
-      village();
+      shop();
     }
 
     function buyStrength() {
@@ -221,7 +241,7 @@
         story.textContent = "Not enough gold!";
       }
       updateStats();
-      village();
+      shop();
     }
 
     startGame();
