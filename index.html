@@ -7,167 +7,176 @@
   <style>
     body {
       background: black;
-      color: #00ff00;
-      font-family: "Courier New", monospace;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-    #game {
-      max-width: 600px;
-      margin: 40px auto;
+      color: limegreen;
+      font-family: monospace;
       padding: 20px;
-      border: 2px solid #00ff00;
-      border-radius: 10px;
     }
     h1 {
-      font-size: 2em;
-      margin-bottom: 10px;
-    }
-    #stats {
-      font-size: 1.2em;
-      margin-bottom: 20px;
-      line-height: 1.6;
-    }
-    #story {
-      font-size: 1.2em;
-      margin-bottom: 20px;
+      color: lime;
     }
     button {
-      background: #00ff00;
-      color: black;
-      font-size: 1.1em;
-      padding: 10px 20px;
-      margin: 5px;
+      background: green;
+      color: white;
       border: none;
-      border-radius: 5px;
+      padding: 10px;
+      margin: 5px;
       cursor: pointer;
+      border-radius: 5px;
     }
     button:hover {
-      background: #00cc00;
+      background: darkgreen;
+    }
+    .stats {
+      margin-bottom: 15px;
     }
   </style>
 </head>
 <body>
-  <div id="game">
-    <h1>AI Text RPG</h1>
-    <div id="stats">
-      ❤️ Player HP: <span id="playerHP">20</span><br>
-      👾 Enemy HP: <span id="enemyHP">-</span><br>
-      🧪 Potions: <span id="potions">0</span>
-    </div>
-    <div id="story">Welcome to the adventure! Choose your path.</div>
-    <div id="choices"></div>
+  <h1>AI Text RPG</h1>
+  <div class="stats">
+    ❤️ Player HP: <span id="playerHP">20</span><br>
+    🧟 Enemy HP: <span id="enemyHP">0</span><br>
+    🧪 Potions: <span id="potions">1</span><br>
+    💰 Gold: <span id="gold">0</span>
   </div>
+  <div id="story">Welcome to the adventure! Choose your path.</div>
+  <div id="choices"></div>
 
   <script>
     let playerHP = 20;
     let enemyHP = 0;
-    let potions = 0;
+    let potions = 1;
+    let gold = 0;
+
+    const story = document.getElementById("story");
+    const choices = document.getElementById("choices");
+    const playerHPText = document.getElementById("playerHP");
+    const enemyHPText = document.getElementById("enemyHP");
+    const potionsText = document.getElementById("potions");
+    const goldText = document.getElementById("gold");
 
     function updateStats() {
-      document.getElementById("playerHP").textContent = playerHP;
-      document.getElementById("enemyHP").textContent = enemyHP > 0 ? enemyHP : "-";
-      document.getElementById("potions").textContent = potions;
-    }
-
-    function setStory(text) {
-      document.getElementById("story").textContent = text;
+      playerHPText.textContent = playerHP;
+      enemyHPText.textContent = enemyHP;
+      potionsText.textContent = potions;
+      goldText.textContent = gold;
     }
 
     function setChoices(options) {
-      const choicesDiv = document.getElementById("choices");
-      choicesDiv.innerHTML = "";
+      choices.innerHTML = "";
       options.forEach(opt => {
-        const btn = document.createElement("button");
+        let btn = document.createElement("button");
         btn.textContent = opt.text;
         btn.onclick = opt.action;
-        choicesDiv.appendChild(btn);
+        choices.appendChild(btn);
       });
     }
 
+    // Starting area
     function startGame() {
-      playerHP = 20;
-      enemyHP = 0;
-      potions = 0;
-      updateStats();
-      setStory("You stand at the edge of a dark forest. Where will you go?");
+      story.textContent = "You stand at a crossroad. Where will you go?";
       setChoices([
-        { text: "Enter the forest", action: forest },
-        { text: "Explore the cave", action: cave },
-        { text: "Visit the village", action: village }
+        { text: "🌲 Enter the forest", action: forest },
+        { text: "🕳 Explore the cave", action: cave },
+        { text: "🏘 Visit the village", action: village }
       ]);
     }
 
+    // Forest (fight enemies, earn gold)
     function forest() {
+      story.textContent = "A wild goblin jumps out!";
       enemyHP = 10;
       updateStats();
-      setStory("A wild goblin appears!");
       setChoices([
-        { text: "Attack", action: attack },
-        { text: "Use Potion", action: usePotion },
-        { text: "Run", action: startGame }
+        { text: "⚔ Attack", action: attackEnemy },
+        { text: "🧪 Use Potion", action: usePotion },
+        { text: "🏃 Run Away", action: startGame }
       ]);
     }
 
+    // Cave (tougher enemies, more gold)
     function cave() {
-      potions++;
+      story.textContent = "A skeleton warrior blocks your path!";
+      enemyHP = 15;
       updateStats();
-      setStory("You find a healing potion in the cave.");
       setChoices([
-        { text: "Go back", action: startGame }
+        { text: "⚔ Attack", action: attackEnemy },
+        { text: "🧪 Use Potion", action: usePotion },
+        { text: "🏃 Escape", action: startGame }
       ]);
     }
 
+    // Village (shop + rest)
     function village() {
-      setStory("You rest in the village. HP restored!");
-      playerHP = 20;
-      updateStats();
+      story.textContent = "Welcome to the village shop. What do you want to buy?";
       setChoices([
-        { text: "Go back", action: startGame }
+        { text: "🧪 Buy Potion (5 gold)", action: buyPotion },
+        { text: "❤️ Heal (10 gold)", action: healPlayer },
+        { text: "🚪 Leave Shop", action: startGame }
       ]);
     }
 
-    function attack() {
-      if (enemyHP <= 0) {
-        setStory("The enemy is already defeated!");
-        setChoices([{ text: "Go back", action: startGame }]);
-        return;
-      }
-      enemyHP -= 5;
-      playerHP -= 3;
-      updateStats();
+    // Combat
+    function attackEnemy() {
+      let damage = Math.floor(Math.random() * 6) + 1;
+      let enemyDamage = Math.floor(Math.random() * 4) + 1;
+      enemyHP -= damage;
+      story.textContent = `You hit the enemy for ${damage} damage! It strikes back for ${enemyDamage} damage.`;
+      playerHP -= enemyDamage;
 
       if (enemyHP <= 0) {
-        setStory("You defeated the goblin!");
+        story.textContent = "You defeated the enemy! 🏆 You found 5 gold.";
+        gold += 5;
+        enemyHP = 0;
         setChoices([{ text: "Continue", action: startGame }]);
       } else if (playerHP <= 0) {
-        setStory("You have been defeated! Game Over.");
-        setChoices([{ text: "Restart", action: startGame }]);
+        story.textContent = "💀 You have been defeated!";
+        setChoices([{ text: "Restart", action: () => location.reload() }]);
       } else {
-        setStory("You hit the goblin, but it strikes back!");
         setChoices([
-          { text: "Attack", action: attack },
-          { text: "Use Potion", action: usePotion },
-          { text: "Run", action: startGame }
+          { text: "⚔ Attack Again", action: attackEnemy },
+          { text: "🧪 Use Potion", action: usePotion },
+          { text: "🏃 Run Away", action: startGame }
         ]);
       }
+
+      updateStats();
     }
 
     function usePotion() {
       if (potions > 0) {
-        potions--;
         playerHP += 10;
-        if (playerHP > 20) playerHP = 20;
-        updateStats();
-        setStory("You used a potion and restored HP!");
+        potions--;
+        story.textContent = "You used a potion and restored 10 HP!";
       } else {
-        setStory("No potions left!");
+        story.textContent = "You have no potions!";
       }
-      setChoices([
-        { text: "Attack", action: attack },
-        { text: "Run", action: startGame }
-      ]);
+      updateStats();
+    }
+
+    // Shop functions
+    function buyPotion() {
+      if (gold >= 5) {
+        gold -= 5;
+        potions++;
+        story.textContent = "You bought a potion!";
+      } else {
+        story.textContent = "Not enough gold!";
+      }
+      updateStats();
+      village();
+    }
+
+    function healPlayer() {
+      if (gold >= 10) {
+        gold -= 10;
+        playerHP = 20;
+        story.textContent = "You are fully healed!";
+      } else {
+        story.textContent = "Not enough gold!";
+      }
+      updateStats();
+      village();
     }
 
     startGame();
