@@ -67,7 +67,6 @@
     };
 
     let enemy = null;
-    let fightCount = 0;
 
     function updateStats() {
       document.getElementById("stats").innerHTML = `
@@ -96,16 +95,36 @@
       updateStats();
     }
 
-    // 🌲 Forest Monster Selection
+    // 🌲 Forest Monster Selection with level restrictions
     function goForest() {
       document.getElementById("actions").innerHTML = `
         <h3>Choose a monster to fight:</h3>
-        <button onclick="startBattle('Goblin', 10, 3, 5, 5)">Goblin (Easy)</button>
-        <button onclick="startBattle('Troll', 20, 5, 10, 10)">Troll (Medium)</button>
-        <button onclick="startBattle('Dragon', 35, 8, 20, 20)">Dragon (Hard)</button>
+        <button onclick="fightGoblin()">Goblin (Easy)</button>
+        <button onclick="fightTroll()">Troll (Lvl 2+)</button>
+        <button onclick="fightDragon()">Dragon (Lvl 4+)</button>
         <button onclick="showMainMenu()">⬅️ Back</button>
       `;
       showMessage("The forest is full of monsters. Who will you challenge?");
+    }
+
+    function fightGoblin() {
+      startBattle('Goblin', 10, 3, 5, 5);
+    }
+
+    function fightTroll() {
+      if (player.level >= 2) {
+        startBattle('Troll', 20, 5, 10, 10);
+      } else {
+        showMessage("❌ You must be Level 2 to fight the Troll!");
+      }
+    }
+
+    function fightDragon() {
+      if (player.level >= 4) {
+        startBattle('Dragon', 35, 8, 20, 20);
+      } else {
+        showMessage("❌ You must be Level 4 to fight the Dragon!");
+      }
     }
 
     // 🏘️ Village (Shop + Rest)
