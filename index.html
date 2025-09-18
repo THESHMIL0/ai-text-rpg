@@ -169,7 +169,6 @@
         const savedData = localStorage.getItem('aiTextRpgSave');
         if (savedData) {
           const loadedPlayer = JSON.parse(savedData);
-          // Simple validation to prevent NaN errors
           if (loadedPlayer && typeof loadedPlayer.hp === 'number' && !isNaN(loadedPlayer.hp)) {
             player = loadedPlayer;
             showMessage("Game loaded successfully!");
@@ -348,7 +347,9 @@
     }
 
     function attack() {
-      if (!enemy) return;
+      if (!enemy || enemy.hp <= 0) {
+        return; // Prevents attacks on a defeated enemy
+      }
       
       let playerDamage = Math.floor(Math.random() * player.attack) + 1;
       let enemyDamage = Math.floor(Math.random() * enemy.attack) + 1;
