@@ -106,6 +106,8 @@
       attack: 5, defense: 0,
       weapon: "Fists",
       shield: "None",
+      bow: false,
+      quiver: 0,
       isPoisoned: false,
       hasQuest: false
     };
@@ -129,7 +131,7 @@
         </div>
         HP: ${player.hp} / ${player.maxHp} ${player.isPoisoned ? "(Poisoned)" : ""} <br>
         Weapon: ${player.weapon} (Attack: ${player.attack}) | Shield: ${player.shield} (Defense: ${player.defense})<br>
-        Potions: ${player.potions} | Gold: ${player.gold} | XP: ${player.xp} | Level: ${player.level}
+        Potions: ${player.potions} | Arrows: ${player.quiver} | Gold: ${player.gold} | XP: ${player.xp} | Level: ${player.level}
         ${player.hasQuest ? ' | Quest: Defeat Guardian' : ''}
       `;
     }
@@ -257,6 +259,7 @@
         <button onclick="buyPotion()">🛍️ Buy Potion (10 gold)</button>
         <button onclick="buySword()">⚔️ Buy Sword (15 gold)</button>
         <button onclick="buyShield()">🛡️ Buy Shield (15 gold)</button>
+        <button onclick="buyBow()">🏹 Buy Bow & Arrows (20 gold)</button>
         <button onclick="visitVillage()">⬅️ Back to Village</button>
       `;
       showMessage("The shopkeeper welcomes you. What would you like to buy?");
@@ -326,11 +329,15 @@
         </div>
         HP: ${enemy.hp} / ${enemy.maxHp}
       `;
-      document.getElementById("actions").innerHTML = `
+      let combatButtons = `
         <button onclick="attack()">⚔️ Attack</button>
         <button onclick="usePotion()">🧪 Use Potion</button>
-        <button onclick="showMainMenu()">🏃 Run</button>
       `;
+      if (player.bow) {
+        combatButtons += `<button onclick="shoot()">🏹 Shoot (${player.quiver})</button>`;
+      }
+      combatButtons += `<button onclick="showMainMenu()">🏃 Run</button>`;
+      document.getElementById("actions").innerHTML = combatButtons;
       showMessage(`A wild ${enemy.name} appears!`);
     }
 
@@ -348,7 +355,7 @@
 
     function attack() {
       if (!enemy || enemy.hp <= 0) {
-        return; // Prevents attacks on a defeated enemy
+        return;
       }
       
       let playerDamage = Math.floor(Math.random() * player.attack) + 1;
@@ -370,27 +377,64 @@
       showMessage(message);
 
       if (enemy.hp <= 0) {
-        if (enemy.isBoss) {
-            showMessage(`You defeated the ${enemy.name} and completed the quest! 👑 You found a large chest with ${enemy.gold} gold and ${enemy.xp} XP!`);
-            player.hasQuest = false;
-        } else {
-            showMessage(`You defeated the ${enemy.name}! +${enemy.gold} gold, +${enemy.xp} XP`);
-        }
-        
-        player.gold += enemy.gold;
-        player.xp += enemy.xp;
-        levelUpCheck();
-        setTimeout(showMainMenu, 2500);
-        return;
+        handleMonsterDefeat();
       }
       
       if (player.hp <= 0) {
-        showMessage("💀 You have been defeated! Game Over.");
-        document.getElementById("actions").innerHTML = `<button onclick="restart()">Restart</button>`;
-        clearInterval(poisonInterval);
-        poisonInterval = null;
-        player.isPoisoned = false;
+        handlePlayerDefeat();
       }
+    }
+
+    function shoot() {
+      if (!enemy || enemy.hp <= 0) {
+        return;
+      }
+
+      if (player.quiver > 0) {
+        let playerDamage = Math.floor(Math.random() * (player.attack + 2)) + 1; // Ranged attack bonus
+        let enemyDamage = Math.floor(Math.random() * enemy.attack) + 1;
+        player.quiver--;
+        enemy.hp -= playerDamage;
+        player.hp -= Math.max(1, enemyDamage - player.defense);
+        
+        showMessage(`You fire an arrow, hitting the ${enemy.name} for ${playerDamage} damage! The ${enemy.name} hits you for ${Math.max(1, enemyDamage - player.defense)} damage!`);
+        updateEnemy();
+        updateStats();
+
+        if (enemy.hp <= 0) {
+          handleMonsterDefeat();
+        }
+
+        if (player.hp <= 0) {
+          handlePlayerDefeat();
+        }
+
+      } else {
+        showMessage("You are out of arrows!");
+      }
+    }
+
+    function handleMonsterDefeat() {
+      if (enemy.isBoss) {
+        showMessage(`You defeated the ${enemy.name} and completed the quest! 👑 You found a large chest with ${enemy.gold} gold and ${enemy.xp} XP!`);
+        player.hasQuest = false;
+      } else {
+        showMessage(`You defeated the ${enemy.name}! +${enemy.gold} gold, +${enemy.xp} XP`);
+      }
+      
+      player.gold += enemy.gold;
+      player.xp += enemy.xp;
+      levelUpCheck();
+      setTimeout(showMainMenu, 2500);
+      return;
+    }
+
+    function handlePlayerDefeat() {
+      showMessage("💀 You have been defeated! Game Over.");
+      document.getElementById("actions").innerHTML = `<button onclick="restart()">Restart</button>`;
+      clearInterval(poisonInterval);
+      poisonInterval = null;
+      player.isPoisoned = false;
     }
 
     function usePotion() {
@@ -436,6 +480,23 @@
         showMessage("You bought a Wooden Shield! Defense increased.");
       } else {
         showMessage("Not enough gold or already own a shield!");
+      }
+    }
+
+    function buyBow() {
+      if (player.gold >= 20 && !player.bow) {
+        player.gold -= 20;
+        player.bow = true;
+        player.quiver = 20;
+        updateStats();
+        showMessage("You bought a Bow and 20 arrows!");
+      } else if (player.gold >= 5 && player.bow) {
+        player.gold -= 5;
+        player.quiver += 10;
+        updateStats();
+        showMessage("You bought 10 more arrows!");
+      } else {
+        showMessage("Not enough gold!");
       }
     }
 
@@ -495,7 +556,7 @@
     }
 
     function restart() {
-      player = {hp:40, maxHp:40, potions:2, gold:0, level:1, xp:0, attack:5, defense:0, weapon:"Fists", shield:"None", isPoisoned:false, hasQuest:false};
+      player = {hp:40, maxHp:40, potions:2, gold:0, level:1, xp:0, attack:5, defense:0, weapon:"Fists", shield:"None", bow:false, quiver:0, isPoisoned:false, hasQuest:false};
       if (poisonInterval) {
         clearInterval(poisonInterval);
         poisonInterval = null;
