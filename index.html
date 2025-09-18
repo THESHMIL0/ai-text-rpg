@@ -232,28 +232,38 @@
       }
     }
 
-    // 🏘️ Village (Shop + Rest)
+    // 🏘️ Village Menu
     function visitVillage() {
       document.getElementById("actions").innerHTML = `
         <h3>Village</h3>
+        <button onclick="visitShop()">🛍️ Visit Shop</button>
+        <button onclick="rest()">🛌 Rest at Inn (5 gold)</button>
+        <button onclick="visitTavern()">🍺 Visit Tavern</button>
+        <button onclick="visitShrine()">✨ Visit Shrine</button>
+        <button onclick="showMainMenu()">🚪 Leave Village</button>
+      `;
+      showMessage("You have arrived at the bustling village.");
+    }
+
+    // === Shop Functions ===
+    function visitShop() {
+      document.getElementById("actions").innerHTML = `
+        <h3>Shop</h3>
         <button onclick="buyPotion()">🛍️ Buy Potion (10 gold)</button>
         <button onclick="buySword()">⚔️ Buy Sword (15 gold)</button>
         <button onclick="buyShield()">🛡️ Buy Shield (15 gold)</button>
-        <button onclick="rest()">🛌 Rest at Inn (5 gold)</button>
-        <button onclick="visitShrine()">✨ Visit Shrine</button>
-        <button onclick="visitTavern()">🍺 Visit Tavern</button>
-        <button onclick="showMainMenu()">🚪 Leave Village</button>
+        <button onclick="visitVillage()">⬅️ Back to Village</button>
       `;
-      showMessage("Welcome to the village! Spend your gold wisely.");
+      showMessage("The shopkeeper welcomes you. What would you like to buy?");
     }
-    
+
     // === Tavern Functions ===
     function visitTavern() {
       document.getElementById("actions").innerHTML = `
         <h3>The Old Salty Dog Tavern</h3>
         <button onclick="talkToBarkeep()">Talk to Barkeep</button>
         <button onclick="getRumors()">Listen for Rumors</button>
-        <button onclick="visitVillage()">Leave Tavern</button>
+        <button onclick="visitVillage()">⬅️ Leave Tavern</button>
       `;
       showMessage("The tavern is full of travelers and adventurers. The smell of stew and ale fills the air.");
     }
