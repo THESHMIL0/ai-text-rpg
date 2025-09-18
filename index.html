@@ -103,7 +103,9 @@
     let player = {
       hp: 40, maxHp: 40, potions: 2,
       gold: 0, level: 1, xp: 0,
-      attack: 5, weapon: "Fists",
+      attack: 5, defense: 0,
+      weapon: "Fists",
+      shield: "None",
       isPoisoned: false,
       hasQuest: false
     };
@@ -126,7 +128,7 @@
           <div class="bar player-bar" style="width:${(player.hp/player.maxHp)*100}%"></div>
         </div>
         HP: ${player.hp} / ${player.maxHp} ${player.isPoisoned ? "(Poisoned)" : ""} <br>
-        Weapon: ${player.weapon} (Attack: ${player.attack}) <br>
+        Weapon: ${player.weapon} (Attack: ${player.attack}) | Shield: ${player.shield} (Defense: ${player.defense})<br>
         Potions: ${player.potions} | Gold: ${player.gold} | XP: ${player.xp} | Level: ${player.level}
         ${player.hasQuest ? ' | Quest: Defeat Guardian' : ''}
       `;
@@ -236,6 +238,7 @@
         <h3>Village</h3>
         <button onclick="buyPotion()">🛍️ Buy Potion (10 gold)</button>
         <button onclick="buySword()">⚔️ Buy Sword (15 gold)</button>
+        <button onclick="buyShield()">🛡️ Buy Shield (15 gold)</button>
         <button onclick="rest()">🛌 Rest at Inn (5 gold)</button>
         <button onclick="visitShrine()">✨ Visit Shrine</button>
         <button onclick="visitTavern()">🍺 Visit Tavern</button>
@@ -335,9 +338,9 @@
       let enemyDamage = Math.floor(Math.random() * enemy.attack) + 1;
 
       enemy.hp -= playerDamage;
-      player.hp -= enemyDamage;
+      player.hp -= Math.max(1, enemyDamage - player.defense);
       
-      let message = `You hit the ${enemy.name} for ${playerDamage} damage! The ${enemy.name} hits you for ${enemyDamage} damage!`;
+      let message = `You hit the ${enemy.name} for ${playerDamage} damage! The ${enemy.name} hits you for ${Math.max(1, enemyDamage - player.defense)} damage!`;
       
       if (enemy.canPoison && Math.random() < 0.5 && !player.isPoisoned) {
           player.isPoisoned = true;
@@ -406,6 +409,18 @@
         showMessage("Not enough gold or already own a weapon!");
       }
     }
+    
+    function buyShield() {
+      if (player.gold >= 15 && player.shield === "None") {
+        player.gold -= 15;
+        player.shield = "Wooden Shield";
+        player.defense += 2;
+        updateStats();
+        showMessage("You bought a Wooden Shield! Defense increased.");
+      } else {
+        showMessage("Not enough gold or already own a shield!");
+      }
+    }
 
     function rest() {
       if (player.gold >= 5) {
@@ -463,7 +478,7 @@
     }
 
     function restart() {
-      player = {hp:40, maxHp:40, potions:2, gold:0, level:1, xp:0, attack:5, weapon:"Fists", isPoisoned:false, hasQuest:false};
+      player = {hp:40, maxHp:40, potions:2, gold:0, level:1, xp:0, attack:5, defense:0, weapon:"Fists", shield:"None", isPoisoned:false, hasQuest:false};
       if (poisonInterval) {
         clearInterval(poisonInterval);
         poisonInterval = null;
