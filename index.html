@@ -63,7 +63,7 @@
 
   <script>
     let player = {
-      hp: 20, maxHp: 20, potions: 2,
+      hp: 40, maxHp: 40, potions: 2,
       gold: 0, level: 1, xp: 0,
       attack: 5, weapon: "Fists",
       isPoisoned: false,
@@ -364,7 +364,7 @@
     }
 
     function restart() {
-      player = {hp:20, maxHp:20, potions:2, gold:0, level:1, xp:0, attack:5, weapon:"Fists", isPoisoned:false, hasQuest:false};
+      player = {hp:40, maxHp:40, potions:2, gold:0, level:1, xp:0, attack:5, weapon:"Fists", isPoisoned:false, hasQuest:false};
       if (poisonInterval) {
         clearInterval(poisonInterval);
         poisonInterval = null;
