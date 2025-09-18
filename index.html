@@ -103,44 +103,26 @@
     let player = {
       hp: 40, maxHp: 40, potions: 2,
       gold: 0, level: 1, xp: 0,
-      baseAttack: 5, baseDefense: 0,
-      equippedWeapon: null,
-      equippedShield: null,
-      inventory: [],
-      isPoisoned: false,
-      hasQuest: false,
-      quiver: 0
+      attack: 5, defense: 0
     };
 
     let enemy = null;
-    let poisonInterval = null;
 
     const monsters = [
       { name: "Goblin", hp: 10, attack: 3, gold: 5, xp: 5 },
       { name: "Troll", hp: 20, attack: 5, gold: 10, xp: 10 },
-      { name: "Dragon", hp: 35, attack: 8, gold: 20, xp: 20 },
-      { name: "Swamp Serpent", hp: 15, attack: 6, gold: 15, xp: 12, canPoison: true },
-      { name: "Ancient Guardian", hp: 50, attack: 10, gold: 50, xp: 50, isBoss: true }
+      { name: "Dragon", hp: 35, attack: 8, gold: 20, xp: 20 }
     ];
 
     function updateStats() {
-      const equippedWeaponName = player.equippedWeapon ? player.equippedWeapon.name : 'Fists';
-      const equippedWeaponAttack = player.equippedWeapon ? player.equippedWeapon.attack : 0;
-      const equippedShieldName = player.equippedShield ? player.equippedShield.name : 'None';
-      const equippedShieldDefense = player.equippedShield ? player.equippedShield.defense : 0;
-      
-      const totalAttack = player.baseAttack + equippedWeaponAttack;
-      const totalDefense = player.baseDefense + equippedShieldDefense;
-
       document.getElementById("stats").innerHTML = `
         <h3>🧙 Player Stats</h3>
         <div class="bar-container">
           <div class="bar player-bar" style="width:${(player.hp/player.maxHp)*100}%"></div>
         </div>
-        HP: ${player.hp} / ${player.maxHp} ${player.isPoisoned ? "(Poisoned)" : ""} <br>
-        Weapon: ${equippedWeaponName} (Attack: ${totalAttack}) | Shield: ${equippedShieldName} (Defense: ${totalDefense})<br>
-        Potions: ${player.potions} | Arrows: ${player.quiver} | Gold: ${player.gold} | XP: ${player.xp} | Level: ${player.level}
-        ${player.hasQuest ? ' | Quest: Defeat Guardian' : ''}
+        HP: ${player.hp} / ${player.maxHp}<br>
+        Attack: ${player.attack} | Defense: ${player.defense}<br>
+        Potions: ${player.potions} | Gold: ${player.gold} | XP: ${player.xp} | Level: ${player.level}
       `;
     }
 
@@ -153,223 +135,42 @@
       document.getElementById("enemy").innerHTML = "";
       document.getElementById("actions").innerHTML = `
         <button onclick="goForest()">🌲 Enter Forest</button>
-        <button onclick="goSwamp()">💧 Explore Swamp</button>
-        <button onclick="goCave()">🕳️ Explore Cave</button>
         <button onclick="visitVillage()">🏘️ Visit Village</button>
-        <button onclick="showInventory()">🎒 View Inventory</button>
-        <button onclick="saveGame()">💾 Save Game</button>
-        <button onclick="loadGame()">📂 Load Game</button>
       `;
       showMessage("What will you do?");
       updateStats();
     }
-    
-    // === Save/Load Functions ===
-    function saveGame() {
-      try {
-        const playerData = JSON.stringify(player);
-        localStorage.setItem('aiTextRpgSave', playerData);
-        showMessage("Game saved successfully!");
-      } catch (e) {
-        showMessage("Failed to save game. Your browser may not support this feature.");
-      }
-    }
 
-    function loadGame() {
-      try {
-        const savedData = localStorage.getItem('aiTextRpgSave');
-        if (savedData) {
-          const loadedPlayer = JSON.parse(savedData);
-          if (loadedPlayer && typeof loadedPlayer.hp === 'number' && !isNaN(loadedPlayer.hp)) {
-            player = loadedPlayer;
-            updateStats();
-            showMessage("Game loaded successfully!");
-          } else {
-            showMessage("Failed to load game. Save data is corrupted.");
-          }
-        } else {
-          showMessage("No saved game found.");
-        }
-      } catch (e) {
-        showMessage("Failed to load game. The save data might be corrupted.");
-      }
-    }
-
-    // === Inventory Functions ===
-    function showInventory() {
-        let inventoryHtml = '<h3>🎒 Inventory</h3>';
-        if (player.inventory.length === 0) {
-            inventoryHtml += '<p>Your inventory is empty.</p>';
-        } else {
-            inventoryHtml += '<ul>';
-            player.inventory.forEach((item, index) => {
-                let equippedStatus = '';
-                if (player.equippedWeapon && player.equippedWeapon.name === item.name) {
-                    equippedStatus = ' (Equipped)';
-                } else if (player.equippedShield && player.equippedShield.name === item.name) {
-                    equippedStatus = ' (Equipped)';
-                }
-                
-                inventoryHtml += `<button onclick="equipItem(${index})">${item.name} ${equippedStatus}</button>`;
-            });
-            inventoryHtml += '</ul>';
-        }
-
-        document.getElementById("actions").innerHTML = inventoryHtml + `<button onclick="showMainMenu()">⬅️ Back</button>`;
-        showMessage("Choose an item to equip.");
-    }
-    
-    function equipItem(itemIndex) {
-        const item = player.inventory[itemIndex];
-        if (!item) return;
-
-        // Unequip any old item of the same type
-        if (item.type === 'weapon' || item.type === 'bow') {
-            player.equippedWeapon = item;
-        } else if (item.type === 'shield') {
-            player.equippedShield = item;
-        }
-        
-        updateStats();
-        showMessage(`You equipped the ${item.name}!`);
-        showInventory();
-    }
-
-
-    // 🌲 Forest Monster Selection with level restrictions
     function goForest() {
       document.getElementById("actions").innerHTML = `
         <h3>Choose a monster to fight:</h3>
-        <button onclick="fightGoblin()">Goblin (Easy)</button>
-        <button onclick="fightTroll()">Troll (Lvl 2+)</button>
-        <button onclick="fightDragon()">Dragon (Lvl 4+)</button>
+        <button onclick="startBattle(monsters[0])">Goblin (Easy)</button>
+        <button onclick="startBattle(monsters[1])">Troll (Medium)</button>
+        <button onclick="startBattle(monsters[2])">Dragon (Hard)</button>
         <button onclick="showMainMenu()">⬅️ Back</button>
       `;
       showMessage("The forest is full of monsters. Who will you challenge?");
     }
-
-    function fightGoblin() {
-      const goblin = monsters.find(m => m.name === "Goblin");
-      startBattle(goblin);
-    }
-
-    function fightTroll() {
-      if (player.level >= 2) {
-        const troll = monsters.find(m => m.name === "Troll");
-        startBattle(troll);
-      } else {
-        showMessage("❌ You must be Level 2 to fight the Troll!");
-      }
-    }
-
-    function fightDragon() {
-      if (player.level >= 4) {
-        const dragon = monsters.find(m => m.name === "Dragon");
-        startBattle(dragon);
-      } else {
-        showMessage("❌ You must be Level 4 to fight the Dragon!");
-      }
-    }
-
-    // 💧 Swamp Location
-    function goSwamp() {
-      const swampMonster = monsters.find(m => m.name === "Swamp Serpent");
-      startBattle(swampMonster);
-      showMessage("You wade into the murky swamp. A huge Swamp Serpent emerges from the water!");
-    }
-
-    // 🕳️ Cave Location
-    function goCave() {
-      if (player.hasQuest) {
-        const guardian = monsters.find(m => m.name === "Ancient Guardian");
-        startBattle(guardian);
-      } else {
-        showMessage("The cave entrance is lit by a strange, blue light. You feel a powerful presence, but you are not yet prepared to enter.");
-        setTimeout(showMainMenu, 2500);
-      }
-    }
-
-    // 🏘️ Village Menu
+    
     function visitVillage() {
       document.getElementById("actions").innerHTML = `
         <h3>Village</h3>
         <button onclick="visitShop()">🛍️ Visit Shop</button>
         <button onclick="rest()">🛌 Rest at Inn (5 gold)</button>
-        <button onclick="visitTavern()">🍺 Visit Tavern</button>
-        <button onclick="visitShrine()">✨ Visit Shrine</button>
         <button onclick="showMainMenu()">🚪 Leave Village</button>
       `;
       showMessage("You have arrived at the bustling village.");
     }
 
-    // === Shop Functions ===
     function visitShop() {
       document.getElementById("actions").innerHTML = `
         <h3>Shop</h3>
         <button onclick="buyPotion()">🛍️ Buy Potion (10 gold)</button>
-        <button onclick="buySword()">⚔️ Buy Sword (15 gold)</button>
-        <button onclick="buyShield()">🛡️ Buy Shield (15 gold)</button>
-        <button onclick="buyBow()">🏹 Buy Bow & Arrows (20 gold)</button>
-        <button onclick="visitVillage()">⬅️ Back to Village</button>
+        <button onclick="showMainMenu()">⬅️ Back</button>
       `;
       showMessage("The shopkeeper welcomes you. What would you like to buy?");
     }
 
-    // === Tavern Functions ===
-    function visitTavern() {
-      document.getElementById("actions").innerHTML = `
-        <h3>The Old Salty Dog Tavern</h3>
-        <button onclick="talkToBarkeep()">Talk to Barkeep</button>
-        <button onclick="getRumors()">Listen for Rumors</button>
-        <button onclick="visitVillage()">⬅️ Leave Tavern</button>
-      `;
-      showMessage("The tavern is full of travelers and adventurers. The smell of stew and ale fills the air.");
-    }
-
-    function talkToBarkeep() {
-      const dialogue = [
-        "The barkeep smiles. 'Greetings, traveler. What can I get for you?'",
-        "The barkeep says, 'It's been a quiet week. The monsters outside are keeping most folks away.'",
-        "The barkeep sighs. 'A good ale can make you forget your troubles, but it won't defeat a dragon.'",
-        "The barkeep nods toward the door. 'Stay safe out there.'"
-      ];
-      const randomLine = dialogue[Math.floor(Math.random() * dialogue.length)];
-      showMessage(randomLine);
-    }
-    
-    function getRumors() {
-      const rumors = [
-        "A traveler says, 'I heard the Swamp Serpent's poison is potent, but a good night's rest can cure it.'",
-        "A rogue whispers, 'They say the Ancient Guardian's treasure is a powerful magic relic, but it's a trap.'",
-        "An old man mutters, 'The forest is dangerous, but the rewards are worth the risk.'",
-        "A group of adventurers are arguing about the best way to defeat a Troll. One says, 'You have to be strong enough to hit it, that's all!'"
-      ];
-      const randomRumor = rumors[Math.floor(Math.random() * rumors.length)];
-      showMessage(randomRumor);
-    }
-
-    // ✨ Shrine Quest
-    function visitShrine() {
-      if (player.hasQuest) {
-        showMessage("The Wise Sage thanks you for your quest. He has nothing more for you.");
-        setTimeout(visitVillage, 2500);
-      } else {
-        showMessage("A Wise Sage stands before an ancient shrine. 'Brave adventurer,' he says, 'a powerful Ancient Guardian has been corrupted and now lurks in the cave, guarding a sacred relic. Will you retrieve it for me?'");
-        document.getElementById("actions").innerHTML = `
-          <button onclick="acceptQuest()">✅ Accept Quest</button>
-          <button onclick="visitVillage()">❌ Decline</button>
-        `;
-      }
-    }
-
-    function acceptQuest() {
-      player.hasQuest = true;
-      showMessage("You accept the quest! You must defeat the Ancient Guardian in the cave to retrieve the sacred relic.");
-      updateStats();
-      setTimeout(showMainMenu, 2500);
-    }
-
-    // Start battle
     function startBattle(monster) {
       enemy = {...monster, hp: monster.hp, maxHp: monster.hp};
       document.getElementById("enemy").innerHTML = `
@@ -379,15 +180,11 @@
         </div>
         HP: ${enemy.hp} / ${enemy.maxHp}
       `;
-      let combatButtons = `
+      document.getElementById("actions").innerHTML = `
         <button onclick="attack()">⚔️ Attack</button>
         <button onclick="usePotion()">🧪 Use Potion</button>
+        <button onclick="showMainMenu()">🏃 Run</button>
       `;
-      if (player.equippedWeapon && player.equippedWeapon.type === 'bow') {
-        combatButtons += `<button onclick="shoot()">🏹 Shoot (${player.quiver})</button>`;
-      }
-      combatButtons += `<button onclick="showMainMenu()">🏃 Run</button>`;
-      document.getElementById("actions").innerHTML = combatButtons;
       showMessage(`A wild ${enemy.name} appears!`);
     }
 
@@ -408,22 +205,13 @@
         return;
       }
       
-      const totalAttack = player.baseAttack + (player.equippedWeapon ? player.equippedWeapon.attack : 0);
-      const totalDefense = player.baseDefense + (player.equippedShield ? player.equippedShield.defense : 0);
-      
-      let playerDamage = Math.floor(Math.random() * totalAttack) + 1;
+      let playerDamage = Math.floor(Math.random() * player.attack) + 1;
       let enemyDamage = Math.floor(Math.random() * enemy.attack) + 1;
 
       enemy.hp -= playerDamage;
-      player.hp -= Math.max(1, enemyDamage - totalDefense);
+      player.hp -= Math.max(1, enemyDamage - player.defense);
       
-      let message = `You hit the ${enemy.name} for ${playerDamage} damage! The ${enemy.name} hits you for ${Math.max(1, enemyDamage - totalDefense)} damage!`;
-      
-      if (enemy.canPoison && Math.random() < 0.5 && !player.isPoisoned) {
-          player.isPoisoned = true;
-          startPoison();
-          message += ` It bites you and you feel the poison enter your veins!`;
-      }
+      let message = `You hit the ${enemy.name} for ${playerDamage} damage! The ${enemy.name} hits you for ${Math.max(1, enemyDamage - player.defense)} damage!`;
       
       updateEnemy();
       updateStats();
@@ -438,45 +226,8 @@
       }
     }
 
-    function shoot() {
-      if (!enemy || enemy.hp <= 0) {
-        return;
-      }
-      const totalDefense = player.baseDefense + (player.equippedShield ? player.equippedShield.defense : 0);
-      const playerBowAttack = player.baseAttack + (player.equippedWeapon ? player.equippedWeapon.attack : 0);
-
-      if (player.quiver > 0) {
-        let playerDamage = Math.floor(Math.random() * playerBowAttack) + 1;
-        let enemyDamage = Math.floor(Math.random() * enemy.attack) + 1;
-        player.quiver--;
-        enemy.hp -= playerDamage;
-        player.hp -= Math.max(1, enemyDamage - totalDefense);
-        
-        showMessage(`You fire an arrow, hitting the ${enemy.name} for ${playerDamage} damage! The ${enemy.name} hits you for ${Math.max(1, enemyDamage - totalDefense)} damage!`);
-        updateEnemy();
-        updateStats();
-
-        if (enemy.hp <= 0) {
-          handleMonsterDefeat();
-        }
-
-        if (player.hp <= 0) {
-          handlePlayerDefeat();
-        }
-
-      } else {
-        showMessage("You are out of arrows!");
-      }
-    }
-
     function handleMonsterDefeat() {
-      if (enemy.isBoss) {
-        showMessage(`You defeated the ${enemy.name} and completed the quest! 👑 You found a large chest with ${enemy.gold} gold and ${enemy.xp} XP!`);
-        player.hasQuest = false;
-      } else {
-        showMessage(`You defeated the ${enemy.name}! +${enemy.gold} gold, +${enemy.xp} XP`);
-      }
-      
+      showMessage(`You defeated the ${enemy.name}! +${enemy.gold} gold, +${enemy.xp} XP`);
       player.gold += enemy.gold;
       player.xp += enemy.xp;
       levelUpCheck();
@@ -487,9 +238,6 @@
     function handlePlayerDefeat() {
       showMessage("💀 You have been defeated! Game Over.");
       document.getElementById("actions").innerHTML = `<button onclick="restart()">Restart</button>`;
-      clearInterval(poisonInterval);
-      poisonInterval = null;
-      player.isPoisoned = false;
     }
 
     function usePotion() {
@@ -513,63 +261,37 @@
         showMessage("Not enough gold!");
       }
     }
-
-    function buySword() {
-      const sword = { name: "Sword", attack: 3, type: "weapon" };
-      const hasSword = player.inventory.some(item => item.name === sword.name);
-      
-      if (player.gold >= 15 && !hasSword) {
-        player.gold -= 15;
-        player.inventory.push(sword);
-        updateStats();
-        showMessage("You bought a Sword! It has been added to your inventory.");
-      } else {
-        showMessage("Not enough gold or you already own a sword!");
-      }
-    }
     
-    function buyShield() {
-      const shield = { name: "Wooden Shield", defense: 2, type: "shield" };
-      const hasShield = player.inventory.some(item => item.name === shield.name);
-      
-      if (player.gold >= 15 && !hasShield) {
-        player.gold -= 15;
-        player.inventory.push(shield);
-        updateStats();
-        showMessage("You bought a Wooden Shield! It has been added to your inventory.");
-      } else {
-        showMessage("Not enough gold or you already own a shield!");
-      }
-    }
-
-    function buyBow() {
-        const bow = { name: "Bow", attack: 7, type: "bow" };
-        const hasBow = player.inventory.some(item => item.name === bow.name);
-
-        if (player.gold >= 20 && !hasBow) {
-            player.gold -= 20;
-            player.inventory.push(bow);
-            player.quiver += 20;
-            updateStats();
-            showMessage("You bought a Bow and 20 arrows! It has been added to your inventory.");
-        } else if (player.gold >= 5 && hasBow) {
-            player.gold -= 5;
-            player.quiver += 10;
-            updateStats();
-            showMessage("You bought 10 more arrows!");
-        } else {
-            showMessage("Not enough gold!");
-        }
-    }
-
     function rest() {
       if (player.gold >= 5) {
         player.gold -= 5;
         player.hp = player.maxHp;
-        if (player.isPoisoned) {
-          player.isPoisoned = false;
-          clearInterval(poisonInterval);
-          poisonInterval = null;
-          showMessage("You rested at the inn. HP fully restored and the poison has left your system!");
-        } else {
-        
+        showMessage("You rested at the inn. HP fully restored.");
+        updateStats();
+      } else {
+        showMessage("Not enough gold to rest!");
+      }
+    }
+
+    function levelUpCheck() {
+      if (player.xp >= player.level * 20) {
+        player.level++;
+        player.maxHp += 5;
+        player.hp = player.maxHp;
+        player.attack += 2;
+        player.defense += 1;
+        showMessage(`⭐ Level Up! You are now Level ${player.level}.`);
+        updateStats();
+      }
+    }
+
+    function restart() {
+      player = {hp:40, maxHp:40, potions:2, gold:0, level:1, xp:0, attack:5, defense:0};
+      showMainMenu();
+    }
+
+    // Start game
+    showMainMenu();
+  </script>
+</body>
+</html>
