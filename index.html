@@ -174,7 +174,8 @@
             const data = JSON.parse(savedData);
             
             maxHP = data.maxHP !== undefined ? data.maxHP : 20;
-            playerHP = data.playerHP !== undefined ? data.playerHP : maxHP;
+            // Fixed: playerHP should be explicitly set to a number
+            playerHP = data.playerHP !== undefined && !isNaN(data.playerHP) ? data.playerHP : maxHP;
 
 
             potions = data.potions;
@@ -609,6 +610,4 @@
         playerHP = maxHP;
         story.textContent = "You are fully healed!";
         if (isPoisoned) {
-            isPoisoned = false;
-            clearInterval(poisonInterval);
-            poisonInterval = null
+            isP
