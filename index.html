@@ -108,7 +108,8 @@
       equippedShield: null,
       inventory: [],
       isPoisoned: false,
-      hasQuest: false
+      hasQuest: false,
+      quiver: 0
     };
 
     let enemy = null;
@@ -127,7 +128,6 @@
       const equippedWeaponAttack = player.equippedWeapon ? player.equippedWeapon.attack : 5;
       const equippedShieldName = player.equippedShield ? player.equippedShield.name : 'None';
       const equippedShieldDefense = player.equippedShield ? player.equippedShield.defense : 0;
-      const equippedBowName = player.equippedBow ? player.equippedBow.name : 'None';
       
       document.getElementById("stats").innerHTML = `
         <h3>🧙 Player Stats</h3>
@@ -221,7 +221,7 @@
         if (!item) return;
 
         // Unequip any old item of the same type
-        if (item.type === 'weapon') {
+        if (item.type === 'weapon' || item.type === 'bow') {
             if (player.equippedWeapon) {
                 player.attack -= player.equippedWeapon.attack;
             }
@@ -575,4 +575,4 @@
           player.isPoisoned = false;
           clearInterval(poisonInterval);
           poisonInterval = null;
- 
+          showMessage("You rested at the inn. 
