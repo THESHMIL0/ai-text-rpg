@@ -107,15 +107,18 @@
       equippedWeapon: null,
       equippedShield: null,
       inventory: [],
+      isPoisoned: false,
       quiver: 0
     };
 
     let enemy = null;
+    let poisonInterval = null;
 
     const monsters = [
       { name: "Goblin", hp: 10, attack: 3, gold: 5, xp: 5 },
       { name: "Troll", hp: 20, attack: 5, gold: 10, xp: 10 },
-      { name: "Dragon", hp: 35, attack: 8, gold: 20, xp: 20 }
+      { name: "Dragon", hp: 35, attack: 8, gold: 20, xp: 20 },
+      { name: "Swamp Serpent", hp: 15, attack: 6, gold: 15, xp: 12, canPoison: true }
     ];
 
     function updateStats() {
@@ -132,7 +135,7 @@
         <div class="bar-container">
           <div class="bar player-bar" style="width:${(player.hp/player.maxHp)*100}%"></div>
         </div>
-        HP: ${player.hp} / ${player.maxHp}<br>
+        HP: ${player.hp} / ${player.maxHp} ${player.isPoisoned ? "(Poisoned)" : ""} <br>
         Weapon: ${equippedWeaponName} (Attack: ${totalAttack}) | Shield: ${equippedShieldName} (Defense: ${totalDefense})<br>
         Potions: ${player.potions} | Arrows: ${player.quiver} | Gold: ${player.gold} | XP: ${player.xp} | Level: ${player.level}
       `;
@@ -147,6 +150,7 @@
       document.getElementById("enemy").innerHTML = "";
       document.getElementById("actions").innerHTML = `
         <button onclick="goForest()">🌲 Enter Forest</button>
+        <button onclick="goSwamp()">💧 Explore Swamp</button>
         <button onclick="visitVillage()">🏘️ Visit Village</button>
         <button onclick="showInventory()">🎒 View Inventory</button>
       `;
@@ -190,7 +194,7 @@
         showInventory();
     }
 
-    // === Forest Monster Selection ===
+    // === Locations ===
     function goForest() {
       document.getElementById("actions").innerHTML = `
         <h3>Choose a monster to fight:</h3>
@@ -202,7 +206,12 @@
       showMessage("The forest is full of monsters. Who will you challenge?");
     }
     
-    // === Village Menu ===
+    function goSwamp() {
+      const swampMonster = monsters.find(m => m.name === "Swamp Serpent");
+      startBattle(swampMonster);
+      showMessage("You wade into the murky swamp. A huge Swamp Serpent emerges from the water!");
+    }
+
     function visitVillage() {
       document.getElementById("actions").innerHTML = `
         <h3>Village</h3>
@@ -213,7 +222,6 @@
       showMessage("You have arrived at the bustling village.");
     }
 
-    // === Shop Functions ===
     function visitShop() {
       document.getElementById("actions").innerHTML = `
         <h3>Shop</h3>
@@ -275,6 +283,12 @@
       
       let message = `You hit the ${enemy.name} for ${playerDamage} damage! The ${enemy.name} hits you for ${Math.max(1, enemyDamage - totalDefense)} damage!`;
       
+      if (enemy.canPoison && Math.random() < 0.5 && !player.isPoisoned) {
+          player.isPoisoned = true;
+          startPoison();
+          message += ` It bites you and you feel the poison enter your veins!`;
+      }
+      
       updateEnemy();
       updateStats();
       showMessage(message);
@@ -319,6 +333,32 @@
       }
     }
 
+    function startPoison() {
+      if (!poisonInterval) {
+        poisonInterval = setInterval(poisonTick, 1000);
+      }
+    }
+
+    function poisonTick() {
+      if (player.isPoisoned && player.hp > 0) {
+        player.hp -= 2;
+        showMessage("The poison burns! You take 2 damage.");
+        updateStats();
+        if (player.hp <= 0) {
+          player.hp = 0;
+          showMessage("💀 You have been defeated by the poison!");
+          document.getElementById("actions").innerHTML = `<button onclick="restart()">Restart</button>`;
+          clearInterval(poisonInterval);
+          poisonInterval = null;
+          player.isPoisoned = false;
+        }
+      } else {
+        clearInterval(poisonInterval);
+        poisonInterval = null;
+        player.isPoisoned = false;
+      }
+    }
+
     function handleMonsterDefeat() {
       showMessage(`You defeated the ${enemy.name}! +${enemy.gold} gold, +${enemy.xp} XP`);
       player.gold += enemy.gold;
@@ -331,6 +371,9 @@
     function handlePlayerDefeat() {
       showMessage("💀 You have been defeated! Game Over.");
       document.getElementById("actions").innerHTML = `<button onclick="restart()">Restart</button>`;
+      clearInterval(poisonInterval);
+      poisonInterval = null;
+      player.isPoisoned = false;
     }
 
     function usePotion() {
@@ -407,7 +450,14 @@
       if (player.gold >= 5) {
         player.gold -= 5;
         player.hp = player.maxHp;
-        showMessage("You rested at the inn. HP fully restored.");
+        if (player.isPoisoned) {
+          player.isPoisoned = false;
+          clearInterval(poisonInterval);
+          poisonInterval = null;
+          showMessage("You rested at the inn. HP fully restored and the poison has left your system!");
+        } else {
+          showMessage("You rested at the inn. HP fully restored.");
+        }
         updateStats();
       } else {
         showMessage("Not enough gold to rest!");
@@ -427,7 +477,11 @@
     }
 
     function restart() {
-      player = {hp:40, maxHp:40, potions:2, gold:0, level:1, xp:0, baseAttack:5, baseDefense:0, equippedWeapon:null, equippedShield:null, inventory:[], quiver:0};
+      player = {hp:40, maxHp:40, potions:2, gold:0, level:1, xp:0, baseAttack:5, baseDefense:0, equippedWeapon:null, equippedShield:null, inventory:[], isPoisoned:false, quiver:0};
+      if (poisonInterval) {
+        clearInterval(poisonInterval);
+        poisonInterval = null;
+      }
       showMainMenu();
     }
 
