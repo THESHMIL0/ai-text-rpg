@@ -554,7 +554,7 @@
         if (player.gold >= 20 && !hasBow) {
             player.gold -= 20;
             player.inventory.push(bow);
-            player.quiver = 20;
+            player.quiver += 20;
             updateStats();
             showMessage("You bought a Bow and 20 arrows! It has been added to your inventory.");
         } else if (player.gold >= 5 && hasBow) {
@@ -575,4 +575,4 @@
           player.isPoisoned = false;
           clearInterval(poisonInterval);
           poisonInterval = null;
-          showMessage("You rested at the inn. 
+          showMessage("You rested at the inn.
