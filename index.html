@@ -171,32 +171,35 @@
     function loadGame() {
         const savedData = localStorage.getItem("rpgGameSave");
         if (savedData) {
-            const data = JSON.parse(savedData);
-            
-            maxHP = data.maxHP !== undefined ? data.maxHP : 20;
-            // Fixed: playerHP should be explicitly set to a number
-            playerHP = data.playerHP !== undefined && !isNaN(data.playerHP) ? data.playerHP : maxHP;
+            try {
+                const data = JSON.parse(savedData);
+                
+                maxHP = data.maxHP !== undefined ? data.maxHP : 20;
+                playerHP = data.playerHP !== undefined && !isNaN(data.playerHP) ? data.playerHP : maxHP;
+                potions = data.potions;
+                strengthPotions = data.strengthPotions !== undefined ? data.strengthPotions : 0;
+                gold = data.gold;
+                strength = data.strength;
+                baseStrength = data.baseStrength !== undefined ? data.baseStrength : 5;
+                xp = data.xp;
+                level = data.level;
+                hasQuest = data.hasQuest;
+                hasSword = data.hasSword;
+                hasShield = data.hasShield;
+                isPoisoned = data.isPoisoned !== undefined ? data.isPoisoned : false;
+                
+                if (isPoisoned) {
+                    startPoison();
+                }
 
-
-            potions = data.potions;
-            strengthPotions = data.strengthPotions !== undefined ? data.strengthPotions : 0;
-            gold = data.gold;
-            strength = data.strength;
-            baseStrength = data.baseStrength !== undefined ? data.baseStrength : 5;
-            xp = data.xp;
-            level = data.level;
-            hasQuest = data.hasQuest;
-            hasSword = data.hasSword;
-            hasShield = data.hasShield;
-            isPoisoned = data.isPoisoned !== undefined ? data.isPoisoned : false;
-            
-            if (isPoisoned) {
-                startPoison();
+                updateStats();
+                story.textContent = "Game loaded from a previous save. Welcome back!";
+                startGame();
+            } catch (e) {
+                // If parsing fails (corrupted data), start a new game
+                story.textContent = "Your saved game could not be loaded. Starting a new adventure!";
+                startGame();
             }
-
-            updateStats();
-            story.textContent = "Game loaded from a previous save. Welcome back!";
-            startGame();
         } else {
             story.textContent = "Welcome to the adventure! Choose your path.";
             startGame();
@@ -598,16 +601,4 @@
         potions++;
         story.textContent = "You bought a potion!";
       } else {
-        story.textContent = "Not enough gold!";
-      }
-      updateStats();
-      shop();
-    }
-
-    function healPlayer() {
-      if (gold >= 10) {
-        gold -= 10;
-        playerHP = maxHP;
-        story.textContent = "You are fully healed!";
-        if (isPoisoned) {
-            isP
+        stor
