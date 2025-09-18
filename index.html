@@ -268,19 +268,24 @@
 
     function attack() {
       if (!enemy) return;
-      let dmg = Math.floor(Math.random() * player.attack) + 1;
-      enemy.hp -= dmg;
       
-      let initialMessage = `You hit the ${enemy.name} for ${dmg} damage!`;
+      let playerDamage = Math.floor(Math.random() * player.attack) + 1;
+      let enemyDamage = Math.floor(Math.random() * enemy.attack) + 1;
 
+      enemy.hp -= playerDamage;
+      player.hp -= enemyDamage;
+      
+      let message = `You hit the ${enemy.name} for ${playerDamage} damage! The ${enemy.name} hits you for ${enemyDamage} damage!`;
+      
       if (enemy.canPoison && Math.random() < 0.5 && !player.isPoisoned) {
           player.isPoisoned = true;
           startPoison();
-          initialMessage += ` It bites you and you feel the poison enter your veins!`;
-      } 
+          message += ` It bites you and you feel the poison enter your veins!`;
+      }
       
-      showMessage(initialMessage);
       updateEnemy();
+      updateStats();
+      showMessage(message);
 
       if (enemy.hp <= 0) {
         if (enemy.isBoss) {
@@ -296,13 +301,7 @@
         setTimeout(showMainMenu, 2500);
         return;
       }
-
-      // Enemy turn
-      let enemyDmg = Math.floor(Math.random() * enemy.attack) + 1;
-      player.hp -= enemyDmg;
-      updateStats();
-      showMessage(`The ${enemy.name} hits you for ${enemyDmg} damage!`);
-
+      
       if (player.hp <= 0) {
         showMessage("💀 You have been defeated! Game Over.");
         document.getElementById("actions").innerHTML = `<button onclick="restart()">Restart</button>`;
