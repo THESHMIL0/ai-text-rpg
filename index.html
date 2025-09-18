@@ -108,6 +108,7 @@
       equippedShield: null,
       inventory: [],
       isPoisoned: false,
+      hasQuest: false,
       quiver: 0
     };
 
@@ -118,7 +119,8 @@
       { name: "Goblin", hp: 10, attack: 3, gold: 5, xp: 5 },
       { name: "Troll", hp: 20, attack: 5, gold: 10, xp: 10 },
       { name: "Dragon", hp: 35, attack: 8, gold: 20, xp: 20 },
-      { name: "Swamp Serpent", hp: 15, attack: 6, gold: 15, xp: 12, canPoison: true }
+      { name: "Swamp Serpent", hp: 15, attack: 6, gold: 15, xp: 12, canPoison: true },
+      { name: "Ancient Guardian", hp: 50, attack: 10, gold: 50, xp: 50, isBoss: true }
     ];
 
     function updateStats() {
@@ -138,6 +140,7 @@
         HP: ${player.hp} / ${player.maxHp} ${player.isPoisoned ? "(Poisoned)" : ""} <br>
         Weapon: ${equippedWeaponName} (Attack: ${totalAttack}) | Shield: ${equippedShieldName} (Defense: ${totalDefense})<br>
         Potions: ${player.potions} | Arrows: ${player.quiver} | Gold: ${player.gold} | XP: ${player.xp} | Level: ${player.level}
+        ${player.hasQuest ? ' | Quest: Defeat Guardian' : ''}
       `;
     }
 
@@ -151,6 +154,7 @@
       document.getElementById("actions").innerHTML = `
         <button onclick="goForest()">🌲 Enter Forest</button>
         <button onclick="goSwamp()">💧 Explore Swamp</button>
+        <button onclick="goCave()">🕳️ Explore Cave</button>
         <button onclick="visitVillage()">🏘️ Visit Village</button>
         <button onclick="showInventory()">🎒 View Inventory</button>
       `;
@@ -194,6 +198,7 @@
         showInventory();
     }
 
+
     // === Locations ===
     function goForest() {
       document.getElementById("actions").innerHTML = `
@@ -212,16 +217,29 @@
       showMessage("You wade into the murky swamp. A huge Swamp Serpent emerges from the water!");
     }
 
+    function goCave() {
+      if (player.hasQuest) {
+        const guardian = monsters.find(m => m.name === "Ancient Guardian");
+        startBattle(guardian);
+      } else {
+        showMessage("The cave entrance is lit by a strange, blue light. You feel a powerful presence, but you are not yet prepared to enter.");
+        setTimeout(showMainMenu, 2500);
+      }
+    }
+
     function visitVillage() {
       document.getElementById("actions").innerHTML = `
         <h3>Village</h3>
         <button onclick="visitShop()">🛍️ Visit Shop</button>
         <button onclick="rest()">🛌 Rest at Inn (5 gold)</button>
+        <button onclick="visitTavern()">🍺 Visit Tavern</button>
+        <button onclick="visitShrine()">✨ Visit Shrine</button>
         <button onclick="showMainMenu()">🚪 Leave Village</button>
       `;
       showMessage("You have arrived at the bustling village.");
     }
 
+    // === Shop Functions ===
     function visitShop() {
       document.getElementById("actions").innerHTML = `
         <h3>Shop</h3>
@@ -232,6 +250,37 @@
         <button onclick="visitVillage()">⬅️ Back to Village</button>
       `;
       showMessage("The shopkeeper welcomes you. What would you like to buy?");
+    }
+
+    // === Tavern/Shrine Quest Functions ===
+    function visitTavern() {
+      document.getElementById("actions").innerHTML = `
+        <h3>The Old Salty Dog Tavern</h3>
+        <button onclick="talkToBarkeep()">Talk to Barkeep</button>
+        <button onclick="getRumors()">Listen for Rumors</button>
+        <button onclick="visitVillage()">⬅️ Leave Tavern</button>
+      `;
+      showMessage("The tavern is full of travelers and adventurers. The smell of stew and ale fills the air.");
+    }
+    
+    function visitShrine() {
+      if (player.hasQuest) {
+        showMessage("The Wise Sage thanks you for your quest. He has nothing more for you.");
+        setTimeout(visitVillage, 2500);
+      } else {
+        showMessage("A Wise Sage stands before an ancient shrine. 'Brave adventurer,' he says, 'a powerful Ancient Guardian has been corrupted and now lurks in the cave, guarding a sacred relic. Will you retrieve it for me?'");
+        document.getElementById("actions").innerHTML = `
+          <button onclick="acceptQuest()">✅ Accept Quest</button>
+          <button onclick="visitVillage()">❌ Decline</button>
+        `;
+      }
+    }
+
+    function acceptQuest() {
+      player.hasQuest = true;
+      showMessage("You accept the quest! You must defeat the Ancient Guardian in the cave to retrieve the sacred relic.");
+      updateStats();
+      setTimeout(showMainMenu, 2500);
     }
     
     function startBattle(monster) {
@@ -360,7 +409,13 @@
     }
 
     function handleMonsterDefeat() {
-      showMessage(`You defeated the ${enemy.name}! +${enemy.gold} gold, +${enemy.xp} XP`);
+      if (enemy.isBoss) {
+        showMessage(`You defeated the ${enemy.name} and completed the quest! 👑 You found a large chest with ${enemy.gold} gold and ${enemy.xp} XP!`);
+        player.hasQuest = false;
+      } else {
+        showMessage(`You defeated the ${enemy.name}! +${enemy.gold} gold, +${enemy.xp} XP`);
+      }
+      
       player.gold += enemy.gold;
       player.xp += enemy.xp;
       levelUpCheck();
@@ -477,7 +532,7 @@
     }
 
     function restart() {
-      player = {hp:40, maxHp:40, potions:2, gold:0, level:1, xp:0, baseAttack:5, baseDefense:0, equippedWeapon:null, equippedShield:null, inventory:[], isPoisoned:false, quiver:0};
+      player = {hp:40, maxHp:40, potions:2, gold:0, level:1, xp:0, baseAttack:5, baseDefense:0, equippedWeapon:null, equippedShield:null, inventory:[], isPoisoned:false, hasQuest:false, quiver:0};
       if (poisonInterval) {
         clearInterval(poisonInterval);
         poisonInterval = null;
