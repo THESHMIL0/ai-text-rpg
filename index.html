@@ -103,7 +103,7 @@
     let player = {
       hp: 40, maxHp: 40, potions: 2,
       gold: 0, level: 1, xp: 0,
-      attack: 5, defense: 0,
+      baseAttack: 5, baseDefense: 0,
       equippedWeapon: null,
       equippedShield: null,
       inventory: [],
@@ -125,17 +125,20 @@
 
     function updateStats() {
       const equippedWeaponName = player.equippedWeapon ? player.equippedWeapon.name : 'Fists';
-      const equippedWeaponAttack = player.equippedWeapon ? player.equippedWeapon.attack : 5;
+      const equippedWeaponAttack = player.equippedWeapon ? player.equippedWeapon.attack : 0;
       const equippedShieldName = player.equippedShield ? player.equippedShield.name : 'None';
       const equippedShieldDefense = player.equippedShield ? player.equippedShield.defense : 0;
       
+      const totalAttack = player.baseAttack + equippedWeaponAttack;
+      const totalDefense = player.baseDefense + equippedShieldDefense;
+
       document.getElementById("stats").innerHTML = `
         <h3>🧙 Player Stats</h3>
         <div class="bar-container">
           <div class="bar player-bar" style="width:${(player.hp/player.maxHp)*100}%"></div>
         </div>
         HP: ${player.hp} / ${player.maxHp} ${player.isPoisoned ? "(Poisoned)" : ""} <br>
-        Weapon: ${equippedWeaponName} (Attack: ${equippedWeaponAttack}) | Shield: ${equippedShieldName} (Defense: ${equippedShieldDefense})<br>
+        Weapon: ${equippedWeaponName} (Attack: ${totalAttack}) | Shield: ${equippedShieldName} (Defense: ${totalDefense})<br>
         Potions: ${player.potions} | Arrows: ${player.quiver} | Gold: ${player.gold} | XP: ${player.xp} | Level: ${player.level}
         ${player.hasQuest ? ' | Quest: Defeat Guardian' : ''}
       `;
@@ -222,17 +225,9 @@
 
         // Unequip any old item of the same type
         if (item.type === 'weapon' || item.type === 'bow') {
-            if (player.equippedWeapon) {
-                player.attack -= player.equippedWeapon.attack;
-            }
             player.equippedWeapon = item;
-            player.attack += item.attack;
         } else if (item.type === 'shield') {
-            if (player.equippedShield) {
-                player.defense -= player.equippedShield.defense;
-            }
             player.equippedShield = item;
-            player.defense += item.defense;
         }
         
         updateStats();
@@ -413,16 +408,16 @@
         return;
       }
       
-      const playerAttack = player.equippedWeapon ? player.equippedWeapon.attack : 5;
-      const playerDefense = player.equippedShield ? player.equippedShield.defense : 0;
+      const totalAttack = player.baseAttack + (player.equippedWeapon ? player.equippedWeapon.attack : 0);
+      const totalDefense = player.baseDefense + (player.equippedShield ? player.equippedShield.defense : 0);
       
-      let playerDamage = Math.floor(Math.random() * playerAttack) + 1;
+      let playerDamage = Math.floor(Math.random() * totalAttack) + 1;
       let enemyDamage = Math.floor(Math.random() * enemy.attack) + 1;
 
       enemy.hp -= playerDamage;
-      player.hp -= Math.max(1, enemyDamage - playerDefense);
+      player.hp -= Math.max(1, enemyDamage - totalDefense);
       
-      let message = `You hit the ${enemy.name} for ${playerDamage} damage! The ${enemy.name} hits you for ${Math.max(1, enemyDamage - playerDefense)} damage!`;
+      let message = `You hit the ${enemy.name} for ${playerDamage} damage! The ${enemy.name} hits you for ${Math.max(1, enemyDamage - totalDefense)} damage!`;
       
       if (enemy.canPoison && Math.random() < 0.5 && !player.isPoisoned) {
           player.isPoisoned = true;
@@ -447,17 +442,17 @@
       if (!enemy || enemy.hp <= 0) {
         return;
       }
-      const playerDefense = player.equippedShield ? player.equippedShield.defense : 0;
-      const playerBowAttack = player.equippedWeapon.attack;
+      const totalDefense = player.baseDefense + (player.equippedShield ? player.equippedShield.defense : 0);
+      const playerBowAttack = player.baseAttack + (player.equippedWeapon ? player.equippedWeapon.attack : 0);
 
       if (player.quiver > 0) {
         let playerDamage = Math.floor(Math.random() * playerBowAttack) + 1;
         let enemyDamage = Math.floor(Math.random() * enemy.attack) + 1;
         player.quiver--;
         enemy.hp -= playerDamage;
-        player.hp -= Math.max(1, enemyDamage - playerDefense);
+        player.hp -= Math.max(1, enemyDamage - totalDefense);
         
-        showMessage(`You fire an arrow, hitting the ${enemy.name} for ${playerDamage} damage! The ${enemy.name} hits you for ${Math.max(1, enemyDamage - playerDefense)} damage!`);
+        showMessage(`You fire an arrow, hitting the ${enemy.name} for ${playerDamage} damage! The ${enemy.name} hits you for ${Math.max(1, enemyDamage - totalDefense)} damage!`);
         updateEnemy();
         updateStats();
 
@@ -575,4 +570,6 @@
           player.isPoisoned = false;
           clearInterval(poisonInterval);
           poisonInterval = null;
-          showMessage("You rested at the inn.
+          showMessage("You rested at the inn. HP fully restored and the poison has left your system!");
+        } else {
+        
