@@ -40,6 +40,7 @@
     🌟 XP: <span id="xp">0</span><br>
     🧟 Enemy HP: <span id="enemyHP">0</span><br>
     🧪 Potions: <span id="potions">1</span><br>
+    🏋️ Strength Potions: <span id="strengthPotions">0</span><br>
     💰 Gold: <span id="gold">0</span>
   </div>
   <div id="story"></div>
@@ -50,6 +51,7 @@
     let maxHP = 20; 
     let enemyHP = 0;
     let potions = 1;
+    let strengthPotions = 0;
     let gold = 0;
     let strength = 5;
     let xp = 0;
@@ -60,6 +62,8 @@
     let hasShield = false;
     let isPoisoned = false;
     let poisonInterval = null;
+    let strengthPotionActive = false;
+    let baseStrength = strength;
 
     const story = document.getElementById("story");
     const choices = document.getElementById("choices");
@@ -69,6 +73,7 @@
     const xpText = document.getElementById("xp");
     const enemyHPText = document.getElementById("enemyHP");
     const potionsText = document.getElementById("potions");
+    const strengthPotionsText = document.getElementById("strengthPotions");
     const goldText = document.getElementById("gold");
 
     const monsters = [
@@ -120,6 +125,7 @@
       xpText.textContent = xp;
       enemyHPText.textContent = enemyHP;
       potionsText.textContent = potions;
+      strengthPotionsText.textContent = strengthPotions;
       goldText.textContent = gold;
     }
 
@@ -135,7 +141,9 @@
             hasSword,
             hasShield,
             maxHP,
-            isPoisoned
+            isPoisoned,
+            strengthPotions,
+            baseStrength
         };
         localStorage.setItem("rpgGameSave", JSON.stringify(savedData));
         story.textContent = "Game saved successfully!";
@@ -147,14 +155,15 @@
         if (savedData) {
             const data = JSON.parse(savedData);
             
-            // Fixed: playerHP should be loaded from saved data, not reset to 20
             maxHP = data.maxHP !== undefined ? data.maxHP : 20;
             playerHP = data.playerHP !== undefined ? data.playerHP : maxHP;
 
 
             potions = data.potions;
+            strengthPotions = data.strengthPotions !== undefined ? data.strengthPotions : 0;
             gold = data.gold;
             strength = data.strength;
+            baseStrength = data.baseStrength !== undefined ? data.baseStrength : 5;
             xp = data.xp;
             level = data.level;
             hasQuest = data.hasQuest;
@@ -180,6 +189,7 @@
       if (xp >= xpNeeded) {
         level++;
         strength += 2;
+        baseStrength = strength; // Update base strength on level up
         playerHP = maxHP;
         xp = 0;
         story.textContent = `🌟 You leveled up to level ${level}! Your strength increased!`;
@@ -220,11 +230,15 @@
       story.textContent = `A wild ${currentEnemy.name} jumps out!`;
       enemyHP = currentEnemy.hp;
       updateStats();
-      setChoices([
+      const combatChoices = [
         { text: "⚔ Attack", action: attackEnemy },
         { text: "🧪 Use Potion", action: usePotion },
-        { text: "🏃 Run Away", action: startGame }
-      ]);
+      ];
+      if (strengthPotions > 0) {
+        combatChoices.push({ text: "🏋️ Use Strength Potion", action: useStrengthPotion });
+      }
+      combatChoices.push({ text: "🏃 Run Away", action: startGame });
+      setChoices(combatChoices);
     }
 
     // Cave (tougher enemies, more gold)
@@ -241,11 +255,15 @@
         story.textContent = `A ${currentEnemy.name} blocks your path!`;
         enemyHP = currentEnemy.hp;
         updateStats();
-        setChoices([
+        const combatChoices = [
           { text: "⚔ Attack", action: attackEnemy },
           { text: "🧪 Use Potion", action: usePotion },
-          { text: "🏃 Escape", action: startGame }
-        ]);
+        ];
+        if (strengthPotions > 0) {
+          combatChoices.push({ text: "🏋️ Use Strength Potion", action: useStrengthPotion });
+        }
+        combatChoices.push({ text: "🏃 Escape", action: startGame });
+        setChoices(combatChoices);
       }
     }
 
@@ -255,11 +273,15 @@
       story.textContent = `You wade into the murky swamp. A huge ${currentEnemy.name} emerges from the water!`;
       enemyHP = currentEnemy.hp;
       updateStats();
-      setChoices([
+      const combatChoices = [
         { text: "⚔ Attack", action: attackEnemy },
         { text: "🧪 Use Potion", action: usePotion },
-        { text: "🏃 Run Away", action: startGame }
-      ]);
+      ];
+      if (strengthPotions > 0) {
+        combatChoices.push({ text: "🏋️ Use Strength Potion", action: useStrengthPotion });
+      }
+      combatChoices.push({ text: "🏃 Run Away", action: startGame });
+      setChoices(combatChoices);
     }
 
     // Village (shop + rest)
@@ -302,6 +324,7 @@
         { text: "🧪 Buy Potion (5 gold)", action: buyPotion },
         { text: "❤️ Heal (10 gold)", action: healPlayer },
         { text: "💪 Increase Strength (20 gold)", action: buyStrength },
+        { text: "🏋️ Buy Strength Potion (15 gold)", action: buyStrengthPotion }
       ];
       if (!hasSword) {
           shopChoices.push({ text: "⚔ Buy Sword (+5 Strength, 50 gold)", action: buySword });
@@ -313,11 +336,24 @@
       setChoices(shopChoices);
     }
 
+    function buyStrengthPotion() {
+        if (gold >= 15) {
+            gold -= 15;
+            strengthPotions++;
+            story.textContent = "You bought a Strength Potion!";
+        } else {
+            story.textContent = "Not enough gold!";
+        }
+        updateStats();
+        shop();
+    }
+
     // New item functions
     function buySword() {
       if (gold >= 50) {
         gold -= 50;
         strength += 5;
+        baseStrength = strength; // Update base strength when buying a sword
         hasSword = true;
         story.textContent = "You bought a powerful sword! Your strength has increased by 5.";
       } else {
@@ -381,6 +417,11 @@
             clearInterval(poisonInterval);
             poisonInterval = null;
         }
+        // Reset strength after fight, even if you lose
+        if (strengthPotionActive) {
+            strength = baseStrength;
+            strengthPotionActive = false;
+        }
         setChoices([{ text: "Restart", action: () => location.reload() }]);
       } else if (enemyHP <= 0) {
         xp += 5;
@@ -401,15 +442,25 @@
         }
 
         enemyHP = 0;
+        // Reset strength after a win
+        if (strengthPotionActive) {
+            strength = baseStrength;
+            strengthPotionActive = false;
+        }
+
         if (!checkLevelUp()) {
           setChoices([{ text: "Continue", action: startGame }]);
         }
       } else {
-        setChoices([
+        const combatChoices = [
           { text: "⚔ Attack Again", action: attackEnemy },
           { text: "🧪 Use Potion", action: usePotion },
-          { text: "🏃 Run Away", action: startGame }
-        ]);
+        ];
+        if (strengthPotions > 0 && !strengthPotionActive) {
+            combatChoices.push({ text: "🏋️ Use Strength Potion", action: useStrengthPotion });
+        }
+        combatChoices.push({ text: "🏃 Run Away", action: startGame });
+        setChoices(combatChoices);
       }
       updateStats();
     }
@@ -420,12 +471,33 @@
         story.textContent = `You stand before the mighty ${currentEnemy.name}! This is the final challenge!`;
         enemyHP = currentEnemy.hp;
         updateStats();
+        const combatChoices = [
+          { text: "⚔ Attack", action: attackEnemy },
+          { text: "🧪 Use Potion", action: usePotion },
+        ];
+        if (strengthPotions > 0) {
+            combatChoices.push({ text: "🏋️ Use Strength Potion", action: useStrengthPotion });
+        }
+        combatChoices.push({ text: "🏃 Retreat!", action: startGame });
+        setChoices(combatChoices);
+      }
+    }
+
+    function useStrengthPotion() {
+        if (strengthPotions > 0 && !strengthPotionActive) {
+            strengthPotions--;
+            strength = strength * 2;
+            strengthPotionActive = true;
+            story.textContent = "You used a Strength Potion! Your strength has doubled for this battle.";
+        } else {
+            story.textContent = "You can't use a Strength Potion right now.";
+        }
+        updateStats();
         setChoices([
           { text: "⚔ Attack", action: attackEnemy },
           { text: "🧪 Use Potion", action: usePotion },
-          { text: "🏃 Retreat!", action: startGame }
+          { text: "🏃 Run Away", action: startGame }
         ]);
-      }
     }
 
     function usePotion() {
@@ -506,6 +578,7 @@
       if (gold >= 20) {
         gold -= 20;
         strength++;
+        baseStrength = strength; // Update base strength when buying a permanent upgrade
         story.textContent = "Your strength has increased!";
       } else {
         story.textContent = "Not enough gold!";
