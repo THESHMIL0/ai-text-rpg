@@ -13,21 +13,39 @@
     }
     h1 {
       color: lime;
-    }
-    button {
-      background: green;
-      color: white;
-      border: none;
-      padding: 10px;
-      margin: 5px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    button:hover {
-      background: darkgreen;
+      text-align: center;
     }
     .stats {
       margin-bottom: 15px;
+    }
+    /* New styling for buttons */
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 10px; /* Adds space between buttons */
+    }
+    .choices button {
+      background: green;
+      color: white;
+      border: 2px solid limegreen;
+      padding: 15px 25px; /* Makes the buttons bigger */
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      transition: background 0.3s, transform 0.1s;
+      width: 100%; /* Makes all buttons the same width */
+      box-sizing: border-box; /* Ensures padding doesn't affect total width */
+    }
+    .choices button:hover {
+      background: darkgreen;
+      border-color: lime;
+      transform: translateY(-2px);
+    }
+    .story {
+      border: 2px solid limegreen;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
     }
   </style>
 </head>
@@ -43,8 +61,8 @@
     🏋️ Strength Potions: <span id="strengthPotions">0</span><br>
     💰 Gold: <span id="gold">0</span>
   </div>
-  <div id="story"></div>
-  <div id="choices"></div>
+  <div id="story" class="story"></div>
+  <div id="choices" class="choices"></div>
 
   <script>
     let playerHP = 20;
