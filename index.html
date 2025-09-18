@@ -194,14 +194,32 @@
 
                 updateStats();
                 story.textContent = "Game loaded from a previous save. Welcome back!";
-                startGame();
+                // This is the direct call to set choices after loading a saved game
+                setChoices([
+                  { text: "🌲 Enter the forest", action: forest },
+                  { text: "🕳 Explore the cave", action: cave },
+                  { text: "💧 Explore the swamp", action: swamp },
+                  { text: "🏘 Visit the village", action: village }
+                ]);
             } catch (e) {
+                // If parsing fails (corrupted data), start a new game by setting initial choices
                 story.textContent = "Your saved game could not be loaded. Starting a new adventure!";
-                startGame();
+                setChoices([
+                  { text: "🌲 Enter the forest", action: forest },
+                  { text: "🕳 Explore the cave", action: cave },
+                  { text: "💧 Explore the swamp", action: swamp },
+                  { text: "🏘 Visit the village", action: village }
+                ]);
             }
         } else {
             story.textContent = "Welcome to the adventure! Choose your path.";
-            startGame();
+            // This is the direct call to set choices for a new game
+            setChoices([
+              { text: "🌲 Enter the forest", action: forest },
+              { text: "🕳 Explore the cave", action: cave },
+              { text: "💧 Explore the swamp", action: swamp },
+              { text: "🏘 Visit the village", action: village }
+            ]);
         }
     }
 
@@ -561,35 +579,4 @@
 
     function usePotion() {
       if (potions > 0) {
-        playerHP = Math.min(playerHP + 10, maxHP);
-        potions--;
-        story.textContent = "You used a potion and restored 10 HP!";
-        if (isPoisoned) {
-            isPoisoned = false;
-            clearInterval(poisonInterval);
-            poisonInterval = null;
-            story.textContent += " The poison has left your system!";
-        }
-      } else {
-        story.textContent = "You have no potions!";
-      }
-      updateStats();
-    }
-
-    // Poison Damage Function
-    function poisonTick() {
-        if (isPoisoned && playerHP > 0) {
-            playerHP -= 2;
-            updateStats();
-            story.textContent = "The poison burns! You take 2 damage.";
-            if (playerHP <= 0) {
-                playerHP = 0;
-                story.textContent = "💀 You have been defeated by the poison!";
-                isPoisoned = false;
-                clearInterval(poisonInterval);
-                poisonInterval = null;
-                setChoices([{ text: "Restart", action: () => location.reload() }]);
-            }
-        } else if (!isPoisoned) {
-            clearInterval(poisonInterval);
-      
+        playerHP = Math.min(playerHP 
