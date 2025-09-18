@@ -196,7 +196,6 @@
                 story.textContent = "Game loaded from a previous save. Welcome back!";
                 startGame();
             } catch (e) {
-                // If parsing fails (corrupted data), start a new game
                 story.textContent = "Your saved game could not be loaded. Starting a new adventure!";
                 startGame();
             }
@@ -313,10 +312,48 @@
         { text: "🛍 Visit the shop", action: shop },
         { text: "🛌 Rest (Free Health Restore)", action: rest },
         { text: "✨ Visit the Shrine", action: shrine },
+        { text: "🍻 Go to the Tavern", action: tavern },
         { text: "💾 Save Game", action: saveGame },
         { text: "🚪 Leave Village", action: startGame }
       ]);
     }
+
+    // New Tavern Location
+    function tavern() {
+        story.textContent = "The tavern is loud and smells of stale beer and roasted meat. What do you want to do?";
+        setChoices([
+            { text: "🍺 Buy a drink (2 gold)", action: buyDrink },
+            { text: "👂 Hear rumors", action: hearRumors },
+            { text: "🚪 Leave Tavern", action: village }
+        ]);
+    }
+
+    function buyDrink() {
+        if (gold >= 2) {
+            gold -= 2;
+            story.textContent = "You buy a foamy ale and feel a slight increase in your strength!";
+            strength++;
+            setTimeout(() => {
+                strength--;
+                updateStats();
+                story.textContent += " The effect of the ale has worn off.";
+            }, 60000); // Strength increase lasts for 60 seconds
+        } else {
+            story.textContent = "You don't have enough gold for a drink.";
+        }
+        updateStats();
+        tavern();
+    }
+
+    function hearRumors() {
+        story.textContent = "You overhear a group of adventurers talking... 'The swamp is full of beasts, but some say a rare potion can be found there.'";
+        setChoices([
+            { text: "🍺 Buy a drink (2 gold)", action: buyDrink },
+            { text: "👂 Hear more rumors", action: hearRumors },
+            { text: "🚪 Leave Tavern", action: village }
+        ]);
+    }
+
 
     function shrine() {
       if (hasQuest) {
@@ -555,61 +592,4 @@
             }
         } else if (!isPoisoned) {
             clearInterval(poisonInterval);
-            poisonInterval = null;
-        }
-    }
-
-    function startPoison() {
-        if (isPoisoned && poisonInterval === null) {
-            poisonInterval = setInterval(poisonTick, 2000);
-        }
-    }
-
-    // Shop functions
-    function buyPotion() {
-      if (gold >= 5) {
-        gold -= 5;
-        potions++;
-        story.textContent = "You bought a potion!";
-      } else {
-        story.textContent = "Not enough gold!";
-      }
-      updateStats();
-      shop();
-    }
-
-    function healPlayer() {
-      if (gold >= 10) {
-        gold -= 10;
-        playerHP = maxHP;
-        story.textContent = "You are fully healed!";
-        if (isPoisoned) {
-            isPoisoned = false;
-            clearInterval(poisonInterval);
-            poisonInterval = null;
-            story.textContent += " The poison has left your system!";
-        }
-      } else {
-        story.textContent = "Not enough gold!";
-      }
-      updateStats();
-      shop();
-    }
-
-    function buyStrength() {
-      if (gold >= 20) {
-        gold -= 20;
-        strength++;
-        baseStrength = strength; // Update base strength when buying a permanent upgrade
-        story.textContent = "Your strength has increased!";
-      } else {
-        story.textContent = "Not enough gold!";
-      }
-      updateStats();
-      shop();
-    }
-    
-    loadGame();
-  </script>
-</body>
-</html>
+      
