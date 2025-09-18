@@ -18,23 +18,23 @@
     .stats {
       margin-bottom: 15px;
     }
-    /* New styling for buttons */
     .choices {
       display: flex;
       flex-direction: column;
-      gap: 10px; /* Adds space between buttons */
+      gap: 10px;
+      margin-top: 15px;
     }
     .choices button {
       background: green;
       color: white;
       border: 2px solid limegreen;
-      padding: 15px 25px; /* Makes the buttons bigger */
+      padding: 15px 25px;
       cursor: pointer;
       border-radius: 8px;
       font-size: 1.2rem;
       transition: background 0.3s, transform 0.1s;
-      width: 100%; /* Makes all buttons the same width */
-      box-sizing: border-box; /* Ensures padding doesn't affect total width */
+      width: 100%;
+      box-sizing: border-box;
     }
     .choices button:hover {
       background: darkgreen;
@@ -46,6 +46,7 @@
       padding: 20px;
       margin-bottom: 20px;
       border-radius: 8px;
+      min-height: 60px;
     }
   </style>
 </head>
@@ -65,8 +66,9 @@
   <div id="choices" class="choices"></div>
 
   <script>
+    // === Player Data ===
     let playerHP = 20;
-    let maxHP = 20; 
+    let maxHP = 20;
     let enemyHP = 0;
     let potions = 1;
     let strengthPotions = 0;
@@ -83,6 +85,7 @@
     let strengthPotionActive = false;
     let baseStrength = strength;
 
+    // === UI Elements ===
     const story = document.getElementById("story");
     const choices = document.getElementById("choices");
     const playerHPText = document.getElementById("playerHP");
@@ -94,50 +97,20 @@
     const strengthPotionsText = document.getElementById("strengthPotions");
     const goldText = document.getElementById("gold");
 
+    // === Monsters ===
     const monsters = [
-      {
-        name: "Goblin",
-        hp: 10,
-        damage: 4,
-        isBoss: false
-      },
-      {
-        name: "Skeleton Warrior",
-        hp: 15,
-        damage: 6,
-        isBoss: false
-      },
-      {
-        name: "Giant Spider",
-        hp: 8,
-        damage: 8,
-        isBoss: false
-      },
-      {
-        name: "Ogre",
-        hp: 25,
-        damage: 10,
-        isBoss: false
-      },
-      {
-        name: "Ancient Guardian",
-        hp: 50,
-        damage: 15,
-        isBoss: true
-      },
-      {
-        name: "Swamp Serpent",
-        hp: 30,
-        damage: 12,
-        isBoss: false
-      }
+      { name: "Goblin", hp: 10, damage: 4, isBoss: false },
+      { name: "Skeleton Warrior", hp: 15, damage: 6, isBoss: false },
+      { name: "Giant Spider", hp: 8, damage: 8, isBoss: false },
+      { name: "Ogre", hp: 25, damage: 10, isBoss: false },
+      { name: "Ancient Guardian", hp: 50, damage: 15, isBoss: true },
+      { name: "Swamp Serpent", hp: 30, damage: 12, isBoss: false }
     ];
 
+    // === Helpers ===
     function updateStats() {
       playerHPText.textContent = `${playerHP}/${maxHP}`;
-      if (isPoisoned) {
-          playerHPText.textContent += " (Poisoned)";
-      }
+      if (isPoisoned) playerHPText.textContent += " (Poisoned)";
       strengthText.textContent = strength;
       levelText.textContent = level;
       xpText.textContent = xp;
@@ -147,108 +120,17 @@
       goldText.textContent = gold;
     }
 
-    function saveGame() {
-        const savedData = {
-            playerHP,
-            potions,
-            gold,
-            strength,
-            xp,
-            level,
-            hasQuest,
-            hasSword,
-            hasShield,
-            maxHP,
-            isPoisoned,
-            strengthPotions,
-            baseStrength
-        };
-        localStorage.setItem("rpgGameSave", JSON.stringify(savedData));
-        story.textContent = "Game saved successfully!";
-        setChoices([{ text: "Continue", action: startGame }]);
-    }
-
-    function loadGame() {
-        const savedData = localStorage.getItem("rpgGameSave");
-        if (savedData) {
-            try {
-                const data = JSON.parse(savedData);
-                
-                maxHP = data.maxHP !== undefined ? data.maxHP : 20;
-                playerHP = data.playerHP !== undefined && !isNaN(data.playerHP) ? data.playerHP : maxHP;
-                potions = data.potions;
-                strengthPotions = data.strengthPotions !== undefined ? data.strengthPotions : 0;
-                gold = data.gold;
-                strength = data.strength;
-                baseStrength = data.baseStrength !== undefined ? data.baseStrength : 5;
-                xp = data.xp;
-                level = data.level;
-                hasQuest = data.hasQuest;
-                hasSword = data.hasSword;
-                hasShield = data.hasShield;
-                isPoisoned = data.isPoisoned !== undefined ? data.isPoisoned : false;
-                
-                if (isPoisoned) {
-                    startPoison();
-                }
-
-                updateStats();
-                story.textContent = "Game loaded from a previous save. Welcome back!";
-                setChoices([
-                  { text: "🌲 Enter the forest", action: forest },
-                  { text: "🕳 Explore the cave", action: cave },
-                  { text: "💧 Explore the swamp", action: swamp },
-                  { text: "🏘 Visit the village", action: village }
-                ]);
-            } catch (e) {
-                story.textContent = "Your saved game could not be loaded. Starting a new adventure!";
-                setChoices([
-                  { text: "🌲 Enter the forest", action: forest },
-                  { text: "🕳 Explore the cave", action: cave },
-                  { text: "💧 Explore the swamp", action: swamp },
-                  { text: "🏘 Visit the village", action: village }
-                ]);
-            }
-        } else {
-            story.textContent = "Welcome to the adventure! Choose your path.";
-            setChoices([
-              { text: "🌲 Enter the forest", action: forest },
-              { text: "🕳 Explore the cave", action: cave },
-              { text: "💧 Explore the swamp", action: swamp },
-              { text: "🏘 Visit the village", action: village }
-            ]);
-        }
-    }
-
-    function checkLevelUp() {
-      const xpNeeded = level * 10;
-      if (xp >= xpNeeded) {
-        level++;
-        strength += 2;
-        baseStrength = strength; // Update base strength on level up
-        playerHP = maxHP;
-        xp = 0;
-        story.textContent = `🌟 You leveled up to level ${level}! Your strength increased!`;
-        setChoices([
-          { text: "Awesome!", action: startGame }
-        ]);
-        updateStats();
-        return true;
-      }
-      return false;
-    }
-
     function setChoices(options) {
       choices.innerHTML = "";
       options.forEach(opt => {
-        let btn = document.createElement("button");
+        const btn = document.createElement("button");
         btn.textContent = opt.text;
         btn.onclick = opt.action;
         choices.appendChild(btn);
       });
     }
 
-    // Starting area
+    // === Main Start ===
     function startGame() {
       story.textContent = "You stand at a crossroad. Where will you go?";
       setChoices([
@@ -259,7 +141,7 @@
       ]);
     }
 
-    // Forest (fight enemies, earn gold)
+    // === Example Locations ===
     function forest() {
       const regularMonsters = monsters.filter(m => !m.isBoss);
       currentEnemy = regularMonsters[Math.floor(Math.random() * regularMonsters.length)];
@@ -269,318 +151,79 @@
       const combatChoices = [
         { text: "⚔ Attack", action: attackEnemy },
         { text: "🧪 Use Potion", action: usePotion },
+        { text: "🏃 Run Away", action: startGame }
       ];
-      if (strengthPotions > 0) {
-        combatChoices.push({ text: "🏋️ Use Strength Potion", action: useStrengthPotion });
-      }
-      combatChoices.push({ text: "🏃 Run Away", action: startGame });
       setChoices(combatChoices);
     }
 
-    // Cave (tougher enemies, more gold)
     function cave() {
-      if (hasQuest) {
-        story.textContent = "The cave entrance is lit by a strange, blue light. A powerful presence emanates from within.";
-        setChoices([
-          { text: "Challenge the Guardian!", action: bossFight },
-          { text: "Back to the crossroads", action: startGame }
-        ]);
-      } else {
-        const tougherMonsters = [monsters[1], monsters[3]];
-        currentEnemy = tougherMonsters[Math.floor(Math.random() * tougherMonsters.length)];
-        story.textContent = `A ${currentEnemy.name} blocks your path!`;
-        enemyHP = currentEnemy.hp;
-        updateStats();
-        const combatChoices = [
-          { text: "⚔ Attack", action: attackEnemy },
-          { text: "🧪 Use Potion", action: usePotion },
-        ];
-        if (strengthPotions > 0) {
-          combatChoices.push({ text: "🏋️ Use Strength Potion", action: useStrengthPotion });
-        }
-        combatChoices.push({ text: "🏃 Escape", action: startGame });
-        setChoices(combatChoices);
-      }
+      story.textContent = "You enter the dark cave... but this part is still being built!";
+      setChoices([{ text: "⬅️ Back", action: startGame }]);
     }
 
-    // New Swamp Location
     function swamp() {
-      currentEnemy = monsters.find(m => m.name === "Swamp Serpent");
-      story.textContent = `You wade into the murky swamp. A huge ${currentEnemy.name} emerges from the water!`;
-      enemyHP = currentEnemy.hp;
-      updateStats();
-      const combatChoices = [
-        { text: "⚔ Attack", action: attackEnemy },
-        { text: "🧪 Use Potion", action: usePotion },
-      ];
-      if (strengthPotions > 0) {
-        combatChoices.push({ text: "🏋️ Use Strength Potion", action: useStrengthPotion });
-      }
-      combatChoices.push({ text: "🏃 Run Away", action: startGame });
-      setChoices(combatChoices);
+      story.textContent = "You wade into the swamp... it feels dangerous!";
+      setChoices([{ text: "⬅️ Back", action: startGame }]);
     }
 
-    // Village (shop + rest)
     function village() {
       story.textContent = "Welcome to the village. What do you want to do?";
       setChoices([
-        { text: "🛍 Visit the shop", action: shop },
-        { text: "🛌 Rest (Free Health Restore)", action: rest },
-        { text: "✨ Visit the Shrine", action: shrine },
-        { text: "🍻 Go to the Tavern", action: tavern },
-        { text: "💾 Save Game", action: saveGame },
-        { text: "🚪 Leave Village", action: startGame }
+        { text: "🛌 Rest", action: rest },
+        { text: "🚪 Leave", action: startGame }
       ]);
     }
 
-    // New Tavern Location
-    function tavern() {
-        story.textContent = "The tavern is loud and smells of stale beer and roasted meat. What do you want to do?";
-        setChoices([
-            { text: "🍺 Buy a drink (2 gold)", action: buyDrink },
-            { text: "👂 Hear rumors", action: hearRumors },
-            { text: "🚪 Leave Tavern", action: village }
-        ]);
-    }
-
-    function buyDrink() {
-        if (gold >= 2) {
-            gold -= 2;
-            story.textContent = "You buy a foamy ale and feel a slight increase in your strength!";
-            strength++;
-            setTimeout(() => {
-                strength--;
-                updateStats();
-                story.textContent += " The effect of the ale has worn off.";
-            }, 60000); // Strength increase lasts for 60 seconds
-        } else {
-            story.textContent = "You don't have enough gold for a drink.";
-        }
-        updateStats();
-        tavern();
-    }
-
-    function hearRumors() {
-        story.textContent = "You overhear a group of adventurers talking... 'The swamp is full of beasts, but some say a rare potion can be found there.'";
-        setChoices([
-            { text: "🍺 Buy a drink (2 gold)", action: buyDrink },
-            { text: "👂 Hear more rumors", action: hearRumors },
-            { text: "🚪 Leave Tavern", action: village }
-        ]);
-    }
-
-
-    function shrine() {
-      if (hasQuest) {
-        story.textContent = "The Wise Sage thanks you for your efforts. He has nothing more for you.";
-        setChoices([
-          { text: "Leave Shrine", action: startGame }
-        ]);
-      } else {
-        story.textContent = "A Wise Sage stands before an ancient shrine. 'Brave adventurer,' he says, 'a powerful Ancient Guardian has been corrupted and now lurks in the cave, guarding a sacred relic. Will you retrieve it for me?'";
-        setChoices([
-          { text: "Accept the Quest", action: acceptQuest },
-          { text: "Decline", action: startGame }
-        ]);
-      }
-    }
-
-    function acceptQuest() {
-      hasQuest = true;
-      story.textContent = "You accept the quest! You must defeat the Ancient Guardian in the cave to retrieve the sacred relic.";
-      startGame();
-    }
-    
-    // Shop
-    function shop() {
-      story.textContent = "Welcome to the village shop. What do you want to buy?";
-      const shopChoices = [
-        { text: "🧪 Buy Potion (5 gold)", action: buyPotion },
-        { text: "❤️ Heal (10 gold)", action: healPlayer },
-        { text: "💪 Increase Strength (20 gold)", action: buyStrength },
-        { text: "🏋️ Buy Strength Potion (15 gold)", action: buyStrengthPotion }
-      ];
-      if (!hasSword) {
-          shopChoices.push({ text: "⚔ Buy Sword (+5 Strength, 50 gold)", action: buySword });
-      }
-      if (!hasShield) {
-          shopChoices.push({ text: "🛡 Buy Shield (+20 HP, 75 gold)", action: buyShield });
-      }
-      shopChoices.push({ text: "🚪 Leave Shop", action: village });
-      setChoices(shopChoices);
-    }
-
-    function buyStrengthPotion() {
-        if (gold >= 15) {
-            gold -= 15;
-            strengthPotions++;
-            story.textContent = "You bought a Strength Potion!";
-        } else {
-            story.textContent = "Not enough gold!";
-        }
-        updateStats();
-        shop();
-    }
-
-    // New item functions
-    function buySword() {
-      if (gold >= 50) {
-        gold -= 50;
-        strength += 5;
-        baseStrength = strength; // Update base strength when buying a sword
-        hasSword = true;
-        story.textContent = "You bought a powerful sword! Your strength has increased by 5.";
-      } else {
-        story.textContent = "Not enough gold!";
-      }
-      updateStats();
-      shop();
-    }
-
-    function buyShield() {
-      if (gold >= 75) {
-        gold -= 75;
-        maxHP += 20;
-        playerHP = maxHP;
-        hasShield = true;
-        story.textContent = "You bought a sturdy shield! Your max HP has increased by 20.";
-      } else {
-        story.textContent = "Not enough gold!";
-      }
-      updateStats();
-      shop();
-    }
-
-    // Rest function
+    // === Rest ===
     function rest() {
       playerHP = maxHP;
-      story.textContent = "You rest and feel your strength return. Your HP is fully restored!";
-      if (isPoisoned) {
-          isPoisoned = false;
-          clearInterval(poisonInterval);
-          poisonInterval = null;
-          story.textContent += " The poison has left your system!";
-      }
+      story.textContent = "You rest and restore your health.";
       updateStats();
-      setChoices([
-        { text: "Continue", action: village }
-      ]);
+      setChoices([{ text: "Continue", action: village }]);
     }
 
-    // Combat
+    // === Combat (simplified for now) ===
     function attackEnemy() {
-      let playerDamage = Math.floor(Math.random() * 6) + 1 + strength;
-      let enemyDamage = Math.floor(Math.random() * currentEnemy.damage) + 1;
-      
+      const playerDamage = Math.floor(Math.random() * 6) + 1 + strength;
+      const enemyDamage = Math.floor(Math.random() * currentEnemy.damage) + 1;
       enemyHP -= playerDamage;
       playerHP -= enemyDamage;
 
-      if (currentEnemy.name === "Swamp Serpent" && Math.random() < 0.5 && !isPoisoned) {
-          isPoisoned = true;
-          story.textContent = `You hit the ${currentEnemy.name} for ${playerDamage} damage! It strikes back for ${enemyDamage} damage. The ${currentEnemy.name} bites you and you feel the poison enter your veins!`;
-          startPoison();
-      } else {
-        story.textContent = `You hit the ${currentEnemy.name} for ${playerDamage} damage! It strikes back for ${enemyDamage} damage.`;
-      }
+      story.textContent = `You hit ${currentEnemy.name} for ${playerDamage}! It hits back for ${enemyDamage}!`;
 
       if (playerHP <= 0) {
         playerHP = 0;
         story.textContent = "💀 You have been defeated!";
-        if (isPoisoned) {
-            isPoisoned = false;
-            clearInterval(poisonInterval);
-            poisonInterval = null;
-        }
-        // Reset strength after fight, even if you lose
-        if (strengthPotionActive) {
-            strength = baseStrength;
-            strengthPotionActive = false;
-        }
         setChoices([{ text: "Restart", action: () => location.reload() }]);
       } else if (enemyHP <= 0) {
-        xp += 5;
-        if (currentEnemy.isBoss) {
-            story.textContent = `You defeated the ${currentEnemy.name} and completed the quest! 👑 You found a large chest with 50 gold and 20 XP!`;
-            gold += 50;
-            xp += 20;
-            hasQuest = false;
-        } else if (currentEnemy.name === "Swamp Serpent") {
-            story.textContent = `You defeated the ${currentEnemy.name}! You found a rare Swamp Potion and 20 gold!`;
-            gold += 20;
-            potions += 1;
-            xp += 10;
-        } else {
-            story.textContent = `You defeated the ${currentEnemy.name}! 🏆 You found 5 gold.`;
-            gold += 5;
-            xp += 5;
-        }
-
+        story.textContent = `You defeated the ${currentEnemy.name}! You gain 5 gold.`;
+        gold += 5;
         enemyHP = 0;
-        // Reset strength after a win
-        if (strengthPotionActive) {
-            strength = baseStrength;
-            strengthPotionActive = false;
-        }
-
-        if (!checkLevelUp()) {
-          setChoices([{ text: "Continue", action: startGame }]);
-        }
+        setChoices([{ text: "Continue", action: startGame }]);
       } else {
-        const combatChoices = [
+        setChoices([
           { text: "⚔ Attack Again", action: attackEnemy },
           { text: "🧪 Use Potion", action: usePotion },
-        ];
-        if (strengthPotions > 0 && !strengthPotionActive) {
-            combatChoices.push({ text: "🏋️ Use Strength Potion", action: useStrengthPotion });
-        }
-        combatChoices.push({ text: "🏃 Run Away", action: startGame });
-        setChoices(combatChoices);
+          { text: "🏃 Run Away", action: startGame }
+        ]);
       }
       updateStats();
     }
 
-    function bossFight() {
-      currentEnemy = monsters.find(m => m.isBoss);
-      if (currentEnemy) {
-        story.textContent = `You stand before the mighty ${currentEnemy.name}! This is the final challenge!`;
-        enemyHP = currentEnemy.hp;
-        updateStats();
-        const combatChoices = [
-          { text: "⚔ Attack", action: attackEnemy },
-          { text: "🧪 Use Potion", action: usePotion },
-        ];
-        if (strengthPotions > 0) {
-            combatChoices.push({ text: "🏋️ Use Strength Potion", action: useStrengthPotion });
-        }
-        combatChoices.push({ text: "🏃 Retreat!", action: startGame });
-        setChoices(combatChoices);
-      }
-    }
-
-    function useStrengthPotion() {
-        if (strengthPotions > 0 && !strengthPotionActive) {
-            strengthPotions--;
-            strength = strength * 2;
-            strengthPotionActive = true;
-            story.textContent = "You used a Strength Potion! Your strength has doubled for this battle.";
-        } else {
-            story.textContent = "You can't use a Strength Potion right now.";
-        }
-        updateStats();
-        setChoices([
-          { text: "⚔ Attack", action: attackEnemy },
-          { text: "🧪 Use Potion", action: usePotion },
-          { text: "🏃 Run Away", action: startGame }
-        ]);
-    }
-
     function usePotion() {
       if (potions > 0) {
-        playerHP = Math.min(playerHP + 10, maxHP);
         potions--;
-        story.textContent = "You used a potion and restored 10 HP!";
-        if (isPoisoned) {
-            isPoisoned = false;
-            clearInterval(poisonInterval);
-            poisonInterval = null;
-            st
+        playerHP = Math.min(maxHP, playerHP + 10);
+        story.textContent = "You used a potion and healed 10 HP!";
+      } else {
+        story.textContent = "You have no potions!";
+      }
+      updateStats();
+    }
+
+    // === Start the game ===
+    updateStats();
+    startGame();
+  </script>
+</body>
+</html>
