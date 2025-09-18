@@ -144,9 +144,37 @@
         <button onclick="goSwamp()">💧 Explore Swamp</button>
         <button onclick="goCave()">🕳️ Explore Cave</button>
         <button onclick="visitVillage()">🏘️ Visit Village</button>
+        <button onclick="saveGame()">💾 Save Game</button>
+        <button onclick="loadGame()">📂 Load Game</button>
       `;
       showMessage("What will you do?");
       updateStats();
+    }
+    
+    // === Save/Load Functions ===
+    function saveGame() {
+      try {
+        const playerData = JSON.stringify(player);
+        localStorage.setItem('aiTextRpgSave', playerData);
+        showMessage("Game saved successfully!");
+      } catch (e) {
+        showMessage("Failed to save game. Your browser may not support this feature.");
+      }
+    }
+
+    function loadGame() {
+      try {
+        const savedData = localStorage.getItem('aiTextRpgSave');
+        if (savedData) {
+          player = JSON.parse(savedData);
+          showMessage("Game loaded successfully!");
+          updateStats();
+        } else {
+          showMessage("No saved game found.");
+        }
+      } catch (e) {
+        showMessage("Failed to load game. The save data might be corrupted.");
+      }
     }
 
     // 🌲 Forest Monster Selection with level restrictions
