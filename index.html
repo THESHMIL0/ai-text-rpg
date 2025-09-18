@@ -241,36 +241,7 @@
         { text: "🌲 Enter the forest", action: forest },
         { text: "🕳 Explore the cave", action: cave },
         { text: "💧 Explore the swamp", action: swamp },
-        { text: "🏘 Visit the village", action: village },
-        { text: "⛏ Go to the Mine", action: mine }
-      ]);
-    }
-
-    // New Mine Location
-    function mine() {
-      story.textContent = "You are in the dark mine. You can hear the pickaxe echoing in the distance.";
-      setChoices([
-        { text: "⛏ Mine for Gold", action: mineGold },
-        { text: "🚪 Leave the Mine", action: startGame }
-      ]);
-    }
-
-    function mineGold() {
-      const goldFound = Math.floor(Math.random() * 5) + 1;
-      gold += goldFound;
-      story.textContent = `You swung your pickaxe and found ${goldFound} gold!`;
-      
-      // Small chance for a bonus
-      if (Math.random() < 0.2) {
-        const bonusGold = Math.floor(Math.random() * 10) + 5;
-        gold += bonusGold;
-        story.textContent += ` You hit a rich vein and found an extra ${bonusGold} gold!`;
-      }
-      
-      updateStats();
-      setChoices([
-        { text: "⛏ Mine again", action: mineGold },
-        { text: "🚪 Leave the Mine", action: startGame }
+        { text: "🏘 Visit the village", action: village }
       ]);
     }
 
@@ -601,4 +572,44 @@
         potions++;
         story.textContent = "You bought a potion!";
       } else {
-        stor
+        story.textContent = "Not enough gold!";
+      }
+      updateStats();
+      shop();
+    }
+
+    function healPlayer() {
+      if (gold >= 10) {
+        gold -= 10;
+        playerHP = maxHP;
+        story.textContent = "You are fully healed!";
+        if (isPoisoned) {
+            isPoisoned = false;
+            clearInterval(poisonInterval);
+            poisonInterval = null;
+            story.textContent += " The poison has left your system!";
+        }
+      } else {
+        story.textContent = "Not enough gold!";
+      }
+      updateStats();
+      shop();
+    }
+
+    function buyStrength() {
+      if (gold >= 20) {
+        gold -= 20;
+        strength++;
+        baseStrength = strength; // Update base strength when buying a permanent upgrade
+        story.textContent = "Your strength has increased!";
+      } else {
+        story.textContent = "Not enough gold!";
+      }
+      updateStats();
+      shop();
+    }
+    
+    loadGame();
+  </script>
+</body>
+</html>
