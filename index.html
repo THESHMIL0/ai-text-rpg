@@ -1,375 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Text RPG</title>
   <style>
-    :root{
-      --neon:#00ff55;
-      --neon-2:#32ff7e;
-      --accent:#ffd700;
-      --bg:#000;
-      --card-border: 2px solid var(--neon);
+    body {
+      background-color: black;
+      color: #00ff00;
+      font-family: "Courier New", monospace;
+      text-align: center;
+      padding: 20px;
     }
-    html,body{height:100%;margin:0;background:var(--bg);font-family: "Courier New", monospace;color:var(--neon);-webkit-font-smoothing:antialiased}
-    .wrap{
-      min-height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-      box-sizing:border-box;
+    #game {
+      max-width: 600px;
+      margin: auto;
+      border: 2px solid #00ff00;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #00ff00;
     }
-    .game {
-      width:100%;
-      max-width:720px;
-      background:rgba(0,0,0,0.4);
-      border-radius:12px;
-      padding:18px;
-      box-sizing:border-box;
-      border:var(--card-border);
-      box-shadow: 0 8px 30px rgba(0,255,120,0.04), inset 0 0 30px rgba(0,255,120,0.02);
+    button {
+      background-color: #111;
+      color: #00ff00;
+      border: 1px solid #00ff00;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: pointer;
     }
-
-    header{ text-align:center; margin-bottom:12px }
-    h1 { margin:0; font-size:28px; color:var(--neon); letter-spacing:2px }
-    .top-grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-      align-items:center;
-      margin-top:12px;
+    button:hover {
+      background-color: #00ff00;
+      color: black;
     }
-
-    .stats-card, .story {
-      border-radius:8px;
-      padding:12px;
-      border:var(--card-border);
+    .bar-container {
+      width: 100%;
+      background: #333;
+      border: 1px solid #00ff00;
+      border-radius: 5px;
+      margin: 5px 0;
+      height: 20px;
+      position: relative;
     }
-
-    .stats-list{
-      font-size:16px;
-      line-height:1.65;
-    }
-
-    /* Health bars */
-    .hp-row { margin-bottom:8px }
-    .label { font-size:14px; opacity:0.9 }
     .bar {
-      width:100%;
-      height:18px;
-      background: rgba(255,255,255,0.04);
-      border-radius:10px;
-      overflow:hidden;
-      margin-top:6px;
-      border:1px solid rgba(0,255,120,0.08);
+      height: 100%;
+      border-radius: 5px;
     }
-    .bar-inner {
-      height:100%;
-      width:100%;
-      transition: width 220ms linear, background 220ms;
-      background: linear-gradient(90deg,var(--neon) 0%, var(--neon-2) 100%);
-    }
-    .bar-inner.enemy {
-      background: linear-gradient(90deg,#ff6b6b 0%, #ff8787 100%);
-    }
-
-    .story {
-      min-height:76px;
-      font-size:16px;
-      white-space:pre-wrap;
-      background: rgba(0,0,0,0.2);
-    }
-
-    /* choices */
-    #choices { margin-top:12px; display:flex; flex-direction:column; gap:10px; }
-    button.choice {
-      background: var(--neon);
-      color: #000;
-      border: none;
-      padding:14px 16px;
-      font-size:16px;
-      border-radius:8px;
-      cursor:pointer;
-      box-shadow: 0 6px 18px rgba(0,255,120,0.06);
-      text-align:left;
-    }
-    button.choice:hover{ transform: translateY(-3px); background:#9cffb0 }
-    .small { font-size:14px; padding:10px 12px }
-
-    /* responsive */
-    @media (max-width:560px){
-      h1{ font-size:20px }
-      .top-grid{ grid-template-columns: 1fr; }
-      .stats-list{ font-size:15px }
-      button.choice{ font-size:17px; padding:16px 18px }
-    }
+    .player-bar { background: lime; }
+    .enemy-bar { background: red; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <main class="game" role="main" aria-labelledby="game-title">
-      <header>
-        <h1 id="game-title">AI Text RPG</h1>
-      </header>
-
-      <div class="top-grid">
-        <div class="stats-card stats-list" aria-live="polite">
-          ❤️ Player HP: <strong id="playerHPText">20/20</strong><br>
-          <div class="hp-row">
-            <div class="label">Player Health</div>
-            <div class="bar"><div id="playerBar" class="bar-inner" style="width:100%"></div></div>
-          </div>
-
-          👾 Enemy HP: <strong id="enemyHPText">0</strong><br>
-          <div class="hp-row">
-            <div class="label">Enemy Health</div>
-            <div class="bar"><div id="enemyBar" class="bar-inner enemy" style="width:0%"></div></div>
-          </div>
-
-          <div style="margin-top:8px">
-            💪 Strength: <span id="strengthText">5</span><br>
-            ✨ Level: <span id="levelText">1</span><br>
-            🌟 XP: <span id="xpText">0</span><br>
-            🧪 Potions: <span id="potionsText">1</span><br>
-            💰 Gold: <span id="goldText">0</span>
-          </div>
-        </div>
-
-        <section class="story" id="story" aria-live="assertive">Welcome to the adventure — choose your path below.</section>
-      </div>
-
-      <div id="choices" role="region" aria-label="Choices" class="choices">
-        <!-- buttons injected here -->
-      </div>
-    </main>
+  <div id="game">
+    <h1>⚔️ AI Text RPG ⚔️</h1>
+    <div id="stats"></div>
+    <div id="enemy"></div>
+    <div id="actions"></div>
+    <div id="message"></div>
   </div>
 
   <script>
-    /* ---------- Game state ---------- */
-    let maxHP = 20;
-    let playerHP = 20;
-    let enemyHP = 0;
-    let enemyMaxHP = 0;
-    let strength = 5;
-    let xp = 0;
-    let level = 1;
-    let potions = 1;
-    let gold = 0;
-    let currentEnemy = null;
+    let player = {
+      hp: 20, maxHp: 20, potions: 2,
+      gold: 0, level: 1, xp: 0,
+      attack: 5, weapon: "Fists"
+    };
 
-    /* ---------- UI elements ---------- */
-    const storyEl = document.getElementById('story');
-    const choicesEl = document.getElementById('choices');
+    let enemy = null;
+    let fightCount = 0;
 
-    const playerHPText = document.getElementById('playerHPText');
-    const enemyHPText = document.getElementById('enemyHPText');
-    const playerBar = document.getElementById('playerBar');
-    const enemyBar = document.getElementById('enemyBar');
-
-    const strengthText = document.getElementById('strengthText');
-    const levelText = document.getElementById('levelText');
-    const xpText = document.getElementById('xpText');
-    const potionsText = document.getElementById('potionsText');
-    const goldText = document.getElementById('goldText');
-
-    /* ---------- Monsters ---------- */
-    const monsters = [
-      { name: "Goblin", hp: 10, dmg: 3, gold:5, xp:5, boss:false },
-      { name: "Wolf", hp: 12, dmg: 4, gold:7, xp:6, boss:false },
-      { name: "Bandit", hp: 14, dmg: 5, gold:10, xp:8, boss:false },
-      { name: "Ogre", hp: 22, dmg: 8, gold:20, xp:15, boss:false },
-      { name: "Ancient Guardian", hp: 50, dmg: 12, gold:60, xp:40, boss:true }
-    ];
-
-    /* ---------- Helpers ---------- */
-    function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
-
-    function updateUI(){
-      playerHPText.textContent = `${playerHP}/${maxHP}`;
-      enemyHPText.textContent = enemyHP > 0 ? `${enemyHP}` : '—';
-      strengthText.textContent = strength;
-      levelText.textContent = level;
-      xpText.textContent = xp;
-      potionsText.textContent = potions;
-      goldText.textContent = gold;
-
-      // bar widths
-      const pPerc = clamp((playerHP / maxHP) * 100, 0, 100);
-      playerBar.style.width = pPerc + '%';
-      if (pPerc < 30) playerBar.style.background = 'linear-gradient(90deg,#ff8b8b,#ff6b6b)';
-      else playerBar.style.background = 'linear-gradient(90deg,var(--neon),var(--neon-2))';
-
-      const ePerc = enemyMaxHP > 0 ? clamp((enemyHP / enemyMaxHP) * 100, 0, 100) : 0;
-      enemyBar.style.width = ePerc + '%';
-      if (ePerc < 25) enemyBar.style.opacity = 0.8; else enemyBar.style.opacity = 1;
+    function updateStats() {
+      document.getElementById("stats").innerHTML = `
+        <h3>🧙 Player Stats</h3>
+        <div class="bar-container">
+          <div class="bar player-bar" style="width:${(player.hp/player.maxHp)*100}%"></div>
+        </div>
+        HP: ${player.hp} / ${player.maxHp} <br>
+        Weapon: ${player.weapon} (Attack: ${player.attack}) <br>
+        Potions: ${player.potions} | Gold: ${player.gold} | XP: ${player.xp} | Level: ${player.level}
+      `;
     }
 
-    function showStory(text){
-      storyEl.textContent = text;
-      // small auto-scroll behavior for long story (useful if the page got scrolled)
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    function showMessage(msg) {
+      document.getElementById("message").innerHTML = `<p>${msg}</p>`;
     }
 
-    function clearChoices(){ choicesEl.innerHTML = ''; }
-
-    function setChoices(items){
-      clearChoices();
-      items.forEach(it => {
-        const b = document.createElement('button');
-        b.className = 'choice';
-        b.textContent = it.text;
-        b.onclick = it.action;
-        choicesEl.appendChild(b);
-      });
+    function showMainMenu() {
+      enemy = null;
+      document.getElementById("enemy").innerHTML = "";
+      document.getElementById("actions").innerHTML = `
+        <button onclick="goForest()">🌲 Enter Forest</button>
+        <button onclick="visitVillage()">🏘️ Visit Village</button>
+      `;
+      showMessage("What will you do?");
+      updateStats();
     }
 
-    function levelCheck(){
-      const need = level * 10;
-      if (xp >= need){
-        xp -= need;
-        level++;
-        strength += 2;
-        maxHP += 5;
-        playerHP = maxHP; // heal on level
-        showStory(`🌟 Level up! You reached level ${level}. Strength +2, Max HP +5.`);
-        updateUI();
-        setTimeout(startScreen, 1400);
-        return true;
+    // 🌲 Forest Monster Selection
+    function goForest() {
+      document.getElementById("actions").innerHTML = `
+        <h3>Choose a monster to fight:</h3>
+        <button onclick="startBattle('Goblin', 10, 3, 5, 5)">Goblin (Easy)</button>
+        <button onclick="startBattle('Troll', 20, 5, 10, 10)">Troll (Medium)</button>
+        <button onclick="startBattle('Dragon', 35, 8, 20, 20)">Dragon (Hard)</button>
+        <button onclick="showMainMenu()">⬅️ Back</button>
+      `;
+      showMessage("The forest is full of monsters. Who will you challenge?");
+    }
+
+    // 🏘️ Village (Shop + Rest)
+    function visitVillage() {
+      document.getElementById("actions").innerHTML = `
+        <h3>Village Shop</h3>
+        <button onclick="buyPotion()">Buy Potion (10 gold)</button>
+        <button onclick="buySword()">Buy Sword (15 gold)</button>
+        <button onclick="rest()">Rest at Inn (5 gold)</button>
+        <button onclick="showMainMenu()">⬅️ Back</button>
+      `;
+      showMessage("Welcome to the village! Spend your gold wisely.");
+    }
+
+    // Start battle
+    function startBattle(name, hp, attack, gold, xp) {
+      enemy = {name, hp, maxHp: hp, attack, rewardGold: gold, rewardXp: xp};
+      document.getElementById("enemy").innerHTML = `
+        <h3>👹 Enemy: ${enemy.name}</h3>
+        <div class="bar-container">
+          <div class="bar enemy-bar" style="width:100%"></div>
+        </div>
+        HP: ${enemy.hp} / ${enemy.maxHp}
+      `;
+      document.getElementById("actions").innerHTML = `
+        <button onclick="attack()">⚔️ Attack</button>
+        <button onclick="usePotion()">🧪 Use Potion</button>
+        <button onclick="showMainMenu()">🏃 Run</button>
+      `;
+      showMessage(`A wild ${enemy.name} appears!`);
+    }
+
+    function updateEnemy() {
+      if (enemy) {
+        document.getElementById("enemy").innerHTML = `
+          <h3>👹 Enemy: ${enemy.name}</h3>
+          <div class="bar-container">
+            <div class="bar enemy-bar" style="width:${(enemy.hp/enemy.maxHp)*100}%"></div>
+          </div>
+          HP: ${enemy.hp} / ${enemy.maxHp}
+        `;
       }
-      return false;
     }
 
-    /* ---------- Gameplay ---------- */
-    function startScreen(){
-      showStory('You stand at a crossroads. Paths: Forest, Cave, Village.');
-      setChoices([
-        { text: '🌲 Enter the Forest', action: enterForest },
-        { text: '🕳️ Explore the Cave', action: enterCave },
-        { text: '🏘️ Visit the Village', action: enterVillage }
-      ]);
-      updateUI();
+    function attack() {
+      if (!enemy) return;
+      let dmg = Math.floor(Math.random() * player.attack) + 1;
+      enemy.hp -= dmg;
+      showMessage(`You hit the ${enemy.name} for ${dmg} damage!`);
+      updateEnemy();
+
+      if (enemy.hp <= 0) {
+        showMessage(`You defeated the ${enemy.name}! +${enemy.rewardGold} gold, +${enemy.rewardXp} XP`);
+        player.gold += enemy.rewardGold;
+        player.xp += enemy.rewardXp;
+        levelUpCheck();
+        setTimeout(showMainMenu, 1500);
+        return;
+      }
+
+      // Enemy turn
+      let enemyDmg = Math.floor(Math.random() * enemy.attack) + 1;
+      player.hp -= enemyDmg;
+      updateStats();
+      showMessage(`The ${enemy.name} hits you for ${enemyDmg} damage!`);
+
+      if (player.hp <= 0) {
+        showMessage("💀 You have been defeated! Game Over.");
+        document.getElementById("actions").innerHTML = `<button onclick="restart()">Restart</button>`;
+      }
     }
 
-    function spawnEnemy(template){
-      // clone template so we don't mutate the list
-      currentEnemy = {...template};
-      enemyHP = currentEnemy.hp;
-      enemyMaxHP = currentEnemy.hp;
-      updateUI();
-    }
-
-    function enterForest(){
-      const choices = monsters.filter(m => !m.boss);
-      const pick = choices[Math.floor(Math.random()*choices.length)];
-      spawnEnemy(pick);
-      showStory(`🌲 A wild ${currentEnemy.name} appears!`);
-      setChoices([
-        { text: '⚔ Attack', action: attack },
-        { text: '🧪 Use Potion', action: usePotion },
-        { text: '🏃 Run', action: startScreen }
-      ]);
-    }
-
-    function enterCave(){
-      // higher chance for tougher monsters
-      const tough = monsters.filter(m => m.hp >= 14);
-      const pick = tough[Math.floor(Math.random()*tough.length)];
-      spawnEnemy(pick);
-      showStory(`🕳️ You encounter ${currentEnemy.name} in the cave!`);
-      setChoices([
-        { text: '⚔ Attack', action: attack },
-        { text: '🧪 Use Potion', action: usePotion },
-        { text: '🏃 Retreat', action: startScreen }
-      ]);
-    }
-
-    function enterVillage(){
-      showStory('🏘️ You arrive at the village. Rest, shop, or leave?');
-      setChoices([
-        { text: '🛌 Rest (restore HP)', action: () => { playerHP = maxHP; showStory('You rested and feel refreshed.'); updateUI(); setTimeout(startScreen,800); } },
-        { text: '🛍️ Shop', action: openShop },
-        { text: '🚪 Leave', action: startScreen }
-      ]);
-    }
-
-    function openShop(){
-      showStory('Welcome to the shop. What will you buy?');
-      setChoices([
-        { text: '🧪 Potion (5 gold)', action: buyPotion },
-        { text: '⚔ Sword (+2 Strength, 25 gold)', action: buySword },
-        { text: '⬅ Back', action: enterVillage }
-      ]);
-    }
-
-    function buyPotion(){
-      if (gold >= 5){ gold -= 5; potions++; showStory('You purchased a potion.'); }
-      else showStory('Not enough gold.');
-      updateUI();
-      setTimeout(openShop, 600);
-    }
-    function buySword(){
-      if (gold >= 25){ gold -= 25; strength += 2; showStory('You bought a sword! Strength increased.'); updateUI(); }
-      else showStory('Not enough gold.');
-      setTimeout(openShop, 700);
-    }
-
-    function attack(){
-      if (!currentEnemy) return;
-      const pDmg = Math.floor(Math.random()*6) + Math.floor(strength/2);
-      const eDmg = Math.floor(Math.random()*currentEnemy.dmg) + 1;
-
-      enemyHP = Math.max(0, enemyHP - pDmg);
-      playerHP = Math.max(0, playerHP - eDmg);
-
-      if (enemyHP <= 0){
-        gold += currentEnemy.gold;
-        xp += currentEnemy.xp;
-        const msg = `You struck ${currentEnemy.name} for ${pDmg}. It falls. You gained ${currentEnemy.gold} gold and ${currentEnemy.xp} XP.`;
-        currentEnemy = null;
-        enemyMaxHP = 0;
-        enemyHP = 0;
-        updateUI();
-        if (!levelCheck()) {
-          showStory(msg);
-          setChoices([{ text: 'Continue', action: startScreen }]);
-        }
-      } else if (playerHP <= 0){
-        showStory(`You took ${eDmg} damage and were defeated...`);
-        setChoices([{ text: 'Restart', action: () => location.reload() }]);
+    function usePotion() {
+      if (player.potions > 0) {
+        player.hp = Math.min(player.maxHp, player.hp + 10);
+        player.potions--;
+        updateStats();
+        showMessage("You used a potion and restored 10 HP!");
       } else {
-        showStory(`You hit for ${pDmg}. Enemy hits back for ${eDmg}.`);
-        setChoices([
-          { text: '⚔ Attack Again', action: attack },
-          { text: '🧪 Use Potion', action: usePotion },
-          { text: '🏃 Run', action: startScreen }
-        ]);
+        showMessage("No potions left!");
       }
-      updateUI();
     }
 
-    function usePotion(){
-      if (potions <= 0){ showStory('No potions left!'); return; }
-      potions--;
-      playerHP = Math.min(maxHP, playerHP + 12);
-      showStory('You used a potion and healed 12 HP.');
-      updateUI();
-      // return to combat choices if fighting
-      if (currentEnemy && enemyHP > 0){
-        setChoices([
-          { text: '⚔ Attack', action: attack },
-          { text: '🧪 Use Potion', action: usePotion },
-          { text: '🏃 Run', action: startScreen }
-        ]);
+    function buyPotion() {
+      if (player.gold >= 10) {
+        player.gold -= 10;
+        player.potions++;
+        updateStats();
+        showMessage("You bought a potion!");
       } else {
-        setChoices([{ text: 'Continue', action: startScreen }]);
+        showMessage("Not enough gold!");
       }
     }
 
-    /* ---------- Start ---------- */
-    updateUI();
-    startScreen();
+    function buySword() {
+      if (player.gold >= 15 && player.weapon === "Fists") {
+        player.gold -= 15;
+        player.weapon = "Sword";
+        player.attack += 3;
+        updateStats();
+        showMessage("You bought a Sword! Attack increased.");
+      } else {
+        showMessage("Not enough gold or already own a weapon!");
+      }
+    }
+
+    function rest() {
+      if (player.gold >= 5) {
+        player.gold -= 5;
+        player.hp = player.maxHp;
+        updateStats();
+        showMessage("You rested at the inn. HP fully restored.");
+      } else {
+        showMessage("Not enough gold to rest!");
+      }
+    }
+
+    function levelUpCheck() {
+      if (player.xp >= player.level * 20) {
+        player.level++;
+        player.maxHp += 5;
+        player.hp = player.maxHp;
+        player.attack += 2;
+        showMessage(`⭐ Level Up! You are now Level ${player.level}.`);
+        updateStats();
+      }
+    }
+
+    function restart() {
+      player = {hp:20, maxHp:20, potions:2, gold:0, level:1, xp:0, attack:5, weapon:"Fists"};
+      showMainMenu();
+    }
+
+    // Start game
+    showMainMenu();
   </script>
 </body>
 </html>
