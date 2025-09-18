@@ -6,39 +6,73 @@
   <title>AI Text RPG</title>
   <style>
     body {
-      background-color: black;
-      color: #00ff00;
-      font-family: "Courier New", monospace;
-      text-align: center;
+      background: black;
+      color: limegreen;
+      font-family: monospace;
       padding: 20px;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
     }
     #game {
-      max-width: 600px;
+      max-width: 700px;
+      width: 100%;
       margin: auto;
-      border: 2px solid #00ff00;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px #00ff00;
+      border: 3px solid limegreen;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 25px limegreen;
+      background: #0a0a0a;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    h1 {
+      color: lime;
+      text-align: center;
+      font-size: 2.5rem;
+      text-shadow: 0 0 5px lime;
+    }
+    #stats, #enemy, #message {
+      border: 2px solid limegreen;
+      padding: 15px;
+      border-radius: 8px;
+      background: #1a1a1a;
+      min-height: 40px;
+    }
+    #actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
     }
     button {
-      background-color: #111;
-      color: #00ff00;
-      border: 1px solid #00ff00;
-      padding: 10px 20px;
-      margin: 5px;
-      border-radius: 5px;
+      background: green;
+      color: white;
+      border: 2px solid limegreen;
+      padding: 15px 25px;
       cursor: pointer;
-      transition: all 0.2s ease-in-out;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      transition: background 0.3s, transform 0.1s;
+      flex-grow: 1;
+      min-width: 150px;
+      text-align: center;
+      box-sizing: border-box;
     }
     button:hover {
-      background-color: #00ff00;
-      color: black;
-      box-shadow: 0 0 10px #00ff00;
+      background: darkgreen;
+      border-color: lime;
+      transform: translateY(-2px);
     }
     .bar-container {
       width: 100%;
       background: #333;
-      border: 1px solid #00ff00;
+      border: 1px solid limegreen;
       border-radius: 5px;
       margin: 5px 0;
       height: 20px;
@@ -50,6 +84,10 @@
     }
     .player-bar { background: lime; }
     .enemy-bar { background: red; }
+    
+    p {
+      margin: 0;
+    }
   </style>
 </head>
 <body>
