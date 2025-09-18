@@ -238,9 +238,43 @@
         <button onclick="buySword()">⚔️ Buy Sword (15 gold)</button>
         <button onclick="rest()">🛌 Rest at Inn (5 gold)</button>
         <button onclick="visitShrine()">✨ Visit Shrine</button>
+        <button onclick="visitTavern()">🍺 Visit Tavern</button>
         <button onclick="showMainMenu()">🚪 Leave Village</button>
       `;
       showMessage("Welcome to the village! Spend your gold wisely.");
+    }
+    
+    // === Tavern Functions ===
+    function visitTavern() {
+      document.getElementById("actions").innerHTML = `
+        <h3>The Old Salty Dog Tavern</h3>
+        <button onclick="talkToBarkeep()">Talk to Barkeep</button>
+        <button onclick="getRumors()">Listen for Rumors</button>
+        <button onclick="visitVillage()">Leave Tavern</button>
+      `;
+      showMessage("The tavern is full of travelers and adventurers. The smell of stew and ale fills the air.");
+    }
+
+    function talkToBarkeep() {
+      const dialogue = [
+        "The barkeep smiles. 'Greetings, traveler. What can I get for you?'",
+        "The barkeep says, 'It's been a quiet week. The monsters outside are keeping most folks away.'",
+        "The barkeep sighs. 'A good ale can make you forget your troubles, but it won't defeat a dragon.'",
+        "The barkeep nods toward the door. 'Stay safe out there.'"
+      ];
+      const randomLine = dialogue[Math.floor(Math.random() * dialogue.length)];
+      showMessage(randomLine);
+    }
+    
+    function getRumors() {
+      const rumors = [
+        "A traveler says, 'I heard the Swamp Serpent's poison is potent, but a good night's rest can cure it.'",
+        "A rogue whispers, 'They say the Ancient Guardian's treasure is a powerful magic relic, but it's a trap.'",
+        "An old man mutters, 'The forest is dangerous, but the rewards are worth the risk.'",
+        "A group of adventurers are arguing about the best way to defeat a Troll. One says, 'You have to be strong enough to hit it, that's all!'"
+      ];
+      const randomRumor = rumors[Math.floor(Math.random() * rumors.length)];
+      showMessage(randomRumor);
     }
 
     // ✨ Shrine Quest
