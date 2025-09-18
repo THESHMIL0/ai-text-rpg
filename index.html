@@ -168,9 +168,15 @@
       try {
         const savedData = localStorage.getItem('aiTextRpgSave');
         if (savedData) {
-          player = JSON.parse(savedData);
-          showMessage("Game loaded successfully!");
-          updateStats();
+          const loadedPlayer = JSON.parse(savedData);
+          // Simple validation to prevent NaN errors
+          if (loadedPlayer && typeof loadedPlayer.hp === 'number' && !isNaN(loadedPlayer.hp)) {
+            player = loadedPlayer;
+            showMessage("Game loaded successfully!");
+            updateStats();
+          } else {
+            showMessage("Failed to load game. Save data is corrupted.");
+          }
         } else {
           showMessage("No saved game found.");
         }
