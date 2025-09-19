@@ -1,6 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Text RPG</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #0f0;
+      font-family: "Courier New", monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #game {
+      background: #111;
+      padding: 20px;
+      border: 2px solid #0f0;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #0f0;
+      margin-bottom: 20px;
+    }
+
+    #output {
+      min-height: 120px;
+      margin: 15px 0;
+      font-size: 16px;
+    }
+
+    .btn {
+      background: #0f0;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background: #4dff4d;
+    }
+
+    .health-bar {
+      height: 20px;
+      background: red;
+      border: 1px solid #333;
+      margin: 5px 0;
+      position: relative;
+      border-radius: 5px;
+    }
+
+    .health-fill {
+      height: 100%;
+      background: limegreen;
+      width: 100%;
+      transition: width 0.3s;
+      border-radius: 5px;
+    }
+
+    .status {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <h1>AI Text RPG</h1>
+
+    <div class="status">❤️ Player HP</div>
+    <div class="health-bar"><div id="playerHP" class="health-fill"></div></div>
+
+    <div class="status">👾 Enemy HP</div>
+    <div class="health-bar"><div id="enemyHP" class="health-fill" style="background:red;"></div></div>
+
+    <div id="output">Welcome to the adventure! Choose your path.</div>
+
+    <div id="buttons">
+      <button class="btn" onclick="enterForest()">Enter Forest</button>
+      <button class="btn" onclick="visitTown()">Visit Town</button>
+    </div>
+  </div>
+
+  <script>
+    let player = { hp: 100, maxHp: 100 };
+    let enemy = { hp: 0, maxHp: 0 };
+    let inBattle = false;
+
+    function updateHP() {
+      document.getElementById("playerHP").style.width = (player.hp / player.maxHp * 100) + "%";
+      document.getElementById("enemyHP").style.width = (enemy.hp / enemy.maxHp * 100) + "%";
+    }
+
+    function enterForest() {
+      if (inBattle) return;
+      inBattle = true;
+      enemy = { hp: 40, maxHp: 40 };
+      document.getElementById("output").innerText = "A wild Goblin appears!";
+      showBattleButtons();
+      updateHP();
+    }
+
+    function visitTown() {
+      if (inBattle) return;
+      player.hp = player.maxHp;
+      document.getElementById("output").innerText = "You rested at the inn. HP restored!";
+      updateHP();
+    }
+
+    function showBattleButtons() {
+      document.getElementById("buttons").innerHTML = `
+        <button class="btn" onclick="attack()">Attack</button>
+        <button class="btn" onclick="runAway()">Run Away</button>
+      `;
+    }
+
+    function showMainButtons() {
+      document.getElementById("buttons").innerHTML = `
+        <button class="btn" onclick="enterForest()">Enter Forest</button>
+        <button class="btn" onclick="visitTown()">Visit Town</button>
+      `;
+    }
+
+    function attack() {
+      if (!inBattle) return;
+      let playerDamage = Math.floor(Math.random() * 15) + 5;
+      enemy.hp -= playerDamage;
+      if (enemy.hp <= 0) {
+        enemy.hp = 0;
+        document.getElementById("output").innerText = "You defeated the Goblin!";
+        inBattle = false;
+        showMainButtons();
+        updateHP();
+        return;
+      }
+
+      let enemyDamage = Math.floor(Math.random() * 10) + 3;
+      player.hp -= enemyDamage;
+      if (player.hp <= 0) {
+        player.hp = 0;
+        document.getElementById("output").innerText = "You were defeated... Back to town.";
+        inBattle = false;
+        player.hp = 1; // survive with 1 HP
+        showMainButtons();
+      } else {
+        document.getElementById("output").innerText =
+          `You hit the Goblin for ${playerDamage} damage!\nThe Goblin hit you for ${enemyDamage} damage!`;
+      }
+      updateHP();
+    }
+
+    function runAway() {
+      document.getElementById("output").innerText = "You escaped back to town!";
+      inBattle = false;
+      showMainButtons();
+      updateHP();
+    }
+
+    updateHP();
+  </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>AI Text RPG</title>
