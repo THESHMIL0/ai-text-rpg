@@ -133,6 +133,33 @@
       { name: "Swamp Serpent", hp: 15, attack: 6, gold: 15, xp: 12, canPoison: true },
       { name: "Ancient Guardian", hp: 50, attack: 10, gold: 50, xp: 50, isBoss: true }
     ];
+    
+    // === SAVE / LOAD FUNCTIONS ===
+    function saveGame() {
+      try {
+        const playerState = JSON.stringify(player);
+        localStorage.setItem('ai_rpg_save', playerState);
+        showMessage("Game saved successfully!");
+      } catch (e) {
+        showMessage("Error saving game. Your browser may not support this feature.");
+      }
+    }
+
+    function loadGame() {
+      try {
+        const playerState = localStorage.getItem('ai_rpg_save');
+        if (playerState) {
+          player = JSON.parse(playerState);
+          updateStats();
+          showMessage("Game loaded successfully!");
+          return true;
+        }
+      } catch (e) {
+        showMessage("Error loading game.");
+      }
+      return false;
+    }
+    // ===========================
 
     function updateStats() {
       const equippedWeaponName = player.equippedWeapon ? player.equippedWeapon.name : 'Fists';
@@ -168,6 +195,7 @@
         <button onclick="goCave()">🕳️ Explore Cave</button>
         <button onclick="visitVillage()">🏘️ Visit Village</button>
         <button onclick="showInventory()">🎒 View Inventory</button>
+        <button onclick="saveGame()">💾 Save Game</button>
       `;
       showMessage("What will you do?");
       updateStats();
@@ -552,7 +580,4 @@
     }
 
     // Start game
-    showMainMenu();
-  </script>
-</body>
-</html>
+    if (!loadGame()) {
