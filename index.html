@@ -3,552 +3,534 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrom Pool Game</title>
+    <title>Carrom Pool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
             color: white;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
             padding: 20px;
+            overflow: hidden;
         }
         
         .container {
-            max-width: 800px;
             width: 100%;
-            text-align: center;
+            max-width: 500px;
+            height: 90vh;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
         
-        header {
-            margin-bottom: 20px;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-        
-        .score-board {
+        /* Header with coins and settings */
+        .header {
             display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-            background-color: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: linear-gradient(to right, #8b4513, #6b3409);
+            border-bottom: 2px solid #d4af37;
         }
         
-        .player {
-            text-align: center;
-        }
-        
-        .player h2 {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-        }
-        
-        .score {
-            font-size: 2rem;
+        .coins {
+            display: flex;
+            align-items: center;
+            gap: 5px;
             font-weight: bold;
+        }
+        
+        .coins i {
+            color: gold;
+        }
+        
+        .settings-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Main Menu Screen */
+        .main-menu {
+            padding: 30px 20px;
+            text-align: center;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+        
+        .game-logo {
+            margin-bottom: 20px;
+        }
+        
+        .game-logo h1 {
+            font-size: 2.8rem;
+            text-shadow: 3px 3px 0 #000;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        
+        .game-logo p {
+            font-size: 1.2rem;
+            color: #d4af37;
+        }
+        
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .menu-btn {
+            padding: 16px;
+            font-size: 1.2rem;
+            background: linear-gradient(to bottom, #d4af37, #a2853e);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 0 #8b4513;
+            transition: all 0.2s;
+        }
+        
+        .menu-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #8b4513;
+        }
+        
+        .game-modes {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .mode-btn {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #d4af37;
+            border-radius: 15px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .mode-btn.active {
+            background: #d4af37;
+            color: #000;
+        }
+        
+        /* Game Screen */
+        .game-screen {
+            display: none;
+            height: 100%;
+            flex-direction: column;
         }
         
         .game-area {
+            flex: 1;
             position: relative;
-            margin: 0 auto;
-            width: 100%;
-            max-width: 500px;
-            aspect-ratio: 1 / 1;
             background-color: #d4af37;
+            margin: 15px;
             border-radius: 10px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-            overflow: hidden;
             border: 10px solid #8b4513;
+            overflow: hidden;
         }
         
         #gameCanvas {
-            display: block;
             width: 100%;
             height: 100%;
+            display: block;
         }
         
-        .controls {
-            margin-top: 20px;
+        .game-controls {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: linear-gradient(to right, #8b4513, #6b3409);
+        }
+        
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+        
+        /* Settings Screen */
+        .settings-screen {
+            display: none;
+            padding: 30px 20px;
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        .settings-screen h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #d4af37;
+        }
+        
+        .setting-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .setting-item h3 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
             gap: 10px;
         }
         
-        button {
-            padding: 12px 24px;
-            font-size: 1rem;
-            background-color: #ff8c00;
-            color: white;
-            border: none;
+        .slider {
+            width: 100%;
+            height: 10px;
+            background: #555;
             border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #d4af37;
             cursor: pointer;
-            transition: background-color 0.3s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         
-        button:hover {
-            background-color: #ff6a00;
-        }
-        
-        .instructions {
-            margin-top: 20px;
-            background-color: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: left;
-            max-width: 500px;
-        }
-        
-        .instructions h3 {
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        
-        .instructions ul {
-            padding-left: 20px;
-        }
-        
-        .instructions li {
-            margin-bottom: 8px;
-        }
-        
-        .turn-indicator {
-            font-size: 1.2rem;
-            margin-top: 10px;
+        .back-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 30px;
+            background: #d4af37;
+            color: #000;
+            border: none;
+            border-radius: 50px;
             font-weight: bold;
+            cursor: pointer;
         }
         
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2rem;
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 0.8rem;
+            color: #aaa;
+            border-top: 1px solid #444;
+        }
+        
+        /* Animation for menu items */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .menu-btn {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .menu-btn:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+        
+        .menu-btn:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+        
+        .menu-btn:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 500px) {
+            .container {
+                height: 95vh;
+                border-radius: 15px;
             }
             
-            .score-board {
-                flex-direction: column;
-                gap: 10px;
+            .game-logo h1 {
+                font-size: 2.2rem;
             }
             
-            .controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            button {
-                width: 100%;
-                max-width: 200px;
+            .menu-btn {
+                padding: 14px;
+                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Carrom Pool Game</h1>
-            <p>A classic board game for your browser</p>
-        </header>
-        
-        <div class="score-board">
-            <div class="player">
-                <h2>Player 1</h2>
-                <div id="player1-score" class="score">0</div>
+        <!-- Header with coins and settings -->
+        <div class="header">
+            <div class="coins">
+                <i class="fas fa-coins"></i>
+                <span>12,850</span>
             </div>
-            <div class="player">
-                <h2>Player 2</h2>
-                <div id="player2-score" class="score">0</div>
+            <button class="settings-btn" id="settings-btn">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+        
+        <!-- Main Menu Screen -->
+        <div class="main-menu" id="main-menu">
+            <div class="game-logo">
+                <h1>CARROM POOL</h1>
+                <p>Classic Board Game</p>
+            </div>
+            
+            <div class="menu-buttons">
+                <button class="menu-btn" id="play-btn">
+                    <i class="fas fa-play"></i> PLAY
+                </button>
+                <button class="menu-btn">
+                    <i class="fas fa-trophy"></i> TOURNAMENT
+                </button>
+                <button class="menu-btn">
+                    <i class="fas fa-store"></i> SHOP
+                </button>
+                <button class="menu-btn">
+                    <i class="fas fa-users"></i> FRIENDS
+                </button>
+            </div>
+            
+            <div class="game-modes">
+                <button class="mode-btn active">CLASSIC</button>
+                <button class="mode-btn">DISCO</button>
             </div>
         </div>
         
-        <div class="game-area">
-            <canvas id="gameCanvas"></canvas>
+        <!-- Game Screen -->
+        <div class="game-screen" id="game-screen">
+            <div class="game-area">
+                <canvas id="gameCanvas"></canvas>
+            </div>
+            
+            <div class="game-controls">
+                <button class="control-btn" id="menu-btn">
+                    <i class="fas fa-bars"></i> MENU
+                </button>
+                <div class="score">Player 1: 0 | Player 2: 0</div>
+                <button class="control-btn">
+                    <i class="fas fa-undo"></i>
+                </button>
+            </div>
         </div>
         
-        <div class="turn-indicator" id="turn-indicator">Player 1's Turn</div>
-        
-        <div class="controls">
-            <button id="reset-btn">Reset Game</button>
-            <button id="undo-btn">Undo Move</button>
-            <button id="hint-btn">Show Hint</button>
+        <!-- Settings Screen -->
+        <div class="settings-screen" id="settings-screen">
+            <h2><i class="fas fa-cog"></i> SETTINGS</h2>
+            
+            <div class="setting-item">
+                <h3><i class="fas fa-volume-up"></i> Music</h3>
+                <input type="range" class="slider" min="0" max="100" value="80">
+            </div>
+            
+            <div class="setting-item">
+                <h3><i class="fas fa-volume-down"></i> Sound Effects</h3>
+                <input type="range" class="slider" min="0" max="100" value="90">
+            </div>
+            
+            <div class="setting-item">
+                <h3><i class="fas fa-language"></i> Language</h3>
+                <select style="width: 100%; padding: 8px; border-radius: 5px; background: #333; color: white; border: none;">
+                    <option>English</option>
+                    <option>Spanish</option>
+                    <option>French</option>
+                    <option>Hindi</option>
+                </select>
+            </div>
+            
+            <div class="setting-item">
+                <h3><i class="fas fa-paint-brush"></i> Theme</h3>
+                <select style="width: 100%; padding: 8px; border-radius: 5px; background: #333; color: white; border: none;">
+                    <option>Classic Wood</option>
+                    <option>Modern</option>
+                    <option>Dark</option>
+                </select>
+            </div>
+            
+            <div class="setting-item">
+                <h3><i class="fas fa-user"></i> Account</h3>
+                <p style="font-size: 0.9rem;">Connect your account to save progress</p>
+                <button style="width: 100%; padding: 10px; margin-top: 10px; background: #d4af37; border: none; border-radius: 5px; font-weight: bold;">
+                    Connect with Google
+                </button>
+            </div>
+            
+            <button class="back-btn" id="settings-back-btn">BACK</button>
         </div>
         
-        <div class="instructions">
-            <h3>How to Play</h3>
-            <ul>
-                <li>Drag the striker to aim and release to shoot</li>
-                <li>Pocket your pieces (black or white) to score points</li>
-                <li>The queen (red) is worth bonus points if pocketed with a follow-up</li>
-                <li>First to 25 points wins the game!</li>
-            </ul>
+        <!-- Footer -->
+        <div class="footer">
+            <p>Carrom Pool © 2023 | Version 1.2.5</p>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const canvas = document.getElementById('gameCanvas');
-            const ctx = canvas.getContext('2d');
+            // Get DOM elements
+            const mainMenu = document.getElementById('main-menu');
+            const gameScreen = document.getElementById('game-screen');
+            const settingsScreen = document.getElementById('settings-screen');
+            const playBtn = document.getElementById('play-btn');
+            const settingsBtn = document.getElementById('settings-btn');
+            const menuBtn = document.getElementById('menu-btn');
+            const settingsBackBtn = document.getElementById('settings-back-btn');
             
-            // Set canvas size to match its container
-            function resizeCanvas() {
-                const gameArea = document.querySelector('.game-area');
-                canvas.width = gameArea.offsetWidth;
-                canvas.height = gameArea.offsetHeight;
-                drawGame();
-            }
+            // Switch to game screen
+            playBtn.addEventListener('click', function() {
+                mainMenu.style.display = 'none';
+                gameScreen.style.display = 'flex';
+                initGame();
+            });
             
-            // Initialize variables
-            let player1Score = 0;
-            let player2Score = 0;
-            let currentPlayer = 1;
-            let pieces = [];
-            let striker = null;
-            let isDragging = false;
-            let dragStart = {x: 0, y: 0};
-            let dragEnd = {x: 0, y: 0};
-            let power = 0;
-            let gameActive = true;
+            // Switch to settings screen
+            settingsBtn.addEventListener('click', function() {
+                mainMenu.style.display = 'none';
+                settingsScreen.style.display = 'block';
+            });
             
-            // Initialize the game
+            // Switch back to menu from game
+            menuBtn.addEventListener('click', function() {
+                gameScreen.style.display = 'none';
+                mainMenu.style.display = 'flex';
+            });
+            
+            // Switch back to menu from settings
+            settingsBackBtn.addEventListener('click', function() {
+                settingsScreen.style.display = 'none';
+                mainMenu.style.display = 'flex';
+            });
+            
+            // Initialize game
             function initGame() {
-                player1Score = 0;
-                player2Score = 0;
-                currentPlayer = 1;
-                updateScores();
-                updateTurnIndicator();
+                const canvas = document.getElementById('gameCanvas');
+                const ctx = canvas.getContext('2d');
                 
-                // Create pieces
-                pieces = [];
-                
-                // Center circle (red queen)
-                pieces.push({x: canvas.width/2, y: canvas.height/2, radius: 15, color: 'red', type: 'queen'});
-                
-                // White pieces
-                const whitePositions = [
-                    {x: canvas.width/2, y: canvas.height/2 - 40},
-                    {x: canvas.width/2 - 28, y: canvas.height/2 - 28},
-                    {x: canvas.width/2 + 28, y: canvas.height/2 - 28},
-                    {x: canvas.width/2 - 40, y: canvas.height/2},
-                    {x: canvas.width/2 + 40, y: canvas.height/2},
-                    {x: canvas.width/2 - 28, y: canvas.height/2 + 28},
-                    {x: canvas.width/2 + 28, y: canvas.height/2 + 28},
-                    {x: canvas.width/2, y: canvas.height/2 + 40}
-                ];
-                
-                whitePositions.forEach(pos => {
-                    pieces.push({x: pos.x, y: pos.y, radius: 15, color: 'white', type: 'piece'});
-                });
-                
-                // Black pieces
-                const blackPositions = [
-                    {x: canvas.width/2 - 20, y: canvas.height/2 - 50},
-                    {x: canvas.width/2 + 20, y: canvas.height/2 - 50},
-                    {x: canvas.width/2 - 50, y: canvas.height/2 - 20},
-                    {x: canvas.width/2 + 50, y: canvas.height/2 - 20},
-                    {x: canvas.width/2 - 50, y: canvas.height/2 + 20},
-                    {x: canvas.width/2 + 50, y: canvas.height/2 + 20},
-                    {x: canvas.width/2 - 20, y: canvas.height/2 + 50},
-                    {x: canvas.width/2 + 20, y: canvas.height/2 + 50}
-                ];
-                
-                blackPositions.forEach(pos => {
-                    pieces.push({x: pos.x, y: pos.y, radius: 15, color: 'black', type: 'piece'});
-                });
-                
-                // Create striker
-                striker = {
-                    x: canvas.width/2,
-                    y: canvas.height - 60,
-                    radius: 15,
-                    color: 'white',
-                    stroke: 'black',
-                    type: 'striker'
-                };
-                
-                drawGame();
-            }
-            
-            // Draw the game
-            function drawGame() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                // Draw board
-                ctx.fillStyle = '#d4af37';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                // Draw border
-                ctx.strokeStyle = '#8b4513';
-                ctx.lineWidth = 10;
-                ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
-                
-                // Draw center circle
-                ctx.beginPath();
-                ctx.arc(canvas.width/2, canvas.height/2, 40, 0, Math.PI * 2);
-                ctx.strokeStyle = 'red';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-                
-                // Draw pockets
-                const pocketPositions = [
-                    {x: 0, y: 0},
-                    {x: canvas.width, y: 0},
-                    {x: 0, y: canvas.height},
-                    {x: canvas.width, y: canvas.height}
-                ];
-                
-                pocketPositions.forEach(pos => {
-                    ctx.beginPath();
-                    ctx.arc(pos.x, pos.y, 20, 0, Math.PI * 2);
-                    ctx.fillStyle = 'black';
-                    ctx.fill();
-                });
-                
-                // Draw pieces
-                pieces.forEach(piece => {
-                    ctx.beginPath();
-                    ctx.arc(piece.x, piece.y, piece.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = piece.color;
-                    ctx.fill();
-                    
-                    if (piece.stroke) {
-                        ctx.strokeStyle = piece.stroke;
-                        ctx.lineWidth = 2;
-                        ctx.stroke();
-                    }
-                });
-                
-                // Draw striker
-                if (striker) {
-                    ctx.beginPath();
-                    ctx.arc(striker.x, striker.y, striker.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = striker.color;
-                    ctx.fill();
-                    
-                    if (striker.stroke) {
-                        ctx.strokeStyle = striker.stroke;
-                        ctx.lineWidth = 2;
-                        ctx.stroke();
-                    }
+                // Set canvas size
+                function resizeCanvas() {
+                    const gameArea = document.querySelector('.game-area');
+                    canvas.width = gameArea.offsetWidth;
+                    canvas.height = gameArea.offsetHeight;
+                    drawGame();
                 }
                 
-                // Draw aiming line if dragging
-                if (isDragging) {
+                // Draw the game
+                function drawGame() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Draw board
+                    ctx.fillStyle = '#d4af37';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Draw border
+                    ctx.strokeStyle = '#8b4513';
+                    ctx.lineWidth = 10;
+                    ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
+                    
+                    // Draw center circle
                     ctx.beginPath();
-                    ctx.moveTo(striker.x, striker.y);
-                    ctx.lineTo(dragEnd.x, dragEnd.y);
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+                    ctx.arc(canvas.width/2, canvas.height/2, 40, 0, Math.PI * 2);
+                    ctx.strokeStyle = 'red';
                     ctx.lineWidth = 2;
                     ctx.stroke();
                     
-                    // Draw power indicator
-                    const powerLength = Math.sqrt(
-                        Math.pow(dragEnd.x - striker.x, 2) + 
-                        Math.pow(dragEnd.y - striker.y, 2)
-                    );
+                    // Draw pockets
+                    const pocketPositions = [
+                        {x: 0, y: 0},
+                        {x: canvas.width, y: 0},
+                        {x: 0, y: canvas.height},
+                        {x: canvas.width, y: canvas.height}
+                    ];
                     
-                    ctx.beginPath();
-                    ctx.arc(striker.x, striker.y, powerLength, 0, Math.PI * 2);
-                    ctx.strokeStyle = 'rgba(255, 165, 0, 0.5)';
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                }
-            }
-            
-            // Update score displays
-            function updateScores() {
-                document.getElementById('player1-score').textContent = player1Score;
-                document.getElementById('player2-score').textContent = player2Score;
-            }
-            
-            // Update turn indicator
-            function updateTurnIndicator() {
-                document.getElementById('turn-indicator').textContent = `Player ${currentPlayer}'s Turn`;
-            }
-            
-            // Handle mouse/touch events
-            canvas.addEventListener('mousedown', handleStart);
-            canvas.addEventListener('touchstart', handleStart, { passive: false });
-            
-            canvas.addEventListener('mousemove', handleMove);
-            canvas.addEventListener('touchmove', handleMove, { passive: false });
-            
-            canvas.addEventListener('mouseup', handleEnd);
-            canvas.addEventListener('touchend', handleEnd);
-            
-            function handleStart(e) {
-                if (!gameActive) return;
-                
-                e.preventDefault();
-                const rect = canvas.getBoundingClientRect();
-                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-                
-                dragStart.x = clientX - rect.left;
-                dragStart.y = clientY - rect.top;
-                
-                // Check if striker is being dragged
-                const dx = dragStart.x - striker.x;
-                const dy = dragStart.y - striker.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance < striker.radius) {
-                    isDragging = true;
-                }
-            }
-            
-            function handleMove(e) {
-                if (!isDragging) return;
-                
-                e.preventDefault();
-                const rect = canvas.getBoundingClientRect();
-                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-                
-                dragEnd.x = clientX - rect.left;
-                dragEnd.y = clientY - rect.top;
-                
-                drawGame();
-            }
-            
-            function handleEnd(e) {
-                if (!isDragging) return;
-                
-                e.preventDefault();
-                isDragging = false;
-                
-                // Calculate power and direction
-                const dx = striker.x - dragEnd.x;
-                const dy = striker.y - dragEnd.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                power = Math.min(distance / 5, 20);
-                
-                // Simulate shot
-                simulateShot(dx, dy, power);
-                
-                // Switch player after a delay
-                setTimeout(() => {
-                    currentPlayer = currentPlayer === 1 ? 2 : 1;
-                    updateTurnIndicator();
-                    
-                    // Reset striker position
-                    striker.x = canvas.width/2;
-                    striker.y = currentPlayer === 1 ? canvas.height - 60 : 60;
-                }, 2000);
-            }
-            
-            // Simulate shot (simplified)
-            function simulateShot(dx, dy, power) {
-                // Normalize direction
-                const length = Math.sqrt(dx * dx + dy * dy);
-                const dirX = dx / length;
-                const dirY = dy / length;
-                
-                // Apply impulse to striker
-                const impulseX = dirX * power;
-                const impulseY = dirY * power;
-                
-                // Simple animation
-                let animationFrame;
-                const animate = () => {
-                    // Move striker
-                    striker.x += impulseX;
-                    striker.y += impulseY;
-                    
-                    // Check for collisions with walls
-                    if (striker.x - striker.radius < 0 || striker.x + striker.radius > canvas.width) {
-                        impulseX = -impulseX * 0.8; // Bounce with damping
-                    }
-                    
-                    if (striker.y - striker.radius < 0 || striker.y + striker.radius > canvas.height) {
-                        impulseY = -impulseY * 0.8; // Bounce with damping
-                    }
-                    
-                    // Check for pocket
-                    if (isInPocket(striker)) {
-                        // Striker pocketed - penalty
-                        if (currentPlayer === 1) {
-                            player1Score = Math.max(0, player1Score - 1);
-                        } else {
-                            player2Score = Math.max(0, player2Score - 1);
-                        }
-                        updateScores();
-                        striker.x = canvas.width/2;
-                        striker.y = currentPlayer === 1 ? canvas.height - 60 : 60;
-                        cancelAnimationFrame(animationFrame);
-                        return;
-                    }
-                    
-                    // Check for collisions with pieces
-                    pieces.forEach(piece => {
-                        const pdx = striker.x - piece.x;
-                        const pdy = striker.y - piece.y;
-                        const distance = Math.sqrt(pdx * pdy + pdy * pdy);
-                        
-                        if (distance < striker.radius + piece.radius) {
-                            // Collision detected
-                            if (isInPocket(piece)) {
-                                // Piece pocketed - score
-                                if (piece.type === 'queen') {
-                                    if (currentPlayer === 1) {
-                                        player1Score += 5;
-                                    } else {
-                                        player2Score += 5;
-                                    }
-                                } else {
-                                    if (currentPlayer === 1) {
-                                        player1Score += 1;
-                                    } else {
-                                        player2Score += 1;
-                                    }
-                                }
-                                
-                                // Remove piece from board
-                                const index = pieces.indexOf(piece);
-                                if (index > -1) {
-                                    pieces.splice(index, 1);
-                                }
-                                
-                                updateScores();
-                            }
-                        }
+                    pocketPositions.forEach(pos => {
+                        ctx.beginPath();
+                        ctx.arc(pos.x, pos.y, 20, 0, Math.PI * 2);
+                        ctx.fillStyle = 'black';
+                        ctx.fill();
                     });
                     
-                    // Apply damping
-                    impulseX *= 0.98;
-                    impulseY *= 0.98;
+                    // Draw pieces (simplified for this example)
+                    ctx.beginPath();
+                    ctx.arc(canvas.width/2, canvas.height/2, 15, 0, Math.PI * 2);
+                    ctx.fillStyle = 'red';
+                    ctx.fill();
                     
-                    // Stop animation when slow enough
-                    if (Math.abs(impulseX) < 0.1 && Math.abs(impulseY) < 0.1) {
-                        cancelAnimationFrame(animationFrame);
-                    } else {
-                        drawGame();
-                        animationFrame = requestAnimationFrame(animate);
+                    // Draw white pieces
+                    for (let i = 0; i < 9; i++) {
+                        const angle = (i / 9) * Math.PI * 2;
+                        const radius = 40;
+                        const x = canvas.width/2 + Math.cos(angle) * radius;
+                        const y = canvas.height/2 + Math.sin(angle) * radius;
+                        
+                        ctx.beginPath();
+                        ctx.arc(x, y, 15, 0, Math.PI * 2);
+                        ctx.fillStyle = 'white';
+                        ctx.fill();
+                        ctx.strokeStyle = 'black';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
                     }
-                };
+                    
+                    // Draw black pieces
+                    for (let i = 0; i < 9; i++) {
+                        const angle = (i / 9) * Math.PI * 2;
+                        const radius = 70;
+                        const x = canvas.width/2 + Math.cos(angle) * radius;
+                        const y = canvas.height/2 + Math.sin(angle) * radius;
+                        
+                        ctx.beginPath();
+                        ctx.arc(x, y, 15, 0, Math.PI * 2);
+                        ctx.fillStyle = 'black';
+                        ctx.fill();
+                        ctx.strokeStyle = 'white';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                    }
+                    
+                    // Draw striker
+                    ctx.beginPath();
+                    ctx.arc(canvas.width/2, canvas.height - 60, 15, 0, Math.PI * 2);
+                    ctx.fillStyle = 'white';
+                    ctx.fill();
+                    ctx.strokeStyle = 'black';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
                 
-                animate();
+                // Initial resize and draw
+                resizeCanvas();
+                window.addEventListener('resize', resizeCanvas);
             }
-            
-            // Check if a piece is in a pocket
-            function isInPocket(piece) {
-                const pockets = [
-                    {x: 0, y: 0},
-                    {x: canvas.width, y: 0},
-                    {x: 0, y: canvas.height},
-                    {x: canvas.width, y: canvas.height}
-                ];
-                
-               
+        });
+    </script>
+</body>
+</html>
