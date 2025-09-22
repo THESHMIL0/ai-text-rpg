@@ -17,10 +17,10 @@
             background: linear-gradient(to bottom, #1a1a2e, #16213e);
             color: #fff;
             line-height: 1.6;
-            overflow: hidden;
             height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
         
         .container {
@@ -73,8 +73,6 @@
             height: 40px;
             background: linear-gradient(to bottom, #4361ee, #3a0ca3);
             border-radius: 50% 50% 40% 40%;
-            top: 50%;
-            left: 50%;
             transform: translate(-50%, -50%);
             box-shadow: 0 0 10px rgba(67, 97, 238, 0.7);
             transition: transform 0.2s ease;
@@ -87,8 +85,6 @@
             height: 40px;
             background: linear-gradient(to bottom, #f72585, #b5179e);
             border-radius: 50%;
-            top: 30%;
-            left: 30%;
             box-shadow: 0 0 10px rgba(247, 37, 133, 0.7);
             z-index: 5;
         }
@@ -99,8 +95,6 @@
             height: 35px;
             background: linear-gradient(to bottom, #ff6b6b, #c1121f);
             border-radius: 40% 40% 50% 50%;
-            top: 70%;
-            left: 70%;
             box-shadow: 0 0 10px rgba(195, 18, 31, 0.7);
             z-index: 5;
             animation: enemyFloat 3s infinite ease-in-out;
@@ -117,8 +111,6 @@
             height: 25px;
             background: linear-gradient(to bottom, #ff9e00, #ff7900);
             border-radius: 5px;
-            top: 20%;
-            left: 70%;
             box-shadow: 0 0 10px rgba(255, 121, 0, 0.7);
             z-index: 5;
         }
@@ -247,17 +239,20 @@
             margin-bottom: 10px;
             border-bottom: 1px solid #4cc9f0;
             padding-bottom: 5px;
+            font-size: 1.2rem;
         }
         
         .dialog p {
             margin-bottom: 15px;
             line-height: 1.4;
+            font-size: 0.9rem;
         }
         
         .dialog-buttons {
             display: flex;
             gap: 10px;
             justify-content: center;
+            flex-wrap: wrap;
         }
         
         .close-dialog {
@@ -268,6 +263,7 @@
             color: white;
             cursor: pointer;
             transition: all 0.2s;
+            font-size: 0.9rem;
         }
         
         .close-dialog:active {
@@ -276,14 +272,20 @@
         
         .quest-indicator {
             position: absolute;
-            top: -15px;
+            top: -10px;
             right: -5px;
-            width: 15px;
-            height: 15px;
+            width: 12px;
+            height: 12px;
             background: #ffaa00;
             border-radius: 50%;
             animation: pulse 1.5s infinite;
             z-index: 15;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0.5; transform: scale(1); }
         }
         
         .notification {
@@ -298,6 +300,9 @@
             display: none;
             z-index: 200;
             animation: notificationSlide 0.3s ease-out;
+            font-size: 0.9rem;
+            text-align: center;
+            max-width: 80%;
         }
         
         @keyframes notificationSlide {
@@ -313,8 +318,8 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid #4cc9f0;
             border-radius: 5px;
@@ -339,8 +344,8 @@
             position: absolute;
             top: 10px;
             left: 10px;
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             background: rgba(76, 201, 240, 0.3);
             border: 1px solid #4cc9f0;
             border-radius: 50%;
@@ -348,8 +353,25 @@
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.2rem;
+            font-size: 1rem;
             z-index: 20;
+            cursor: pointer;
+        }
+        
+        .xp-bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .xp-bar {
+            height: 100%;
+            background: linear-gradient(to right, #7209b7, #560bad);
+            width: 0%;
+            transition: width 0.5s;
         }
         
         @media (min-width: 768px) {
@@ -363,7 +385,7 @@
     <div class="container">
         <header>
             <h1>Enhanced RPG Adventure</h1>
-            <p>Level 1 - Forest of Beginnings</p>
+            <p>Level <span id="level-text">1</span> - Forest of Beginnings</p>
         </header>
         
         <div class="game-area">
@@ -376,19 +398,19 @@
                 <div class="chest" id="chest"></div>
                 
                 <div class="mini-map" id="mini-map">
-                    <div class="map-marker player-marker" style="top: 50%; left: 50%;"></div>
-                    <div class="map-marker" style="top: 30%; left: 30%; background: #f72585;"></div>
-                    <div class="map-marker" style="top: 70%; left: 70%; background: #ff6b6b;"></div>
-                    <div class="map-marker" style="top: 20%; left: 70%; background: #ff9e00;"></div>
+                    <div class="map-marker player-marker" id="player-marker"></div>
+                    <div class="map-marker npc-marker" id="npc-marker"></div>
+                    <div class="map-marker enemy-marker" id="enemy-marker"></div>
+                    <div class="map-marker chest-marker" id="chest-marker"></div>
                 </div>
                 
-                <div class="inventory-btn" onclick="openInventory()">🎒</div>
+                <div class="inventory-btn" id="inventory-btn">🎒</div>
                 
                 <div class="dialog" id="dialog">
                     <h3 id="dialog-title">Mysterious Stranger</h3>
                     <p id="dialog-text">Welcome, traveler! Our kingdom needs your help. Will you join our quest to defeat the darkness?</p>
                     <div class="dialog-buttons" id="dialog-buttons">
-                        <button class="close-dialog" onclick="closeDialog()">Continue</button>
+                        <button class="close-dialog" id="dialog-button">Continue</button>
                     </div>
                 </div>
                 
@@ -409,26 +431,26 @@
                 <div class="stat">
                     <div class="stat-value" id="level-value">1</div>
                     <div class="stat-name">Level</div>
-                    <div class="stat-value" id="coins-value">0</div>
+                    <div class="xp-bar-container"><div class="xp-bar" id="xp-bar"></div></div>
                 </div>
             </div>
             
             <div class="controls">
                 <div class="btn"></div>
-                <div class="btn" onmousedown="startMoving('up')" ontouchstart="startMoving('up')" ontouchend="stopMoving()">↑</div>
+                <div class="btn" id="up-btn">↑</div>
                 <div class="btn"></div>
-                <div class="btn" onmousedown="startMoving('left')" ontouchstart="startMoving('left')" ontouchend="stopMoving()">←</div>
-                <div class="btn" onclick="interact()">○</div>
-                <div class="btn" onmousedown="startMoving('right')" ontouchstart="startMoving('right')" ontouchend="stopMoving()">→</div>
+                <div class="btn" id="left-btn">←</div>
+                <div class="btn" id="interact-btn">○</div>
+                <div class="btn" id="right-btn">→</div>
                 <div class="btn"></div>
-                <div class="btn" onmousedown="startMoving('down')" ontouchstart="startMoving('down')" ontouchend="stopMoving()">↓</div>
+                <div class="btn" id="down-btn">↓</div>
                 <div class="btn"></div>
             </div>
             
             <div class="action-buttons">
-                <button class="action-btn" onclick="attack()">Attack</button>
-                <button class="action-btn" onclick="useItem()">Use Item</button>
-                <button class="action-btn" onclick="openMenu()">Menu</button>
+                <button class="action-btn" id="attack-btn">Attack</button>
+                <button class="action-btn" id="item-btn">Use Item</button>
+                <button class="action-btn" id="menu-btn">Menu</button>
             </div>
         </div>
     </div>
@@ -474,22 +496,93 @@
         const healthValue = document.getElementById('health-value');
         const manaValue = document.getElementById('mana-value');
         const levelValue = document.getElementById('level-value');
+        const levelText = document.getElementById('level-text');
         const coinsValue = document.getElementById('coins-value');
         const healthBar = document.getElementById('health-bar');
         const manaBar = document.getElementById('mana-bar');
+        const xpBar = document.getElementById('xp-bar');
         const notification = document.getElementById('notification');
+        
+        // Button elements
+        const upBtn = document.getElementById('up-btn');
+        const downBtn = document.getElementById('down-btn');
+        const leftBtn = document.getElementById('left-btn');
+        const rightBtn = document.getElementById('right-btn');
+        const interactBtn = document.getElementById('interact-btn');
+        const attackBtn = document.getElementById('attack-btn');
+        const itemBtn = document.getElementById('item-btn');
+        const menuBtn = document.getElementById('menu-btn');
+        const inventoryBtn = document.getElementById('inventory-btn');
         
         // Scene boundaries
         let sceneRect = scene.getBoundingClientRect();
-        let characterRect = character.getBoundingClientRect();
         
         // Character position relative to scene
-        let charX = sceneRect.width / 2 - characterRect.width / 2;
-        let charY = sceneRect.height / 2 - characterRect.height / 2;
+        let charX = sceneRect.width / 2;
+        let charY = sceneRect.height / 2;
         
-        // Set initial character position
-        character.style.left = charX + 'px';
-        character.style.top = charY + 'px';
+        // NPC, enemy and chest positions
+        const npcX = sceneRect.width * 0.3;
+        const npcY = sceneRect.height * 0.3;
+        const enemyX = sceneRect.width * 0.7;
+        const enemyY = sceneRect.height * 0.7;
+        const chestX = sceneRect.width * 0.7;
+        const chestY = sceneRect.height * 0.2;
+        
+        // Set initial positions
+        function setInitialPositions() {
+            sceneRect = scene.getBoundingClientRect();
+            
+            // Character position
+            character.style.left = charX + 'px';
+            character.style.top = charY + 'px';
+            
+            // NPC position
+            npc.style.left = npcX + 'px';
+            npc.style.top = npcY + 'px';
+            
+            // Enemy position
+            enemy.style.left = enemyX + 'px';
+            enemy.style.top = enemyY + 'px';
+            
+            // Chest position
+            chest.style.left = chestX + 'px';
+            chest.style.top = chestY + 'px';
+            
+            // Update minimap markers
+            updateMinimap();
+        }
+        
+        // Update minimap markers
+        function updateMinimap() {
+            const playerMarker = document.getElementById('player-marker');
+            const npcMarker = document.getElementById('npc-marker');
+            const enemyMarker = document.getElementById('enemy-marker');
+            const chestMarker = document.getElementById('chest-marker');
+            
+            if (playerMarker) {
+                playerMarker.style.left = (charX / sceneRect.width * 100) + '%';
+                playerMarker.style.top = (charY / sceneRect.height * 100) + '%';
+            }
+            
+            if (npcMarker) {
+                npcMarker.style.left = (npcX / sceneRect.width * 100) + '%';
+                npcMarker.style.top = (npcY / sceneRect.height * 100) + '%';
+                npcMarker.style.background = '#f72585';
+            }
+            
+            if (enemyMarker) {
+                enemyMarker.style.left = (enemyX / sceneRect.width * 100) + '%';
+                enemyMarker.style.top = (enemyY / sceneRect.height * 100) + '%';
+                enemyMarker.style.background = '#ff6b6b';
+            }
+            
+            if (chestMarker) {
+                chestMarker.style.left = (chestX / sceneRect.width * 100) + '%';
+                chestMarker.style.top = (chestY / sceneRect.height * 100) + '%';
+                chestMarker.style.background = '#ff9e00';
+            }
+        }
         
         // Movement interval
         let movementInterval;
@@ -499,95 +592,9 @@
             healthValue.textContent = gameState.health;
             manaValue.textContent = gameState.mana;
             levelValue.textContent = gameState.level;
-            coinsValue.textContent = gameState.coins;
+            levelText.textContent = gameState.level;
+            
+            if (coinsValue) coinsValue.textContent = gameState.coins;
             
             // Update bars
-            healthBar.style.width = `${(gameState.health / gameState.maxHealth) * 100}%`;
-            manaBar.style.width = `${(gameState.mana / gameState.maxMana) * 100}%`;
-        }
-        
-        // Show notification
-        function showNotification(message) {
-            notification.textContent = message;
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-        
-        // Start moving function
-        function startMoving(direction) {
-            gameState.movement[direction] = true;
-            
-            if (movementInterval) clearInterval(movementInterval);
-            
-            movementInterval = setInterval(() => {
-                if (gameState.movement.up) move('up');
-                if (gameState.movement.down) move('down');
-                if (gameState.movement.left) move('left');
-                if (gameState.movement.right) move('right');
-            }, 100);
-        }
-        
-        // Stop moving function
-        function stopMoving() {
-            gameState.movement.up = false;
-            gameState.movement.down = false;
-            gameState.movement.left = false;
-            gameState.movement.right = false;
-            
-            if (movementInterval) {
-                clearInterval(movementInterval);
-                movementInterval = null;
-            }
-        }
-        
-        // Movement function
-        function move(direction) {
-            const moveAmount = 8;
-            const sceneRect = scene.getBoundingClientRect();
-            const charWidth = character.offsetWidth;
-            const charHeight = character.offsetHeight;
-            
-            switch(direction) {
-                case 'up':
-                    charY = Math.max(0, charY - moveAmount);
-                    break;
-                case 'down':
-                    charY = Math.min(sceneRect.height - charHeight, charY + moveAmount);
-                    break;
-                case 'left':
-                    charX = Math.max(0, charX - moveAmount);
-                    break;
-                case 'right':
-                    charX = Math.min(sceneRect.width - charWidth, charX + moveAmount);
-                    break;
-            }
-            
-            character.style.left = charX + 'px';
-            character.style.top = charY + 'px';
-            
-            // Check interactions
-            checkNPCProximity();
-            checkEnemyProximity();
-            checkChestProximity();
-        }
-        
-        // Check if player is near NPC
-        function checkNPCProximity() {
-            const characterRect = character.getBoundingClientRect();
-            const npcRect = npc.getBoundingClientRect();
-            
-            // Calculate distance between character and NPC
-            const charCenterX = characterRect.left + characterRect.width / 2;
-            const charCenterY = characterRect.top + characterRect.height / 2;
-            const npcCenterX = npcRect.left + npcRect.width / 2;
-            const npcCenterY = npcRect.top + npcRect.height / 2;
-            
-            const dx = charCenterX - npcCenterX;
-            const dy = charCenterY - npcCenterY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            
-            if (distance < 80) {
-                // Show quest indicator if player doesn't h
+            healthBar.style.wid
