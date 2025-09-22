@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile RPG Demo</title>
+    <title>Mobile RPG Demo - Fixed</title>
     <style>
         * {
             margin: 0;
@@ -72,6 +72,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             box-shadow: 0 0 10px rgba(67, 97, 238, 0.7);
+            transition: transform 0.2s ease;
         }
         
         .npc {
@@ -156,6 +157,7 @@
             border-radius: 10px;
             padding: 15px;
             display: none;
+            z-index: 100;
         }
         
         .dialog.show {
@@ -176,6 +178,23 @@
             color: white;
         }
         
+        .quest-indicator {
+            position: absolute;
+            top: -15px;
+            right: -5px;
+            width: 15px;
+            height: 15px;
+            background: #ffaa00;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0.5; transform: scale(1); }
+        }
+        
         @media (min-width: 768px) {
             .container {
                 max-width: 400px;
@@ -191,9 +210,11 @@
         </header>
         
         <div class="game-area">
-            <div class="scene">
-                <div class="character"></div>
-                <div class="npc"></div>
+            <div class="scene" id="scene">
+                <div class="character" id="character"></div>
+                <div class="npc" id="npc">
+                    <div class="quest-indicator" id="quest-indicator"></div>
+                </div>
                 
                 <div class="dialog" id="dialog">
                     <h3>Mysterious Stranger</h3>
@@ -204,15 +225,15 @@
             
             <div class="stats">
                 <div class="stat">
-                    <div class="stat-value">100</div>
+                    <div class="stat-value" id="health-value">100</div>
                     <div class="stat-name">Health</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-value">50</div>
+                    <div class="stat-value" id="mana-value">50</div>
                     <div class="stat-name">Mana</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-value">5</div>
+                    <div class="stat-value" id="level-value">1</div>
                     <div class="stat-name">Level</div>
                 </div>
             </div>
@@ -238,60 +259,123 @@
     </div>
 
     <script>
-        // Simple game state
+        // Enhanced game state
         const gameState = {
             health: 100,
             mana: 50,
-            level: 5,
-            position: { x: 0, y: 0 }
+            level: 1,
+            position: { x: 0, y: 0 },
+            hasQuest: false,
+            coins: 0
         };
         
         // DOM elements
-        const character = document.querySelector('.character');
+        const character = document.getElementById('character');
+        const scene = document.getElementById('scene');
         const dialog = document.getElementById('dialog');
+        const npc = document.getElementById('npc');
+        const questIndicator = document.getElementById('quest-indicator');
+        const healthValue = document.getElementById('health-value');
+        const manaValue = document.getElementById('mana-value');
+        const levelValue = document.getElementById('level-value');
         
-        // Movement function
+        // Scene boundaries
+        let sceneRect = scene.getBoundingClientRect();
+        let characterRect = character.getBoundingClientRect();
+        
+        // Character position relative to scene
+        let charX = sceneRect.width / 2 - characterRect.width / 2;
+        let charY = sceneRect.height / 2 - characterRect.height / 2;
+        
+        // Set initial character position
+        character.style.left = charX + 'px';
+        character.style.top = charY + 'px';
+        
+        // Update stats display
+        function updateStats() {
+            healthValue.textContent = gameState.health;
+            manaValue.textContent = gameState.mana;
+            levelValue.textContent = gameState.level;
+        }
+        
+        // Movement function - FIXED
         function move(direction) {
-            const moveAmount = 10;
-            const rect = character.getBoundingClientRect();
+            const moveAmount = 15;
+            const sceneRect = scene.getBoundingClientRect();
+            const charWidth = character.offsetWidth;
+            const charHeight = character.offsetHeight;
             
             switch(direction) {
                 case 'up':
-                    character.style.top = (rect.top - moveAmount) + 'px';
+                    charY = Math.max(0, charY - moveAmount);
                     break;
                 case 'down':
-                    character.style.top = (rect.top + moveAmount) + 'px';
+                    charY = Math.min(sceneRect.height - charHeight, charY + moveAmount);
                     break;
                 case 'left':
-                    character.style.left = (rect.left - moveAmount) + 'px';
+                    charX = Math.max(0, charX - moveAmount);
                     break;
                 case 'right':
-                    character.style.left = (rect.left + moveAmount) + 'px';
+                    charX = Math.min(sceneRect.width - charWidth, charX + moveAmount);
                     break;
             }
+            
+            character.style.left = charX + 'px';
+            character.style.top = charY + 'px';
             
             // Check if near NPC
             checkNPCProximity();
         }
         
-        // Check if player is near NPC
+        // Check if player is near NPC - FIXED
         function checkNPCProximity() {
             const characterRect = character.getBoundingClientRect();
-            const npcRect = document.querySelector('.npc').getBoundingClientRect();
+            const npcRect = npc.getBoundingClientRect();
             
             // Calculate distance between character and NPC
-            const dx = characterRect.left - npcRect.left;
-            const dy = characterRect.top - npcRect.top;
+            const charCenterX = characterRect.left + characterRect.width / 2;
+            const charCenterY = characterRect.top + characterRect.height / 2;
+            const npcCenterX = npcRect.left + npcRect.width / 2;
+            const npcCenterY = npcRect.top + npcRect.height / 2;
+            
+            const dx = charCenterX - npcCenterX;
+            const dy = charCenterY - npcCenterY;
             const distance = Math.sqrt(dx * dx + dy * dy);
             
-            if (distance < 100) {
+            if (distance < 80) {
                 showDialog();
+                // Show quest indicator if player doesn't have quest
+                questIndicator.style.display = gameState.hasQuest ? 'none' : 'block';
+            } else {
+                questIndicator.style.display = 'none';
             }
         }
         
         // Show dialog
         function showDialog() {
+            if (!gameState.hasQuest) {
+                dialog.innerHTML = `
+                    <h3>Mysterious Stranger</h3>
+                    <p>Welcome, traveler! Our kingdom needs your help. Will you join our quest to defeat the darkness?</p>
+                    <button class="close-dialog" onclick="acceptQuest()">Accept Quest</button>
+                    <button class="close-dialog" onclick="closeDialog()">Not Now</button>
+                `;
+            } else {
+                dialog.innerHTML = `
+                    <h3>Mysterious Stranger</h3>
+                    <p>Thank you for accepting the quest! Return to me when you've defeated 5 enemies.</p>
+                    <button class="close-dialog" onclick="closeDialog()">Continue</button>
+                `;
+            }
             dialog.classList.add('show');
+        }
+        
+        // Accept quest
+        function acceptQuest() {
+            gameState.hasQuest = true;
+            questIndicator.style.display = 'none';
+            dialog.classList.remove('show');
+            alert('Quest accepted! Defeat 5 enemies to complete it.');
         }
         
         // Close dialog
@@ -301,76 +385,73 @@
         
         // Attack function
         function attack() {
-            alert('You swing your sword!');
-            // Add combat logic here
+            if (gameState.mana >= 10) {
+                gameState.mana -= 10;
+                updateStats();
+                alert('You cast a fireball! -10 Mana');
+                
+                // Visual feedback
+                character.style.transform = 'translate(0, 0) scale(1.2)';
+                setTimeout(() => {
+                    character.style.transform = 'translate(0, 0) scale(1)';
+                }, 200);
+            } else {
+                alert('Not enough mana!');
+            }
         }
         
         // Use item function
         function useItem() {
-            alert('You use a health potion!');
-            // Add item logic here
+            if (gameState.health < 100) {
+                gameState.health = Math.min(100, gameState.health + 20);
+                updateStats();
+                alert('You used a health potion! +20 Health');
+            } else {
+                alert('Health is already full!');
+            }
         }
         
         // Open menu function
         function openMenu() {
-            alert('Game menu opened');
-            // Add menu logic here
+            alert('Game menu opened\n\nStats:\nHealth: ' + gameState.health + 
+                  '\nMana: ' + gameState.mana + '\nLevel: ' + gameState.level +
+                  '\nQuest: ' + (gameState.hasQuest ? 'Active' : 'None'));
         }
         
         // Interact function
         function interact() {
-            alert('You interact with the environment');
-            // Add interaction logic here
+            const characterRect = character.getBoundingClientRect();
+            const npcRect = npc.getBoundingClientRect();
+            
+            const charCenterX = characterRect.left + characterRect.width / 2;
+            const charCenterY = characterRect.top + characterRect.height / 2;
+            const npcCenterX = npcRect.left + npcRect.width / 2;
+            const npcCenterY = npcRect.top + npcRect.height / 2;
+            
+            const dx = charCenterX - npcCenterX;
+            const dy = charCenterY - npcCenterY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < 80) {
+                showDialog();
+            } else {
+                alert('You search the area and find 5 coins!');
+                gameState.coins += 5;
+            }
         }
         
         // Initialize game
         function init() {
-            // Add touch events for mobile
-            const scene = document.querySelector('.scene');
-            scene.addEventListener('touchstart', handleTouchStart, false);
-            scene.addEventListener('touchmove', handleTouchMove, false);
+            // Update scene boundaries on resize
+            window.addEventListener('resize', () => {
+                sceneRect = scene.getBoundingClientRect();
+            });
             
             // Initial dialog after 2 seconds
             setTimeout(showDialog, 2000);
-        }
-        
-        // Touch handling for mobile movement
-        let xDown = null;
-        let yDown = null;
-        
-        function handleTouchStart(evt) {
-            const firstTouch = evt.touches[0];
-            xDown = firstTouch.clientX;
-            yDown = firstTouch.clientY;
-        }
-        
-        function handleTouchMove(evt) {
-            if (!xDown || !yDown) {
-                return;
-            }
             
-            const xUp = evt.touches[0].clientX;
-            const yUp = evt.touches[0].clientY;
-            
-            const xDiff = xDown - xUp;
-            const yDiff = yDown - yUp;
-            
-            if (Math.abs(xDiff) > Math.abs(yDiff)) {
-                if (xDiff > 0) {
-                    move('left');
-                } else {
-                    move('right');
-                }
-            } else {
-                if (yDiff > 0) {
-                    move('up');
-                } else {
-                    move('down');
-                }
-            }
-            
-            xDown = null;
-            yDown = null;
+            // Update stats display
+            updateStats();
         }
         
         // Initialize the game
