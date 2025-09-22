@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile RPG Demo - Fixed</title>
+    <title>Enhanced Mobile RPG</title>
     <style>
         * {
             margin: 0;
@@ -38,6 +38,7 @@
             background: rgba(0, 0, 0, 0.5);
             border-radius: 10px;
             margin-bottom: 10px;
+            position: relative;
         }
         
         h1 {
@@ -54,12 +55,16 @@
         }
         
         .scene {
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23111" /><circle cx="20" cy="20" r="15" fill="%23333" /><circle cx="60" cy="40" r="12" fill="%23333" /><circle cx="80" cy="70" r="8" fill="%23333" /></svg>');
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(58, 12, 163, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(247, 37, 133, 0.2) 0%, transparent 20%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23111" /><circle cx="20" cy="20" r="15" fill="%23222" /><circle cx="60" cy="40" r="12" fill="%23222" /><circle cx="80" cy="70" r="8" fill="%23222" /></svg>');
             border: 2px solid #4cc9f0;
             border-radius: 10px;
             flex: 1;
             position: relative;
             overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
         }
         
         .character {
@@ -73,6 +78,7 @@
             transform: translate(-50%, -50%);
             box-shadow: 0 0 10px rgba(67, 97, 238, 0.7);
             transition: transform 0.2s ease;
+            z-index: 10;
         }
         
         .npc {
@@ -84,6 +90,37 @@
             top: 30%;
             left: 30%;
             box-shadow: 0 0 10px rgba(247, 37, 133, 0.7);
+            z-index: 5;
+        }
+        
+        .enemy {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(to bottom, #ff6b6b, #c1121f);
+            border-radius: 40% 40% 50% 50%;
+            top: 70%;
+            left: 70%;
+            box-shadow: 0 0 10px rgba(195, 18, 31, 0.7);
+            z-index: 5;
+            animation: enemyFloat 3s infinite ease-in-out;
+        }
+        
+        @keyframes enemyFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        .chest {
+            position: absolute;
+            width: 35px;
+            height: 25px;
+            background: linear-gradient(to bottom, #ff9e00, #ff7900);
+            border-radius: 5px;
+            top: 20%;
+            left: 70%;
+            box-shadow: 0 0 10px rgba(255, 121, 0, 0.7);
+            z-index: 5;
         }
         
         .controls {
@@ -106,10 +143,12 @@
             justify-content: center;
             cursor: pointer;
             user-select: none;
+            transition: all 0.2s;
         }
         
         .btn:active {
             background: rgba(76, 201, 240, 0.6);
+            transform: scale(0.95);
         }
         
         .action-buttons {
@@ -127,6 +166,11 @@
             color: white;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .action-btn:active {
+            transform: scale(0.95);
         }
         
         .stats {
@@ -140,11 +184,38 @@
         
         .stat {
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .stat-value {
             font-size: 1.2rem;
             color: #4cc9f0;
+            font-weight: bold;
+        }
+        
+        .stat-bar {
+            width: 60px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        
+        .health-bar {
+            height: 100%;
+            background: linear-gradient(to right, #4cc9f0, #4361ee);
+            width: 100%;
+            transition: width 0.3s;
+        }
+        
+        .mana-bar {
+            height: 100%;
+            background: linear-gradient(to right, #f72585, #b5179e);
+            width: 100%;
+            transition: width 0.3s;
         }
         
         .dialog {
@@ -152,30 +223,55 @@
             bottom: 10px;
             left: 10px;
             right: 10px;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             border: 2px solid #4cc9f0;
             border-radius: 10px;
             padding: 15px;
             display: none;
             z-index: 100;
+            box-shadow: 0 0 20px rgba(76, 201, 240, 0.5);
         }
         
         .dialog.show {
             display: block;
+            animation: dialogAppear 0.3s ease-out;
+        }
+        
+        @keyframes dialogAppear {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         
         .dialog h3 {
             color: #f72585;
             margin-bottom: 10px;
+            border-bottom: 1px solid #4cc9f0;
+            padding-bottom: 5px;
+        }
+        
+        .dialog p {
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .dialog-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
         }
         
         .close-dialog {
-            margin-top: 10px;
-            padding: 5px 10px;
+            padding: 8px 16px;
             background: #4cc9f0;
             border: none;
             border-radius: 5px;
             color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .close-dialog:active {
+            transform: scale(0.95);
         }
         
         .quest-indicator {
@@ -187,12 +283,73 @@
             background: #ffaa00;
             border-radius: 50%;
             animation: pulse 1.5s infinite;
+            z-index: 15;
         }
         
-        @keyframes pulse {
-            0% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-            100% { opacity: 0.5; transform: scale(1); }
+        .notification {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #4cc9f0;
+            border-radius: 5px;
+            padding: 8px 15px;
+            display: none;
+            z-index: 200;
+            animation: notificationSlide 0.3s ease-out;
+        }
+        
+        @keyframes notificationSlide {
+            from { top: -50px; opacity: 0; }
+            to { top: 10px; opacity: 1; }
+        }
+        
+        .notification.show {
+            display: block;
+        }
+        
+        .mini-map {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #4cc9f0;
+            border-radius: 5px;
+            z-index: 20;
+        }
+        
+        .map-marker {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #4cc9f0;
+            border-radius: 50%;
+        }
+        
+        .player-marker {
+            background: #4361ee;
+            width: 6px;
+            height: 6px;
+        }
+        
+        .inventory-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 40px;
+            height: 40px;
+            background: rgba(76, 201, 240, 0.3);
+            border: 1px solid #4cc9f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            z-index: 20;
         }
         
         @media (min-width: 768px) {
@@ -205,7 +362,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>Mobile RPG Adventure</h1>
+            <h1>Enhanced RPG Adventure</h1>
             <p>Level 1 - Forest of Beginnings</p>
         </header>
         
@@ -215,38 +372,56 @@
                 <div class="npc" id="npc">
                     <div class="quest-indicator" id="quest-indicator"></div>
                 </div>
+                <div class="enemy" id="enemy"></div>
+                <div class="chest" id="chest"></div>
+                
+                <div class="mini-map" id="mini-map">
+                    <div class="map-marker player-marker" style="top: 50%; left: 50%;"></div>
+                    <div class="map-marker" style="top: 30%; left: 30%; background: #f72585;"></div>
+                    <div class="map-marker" style="top: 70%; left: 70%; background: #ff6b6b;"></div>
+                    <div class="map-marker" style="top: 20%; left: 70%; background: #ff9e00;"></div>
+                </div>
+                
+                <div class="inventory-btn" onclick="openInventory()">🎒</div>
                 
                 <div class="dialog" id="dialog">
-                    <h3>Mysterious Stranger</h3>
-                    <p>Welcome, traveler! Our kingdom needs your help. Will you join our quest to defeat the darkness?</p>
-                    <button class="close-dialog" onclick="closeDialog()">Continue</button>
+                    <h3 id="dialog-title">Mysterious Stranger</h3>
+                    <p id="dialog-text">Welcome, traveler! Our kingdom needs your help. Will you join our quest to defeat the darkness?</p>
+                    <div class="dialog-buttons" id="dialog-buttons">
+                        <button class="close-dialog" onclick="closeDialog()">Continue</button>
+                    </div>
                 </div>
+                
+                <div class="notification" id="notification">You found 5 coins!</div>
             </div>
             
             <div class="stats">
                 <div class="stat">
                     <div class="stat-value" id="health-value">100</div>
                     <div class="stat-name">Health</div>
+                    <div class="stat-bar"><div class="health-bar" id="health-bar"></div></div>
                 </div>
                 <div class="stat">
                     <div class="stat-value" id="mana-value">50</div>
                     <div class="stat-name">Mana</div>
+                    <div class="stat-bar"><div class="mana-bar" id="mana-bar"></div></div>
                 </div>
                 <div class="stat">
                     <div class="stat-value" id="level-value">1</div>
                     <div class="stat-name">Level</div>
+                    <div class="stat-value" id="coins-value">0</div>
                 </div>
             </div>
             
             <div class="controls">
                 <div class="btn"></div>
-                <div class="btn" onclick="move('up')">↑</div>
+                <div class="btn" onmousedown="startMoving('up')" ontouchstart="startMoving('up')" ontouchend="stopMoving()">↑</div>
                 <div class="btn"></div>
-                <div class="btn" onclick="move('left')">←</div>
+                <div class="btn" onmousedown="startMoving('left')" ontouchstart="startMoving('left')" ontouchend="stopMoving()">←</div>
                 <div class="btn" onclick="interact()">○</div>
-                <div class="btn" onclick="move('right')">→</div>
+                <div class="btn" onmousedown="startMoving('right')" ontouchstart="startMoving('right')" ontouchend="stopMoving()">→</div>
                 <div class="btn"></div>
-                <div class="btn" onclick="move('down')">↓</div>
+                <div class="btn" onmousedown="startMoving('down')" ontouchstart="startMoving('down')" ontouchend="stopMoving()">↓</div>
                 <div class="btn"></div>
             </div>
             
@@ -262,22 +437,47 @@
         // Enhanced game state
         const gameState = {
             health: 100,
+            maxHealth: 100,
             mana: 50,
+            maxMana: 50,
             level: 1,
+            xp: 0,
+            xpToNextLevel: 100,
+            coins: 0,
             position: { x: 0, y: 0 },
             hasQuest: false,
-            coins: 0
+            enemiesDefeated: 0,
+            questEnemiesRequired: 5,
+            inventory: [
+                { name: "Health Potion", count: 3 },
+                { name: "Mana Potion", count: 2 }
+            ],
+            movement: {
+                up: false,
+                down: false,
+                left: false,
+                right: false
+            }
         };
         
         // DOM elements
         const character = document.getElementById('character');
         const scene = document.getElementById('scene');
         const dialog = document.getElementById('dialog');
+        const dialogTitle = document.getElementById('dialog-title');
+        const dialogText = document.getElementById('dialog-text');
+        const dialogButtons = document.getElementById('dialog-buttons');
         const npc = document.getElementById('npc');
+        const enemy = document.getElementById('enemy');
+        const chest = document.getElementById('chest');
         const questIndicator = document.getElementById('quest-indicator');
         const healthValue = document.getElementById('health-value');
         const manaValue = document.getElementById('mana-value');
         const levelValue = document.getElementById('level-value');
+        const coinsValue = document.getElementById('coins-value');
+        const healthBar = document.getElementById('health-bar');
+        const manaBar = document.getElementById('mana-bar');
+        const notification = document.getElementById('notification');
         
         // Scene boundaries
         let sceneRect = scene.getBoundingClientRect();
@@ -291,16 +491,61 @@
         character.style.left = charX + 'px';
         character.style.top = charY + 'px';
         
+        // Movement interval
+        let movementInterval;
+        
         // Update stats display
         function updateStats() {
             healthValue.textContent = gameState.health;
             manaValue.textContent = gameState.mana;
             levelValue.textContent = gameState.level;
+            coinsValue.textContent = gameState.coins;
+            
+            // Update bars
+            healthBar.style.width = `${(gameState.health / gameState.maxHealth) * 100}%`;
+            manaBar.style.width = `${(gameState.mana / gameState.maxMana) * 100}%`;
         }
         
-        // Movement function - FIXED
+        // Show notification
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Start moving function
+        function startMoving(direction) {
+            gameState.movement[direction] = true;
+            
+            if (movementInterval) clearInterval(movementInterval);
+            
+            movementInterval = setInterval(() => {
+                if (gameState.movement.up) move('up');
+                if (gameState.movement.down) move('down');
+                if (gameState.movement.left) move('left');
+                if (gameState.movement.right) move('right');
+            }, 100);
+        }
+        
+        // Stop moving function
+        function stopMoving() {
+            gameState.movement.up = false;
+            gameState.movement.down = false;
+            gameState.movement.left = false;
+            gameState.movement.right = false;
+            
+            if (movementInterval) {
+                clearInterval(movementInterval);
+                movementInterval = null;
+            }
+        }
+        
+        // Movement function
         function move(direction) {
-            const moveAmount = 15;
+            const moveAmount = 8;
             const sceneRect = scene.getBoundingClientRect();
             const charWidth = character.offsetWidth;
             const charHeight = character.offsetHeight;
@@ -323,11 +568,13 @@
             character.style.left = charX + 'px';
             character.style.top = charY + 'px';
             
-            // Check if near NPC
+            // Check interactions
             checkNPCProximity();
+            checkEnemyProximity();
+            checkChestProximity();
         }
         
-        // Check if player is near NPC - FIXED
+        // Check if player is near NPC
         function checkNPCProximity() {
             const characterRect = character.getBoundingClientRect();
             const npcRect = npc.getBoundingClientRect();
@@ -343,119 +590,4 @@
             const distance = Math.sqrt(dx * dx + dy * dy);
             
             if (distance < 80) {
-                showDialog();
-                // Show quest indicator if player doesn't have quest
-                questIndicator.style.display = gameState.hasQuest ? 'none' : 'block';
-            } else {
-                questIndicator.style.display = 'none';
-            }
-        }
-        
-        // Show dialog
-        function showDialog() {
-            if (!gameState.hasQuest) {
-                dialog.innerHTML = `
-                    <h3>Mysterious Stranger</h3>
-                    <p>Welcome, traveler! Our kingdom needs your help. Will you join our quest to defeat the darkness?</p>
-                    <button class="close-dialog" onclick="acceptQuest()">Accept Quest</button>
-                    <button class="close-dialog" onclick="closeDialog()">Not Now</button>
-                `;
-            } else {
-                dialog.innerHTML = `
-                    <h3>Mysterious Stranger</h3>
-                    <p>Thank you for accepting the quest! Return to me when you've defeated 5 enemies.</p>
-                    <button class="close-dialog" onclick="closeDialog()">Continue</button>
-                `;
-            }
-            dialog.classList.add('show');
-        }
-        
-        // Accept quest
-        function acceptQuest() {
-            gameState.hasQuest = true;
-            questIndicator.style.display = 'none';
-            dialog.classList.remove('show');
-            alert('Quest accepted! Defeat 5 enemies to complete it.');
-        }
-        
-        // Close dialog
-        function closeDialog() {
-            dialog.classList.remove('show');
-        }
-        
-        // Attack function
-        function attack() {
-            if (gameState.mana >= 10) {
-                gameState.mana -= 10;
-                updateStats();
-                alert('You cast a fireball! -10 Mana');
-                
-                // Visual feedback
-                character.style.transform = 'translate(0, 0) scale(1.2)';
-                setTimeout(() => {
-                    character.style.transform = 'translate(0, 0) scale(1)';
-                }, 200);
-            } else {
-                alert('Not enough mana!');
-            }
-        }
-        
-        // Use item function
-        function useItem() {
-            if (gameState.health < 100) {
-                gameState.health = Math.min(100, gameState.health + 20);
-                updateStats();
-                alert('You used a health potion! +20 Health');
-            } else {
-                alert('Health is already full!');
-            }
-        }
-        
-        // Open menu function
-        function openMenu() {
-            alert('Game menu opened\n\nStats:\nHealth: ' + gameState.health + 
-                  '\nMana: ' + gameState.mana + '\nLevel: ' + gameState.level +
-                  '\nQuest: ' + (gameState.hasQuest ? 'Active' : 'None'));
-        }
-        
-        // Interact function
-        function interact() {
-            const characterRect = character.getBoundingClientRect();
-            const npcRect = npc.getBoundingClientRect();
-            
-            const charCenterX = characterRect.left + characterRect.width / 2;
-            const charCenterY = characterRect.top + characterRect.height / 2;
-            const npcCenterX = npcRect.left + npcRect.width / 2;
-            const npcCenterY = npcRect.top + npcRect.height / 2;
-            
-            const dx = charCenterX - npcCenterX;
-            const dy = charCenterY - npcCenterY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            
-            if (distance < 80) {
-                showDialog();
-            } else {
-                alert('You search the area and find 5 coins!');
-                gameState.coins += 5;
-            }
-        }
-        
-        // Initialize game
-        function init() {
-            // Update scene boundaries on resize
-            window.addEventListener('resize', () => {
-                sceneRect = scene.getBoundingClientRect();
-            });
-            
-            // Initial dialog after 2 seconds
-            setTimeout(showDialog, 2000);
-            
-            // Update stats display
-            updateStats();
-        }
-        
-        // Initialize the game
-        init();
-    </script>
-</body>
-</html>
+                // Show quest indicator if player doesn't h
