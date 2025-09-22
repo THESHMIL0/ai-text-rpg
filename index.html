@@ -497,7 +497,6 @@
         const manaValue = document.getElementById('mana-value');
         const levelValue = document.getElementById('level-value');
         const levelText = document.getElementById('level-text');
-        const coinsValue = document.getElementById('coins-value');
         const healthBar = document.getElementById('health-bar');
         const manaBar = document.getElementById('mana-bar');
         const xpBar = document.getElementById('xp-bar');
@@ -522,12 +521,12 @@
         let charY = sceneRect.height / 2;
         
         // NPC, enemy and chest positions
-        const npcX = sceneRect.width * 0.3;
-        const npcY = sceneRect.height * 0.3;
-        const enemyX = sceneRect.width * 0.7;
-        const enemyY = sceneRect.height * 0.7;
-        const chestX = sceneRect.width * 0.7;
-        const chestY = sceneRect.height * 0.2;
+        let npcX = sceneRect.width * 0.3;
+        let npcY = sceneRect.height * 0.3;
+        let enemyX = sceneRect.width * 0.7;
+        let enemyY = sceneRect.height * 0.7;
+        let chestX = sceneRect.width * 0.7;
+        let chestY = sceneRect.height * 0.2;
         
         // Set initial positions
         function setInitialPositions() {
@@ -594,7 +593,7 @@
             levelValue.textContent = gameState.level;
             levelText.textContent = gameState.level;
             
-            if (coinsValue) coinsValue.textContent = gameState.coins;
-            
             // Update bars
-            healthBar.style.wid
+            healthBar.style.width = `${(gameState.health / gameState.maxHealth) * 100}%`;
+            manaBar.style.width = `${(gameState.mana / gameState.maxMana) * 100}%`;
+            xpBar.s
