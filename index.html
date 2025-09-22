@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Mobile RPG</title>
+    <title>Carrom Pool</title>
     <style>
         * {
             margin: 0;
@@ -14,7 +14,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to bottom, #1a1a2e, #16213e);
+            background: linear-gradient(to bottom, #2c3e50, #1a1a2e);
             color: #fff;
             line-height: 1.6;
             height: 100vh;
@@ -42,9 +42,29 @@
         }
         
         h1 {
-            font-size: 1.5rem;
-            color: #4cc9f0;
-            text-shadow: 0 0 5px rgba(76, 201, 240, 0.7);
+            font-size: 1.8rem;
+            color: #f39c12;
+            text-shadow: 0 0 5px rgba(243, 156, 18, 0.7);
+            margin-bottom: 5px;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .info-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #f39c12;
         }
         
         .game-area {
@@ -54,115 +74,146 @@
             gap: 10px;
         }
         
-        .scene {
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(58, 12, 163, 0.2) 0%, transparent 20%),
-                radial-gradient(circle at 80% 70%, rgba(247, 37, 133, 0.2) 0%, transparent 20%),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23111" /><circle cx="20" cy="20" r="15" fill="%23222" /><circle cx="60" cy="40" r="12" fill="%23222" /><circle cx="80" cy="70" r="8" fill="%23222" /></svg>');
-            border: 2px solid #4cc9f0;
-            border-radius: 10px;
+        .carrom-board {
+            width: 100%;
             flex: 1;
+            background: linear-gradient(45deg, #e6d3a3, #d6c495);
+            border: 15px solid #8b4513;
+            border-radius: 10px;
             position: relative;
             overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
         }
         
-        .character {
+        .board-inner {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 2px solid #8b4513;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .center-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border: 2px solid #8b4513;
+            border-radius: 50%;
+            background: rgba(139, 69, 19, 0.1);
+        }
+        
+        .pocket {
             position: absolute;
             width: 40px;
             height: 40px;
-            background: linear-gradient(to bottom, #4361ee, #3a0ca3);
-            border-radius: 50% 50% 40% 40%;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 10px rgba(67, 97, 238, 0.7);
-            transition: transform 0.2s ease;
+            background: #111;
+            border-radius: 50%;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+        
+        .pocket-tl { top: 0; left: 0; }
+        .pocket-tr { top: 0; right: 0; }
+        .pocket-bl { bottom: 0; left: 0; }
+        .pocket-br { bottom: 0; right: 0; }
+        
+        .striker {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(to bottom, #f1c40f, #f39c12);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.7);
+            z-index: 20;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .coin {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
             z-index: 10;
         }
         
-        .npc {
+        .black-coin {
+            background: linear-gradient(to bottom, #2c3e50, #000);
+        }
+        
+        .white-coin {
+            background: linear-gradient(to bottom, #ecf0f1, #bdc3c7);
+        }
+        
+        .queen {
+            background: linear-gradient(to bottom, #e74c3c, #c0392b);
+            width: 32px;
+            height: 32px;
+            box-shadow: 0 0 8px rgba(231, 76, 60, 0.7);
+        }
+        
+        .aim-line {
             position: absolute;
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(to bottom, #f72585, #b5179e);
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(247, 37, 133, 0.7);
+            height: 2px;
+            background: rgba(255, 255, 255, 0.7);
+            transform-origin: center left;
+            display: none;
             z-index: 5;
         }
         
-        .enemy {
+        .power-bar-container {
             position: absolute;
-            width: 35px;
-            height: 35px;
-            background: linear-gradient(to bottom, #ff6b6b, #c1121f);
-            border-radius: 40% 40% 50% 50%;
-            box-shadow: 0 0 10px rgba(195, 18, 31, 0.7);
-            z-index: 5;
-            animation: enemyFloat 3s infinite ease-in-out;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+            z-index: 25;
         }
         
-        @keyframes enemyFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-        
-        .chest {
-            position: absolute;
-            width: 35px;
-            height: 25px;
-            background: linear-gradient(to bottom, #ff9e00, #ff7900);
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(255, 121, 0, 0.7);
-            z-index: 5;
+        .power-bar {
+            height: 100%;
+            background: linear-gradient(to right, #2ecc71, #f1c40f, #e74c3c);
+            width: 0%;
+            transition: width 0.1s;
         }
         
         .controls {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 5px;
-            height: 150px;
-            margin-top: 10px;
-        }
-        
-        .btn {
-            background: rgba(76, 201, 240, 0.3);
-            border: 1px solid #4cc9f0;
-            border-radius: 10px;
-            color: white;
-            font-size: 1.5rem;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.2s;
-        }
-        
-        .btn:active {
-            background: rgba(76, 201, 240, 0.6);
-            transform: scale(0.95);
-        }
-        
-        .action-buttons {
-            display: flex;
+            justify-content: space-between;
             gap: 10px;
             margin-top: 10px;
         }
         
-        .action-btn {
+        .control-btn {
             flex: 1;
-            padding: 12px;
-            background: linear-gradient(to bottom, #f72585, #b5179e);
+            padding: 15px;
+            background: linear-gradient(to bottom, #3498db, #2980b9);
             border: none;
             border-radius: 10px;
             color: white;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
+            font-size: 1rem;
         }
         
-        .action-btn:active {
+        .control-btn:active {
             transform: scale(0.95);
+        }
+        
+        .shot-btn {
+            background: linear-gradient(to bottom, #e74c3c, #c0392b);
         }
         
         .stats {
@@ -183,200 +234,50 @@
         
         .stat-value {
             font-size: 1.2rem;
-            color: #4cc9f0;
+            color: #f39c12;
             font-weight: bold;
         }
         
-        .stat-bar {
-            width: 60px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: 4px;
+        .turn-indicator {
+            padding: 5px 10px;
+            background: rgba(243, 156, 18, 0.3);
+            border-radius: 5px;
+            margin-top: 5px;
         }
         
-        .health-bar {
-            height: 100%;
-            background: linear-gradient(to right, #4cc9f0, #4361ee);
-            width: 100%;
-            transition: width 0.3s;
-        }
-        
-        .mana-bar {
-            height: 100%;
-            background: linear-gradient(to right, #f72585, #b5179e);
-            width: 100%;
-            transition: width 0.3s;
-        }
-        
-        .dialog {
+        .message {
             position: absolute;
-            bottom: 10px;
-            left: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid #4cc9f0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #f39c12;
             border-radius: 10px;
-            padding: 15px;
+            padding: 20px;
+            text-align: center;
             display: none;
             z-index: 100;
-            box-shadow: 0 0 20px rgba(76, 201, 240, 0.5);
+            box-shadow: 0 0 20px rgba(243, 156, 18, 0.5);
         }
         
-        .dialog.show {
-            display: block;
-            animation: dialogAppear 0.3s ease-out;
-        }
-        
-        @keyframes dialogAppear {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        .dialog h3 {
-            color: #f72585;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #4cc9f0;
-            padding-bottom: 5px;
-            font-size: 1.2rem;
-        }
-        
-        .dialog p {
+        .message h3 {
+            color: #f39c12;
             margin-bottom: 15px;
-            line-height: 1.4;
-            font-size: 0.9rem;
         }
         
-        .dialog-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .close-dialog {
+        .message-btn {
             padding: 8px 16px;
-            background: #4cc9f0;
+            background: #3498db;
             border: none;
             border-radius: 5px;
             color: white;
             cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-        }
-        
-        .close-dialog:active {
-            transform: scale(0.95);
-        }
-        
-        .quest-indicator {
-            position: absolute;
-            top: -10px;
-            right: -5px;
-            width: 12px;
-            height: 12px;
-            background: #ffaa00;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-            z-index: 15;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-            100% { opacity: 0.5; transform: scale(1); }
-        }
-        
-        .notification {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid #4cc9f0;
-            border-radius: 5px;
-            padding: 8px 15px;
-            display: none;
-            z-index: 200;
-            animation: notificationSlide 0.3s ease-out;
-            font-size: 0.9rem;
-            text-align: center;
-            max-width: 80%;
-        }
-        
-        @keyframes notificationSlide {
-            from { top: -50px; opacity: 0; }
-            to { top: 10px; opacity: 1; }
-        }
-        
-        .notification.show {
-            display: block;
-        }
-        
-        .mini-map {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 70px;
-            height: 70px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #4cc9f0;
-            border-radius: 5px;
-            z-index: 20;
-        }
-        
-        .map-marker {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: #4cc9f0;
-            border-radius: 50%;
-        }
-        
-        .player-marker {
-            background: #4361ee;
-            width: 6px;
-            height: 6px;
-        }
-        
-        .inventory-btn {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 35px;
-            height: 35px;
-            background: rgba(76, 201, 240, 0.3);
-            border: 1px solid #4cc9f0;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1rem;
-            z-index: 20;
-            cursor: pointer;
-        }
-        
-        .xp-bar-container {
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
-            margin-top: 5px;
-            overflow: hidden;
-        }
-        
-        .xp-bar {
-            height: 100%;
-            background: linear-gradient(to right, #7209b7, #560bad);
-            width: 0%;
-            transition: width 0.5s;
+            margin-top: 15px;
         }
         
         @media (min-width: 768px) {
             .container {
-                max-width: 400px;
+                max-width: 500px;
             }
         }
     </style>
@@ -384,216 +285,322 @@
 <body>
     <div class="container">
         <header>
-            <h1>Enhanced RPG Adventure</h1>
-            <p>Level <span id="level-text">1</span> - Forest of Beginnings</p>
+            <h1>Carrom Pool</h1>
+            <div class="game-info">
+                <div class="info-item">
+                    <span>Player</span>
+                    <div class="info-value" id="player-score">0</div>
+                </div>
+                <div class="info-item">
+                    <span>Turn</span>
+                    <div class="turn-indicator" id="turn-indicator">Player 1</div>
+                </div>
+                <div class="info-item">
+                    <span>Opponent</span>
+                    <div class="info-value" id="opponent-score">0</div>
+                </div>
+            </div>
         </header>
         
         <div class="game-area">
-            <div class="scene" id="scene">
-                <div class="character" id="character"></div>
-                <div class="npc" id="npc">
-                    <div class="quest-indicator" id="quest-indicator"></div>
-                </div>
-                <div class="enemy" id="enemy"></div>
-                <div class="chest" id="chest"></div>
-                
-                <div class="mini-map" id="mini-map">
-                    <div class="map-marker player-marker" id="player-marker"></div>
-                    <div class="map-marker npc-marker" id="npc-marker"></div>
-                    <div class="map-marker enemy-marker" id="enemy-marker"></div>
-                    <div class="map-marker chest-marker" id="chest-marker"></div>
-                </div>
-                
-                <div class="inventory-btn" id="inventory-btn">🎒</div>
-                
-                <div class="dialog" id="dialog">
-                    <h3 id="dialog-title">Mysterious Stranger</h3>
-                    <p id="dialog-text">Welcome, traveler! Our kingdom needs your help. Will you join our quest to defeat the darkness?</p>
-                    <div class="dialog-buttons" id="dialog-buttons">
-                        <button class="close-dialog" id="dialog-button">Continue</button>
+            <div class="carrom-board" id="carrom-board">
+                <div class="board-inner">
+                    <div class="center-circle"></div>
+                    <div class="pocket pocket-tl"></div>
+                    <div class="pocket pocket-tr"></div>
+                    <div class="pocket pocket-bl"></div>
+                    <div class="pocket pocket-br"></div>
+                    
+                    <div class="striker" id="striker"></div>
+                    <div class="aim-line" id="aim-line"></div>
+                    <div class="power-bar-container" id="power-container">
+                        <div class="power-bar" id="power-bar"></div>
                     </div>
+                    
+                    <!-- Coins will be added dynamically -->
                 </div>
                 
-                <div class="notification" id="notification">You found 5 coins!</div>
+                <div class="message" id="message">
+                    <h3 id="message-text">Welcome to Carrom Pool!</h3>
+                    <p>Drag the striker to aim and release to shoot</p>
+                    <button class="message-btn" id="start-btn">Start Game</button>
+                </div>
             </div>
             
             <div class="stats">
                 <div class="stat">
-                    <div class="stat-value" id="health-value">100</div>
-                    <div class="stat-name">Health</div>
-                    <div class="stat-bar"><div class="health-bar" id="health-bar"></div></div>
+                    <div class="stat-value" id="black-coins">9</div>
+                    <div class="stat-name">Black</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-value" id="mana-value">50</div>
-                    <div class="stat-name">Mana</div>
-                    <div class="stat-bar"><div class="mana-bar" id="mana-bar"></div></div>
+                    <div class="stat-value" id="white-coins">9</div>
+                    <div class="stat-name">White</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-value" id="level-value">1</div>
-                    <div class="stat-name">Level</div>
-                    <div class="xp-bar-container"><div class="xp-bar" id="xp-bar"></div></div>
+                    <div class="stat-value" id="queen-status">1</div>
+                    <div class="stat-name">Queen</div>
                 </div>
             </div>
             
             <div class="controls">
-                <div class="btn"></div>
-                <div class="btn" id="up-btn">↑</div>
-                <div class="btn"></div>
-                <div class="btn" id="left-btn">←</div>
-                <div class="btn" id="interact-btn">○</div>
-                <div class="btn" id="right-btn">→</div>
-                <div class="btn"></div>
-                <div class="btn" id="down-btn">↓</div>
-                <div class="btn"></div>
-            </div>
-            
-            <div class="action-buttons">
-                <button class="action-btn" id="attack-btn">Attack</button>
-                <button class="action-btn" id="item-btn">Use Item</button>
-                <button class="action-btn" id="menu-btn">Menu</button>
+                <button class="control-btn" id="aim-btn">Aim</button>
+                <button class="control-btn shot-btn" id="shot-btn">Take Shot</button>
+                <button class="control-btn" id="menu-btn">Menu</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Enhanced game state
+        // Game state
         const gameState = {
-            health: 100,
-            maxHealth: 100,
-            mana: 50,
-            maxMana: 50,
-            level: 1,
-            xp: 0,
-            xpToNextLevel: 100,
-            coins: 0,
-            position: { x: 0, y: 0 },
-            hasQuest: false,
-            enemiesDefeated: 0,
-            questEnemiesRequired: 5,
-            inventory: [
-                { name: "Health Potion", count: 3 },
-                { name: "Mana Potion", count: 2 }
-            ],
-            movement: {
-                up: false,
-                down: false,
-                left: false,
-                right: false
-            }
+            playerScore: 0,
+            opponentScore: 0,
+            blackCoins: 9,
+            whiteCoins: 9,
+            queenAvailable: true,
+            currentPlayer: 1, // 1 for player, 2 for opponent
+            isAiming: false,
+            isPowering: false,
+            power: 0,
+            strikerPosition: { x: 0, y: 0 },
+            aimAngle: 0,
+            coins: [],
+            isGameStarted: false
         };
         
         // DOM elements
-        const character = document.getElementById('character');
-        const scene = document.getElementById('scene');
-        const dialog = document.getElementById('dialog');
-        const dialogTitle = document.getElementById('dialog-title');
-        const dialogText = document.getElementById('dialog-text');
-        const dialogButtons = document.getElementById('dialog-buttons');
-        const npc = document.getElementById('npc');
-        const enemy = document.getElementById('enemy');
-        const chest = document.getElementById('chest');
-        const questIndicator = document.getElementById('quest-indicator');
-        const healthValue = document.getElementById('health-value');
-        const manaValue = document.getElementById('mana-value');
-        const levelValue = document.getElementById('level-value');
-        const levelText = document.getElementById('level-text');
-        const healthBar = document.getElementById('health-bar');
-        const manaBar = document.getElementById('mana-bar');
-        const xpBar = document.getElementById('xp-bar');
-        const notification = document.getElementById('notification');
-        
-        // Button elements
-        const upBtn = document.getElementById('up-btn');
-        const downBtn = document.getElementById('down-btn');
-        const leftBtn = document.getElementById('left-btn');
-        const rightBtn = document.getElementById('right-btn');
-        const interactBtn = document.getElementById('interact-btn');
-        const attackBtn = document.getElementById('attack-btn');
-        const itemBtn = document.getElementById('item-btn');
+        const carromBoard = document.getElementById('carrom-board');
+        const boardInner = document.querySelector('.board-inner');
+        const striker = document.getElementById('striker');
+        const aimLine = document.getElementById('aim-line');
+        const powerContainer = document.getElementById('power-container');
+        const powerBar = document.getElementById('power-bar');
+        const message = document.getElementById('message');
+        const messageText = document.getElementById('message-text');
+        const startBtn = document.getElementById('start-btn');
+        const playerScore = document.getElementById('player-score');
+        const opponentScore = document.getElementById('opponent-score');
+        const blackCoinsElement = document.getElementById('black-coins');
+        const whiteCoinsElement = document.getElementById('white-coins');
+        const queenStatusElement = document.getElementById('queen-status');
+        const turnIndicator = document.getElementById('turn-indicator');
+        const aimBtn = document.getElementById('aim-btn');
+        const shotBtn = document.getElementById('shot-btn');
         const menuBtn = document.getElementById('menu-btn');
-        const inventoryBtn = document.getElementById('inventory-btn');
         
-        // Scene boundaries
-        let sceneRect = scene.getBoundingClientRect();
+        // Board dimensions
+        let boardRect = boardInner.getBoundingClientRect();
+        const boardCenterX = boardRect.width / 2;
+        const boardCenterY = boardRect.height / 2;
+        const boardRadius = boardRect.width / 2;
         
-        // Character position relative to scene
-        let charX = sceneRect.width / 2;
-        let charY = sceneRect.height / 2;
-        
-        // NPC, enemy and chest positions
-        let npcX = sceneRect.width * 0.3;
-        let npcY = sceneRect.height * 0.3;
-        let enemyX = sceneRect.width * 0.7;
-        let enemyY = sceneRect.height * 0.7;
-        let chestX = sceneRect.width * 0.7;
-        let chestY = sceneRect.height * 0.2;
-        
-        // Set initial positions
-        function setInitialPositions() {
-            sceneRect = scene.getBoundingClientRect();
+        // Initialize game
+        function initGame() {
+            // Set initial striker position
+            gameState.strikerPosition = {
+                x: boardCenterX,
+                y: boardRect.height - 60
+            };
             
-            // Character position
-            character.style.left = charX + 'px';
-            character.style.top = charY + 'px';
+            striker.style.left = gameState.strikerPosition.x + 'px';
+            striker.style.top = gameState.strikerPosition.y + 'px';
             
-            // NPC position
-            npc.style.left = npcX + 'px';
-            npc.style.top = npcY + 'px';
+            // Create coins
+            createCoins();
             
-            // Enemy position
-            enemy.style.left = enemyX + 'px';
-            enemy.style.top = enemyY + 'px';
+            // Show start message
+            message.style.display = 'block';
             
-            // Chest position
-            chest.style.left = chestX + 'px';
-            chest.style.top = chestY + 'px';
+            // Add event listeners
+            startBtn.addEventListener('click', startGame);
+            aimBtn.addEventListener('click', startAiming);
+            shotBtn.addEventListener('click', startPowering);
+            menuBtn.addEventListener('click', showMenu);
             
-            // Update minimap markers
-            updateMinimap();
+            // Add touch/mouse events for aiming and shooting
+            carromBoard.addEventListener('mousedown', handleAimStart);
+            carromBoard.addEventListener('mousemove', handleAimMove);
+            carromBoard.addEventListener('mouseup', handleAimEnd);
+            
+            carromBoard.addEventListener('touchstart', handleAimStart);
+            carromBoard.addEventListener('touchmove', handleAimMove);
+            carromBoard.addEventListener('touchend', handleAimEnd);
+            
+            // Update stats display
+            updateStats();
         }
         
-        // Update minimap markers
-        function updateMinimap() {
-            const playerMarker = document.getElementById('player-marker');
-            const npcMarker = document.getElementById('npc-marker');
-            const enemyMarker = document.getElementById('enemy-marker');
-            const chestMarker = document.getElementById('chest-marker');
+        // Create coins in starting position
+        function createCoins() {
+            // Clear existing coins
+            document.querySelectorAll('.coin').forEach(coin => coin.remove());
+            gameState.coins = [];
             
-            if (playerMarker) {
-                playerMarker.style.left = (charX / sceneRect.width * 100) + '%';
-                playerMarker.style.top = (charY / sceneRect.height * 100) + '%';
+            // Create queen
+            const queen = document.createElement('div');
+            queen.className = 'coin queen';
+            queen.style.left = boardCenterX + 'px';
+            queen.style.top = boardCenterY + 'px';
+            boardInner.appendChild(queen);
+            
+            gameState.coins.push({
+                element: queen,
+                type: 'queen',
+                x: boardCenterX,
+                y: boardCenterY,
+                pocketed: false
+            });
+            
+            // Create black and white coins in a circle pattern
+            const radius = 80;
+            const coinsCount = 9;
+            const angles = [];
+            
+            // Calculate angles for coin placement
+            for (let i = 0; i < coinsCount; i++) {
+                angles.push((i * (2 * Math.PI)) / coinsCount);
             }
             
-            if (npcMarker) {
-                npcMarker.style.left = (npcX / sceneRect.width * 100) + '%';
-                npcMarker.style.top = (npcY / sceneRect.height * 100) + '%';
-                npcMarker.style.background = '#f72585';
+            // Create black coins
+            for (let i = 0; i < coinsCount; i++) {
+                const angle = angles[i];
+                const x = boardCenterX + radius * Math.cos(angle);
+                const y = boardCenterY + radius * Math.sin(angle);
+                
+                const coin = document.createElement('div');
+                coin.className = 'coin black-coin';
+                coin.style.left = x + 'px';
+                coin.style.top = y + 'px';
+                boardInner.appendChild(coin);
+                
+                gameState.coins.push({
+                    element: coin,
+                    type: 'black',
+                    x: x,
+                    y: y,
+                    pocketed: false
+                });
             }
             
-            if (enemyMarker) {
-                enemyMarker.style.left = (enemyX / sceneRect.width * 100) + '%';
-                enemyMarker.style.top = (enemyY / sceneRect.height * 100) + '%';
-                enemyMarker.style.background = '#ff6b6b';
-            }
-            
-            if (chestMarker) {
-                chestMarker.style.left = (chestX / sceneRect.width * 100) + '%';
-                chestMarker.style.top = (chestY / sceneRect.height * 100) + '%';
-                chestMarker.style.background = '#ff9e00';
+            // Create white coins
+            for (let i = 0; i < coinsCount; i++) {
+                const angle = angles[i] + 0.2; // Slight offset from black coins
+                const x = boardCenterX + (radius + 30) * Math.cos(angle);
+                const y = boardCenterY + (radius + 30) * Math.sin(angle);
+                
+                const coin = document.createElement('div');
+                coin.className = 'coin white-coin';
+                coin.style.left = x + 'px';
+                coin.style.top = y + 'px';
+                boardInner.appendChild(coin);
+                
+                gameState.coins.push({
+                    element: coin,
+                    type: 'white',
+                    x: x,
+                    y: y,
+                    pocketed: false
+                });
             }
         }
         
-        // Movement interval
-        let movementInterval;
+        // Start the game
+        function startGame() {
+            message.style.display = 'none';
+            gameState.isGameStarted = true;
+            updateStats();
+        }
         
-        // Update stats display
-        function updateStats() {
-            healthValue.textContent = gameState.health;
-            manaValue.textContent = gameState.mana;
-            levelValue.textContent = gameState.level;
-            levelText.textContent = gameState.level;
+        // Start aiming
+        function startAiming() {
+            if (!gameState.isGameStarted) return;
             
-            // Update bars
-            healthBar.style.width = `${(gameState.health / gameState.maxHealth) * 100}%`;
-            manaBar.style.width = `${(gameState.mana / gameState.maxMana) * 100}%`;
-            xpBar.s
+            gameState.isAiming = true;
+            aimLine.style.display = 'block';
+            powerContainer.style.display = 'block';
+        }
+        
+        // Start powering up the shot
+        function startPowering() {
+            if (!gameState.isAiming) return;
+            
+            gameState.isPowering = true;
+            gameState.power = 0;
+            
+            const powerInterval = setInterval(() => {
+                if (gameState.isPowering && gameState.power < 100) {
+                    gameState.power += 2;
+                    powerBar.style.width = gameState.power + '%';
+                } else {
+                    clearInterval(powerInterval);
+                    if (gameState.isPowering) {
+                        takeShot();
+                    }
+                }
+            }, 50);
+        }
+        
+        // Take the shot
+        function takeShot() {
+            gameState.isPowering = false;
+            gameState.isAiming = false;
+            
+            aimLine.style.display = 'none';
+            powerContainer.style.display = 'none';
+            
+            // Calculate striker velocity based on power and angle
+            const velocity = gameState.power / 5;
+            const velocityX = velocity * Math.cos(gameState.aimAngle);
+            const velocityY = velocity * Math.sin(gameState.aimAngle);
+            
+            // Move striker
+            moveStriker(velocityX, velocityY);
+            
+            // Switch turns after a delay
+            setTimeout(() => {
+                switchTurn();
+            }, 2000);
+        }
+        
+        // Move striker with physics
+        function moveStriker(vx, vy) {
+            let x = gameState.strikerPosition.x;
+            let y = gameState.strikerPosition.y;
+            let friction = 0.96;
+            
+            const moveInterval = setInterval(() => {
+                x += vx;
+                y += vy;
+                
+                // Apply friction
+                vx *= friction;
+                vy *= friction;
+                
+                // Check boundaries
+                const distanceFromCenter = Math.sqrt(
+                    Math.pow(x - boardCenterX, 2) + 
+                    Math.pow(y - boardCenterY, 2)
+                );
+                
+                if (distanceFromCenter > boardRadius - 20) {
+                    // Bounce off the edge
+                    const angle = Math.atan2(y - boardCenterY, x - boardCenterX);
+                    const normalAngle = angle + Math.PI;
+                    
+                    // Reflect velocity
+                    const speed = Math.sqrt(vx * vx + vy * vy) * 0.8;
+                    vx = Math.cos(normalAngle) * speed;
+                    vy = Math.sin(normalAngle) * speed;
+                }
+                
+                // Check if striker stopped
+                if (Math.abs(vx) < 0.1 && Math.abs(vy) < 0.1) {
+                    clearInterval(moveInterval);
+                    
+                    // Reset striker position
+                    resetStriker();
+                }
+                
+                // Update striker position
+                striker.style.left = x + 'px';
+           
