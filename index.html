@@ -1,169 +1,380 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Text RPG</title>
-  <style>
-    body {
-      background: black;
-      color: #0f0;
-      font-family: monospace;
-      display: flex;
-      justify-content: center;
-      padding: 10px;
-    }
-    .game-container {
-      border: 2px solid #0f0;
-      padding: 15px;
-      width: 360px;
-      border-radius: 10px;
-      background: rgba(0, 0, 0, 0.85);
-    }
-    h1 {
-      text-align: center;
-      color: #0f0;
-      margin-bottom: 10px;
-    }
-    .bar {
-      width: 100%;
-      height: 20px;
-      border: 1px solid #0f0;
-      border-radius: 5px;
-      margin: 5px 0;
-    }
-    .bar-inner {
-      height: 100%;
-      border-radius: 5px;
-    }
-    .player-bar { background: limegreen; }
-    .enemy-bar { background: crimson; }
-    button {
-      background: #0f0;
-      color: black;
-      border: none;
-      padding: 8px;
-      margin: 5px 0;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
-      width: 100%;
-    }
-    button:hover {
-      background: #1f1;
-    }
-    .section {
-      margin-top: 15px;
-      padding: 10px;
-      border: 1px solid #0f0;
-      border-radius: 5px;
-    }
-    .inventory-item {
-      padding: 4px;
-    }
-    #message {
-      margin-top: 10px;
-      font-size: 14px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile RPG Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            touch-action: manipulation;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #1a1a2e, #16213e);
+            color: #fff;
+            line-height: 1.6;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 10px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            text-align: center;
+            padding: 10px 0;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            color: #4cc9f0;
+            text-shadow: 0 0 5px rgba(76, 201, 240, 0.7);
+        }
+        
+        .game-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .scene {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23111" /><circle cx="20" cy="20" r="15" fill="%23333" /><circle cx="60" cy="40" r="12" fill="%23333" /><circle cx="80" cy="70" r="8" fill="%23333" /></svg>');
+            border: 2px solid #4cc9f0;
+            border-radius: 10px;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .character {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(to bottom, #4361ee, #3a0ca3);
+            border-radius: 50% 50% 40% 40%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px rgba(67, 97, 238, 0.7);
+        }
+        
+        .npc {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(to bottom, #f72585, #b5179e);
+            border-radius: 50%;
+            top: 30%;
+            left: 30%;
+            box-shadow: 0 0 10px rgba(247, 37, 133, 0.7);
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 5px;
+            height: 150px;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            background: rgba(76, 201, 240, 0.3);
+            border: 1px solid #4cc9f0;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .btn:active {
+            background: rgba(76, 201, 240, 0.6);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(to bottom, #f72585, #b5179e);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.2rem;
+            color: #4cc9f0;
+        }
+        
+        .dialog {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #4cc9f0;
+            border-radius: 10px;
+            padding: 15px;
+            display: none;
+        }
+        
+        .dialog.show {
+            display: block;
+        }
+        
+        .dialog h3 {
+            color: #f72585;
+            margin-bottom: 10px;
+        }
+        
+        .close-dialog {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background: #4cc9f0;
+            border: none;
+            border-radius: 5px;
+            color: white;
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 400px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="game-container">
-    <h1>⚔️ AI Text RPG ⚔️</h1>
-
-    <div class="bar"><div id="playerHPBar" class="bar-inner player-bar" style="width:100%"></div></div>
-    <p>❤️ Player HP: <span id="playerHP">40</span>/40</p>
-
-    <div class="bar"><div id="enemyHPBar" class="bar-inner enemy-bar" style="width:0%"></div></div>
-    <p>👾 Enemy HP: <span id="enemyHP">-</span></p>
-
-    <div id="message">Welcome, hero! Enter the forest or visit the shrine.</div>
-
-    <div class="section">
-      <button onclick="enterForest()">Enter Forest</button>
-      <button onclick="visitShrine()">Visit Shrine</button>
-      <button onclick="visitTown()">Visit Town</button>
+    <div class="container">
+        <header>
+            <h1>Mobile RPG Adventure</h1>
+            <p>Level 1 - Forest of Beginnings</p>
+        </header>
+        
+        <div class="game-area">
+            <div class="scene">
+                <div class="character"></div>
+                <div class="npc"></div>
+                
+                <div class="dialog" id="dialog">
+                    <h3>Mysterious Stranger</h3>
+                    <p>Welcome, traveler! Our kingdom needs your help. Will you join our quest to defeat the darkness?</p>
+                    <button class="close-dialog" onclick="closeDialog()">Continue</button>
+                </div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value">100</div>
+                    <div class="stat-name">Health</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">50</div>
+                    <div class="stat-name">Mana</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">5</div>
+                    <div class="stat-name">Level</div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="btn"></div>
+                <div class="btn" onclick="move('up')">↑</div>
+                <div class="btn"></div>
+                <div class="btn" onclick="move('left')">←</div>
+                <div class="btn" onclick="interact()">○</div>
+                <div class="btn" onclick="move('right')">→</div>
+                <div class="btn"></div>
+                <div class="btn" onclick="move('down')">↓</div>
+                <div class="btn"></div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn" onclick="attack()">Attack</button>
+                <button class="action-btn" onclick="useItem()">Use Item</button>
+                <button class="action-btn" onclick="openMenu()">Menu</button>
+            </div>
+        </div>
     </div>
 
-    <div class="section">
-      <h3>🎒 Inventory</h3>
-      <div id="inventoryList">Empty</div>
-      <p>Equipped: <span id="equipped">Fists</span></p>
-    </div>
-
-    <div class="section">
-      <button onclick="saveGame()">Save</button>
-      <button onclick="loadGame()">Load</button>
-      <button onclick="restartGame()">Restart</button>
-    </div>
-  </div>
-
-  <script>
-    let player = { hp: 40, maxHp: 40, level: 1, equipped: "Fists", inventory: [] };
-    let enemy = null;
-
-    function updateUI() {
-      document.getElementById("playerHP").innerText = player.hp;
-      document.getElementById("playerHPBar").style.width = (player.hp / player.maxHp * 100) + "%";
-      if (enemy) {
-        document.getElementById("enemyHP").innerText = enemy.hp + "/" + enemy.maxHp;
-        document.getElementById("enemyHPBar").style.width = (enemy.hp / enemy.maxHp * 100) + "%";
-      } else {
-        document.getElementById("enemyHP").innerText = "-";
-        document.getElementById("enemyHPBar").style.width = "0%";
-      }
-      document.getElementById("inventoryList").innerText = player.inventory.length > 0 ? player.inventory.join(", ") : "Empty";
-      document.getElementById("equipped").innerText = player.equipped;
-    }
-
-    function enterForest() {
-      if (player.level < 2) {
-        enemy = { name: "Slime", hp: 10, maxHp: 10 };
-      } else if (player.level < 4) {
-        enemy = { name: "Troll", hp: 20, maxHp: 20 };
-      } else {
-        enemy = { name: "Dragon", hp: 50, maxHp: 50 };
-      }
-      document.getElementById("message").innerText = "A wild " + enemy.name + " appeared!";
-      updateUI();
-    }
-
-    function visitShrine() {
-      document.getElementById("message").innerText = "The shrine glows. You feel stronger!";
-      if (!player.inventory.includes("Shrine Blessing")) {
-        player.inventory.push("Shrine Blessing");
-      }
-      updateUI();
-    }
-
-    function visitTown() {
-      player.hp = player.maxHp;
-      document.getElementById("message").innerText = "You rested at the town. HP restored!";
-      updateUI();
-    }
-
-    function saveGame() {
-      localStorage.setItem("rpgSave", JSON.stringify(player));
-      document.getElementById("message").innerText = "Game saved!";
-    }
-
-    function loadGame() {
-      let data = localStorage.getItem("rpgSave");
-      if (data) {
-        player = JSON.parse(data);
-        document.getElementById("message").innerText = "Game loaded!";
-        updateUI();
-      }
-    }
-
-    function restartGame() {
-      player = { hp: 40, maxHp: 40, level: 1, equipped: "Fists", inventory: [] };
-      enemy = null;
-      document.getElementById("message").innerText = "Game restarted!";
-      updateUI();
-    }
-
-    updateUI();
-  </script>
+    <script>
+        // Simple game state
+        const gameState = {
+            health: 100,
+            mana: 50,
+            level: 5,
+            position: { x: 0, y: 0 }
+        };
+        
+        // DOM elements
+        const character = document.querySelector('.character');
+        const dialog = document.getElementById('dialog');
+        
+        // Movement function
+        function move(direction) {
+            const moveAmount = 10;
+            const rect = character.getBoundingClientRect();
+            
+            switch(direction) {
+                case 'up':
+                    character.style.top = (rect.top - moveAmount) + 'px';
+                    break;
+                case 'down':
+                    character.style.top = (rect.top + moveAmount) + 'px';
+                    break;
+                case 'left':
+                    character.style.left = (rect.left - moveAmount) + 'px';
+                    break;
+                case 'right':
+                    character.style.left = (rect.left + moveAmount) + 'px';
+                    break;
+            }
+            
+            // Check if near NPC
+            checkNPCProximity();
+        }
+        
+        // Check if player is near NPC
+        function checkNPCProximity() {
+            const characterRect = character.getBoundingClientRect();
+            const npcRect = document.querySelector('.npc').getBoundingClientRect();
+            
+            // Calculate distance between character and NPC
+            const dx = characterRect.left - npcRect.left;
+            const dy = characterRect.top - npcRect.top;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < 100) {
+                showDialog();
+            }
+        }
+        
+        // Show dialog
+        function showDialog() {
+            dialog.classList.add('show');
+        }
+        
+        // Close dialog
+        function closeDialog() {
+            dialog.classList.remove('show');
+        }
+        
+        // Attack function
+        function attack() {
+            alert('You swing your sword!');
+            // Add combat logic here
+        }
+        
+        // Use item function
+        function useItem() {
+            alert('You use a health potion!');
+            // Add item logic here
+        }
+        
+        // Open menu function
+        function openMenu() {
+            alert('Game menu opened');
+            // Add menu logic here
+        }
+        
+        // Interact function
+        function interact() {
+            alert('You interact with the environment');
+            // Add interaction logic here
+        }
+        
+        // Initialize game
+        function init() {
+            // Add touch events for mobile
+            const scene = document.querySelector('.scene');
+            scene.addEventListener('touchstart', handleTouchStart, false);
+            scene.addEventListener('touchmove', handleTouchMove, false);
+            
+            // Initial dialog after 2 seconds
+            setTimeout(showDialog, 2000);
+        }
+        
+        // Touch handling for mobile movement
+        let xDown = null;
+        let yDown = null;
+        
+        function handleTouchStart(evt) {
+            const firstTouch = evt.touches[0];
+            xDown = firstTouch.clientX;
+            yDown = firstTouch.clientY;
+        }
+        
+        function handleTouchMove(evt) {
+            if (!xDown || !yDown) {
+                return;
+            }
+            
+            const xUp = evt.touches[0].clientX;
+            const yUp = evt.touches[0].clientY;
+            
+            const xDiff = xDown - xUp;
+            const yDiff = yDown - yUp;
+            
+            if (Math.abs(xDiff) > Math.abs(yDiff)) {
+                if (xDiff > 0) {
+                    move('left');
+                } else {
+                    move('right');
+                }
+            } else {
+                if (yDiff > 0) {
+                    move('up');
+                } else {
+                    move('down');
+                }
+            }
+            
+            xDown = null;
+            yDown = null;
+        }
+        
+        // Initialize the game
+        init();
+    </script>
 </body>
 </html>
