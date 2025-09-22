@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrom Pool</title>
+    <title>Carrom Pool - Advanced Physics</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -64,80 +64,6 @@
             cursor: pointer;
         }
         
-        /* Main Menu Screen */
-        .main-menu {
-            padding: 30px 20px;
-            text-align: center;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-        }
-        
-        .game-logo {
-            margin-bottom: 20px;
-        }
-        
-        .game-logo h1 {
-            font-size: 2.8rem;
-            text-shadow: 3px 3px 0 #000;
-            color: #fff;
-            margin-bottom: 10px;
-        }
-        
-        .game-logo p {
-            font-size: 1.2rem;
-            color: #d4af37;
-        }
-        
-        .menu-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin: 30px 0;
-        }
-        
-        .menu-btn {
-            padding: 16px;
-            font-size: 1.2rem;
-            background: linear-gradient(to bottom, #d4af37, #a2853e);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 4px 0 #8b4513;
-            transition: all 0.2s;
-        }
-        
-        .menu-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 0 0 #8b4513;
-        }
-        
-        .game-modes {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .mode-btn {
-            padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid #d4af37;
-            border-radius: 15px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .mode-btn.active {
-            background: #d4af37;
-            color: #000;
-        }
-        
         /* Game Screen */
         .game-screen {
             display: none;
@@ -165,6 +91,7 @@
             border-radius: 50%;
             background: #d4af37;
             box-shadow: 0 0 10px #ffd700;
+            transition: all 0.3s;
         }
         
         .game-area {
@@ -175,12 +102,19 @@
             border-radius: 10px;
             border: 10px solid #8b4513;
             overflow: hidden;
+            touch-action: none;
         }
         
         #gameCanvas {
             width: 100%;
             height: 100%;
             display: block;
+        }
+        
+        .aiming-line {
+            position: absolute;
+            pointer-events: none;
+            display: none;
         }
         
         .power-indicator {
@@ -198,7 +132,7 @@
         .power-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(to right, #00ff00, #ff0000);
+            background: linear-gradient(to right, #00ff00, #ffff00, #ff0000);
             transition: width 0.1s;
         }
         
@@ -221,98 +155,24 @@
             gap: 5px;
         }
         
-        /* Settings Screen */
-        .settings-screen {
-            display: none;
-            padding: 30px 20px;
-            height: 100%;
-            overflow-y: auto;
-        }
-        
-        .settings-screen h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #d4af37;
-        }
-        
-        .setting-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .setting-item h3 {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .slider {
-            width: 100%;
-            height: 10px;
-            background: #555;
-            border-radius: 5px;
-            outline: none;
-            -webkit-appearance: none;
-        }
-        
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #d4af37;
-            cursor: pointer;
-        }
-        
-        .back-btn {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 30px;
-            background: #d4af37;
-            color: #000;
-            border: none;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        /* Game Over Screen */
-        .game-over-screen {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .result-message {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            color: #d4af37;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-        
-        .result-score {
-            font-size: 1.5rem;
-            margin-bottom: 30px;
-        }
-        
-        .action-buttons {
+        .game-stats {
             display: flex;
             gap: 15px;
+            font-size: 0.9rem;
+        }
+        
+        /* Game Messages */
+        .game-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 30px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 10;
+            display: none;
         }
         
         /* Footer */
@@ -324,28 +184,6 @@
             border-top: 1px solid #444;
         }
         
-        /* Animation for menu items */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .menu-btn {
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-        
-        .menu-btn:nth-child(2) {
-            animation-delay: 0.1s;
-        }
-        
-        .menu-btn:nth-child(3) {
-            animation-delay: 0.2s;
-        }
-        
-        .menu-btn:nth-child(4) {
-            animation-delay: 0.3s;
-        }
-        
         /* Responsive adjustments */
         @media (max-width: 500px) {
             .container {
@@ -353,13 +191,9 @@
                 border-radius: 15px;
             }
             
-            .game-logo h1 {
-                font-size: 2.2rem;
-            }
-            
-            .menu-btn {
-                padding: 14px;
-                font-size: 1rem;
+            .game-stats {
+                flex-direction: column;
+                gap: 5px;
             }
         }
     </style>
@@ -370,39 +204,11 @@
         <div class="header">
             <div class="coins">
                 <i class="fas fa-coins"></i>
-                <span>12,850</span>
+                <span id="coins-count">12,850</span>
             </div>
             <button class="settings-btn" id="settings-btn">
                 <i class="fas fa-cog"></i>
             </button>
-        </div>
-        
-        <!-- Main Menu Screen -->
-        <div class="main-menu" id="main-menu">
-            <div class="game-logo">
-                <h1>CARROM POOL</h1>
-                <p>Classic Board Game</p>
-            </div>
-            
-            <div class="menu-buttons">
-                <button class="menu-btn" id="play-btn">
-                    <i class="fas fa-play"></i> PLAY
-                </button>
-                <button class="menu-btn">
-                    <i class="fas fa-trophy"></i> TOURNAMENT
-                </button>
-                <button class="menu-btn">
-                    <i class="fas fa-store"></i> SHOP
-                </button>
-                <button class="menu-btn">
-                    <i class="fas fa-users"></i> FRIENDS
-                </button>
-            </div>
-            
-            <div class="game-modes">
-                <button class="mode-btn active">CLASSIC</button>
-                <button class="mode-btn">DISCO</button>
-            </div>
         </div>
         
         <!-- Game Screen -->
@@ -412,6 +218,10 @@
                     <div class="player-turn" id="player1-indicator"></div>
                     <span>Player 1: <span id="player1-score">0</span></span>
                 </div>
+                <div class="game-stats">
+                    <span>Queen: <span id="queen-status">On Board</span></span>
+                    <span>Fouls: <span id="foul-count">0</span></span>
+                </div>
                 <div class="player-info">
                     <div class="player-turn" id="player2-indicator" style="background: #666; box-shadow: none;"></div>
                     <span>Player 2: <span id="player2-score">0</span></span>
@@ -420,14 +230,19 @@
             
             <div class="game-area">
                 <canvas id="gameCanvas"></canvas>
+                <div class="aiming-line" id="aiming-line"></div>
                 <div class="power-indicator">
                     <div class="power-fill" id="power-fill"></div>
                 </div>
+                <div class="game-message" id="game-message"></div>
             </div>
             
             <div class="game-controls">
                 <button class="control-btn" id="menu-btn">
                     <i class="fas fa-bars"></i> MENU
+                </button>
+                <button class="control-btn" id="hint-btn">
+                    <i class="fas fa-lightbulb"></i> HINT
                 </button>
                 <button class="control-btn" id="undo-btn">
                     <i class="fas fa-undo"></i> UNDO
@@ -435,186 +250,314 @@
             </div>
         </div>
         
-        <!-- Settings Screen -->
-        <div class="settings-screen" id="settings-screen">
-            <h2><i class="fas fa-cog"></i> SETTINGS</h2>
-            
-            <div class="setting-item">
-                <h3><i class="fas fa-volume-up"></i> Music</h3>
-                <input type="range" class="slider" min="0" max="100" value="80">
-            </div>
-            
-            <div class="setting-item">
-                <h3><i class="fas fa-volume-down"></i> Sound Effects</h3>
-                <input type="range" class="slider" min="0" max="100" value="90">
-            </div>
-            
-            <div class="setting-item">
-                <h3><i class="fas fa-language"></i> Language</h3>
-                <select style="width: 100%; padding: 8px; border-radius: 5px; background: #333; color: white; border: none;">
-                    <option>English</option>
-                    <option>Spanish</option>
-                    <option>French</option>
-                    <option>Hindi</option>
-                </select>
-            </div>
-            
-            <div class="setting-item">
-                <h3><i class="fas fa-paint-brush"></i> Theme</h3>
-                <select style="width: 100%; padding: 8px; border-radius: 5px; background: #333; color: white; border: none;">
-                    <option>Classic Wood</option>
-                    <option>Modern</option>
-                    <option>Dark</option>
-                </select>
-            </div>
-            
-            <div class="setting-item">
-                <h3><i class="fas fa-user"></i> Account</h3>
-                <p style="font-size: 0.9rem;">Connect your account to save progress</p>
-                <button style="width: 100%; padding: 10px; margin-top: 10px; background: #d4af37; border: none; border-radius: 5px; font-weight: bold;">
-                    Connect with Google
-                </button>
-            </div>
-            
-            <button class="back-btn" id="settings-back-btn">BACK</button>
-        </div>
-        
-        <!-- Game Over Screen -->
-        <div class="game-over-screen" id="game-over-screen">
-            <h2 class="result-message" id="result-message">VICTORY!</h2>
-            <div class="result-score" id="result-score">Player 1 wins with 25 points!</div>
-            <div class="action-buttons">
-                <button class="menu-btn" id="play-again-btn">
-                    <i class="fas fa-redo"></i> PLAY AGAIN
-                </button>
-                <button class="menu-btn" id="main-menu-btn">
-                    <i class="fas fa-home"></i> MAIN MENU
-                </button>
-            </div>
-        </div>
-        
         <!-- Footer -->
         <div class="footer">
-            <p>Carrom Pool © 2023 | Version 1.2.5</p>
+            <p>Carrom Pool © 2023 | Advanced Physics Update</p>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Get DOM elements
-            const mainMenu = document.getElementById('main-menu');
             const gameScreen = document.getElementById('game-screen');
-            const settingsScreen = document.getElementById('settings-screen');
-            const gameOverScreen = document.getElementById('game-over-screen');
-            const playBtn = document.getElementById('play-btn');
-            const settingsBtn = document.getElementById('settings-btn');
-            const menuBtn = document.getElementById('menu-btn');
-            const settingsBackBtn = document.getElementById('settings-back-btn');
-            const playAgainBtn = document.getElementById('play-again-btn');
-            const mainMenuBtn = document.getElementById('main-menu-btn');
-            const undoBtn = document.getElementById('undo-btn');
+            const gameCanvas = document.getElementById('gameCanvas');
+            const aimingLine = document.getElementById('aiming-line');
             const powerFill = document.getElementById('power-fill');
+            const gameMessage = document.getElementById('game-message');
             const player1Score = document.getElementById('player1-score');
             const player2Score = document.getElementById('player2-score');
             const player1Indicator = document.getElementById('player1-indicator');
             const player2Indicator = document.getElementById('player2-indicator');
-            const resultMessage = document.getElementById('result-message');
-            const resultScore = document.getElementById('result-score');
+            const queenStatus = document.getElementById('queen-status');
+            const foulCount = document.getElementById('foul-count');
+            const coinsCount = document.getElementById('coins-count');
+            const menuBtn = document.getElementById('menu-btn');
+            const hintBtn = document.getElementById('hint-btn');
+            const undoBtn = document.getElementById('undo-btn');
+            const settingsBtn = document.getElementById('settings-btn');
             
             // Game state variables
             let currentPlayer = 1;
             let playerScores = [0, 0];
+            let playerColors = ['white', 'black']; // Player 1 plays white, Player 2 plays black
             let isAiming = false;
+            let aimStart = {x: 0, y: 0};
+            let aimEnd = {x: 0, y: 0};
             let aimPower = 0;
-            let powerDirection = 1;
             let gamePieces = [];
             let striker = null;
+            let movingPieces = [];
+            let queenPocketedBy = null; // Track who pocketed the queen
+            let fouls = 0;
+            let coins = 12850;
             let gameActive = false;
             let animationId = null;
+            let lastState = null; // For undo functionality
             
-            // Switch to game screen
-            playBtn.addEventListener('click', function() {
-                mainMenu.style.display = 'none';
-                gameScreen.style.display = 'flex';
-                initGame();
-            });
+            // Physics constants
+            const FRICTION = 0.98;
+            const MIN_VELOCITY = 0.1;
+            const POCKET_RADIUS = 20;
+            const BOARD_MARGIN = 10;
             
-            // Switch to settings screen
-            settingsBtn.addEventListener('click', function() {
-                mainMenu.style.display = 'none';
-                settingsScreen.style.display = 'block';
-            });
-            
-            // Switch back to menu from game
-            menuBtn.addEventListener('click', function() {
-                gameScreen.style.display = 'none';
-                mainMenu.style.display = 'flex';
-                cancelAnimationFrame(animationId);
-            });
-            
-            // Switch back to menu from settings
-            settingsBackBtn.addEventListener('click', function() {
-                settingsScreen.style.display = 'none';
-                mainMenu.style.display = 'flex';
-            });
-            
-            // Play again button
-            playAgainBtn.addEventListener('click', function() {
-                gameOverScreen.style.display = 'none';
-                initGame();
-            });
-            
-            // Main menu button
-            mainMenuBtn.addEventListener('click', function() {
-                gameOverScreen.style.display = 'none';
-                mainMenu.style.display = 'flex';
-                gameScreen.style.display = 'none';
-                cancelAnimationFrame(animationId);
-            });
-            
-            // Undo button
-            undoBtn.addEventListener('click', function() {
-                alert('Undo feature would be implemented here');
-            });
-            
-            // Initialize game
+            // Initialize the game
             function initGame() {
-                const canvas = document.getElementById('gameCanvas');
-                const ctx = canvas.getContext('2d');
-                
-                // Reset game state
-                currentPlayer = 1;
-                playerScores = [0, 0];
-                updateScores();
-                updatePlayerIndicator();
-                gameActive = true;
+                const ctx = gameCanvas.getContext('2d');
                 
                 // Set canvas size
                 function resizeCanvas() {
                     const gameArea = document.querySelector('.game-area');
-                    canvas.width = gameArea.offsetWidth;
-                    canvas.height = gameArea.offsetHeight;
+                    gameCanvas.width = gameArea.offsetWidth;
+                    gameCanvas.height = gameArea.offsetHeight;
                 }
                 
                 resizeCanvas();
                 window.addEventListener('resize', resizeCanvas);
                 
+                // Reset game state
+                currentPlayer = 1;
+                playerScores = [0, 0];
+                queenPocketedBy = null;
+                fouls = 0;
+                updateScores();
+                updatePlayerIndicator();
+                updateGameStats();
+                gameActive = true;
+                
                 // Create game pieces
+                createPieces();
+                
+                // Create striker
+                striker = {
+                    x: gameCanvas.width/2,
+                    y: currentPlayer === 1 ? gameCanvas.height - 80 : 80,
+                    radius: 15,
+                    color: 'white',
+                    type: 'striker',
+                    vx: 0,
+                    vy: 0,
+                    pocketed: false
+                };
+                
+                // Add event listeners for aiming
+                gameCanvas.addEventListener('mousedown', startAim);
+                gameCanvas.addEventListener('touchstart', startAim, { passive: false });
+                
+                gameCanvas.addEventListener('mousemove', updateAim);
+                gameCanvas.addEventListener('touchmove', updateAim, { passive: false });
+                
+                gameCanvas.addEventListener('mouseup', shoot);
+                gameCanvas.addEventListener('touchend', shoot);
+                
+                // Start game loop
+                gameLoop();
+            }
+            
+            // Create all game pieces
+            function createPieces() {
                 gamePieces = [];
+                const centerX = gameCanvas.width/2;
+                const centerY = gameCanvas.height/2;
                 
                 // Center circle (red queen)
                 gamePieces.push({
-                    x: canvas.width/2, 
-                    y: canvas.height/2, 
+                    x: centerX, 
+                    y: centerY, 
                     radius: 15, 
                     color: 'red', 
                     type: 'queen',
-                    value: 5
+                    value: 5,
+                    vx: 0,
+                    vy: 0,
+                    pocketed: false
                 });
                 
-                // White pieces
+                // White pieces (Player 1)
                 const whitePositions = [
-                    {x: canvas.width/2, y: canvas.height/2 - 40},
-                    {x: canvas.width/2 - 28, y: canvas.height/2 - 28},
-                    {x: canvas.width/2 + 28, y: canvas.height/2 - 28},
+                    {x: centerX, y: centerY - 40},
+                    {x: centerX - 28, y: centerY - 28},
+                    {x: centerX + 28, y: centerY - 28},
+                    {x: centerX - 40, y: centerY},
+                    {x: centerX + 40, y: centerY},
+                    {x: centerX - 28, y: centerY + 28},
+                    {x: centerX + 28, y: centerY + 28},
+                    {x: centerX, y: centerY + 40},
+                    {x: centerX - 20, y: centerY - 50},
+                    {x: centerX + 20, y: centerY - 50}
+                ];
+                
+                whitePositions.forEach(pos => {
+                    gamePieces.push({
+                        x: pos.x, 
+                        y: pos.y, 
+                        radius: 15, 
+                        color: 'white', 
+                        type: 'piece',
+                        value: 1,
+                        vx: 0,
+                        vy: 0,
+                        pocketed: false
+                    });
+                });
+                
+                // Black pieces (Player 2)
+                const blackPositions = [
+                    {x: centerX - 50, y: centerY - 20},
+                    {x: centerX + 50, y: centerY - 20},
+                    {x: centerX - 50, y: centerY + 20},
+                    {x: centerX + 50, y: centerY + 20},
+                    {x: centerX - 20, y: centerY + 50},
+                    {x: centerX + 20, y: centerY + 50},
+                    {x: centerX - 35, y: centerY - 35},
+                    {x: centerX + 35, y: centerY - 35},
+                    {x: centerX - 35, y: centerY + 35}
+                ];
+                
+                blackPositions.forEach(pos => {
+                    gamePieces.push({
+                        x: pos.x, 
+                        y: pos.y, 
+                        radius: 15, 
+                        color: 'black', 
+                        type: 'piece',
+                        value: 1,
+                        vx: 0,
+                        vy: 0,
+                        pocketed: false
+                    });
+                });
+            }
+            
+            // Start aiming
+            function startAim(e) {
+                if (!gameActive || movingPieces.length > 0) return;
+                
+                e.preventDefault();
+                const rect = gameCanvas.getBoundingClientRect();
+                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+                
+                aimStart.x = clientX - rect.left;
+                aimStart.y = clientY - rect.top;
+                
+                // Check if aiming from striker
+                const dx = aimStart.x - striker.x;
+                const dy = aimStart.y - striker.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < striker.radius * 2) {
+                    isAiming = true;
+                    aimingLine.style.display = 'block';
+                    updateAim(e);
+                }
+            }
+            
+            // Update aiming line
+            function updateAim(e) {
+                if (!isAiming) return;
+                
+                e.preventDefault();
+                const rect = gameCanvas.getBoundingClientRect();
+                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+                
+                aimEnd.x = clientX - rect.left;
+                aimEnd.y = clientY - rect.top;
+                
+                // Calculate power based on distance from striker
+                const dx = aimEnd.x - striker.x;
+                const dy = aimEnd.y - striker.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                aimPower = Math.min(distance / 50, 1);
+                
+                // Update power indicator
+                powerFill.style.width = `${aimPower * 100}%`;
+                
+                // Draw aiming line
+                drawAimingLine();
+            }
+            
+            // Draw aiming line on canvas
+            function drawAimingLine() {
+                const ctx = gameCanvas.getContext('2d');
+                
+                // Redraw the game
+                drawGame(ctx);
+                
+                // Draw aiming line
+                ctx.beginPath();
+                ctx.moveTo(striker.x, striker.y);
+                
+                // Calculate direction vector
+                const dx = striker.x - aimEnd.x;
+                const dy = striker.y - aimEnd.y;
+                const length = Math.sqrt(dx * dx + dy * dy);
+                const dirX = dx / length;
+                const dirY = dy / length;
+                
+                // Draw line with length based on power
+                const lineLength = 100 + aimPower * 100;
+                ctx.lineTo(striker.x + dirX * lineLength, striker.y + dirY * lineLength);
+                
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Draw power circle at end
+                ctx.beginPath();
+                ctx.arc(striker.x + dirX * lineLength, striker.y + dirY * lineLength, 5, 0, Math.PI * 2);
+                ctx.fillStyle = aimPower > 0.7 ? 'red' : (aimPower > 0.3 ? 'yellow' : 'green');
+                ctx.fill();
+            }
+            
+            // Shoot the striker
+            function shoot(e) {
+                if (!isAiming) return;
+                
+                e.preventDefault();
+                isAiming = false;
+                aimingLine.style.display = 'none';
+                
+                // Save state for undo
+                saveState();
+                
+                // Calculate direction vector
+                const dx = striker.x - aimEnd.x;
+                const dy = striker.y - aimEnd.y;
+                const length = Math.sqrt(dx * dx + dy * dy);
+                
+                if (length > 0) {
+                    const dirX = dx / length;
+                    const dirY = dy / length;
                     
+                    // Apply velocity to striker based on power
+                    striker.vx = dirX * aimPower * 20;
+                    striker.vy = dirY * aimPower * 20;
+                    
+                    movingPieces.push(striker);
+                }
+                
+                // Reset power indicator
+                powerFill.style.width = '0%';
+            }
+            
+            // Game physics loop
+            function updatePhysics() {
+                let allStopped = true;
+                
+                // Update striker and pieces
+                const allMoving = [striker, ...gamePieces];
+                
+                for (let piece of allMoving) {
+                    if (Math.abs(piece.vx) > MIN_VELOCITY || Math.abs(piece.vy) > MIN_VELOCITY) {
+                        allStopped = false;
+                        
+                        // Apply friction
+                        piece.vx *= FRICTION;
+                        piece.vy *= FRICTION;
+                        
+                        // Update position
+                        piece.x += piece.vx;
+                        piece.y += piece.vy;
+                        
+                      
