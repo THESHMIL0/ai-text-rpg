@@ -145,6 +145,28 @@
             flex-direction: column;
         }
         
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: linear-gradient(to right, #8b4513, #6b3409);
+        }
+        
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .player-turn {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #d4af37;
+            box-shadow: 0 0 10px #ffd700;
+        }
+        
         .game-area {
             flex: 1;
             position: relative;
@@ -161,6 +183,25 @@
             display: block;
         }
         
+        .power-indicator {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .power-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #00ff00, #ff0000);
+            transition: width 0.1s;
+        }
+        
         .game-controls {
             display: flex;
             justify-content: space-between;
@@ -175,6 +216,9 @@
             padding: 10px 20px;
             border-radius: 50px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         /* Settings Screen */
@@ -235,6 +279,40 @@
             border-radius: 50px;
             font-weight: bold;
             cursor: pointer;
+        }
+        
+        /* Game Over Screen */
+        .game-over-screen {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .result-message {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #d4af37;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .result-score {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
         }
         
         /* Footer */
@@ -329,17 +407,30 @@
         
         <!-- Game Screen -->
         <div class="game-screen" id="game-screen">
+            <div class="game-header">
+                <div class="player-info">
+                    <div class="player-turn" id="player1-indicator"></div>
+                    <span>Player 1: <span id="player1-score">0</span></span>
+                </div>
+                <div class="player-info">
+                    <div class="player-turn" id="player2-indicator" style="background: #666; box-shadow: none;"></div>
+                    <span>Player 2: <span id="player2-score">0</span></span>
+                </div>
+            </div>
+            
             <div class="game-area">
                 <canvas id="gameCanvas"></canvas>
+                <div class="power-indicator">
+                    <div class="power-fill" id="power-fill"></div>
+                </div>
             </div>
             
             <div class="game-controls">
                 <button class="control-btn" id="menu-btn">
                     <i class="fas fa-bars"></i> MENU
                 </button>
-                <div class="score">Player 1: 0 | Player 2: 0</div>
-                <button class="control-btn">
-                    <i class="fas fa-undo"></i>
+                <button class="control-btn" id="undo-btn">
+                    <i class="fas fa-undo"></i> UNDO
                 </button>
             </div>
         </div>
@@ -388,6 +479,20 @@
             <button class="back-btn" id="settings-back-btn">BACK</button>
         </div>
         
+        <!-- Game Over Screen -->
+        <div class="game-over-screen" id="game-over-screen">
+            <h2 class="result-message" id="result-message">VICTORY!</h2>
+            <div class="result-score" id="result-score">Player 1 wins with 25 points!</div>
+            <div class="action-buttons">
+                <button class="menu-btn" id="play-again-btn">
+                    <i class="fas fa-redo"></i> PLAY AGAIN
+                </button>
+                <button class="menu-btn" id="main-menu-btn">
+                    <i class="fas fa-home"></i> MAIN MENU
+                </button>
+            </div>
+        </div>
+        
         <!-- Footer -->
         <div class="footer">
             <p>Carrom Pool © 2023 | Version 1.2.5</p>
@@ -400,10 +505,32 @@
             const mainMenu = document.getElementById('main-menu');
             const gameScreen = document.getElementById('game-screen');
             const settingsScreen = document.getElementById('settings-screen');
+            const gameOverScreen = document.getElementById('game-over-screen');
             const playBtn = document.getElementById('play-btn');
             const settingsBtn = document.getElementById('settings-btn');
             const menuBtn = document.getElementById('menu-btn');
             const settingsBackBtn = document.getElementById('settings-back-btn');
+            const playAgainBtn = document.getElementById('play-again-btn');
+            const mainMenuBtn = document.getElementById('main-menu-btn');
+            const undoBtn = document.getElementById('undo-btn');
+            const powerFill = document.getElementById('power-fill');
+            const player1Score = document.getElementById('player1-score');
+            const player2Score = document.getElementById('player2-score');
+            const player1Indicator = document.getElementById('player1-indicator');
+            const player2Indicator = document.getElementById('player2-indicator');
+            const resultMessage = document.getElementById('result-message');
+            const resultScore = document.getElementById('result-score');
+            
+            // Game state variables
+            let currentPlayer = 1;
+            let playerScores = [0, 0];
+            let isAiming = false;
+            let aimPower = 0;
+            let powerDirection = 1;
+            let gamePieces = [];
+            let striker = null;
+            let gameActive = false;
+            let animationId = null;
             
             // Switch to game screen
             playBtn.addEventListener('click', function() {
@@ -422,6 +549,7 @@
             menuBtn.addEventListener('click', function() {
                 gameScreen.style.display = 'none';
                 mainMenu.style.display = 'flex';
+                cancelAnimationFrame(animationId);
             });
             
             // Switch back to menu from settings
@@ -430,107 +558,63 @@
                 mainMenu.style.display = 'flex';
             });
             
+            // Play again button
+            playAgainBtn.addEventListener('click', function() {
+                gameOverScreen.style.display = 'none';
+                initGame();
+            });
+            
+            // Main menu button
+            mainMenuBtn.addEventListener('click', function() {
+                gameOverScreen.style.display = 'none';
+                mainMenu.style.display = 'flex';
+                gameScreen.style.display = 'none';
+                cancelAnimationFrame(animationId);
+            });
+            
+            // Undo button
+            undoBtn.addEventListener('click', function() {
+                alert('Undo feature would be implemented here');
+            });
+            
             // Initialize game
             function initGame() {
                 const canvas = document.getElementById('gameCanvas');
                 const ctx = canvas.getContext('2d');
+                
+                // Reset game state
+                currentPlayer = 1;
+                playerScores = [0, 0];
+                updateScores();
+                updatePlayerIndicator();
+                gameActive = true;
                 
                 // Set canvas size
                 function resizeCanvas() {
                     const gameArea = document.querySelector('.game-area');
                     canvas.width = gameArea.offsetWidth;
                     canvas.height = gameArea.offsetHeight;
-                    drawGame();
                 }
                 
-                // Draw the game
-                function drawGame() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    
-                    // Draw board
-                    ctx.fillStyle = '#d4af37';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    
-                    // Draw border
-                    ctx.strokeStyle = '#8b4513';
-                    ctx.lineWidth = 10;
-                    ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
-                    
-                    // Draw center circle
-                    ctx.beginPath();
-                    ctx.arc(canvas.width/2, canvas.height/2, 40, 0, Math.PI * 2);
-                    ctx.strokeStyle = 'red';
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                    
-                    // Draw pockets
-                    const pocketPositions = [
-                        {x: 0, y: 0},
-                        {x: canvas.width, y: 0},
-                        {x: 0, y: canvas.height},
-                        {x: canvas.width, y: canvas.height}
-                    ];
-                    
-                    pocketPositions.forEach(pos => {
-                        ctx.beginPath();
-                        ctx.arc(pos.x, pos.y, 20, 0, Math.PI * 2);
-                        ctx.fillStyle = 'black';
-                        ctx.fill();
-                    });
-                    
-                    // Draw pieces (simplified for this example)
-                    ctx.beginPath();
-                    ctx.arc(canvas.width/2, canvas.height/2, 15, 0, Math.PI * 2);
-                    ctx.fillStyle = 'red';
-                    ctx.fill();
-                    
-                    // Draw white pieces
-                    for (let i = 0; i < 9; i++) {
-                        const angle = (i / 9) * Math.PI * 2;
-                        const radius = 40;
-                        const x = canvas.width/2 + Math.cos(angle) * radius;
-                        const y = canvas.height/2 + Math.sin(angle) * radius;
-                        
-                        ctx.beginPath();
-                        ctx.arc(x, y, 15, 0, Math.PI * 2);
-                        ctx.fillStyle = 'white';
-                        ctx.fill();
-                        ctx.strokeStyle = 'black';
-                        ctx.lineWidth = 2;
-                        ctx.stroke();
-                    }
-                    
-                    // Draw black pieces
-                    for (let i = 0; i < 9; i++) {
-                        const angle = (i / 9) * Math.PI * 2;
-                        const radius = 70;
-                        const x = canvas.width/2 + Math.cos(angle) * radius;
-                        const y = canvas.height/2 + Math.sin(angle) * radius;
-                        
-                        ctx.beginPath();
-                        ctx.arc(x, y, 15, 0, Math.PI * 2);
-                        ctx.fillStyle = 'black';
-                        ctx.fill();
-                        ctx.strokeStyle = 'white';
-                        ctx.lineWidth = 2;
-                        ctx.stroke();
-                    }
-                    
-                    // Draw striker
-                    ctx.beginPath();
-                    ctx.arc(canvas.width/2, canvas.height - 60, 15, 0, Math.PI * 2);
-                    ctx.fillStyle = 'white';
-                    ctx.fill();
-                    ctx.strokeStyle = 'black';
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                }
-                
-                // Initial resize and draw
                 resizeCanvas();
                 window.addEventListener('resize', resizeCanvas);
-            }
-        });
-    </script>
-</body>
-</html>
+                
+                // Create game pieces
+                gamePieces = [];
+                
+                // Center circle (red queen)
+                gamePieces.push({
+                    x: canvas.width/2, 
+                    y: canvas.height/2, 
+                    radius: 15, 
+                    color: 'red', 
+                    type: 'queen',
+                    value: 5
+                });
+                
+                // White pieces
+                const whitePositions = [
+                    {x: canvas.width/2, y: canvas.height/2 - 40},
+                    {x: canvas.width/2 - 28, y: canvas.height/2 - 28},
+                    {x: canvas.width/2 + 28, y: canvas.height/2 - 28},
+                    
