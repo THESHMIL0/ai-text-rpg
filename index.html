@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrom Pool - Advanced Physics</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Carrom Pool Game</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Arial', sans-serif;
         }
         
         body {
@@ -21,21 +20,17 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            overflow: hidden;
         }
         
         .container {
             width: 100%;
             max-width: 500px;
-            height: 90vh;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             border-radius: 20px;
             overflow: hidden;
-            position: relative;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
         
-        /* Header with coins and settings */
         .header {
             display: flex;
             justify-content: space-between;
@@ -50,32 +45,103 @@
             align-items: center;
             gap: 5px;
             font-weight: bold;
+            font-size: 1.2rem;
         }
         
-        .coins i {
-            color: gold;
+        .game-area {
+            padding: 20px;
+            text-align: center;
         }
         
-        .settings-btn {
-            background: none;
-            border: none;
+        .game-title {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #d4af37;
+            text-shadow: 3px 3px 0 #000;
+        }
+        
+        .game-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .menu-btn {
+            padding: 15px;
+            font-size: 1.2rem;
+            background: linear-gradient(to bottom, #d4af37, #a2853e);
             color: white;
-            font-size: 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-modes {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .mode-btn {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            color: white;
             cursor: pointer;
         }
         
-        /* Game Screen */
-        .game-screen {
-            display: none;
-            height: 100%;
-            flex-direction: column;
+        .mode-btn.active {
+            background: #d4af37;
+            color: #000;
         }
         
-        .game-header {
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 0.8rem;
+            color: #aaa;
+            border-top: 1px solid #444;
+        }
+        
+        /* Game Screen Styles */
+        .game-screen {
+            display: none;
+        }
+        
+        .board-container {
+            position: relative;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        #gameBoard {
+            width: 100%;
+            height: 400px;
+            background: #d4af37;
+            border: 15px solid #8b4513;
+            border-radius: 10px;
+        }
+        
+        .game-ui {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
+            padding: 15px;
             background: linear-gradient(to right, #8b4513, #6b3409);
         }
         
@@ -90,474 +156,273 @@
             height: 15px;
             border-radius: 50%;
             background: #d4af37;
-            box-shadow: 0 0 10px #ffd700;
-            transition: all 0.3s;
-        }
-        
-        .game-area {
-            flex: 1;
-            position: relative;
-            background-color: #d4af37;
-            margin: 15px;
-            border-radius: 10px;
-            border: 10px solid #8b4513;
-            overflow: hidden;
-            touch-action: none;
-        }
-        
-        #gameCanvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-        
-        .aiming-line {
-            position: absolute;
-            pointer-events: none;
-            display: none;
-        }
-        
-        .power-indicator {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        
-        .power-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(to right, #00ff00, #ffff00, #ff0000);
-            transition: width 0.1s;
-        }
-        
-        .game-controls {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px;
-            background: linear-gradient(to right, #8b4513, #6b3409);
         }
         
         .control-btn {
             background: rgba(255, 255, 255, 0.2);
             border: none;
             color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
+            padding: 10px 15px;
+            border-radius: 5px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .game-stats {
-            display: flex;
-            gap: 15px;
-            font-size: 0.9rem;
-        }
-        
-        /* Game Messages */
-        .game-message {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
-            padding: 15px 30px;
-            border-radius: 10px;
-            text-align: center;
-            z-index: 10;
-            display: none;
-        }
-        
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 15px;
-            font-size: 0.8rem;
-            color: #aaa;
-            border-top: 1px solid #444;
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 500px) {
-            .container {
-                height: 95vh;
-                border-radius: 15px;
-            }
-            
-            .game-stats {
-                flex-direction: column;
-                gap: 5px;
-            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header with coins and settings -->
+        <!-- Main Menu -->
         <div class="header">
             <div class="coins">
-                <i class="fas fa-coins"></i>
-                <span id="coins-count">12,850</span>
+                <span>🪙</span>
+                <span id="coins">12,850</span>
             </div>
-            <button class="settings-btn" id="settings-btn">
-                <i class="fas fa-cog"></i>
-            </button>
+            <button class="control-btn" id="settingsBtn">⚙️</button>
         </div>
         
-        <!-- Game Screen -->
-        <div class="game-screen" id="game-screen">
-            <div class="game-header">
-                <div class="player-info">
-                    <div class="player-turn" id="player1-indicator"></div>
-                    <span>Player 1: <span id="player1-score">0</span></span>
-                </div>
-                <div class="game-stats">
-                    <span>Queen: <span id="queen-status">On Board</span></span>
-                    <span>Fouls: <span id="foul-count">0</span></span>
-                </div>
-                <div class="player-info">
-                    <div class="player-turn" id="player2-indicator" style="background: #666; box-shadow: none;"></div>
-                    <span>Player 2: <span id="player2-score">0</span></span>
-                </div>
+        <div class="game-area" id="mainMenu">
+            <h1 class="game-title">CARROM POOL</h1>
+            <p class="game-subtitle">Classic Board Game</p>
+            
+            <div class="menu-buttons">
+                <button class="menu-btn" id="playBtn">🎮 PLAY NOW</button>
+                <button class="menu-btn">🏆 TOURNAMENT</button>
+                <button class="menu-btn">🛍️ SHOP</button>
+                <button class="menu-btn">👥 FRIENDS</button>
             </div>
             
-            <div class="game-area">
-                <canvas id="gameCanvas"></canvas>
-                <div class="aiming-line" id="aiming-line"></div>
-                <div class="power-indicator">
-                    <div class="power-fill" id="power-fill"></div>
-                </div>
-                <div class="game-message" id="game-message"></div>
-            </div>
-            
-            <div class="game-controls">
-                <button class="control-btn" id="menu-btn">
-                    <i class="fas fa-bars"></i> MENU
-                </button>
-                <button class="control-btn" id="hint-btn">
-                    <i class="fas fa-lightbulb"></i> HINT
-                </button>
-                <button class="control-btn" id="undo-btn">
-                    <i class="fas fa-undo"></i> UNDO
-                </button>
+            <div class="game-modes">
+                <button class="mode-btn active">CLASSIC</button>
+                <button class="mode-btn">DISCO</button>
+                <button class="mode-btn">RUSH</button>
             </div>
         </div>
         
-        <!-- Footer -->
+        <!-- Game Screen (Hidden by default) -->
+        <div class="game-screen" id="gameScreen">
+            <div class="header">
+                <div class="player-info">
+                    <div class="player-turn" id="p1Indicator"></div>
+                    <span>Player 1: <span id="p1Score">0</span></span>
+                </div>
+                <div class="player-info">
+                    <div class="player-turn" id="p2Indicator"></div>
+                    <span>Player 2: <span id="p2Score">0</span></span>
+                </div>
+            </div>
+            
+            <div class="board-container">
+                <canvas id="gameBoard"></canvas>
+            </div>
+            
+            <div class="game-ui">
+                <button class="control-btn" id="menuBtn">📋 MENU</button>
+                <button class="control-btn" id="hintBtn">💡 HINT</button>
+                <button class="control-btn" id="undoBtn">↩️ UNDO</button>
+            </div>
+        </div>
+        
         <div class="footer">
             <p>Carrom Pool © 2023 | Advanced Physics Update</p>
         </div>
     </div>
 
     <script>
+        // Game initialization
         document.addEventListener('DOMContentLoaded', function() {
-            // Get DOM elements
-            const gameScreen = document.getElementById('game-screen');
-            const gameCanvas = document.getElementById('gameCanvas');
-            const aimingLine = document.getElementById('aiming-line');
-            const powerFill = document.getElementById('power-fill');
-            const gameMessage = document.getElementById('game-message');
-            const player1Score = document.getElementById('player1-score');
-            const player2Score = document.getElementById('player2-score');
-            const player1Indicator = document.getElementById('player1-indicator');
-            const player2Indicator = document.getElementById('player2-indicator');
-            const queenStatus = document.getElementById('queen-status');
-            const foulCount = document.getElementById('foul-count');
-            const coinsCount = document.getElementById('coins-count');
-            const menuBtn = document.getElementById('menu-btn');
-            const hintBtn = document.getElementById('hint-btn');
-            const undoBtn = document.getElementById('undo-btn');
-            const settingsBtn = document.getElementById('settings-btn');
+            const mainMenu = document.getElementById('mainMenu');
+            const gameScreen = document.getElementById('gameScreen');
+            const playBtn = document.getElementById('playBtn');
+            const menuBtn = document.getElementById('menuBtn');
+            const settingsBtn = document.getElementById('settingsBtn');
+            const gameBoard = document.getElementById('gameBoard');
+            const ctx = gameBoard.getContext('2d');
             
-            // Game state variables
-            let currentPlayer = 1;
-            let playerScores = [0, 0];
-            let playerColors = ['white', 'black']; // Player 1 plays white, Player 2 plays black
-            let isAiming = false;
-            let aimStart = {x: 0, y: 0};
-            let aimEnd = {x: 0, y: 0};
-            let aimPower = 0;
-            let gamePieces = [];
-            let striker = null;
-            let movingPieces = [];
-            let queenPocketedBy = null; // Track who pocketed the queen
-            let fouls = 0;
-            let coins = 12850;
-            let gameActive = false;
-            let animationId = null;
-            let lastState = null; // For undo functionality
+            // Switch to game screen
+            playBtn.addEventListener('click', function() {
+                mainMenu.style.display = 'none';
+                gameScreen.style.display = 'block';
+                initGame();
+            });
             
-            // Physics constants
-            const FRICTION = 0.98;
-            const MIN_VELOCITY = 0.1;
-            const POCKET_RADIUS = 20;
-            const BOARD_MARGIN = 10;
+            // Switch back to menu
+            menuBtn.addEventListener('click', function() {
+                gameScreen.style.display = 'none';
+                mainMenu.style.display = 'block';
+            });
+            
+            // Settings button
+            settingsBtn.addEventListener('click', function() {
+                alert('Settings menu would open here');
+            });
             
             // Initialize the game
             function initGame() {
-                const ctx = gameCanvas.getContext('2d');
-                
                 // Set canvas size
-                function resizeCanvas() {
-                    const gameArea = document.querySelector('.game-area');
-                    gameCanvas.width = gameArea.offsetWidth;
-                    gameCanvas.height = gameArea.offsetHeight;
-                }
+                gameBoard.width = gameBoard.offsetWidth;
+                gameBoard.height = gameBoard.offsetHeight;
                 
-                resizeCanvas();
-                window.addEventListener('resize', resizeCanvas);
+                // Draw the game board
+                drawBoard();
                 
-                // Reset game state
-                currentPlayer = 1;
-                playerScores = [0, 0];
-                queenPocketedBy = null;
-                fouls = 0;
-                updateScores();
-                updatePlayerIndicator();
-                updateGameStats();
-                gameActive = true;
-                
-                // Create game pieces
-                createPieces();
-                
-                // Create striker
-                striker = {
-                    x: gameCanvas.width/2,
-                    y: currentPlayer === 1 ? gameCanvas.height - 80 : 80,
-                    radius: 15,
-                    color: 'white',
-                    type: 'striker',
-                    vx: 0,
-                    vy: 0,
-                    pocketed: false
-                };
-                
-                // Add event listeners for aiming
-                gameCanvas.addEventListener('mousedown', startAim);
-                gameCanvas.addEventListener('touchstart', startAim, { passive: false });
-                
-                gameCanvas.addEventListener('mousemove', updateAim);
-                gameCanvas.addEventListener('touchmove', updateAim, { passive: false });
-                
-                gameCanvas.addEventListener('mouseup', shoot);
-                gameCanvas.addEventListener('touchend', shoot);
-                
-                // Start game loop
-                gameLoop();
+                // Initialize game pieces
+                drawPieces();
             }
             
-            // Create all game pieces
-            function createPieces() {
-                gamePieces = [];
-                const centerX = gameCanvas.width/2;
-                const centerY = gameCanvas.height/2;
+            // Draw the carrom board
+            function drawBoard() {
+                const width = gameBoard.width;
+                const height = gameBoard.height;
                 
-                // Center circle (red queen)
-                gamePieces.push({
-                    x: centerX, 
-                    y: centerY, 
-                    radius: 15, 
-                    color: 'red', 
-                    type: 'queen',
-                    value: 5,
-                    vx: 0,
-                    vy: 0,
-                    pocketed: false
-                });
+                // Board background
+                ctx.fillStyle = '#d4af37';
+                ctx.fillRect(0, 0, width, height);
                 
-                // White pieces (Player 1)
-                const whitePositions = [
-                    {x: centerX, y: centerY - 40},
-                    {x: centerX - 28, y: centerY - 28},
-                    {x: centerX + 28, y: centerY - 28},
-                    {x: centerX - 40, y: centerY},
-                    {x: centerX + 40, y: centerY},
-                    {x: centerX - 28, y: centerY + 28},
-                    {x: centerX + 28, y: centerY + 28},
-                    {x: centerX, y: centerY + 40},
-                    {x: centerX - 20, y: centerY - 50},
-                    {x: centerX + 20, y: centerY - 50}
-                ];
+                // Border
+                ctx.strokeStyle = '#8b4513';
+                ctx.lineWidth = 10;
+                ctx.strokeRect(0, 0, width, height);
                 
-                whitePositions.forEach(pos => {
-                    gamePieces.push({
-                        x: pos.x, 
-                        y: pos.y, 
-                        radius: 15, 
-                        color: 'white', 
-                        type: 'piece',
-                        value: 1,
-                        vx: 0,
-                        vy: 0,
-                        pocketed: false
-                    });
-                });
-                
-                // Black pieces (Player 2)
-                const blackPositions = [
-                    {x: centerX - 50, y: centerY - 20},
-                    {x: centerX + 50, y: centerY - 20},
-                    {x: centerX - 50, y: centerY + 20},
-                    {x: centerX + 50, y: centerY + 20},
-                    {x: centerX - 20, y: centerY + 50},
-                    {x: centerX + 20, y: centerY + 50},
-                    {x: centerX - 35, y: centerY - 35},
-                    {x: centerX + 35, y: centerY - 35},
-                    {x: centerX - 35, y: centerY + 35}
-                ];
-                
-                blackPositions.forEach(pos => {
-                    gamePieces.push({
-                        x: pos.x, 
-                        y: pos.y, 
-                        radius: 15, 
-                        color: 'black', 
-                        type: 'piece',
-                        value: 1,
-                        vx: 0,
-                        vy: 0,
-                        pocketed: false
-                    });
-                });
-            }
-            
-            // Start aiming
-            function startAim(e) {
-                if (!gameActive || movingPieces.length > 0) return;
-                
-                e.preventDefault();
-                const rect = gameCanvas.getBoundingClientRect();
-                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-                
-                aimStart.x = clientX - rect.left;
-                aimStart.y = clientY - rect.top;
-                
-                // Check if aiming from striker
-                const dx = aimStart.x - striker.x;
-                const dy = aimStart.y - striker.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance < striker.radius * 2) {
-                    isAiming = true;
-                    aimingLine.style.display = 'block';
-                    updateAim(e);
-                }
-            }
-            
-            // Update aiming line
-            function updateAim(e) {
-                if (!isAiming) return;
-                
-                e.preventDefault();
-                const rect = gameCanvas.getBoundingClientRect();
-                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-                
-                aimEnd.x = clientX - rect.left;
-                aimEnd.y = clientY - rect.top;
-                
-                // Calculate power based on distance from striker
-                const dx = aimEnd.x - striker.x;
-                const dy = aimEnd.y - striker.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                aimPower = Math.min(distance / 50, 1);
-                
-                // Update power indicator
-                powerFill.style.width = `${aimPower * 100}%`;
-                
-                // Draw aiming line
-                drawAimingLine();
-            }
-            
-            // Draw aiming line on canvas
-            function drawAimingLine() {
-                const ctx = gameCanvas.getContext('2d');
-                
-                // Redraw the game
-                drawGame(ctx);
-                
-                // Draw aiming line
+                // Center circle
                 ctx.beginPath();
-                ctx.moveTo(striker.x, striker.y);
+                ctx.arc(width/2, height/2, 40, 0, Math.PI * 2);
+                ctx.strokeStyle = 'red';
+                ctx.lineWidth = 3;
+                ctx.stroke();
                 
-                // Calculate direction vector
-                const dx = striker.x - aimEnd.x;
-                const dy = striker.y - aimEnd.y;
-                const length = Math.sqrt(dx * dx + dy * dy);
-                const dirX = dx / length;
-                const dirY = dy / length;
+                // Corner pockets
+                const pockets = [
+                    {x: 0, y: 0},
+                    {x: width, y: 0},
+                    {x: 0, y: height},
+                    {x: width, y: height}
+                ];
                 
-                // Draw line with length based on power
-                const lineLength = 100 + aimPower * 100;
-                ctx.lineTo(striker.x + dirX * lineLength, striker.y + dirY * lineLength);
+                pockets.forEach(pocket => {
+                    ctx.beginPath();
+                    ctx.arc(pocket.x, pocket.y, 25, 0, Math.PI * 2);
+                    ctx.fillStyle = 'black';
+                    ctx.fill();
+                });
+            }
+            
+            // Draw game pieces
+            function drawPieces() {
+                const width = gameBoard.width;
+                const height = gameBoard.height;
                 
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+                // Queen (red piece in center)
+                ctx.beginPath();
+                ctx.arc(width/2, height/2, 15, 0, Math.PI * 2);
+                ctx.fillStyle = 'red';
+                ctx.fill();
+                ctx.strokeStyle = 'darkred';
                 ctx.lineWidth = 2;
                 ctx.stroke();
                 
-                // Draw power circle at end
-                ctx.beginPath();
-                ctx.arc(striker.x + dirX * lineLength, striker.y + dirY * lineLength, 5, 0, Math.PI * 2);
-                ctx.fillStyle = aimPower > 0.7 ? 'red' : (aimPower > 0.3 ? 'yellow' : 'green');
-                ctx.fill();
-            }
-            
-            // Shoot the striker
-            function shoot(e) {
-                if (!isAiming) return;
-                
-                e.preventDefault();
-                isAiming = false;
-                aimingLine.style.display = 'none';
-                
-                // Save state for undo
-                saveState();
-                
-                // Calculate direction vector
-                const dx = striker.x - aimEnd.x;
-                const dy = striker.y - aimEnd.y;
-                const length = Math.sqrt(dx * dx + dy * dy);
-                
-                if (length > 0) {
-                    const dirX = dx / length;
-                    const dirY = dy / length;
+                // White pieces
+                for (let i = 0; i < 9; i++) {
+                    const angle = (i / 9) * Math.PI * 2;
+                    const radius = 35;
+                    const x = width/2 + Math.cos(angle) * radius;
+                    const y = height/2 + Math.sin(angle) * radius;
                     
-                    // Apply velocity to striker based on power
-                    striker.vx = dirX * aimPower * 20;
-                    striker.vy = dirY * aimPower * 20;
-                    
-                    movingPieces.push(striker);
+                    ctx.beginPath();
+                    ctx.arc(x, y, 15, 0, Math.PI * 2);
+                    ctx.fillStyle = 'white';
+                    ctx.fill();
+                    ctx.strokeStyle = '#ccc';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
                 }
                 
-                // Reset power indicator
-                powerFill.style.width = '0%';
+                // Black pieces
+                for (let i = 0; i < 9; i++) {
+                    const angle = (i / 9) * Math.PI * 2;
+                    const radius = 60;
+                    const x = width/2 + Math.cos(angle) * radius;
+                    const y = height/2 + Math.sin(angle) * radius;
+                    
+                    ctx.beginPath();
+                    ctx.arc(x, y, 15, 0, Math.PI * 2);
+                    ctx.fillStyle = 'black';
+                    ctx.fill();
+                    ctx.strokeStyle = '#333';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+                
+                // Striker
+                ctx.beginPath();
+                ctx.arc(width/2, height - 50, 15, 0, Math.PI * 2);
+                ctx.fillStyle = 'white';
+                ctx.fill();
+                ctx.strokeStyle = 'black';
+                ctx.lineWidth = 3;
+                ctx.stroke();
             }
             
-            // Game physics loop
-            function updatePhysics() {
-                let allStopped = true;
+            // Add touch controls for mobile
+            gameBoard.addEventListener('touchstart', handleTouchStart);
+            gameBoard.addEventListener('touchmove', handleTouchMove);
+            gameBoard.addEventListener('touchend', handleTouchEnd);
+            
+            let touchStart = {x: 0, y: 0};
+            
+            function handleTouchStart(e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = gameBoard.getBoundingClientRect();
+                touchStart.x = touch.clientX - rect.left;
+                touchStart.y = touch.clientY - rect.top;
+            }
+            
+            function handleTouchMove(e) {
+                e.preventDefault();
+                // Add aiming line visualization here
+            }
+            
+            function handleTouchEnd(e) {
+                e.preventDefault();
+                const touch = e.changedTouches[0];
+                const rect = gameBoard.getBoundingClientRect();
+                const touchEndX = touch.clientX - rect.left;
+                const touchEndY = touch.clientY - rect.top;
                 
-                // Update striker and pieces
-                const allMoving = [striker, ...gamePieces];
+                // Calculate shot direction and power
+                const dx = touchEndX - touchStart.x;
+                const dy = touchEndY - touchStart.y;
+                const power = Math.min(Math.sqrt(dx*dx + dy*dy) / 50, 1);
                 
-                for (let piece of allMoving) {
-                    if (Math.abs(piece.vx) > MIN_VELOCITY || Math.abs(piece.vy) > MIN_VELOCITY) {
-                        allStopped = false;
-                        
-                        // Apply friction
-                        piece.vx *= FRICTION;
-                        piece.vy *= FRICTION;
-                        
-                        // Update position
-                        piece.x += piece.vx;
-                        piece.y += piece.vy;
-                        
-                      
+                // Simulate shot
+                simulateShot(power);
+            }
+            
+            // Simulate a shot
+            function simulateShot(power) {
+                // Update scores randomly for demo
+                const points = Math.floor(power * 3) + 1;
+                document.getElementById('p1Score').textContent = 
+                    parseInt(document.getElementById('p1Score').textContent) + points;
+                
+                // Switch turns
+                document.getElementById('p1Indicator').style.background = '#666';
+                document.getElementById('p2Indicator').style.background = '#d4af37';
+                
+                // Redraw board after a delay
+                setTimeout(() => {
+                    drawBoard();
+                    drawPieces();
+                    
+                    // Switch turns back
+                    document.getElementById('p1Indicator').style.background = '#d4af37';
+                    document.getElementById('p2Indicator').style.background = '#666';
+                }, 1000);
+            }
+            
+            // Initialize player indicators
+            document.getElementById('p1Indicator').style.background = '#d4af37';
+            document.getElementById('p2Indicator').style.background = '#666';
+        });
+    </script>
+</body>
+</html>
