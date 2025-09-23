@@ -126,6 +126,8 @@
         /* Game Screen Styles */
         .game-screen {
             display: none;
+            flex-direction: column;
+            height: 100%;
         }
         
         .board-container {
@@ -133,11 +135,12 @@
             width: 100%;
             margin: 0 auto;
             touch-action: none;
+            flex: 1;
         }
         
         #gameBoard {
             width: 100%;
-            height: 400px;
+            height: 100%;
             background: #d4af37;
             border: 15px solid #8b4513;
             border-radius: 10px;
@@ -211,6 +214,15 @@
             display: none;
             z-index: 100;
         }
+        
+        /* Instructions */
+        .instructions {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            margin: 10px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -230,9 +242,8 @@
             
             <div class="menu-buttons">
                 <button class="menu-btn" id="playBtn">🎮 PLAY NOW</button>
-                <button class="menu-btn">🏆 TOURNAMENT</button>
-                <button class="menu-btn">🛍️ SHOP</button>
-                <button class="menu-btn">👥 FRIENDS</button>
+                <button class="menu-btn" id="practiceBtn">🏆 PRACTICE</button>
+                <button class="menu-btn" id="multiplayerBtn">👥 MULTIPLAYER</button>
             </div>
             
             <div class="game-modes">
@@ -240,17 +251,21 @@
                 <button class="mode-btn">DISCO</button>
                 <button class="mode-btn">RUSH</button>
             </div>
+            
+            <div class="instructions">
+                <p><strong>How to Play:</strong> Drag the striker away from the pieces to aim, then release to shoot. Pocket your pieces to score points!</p>
+            </div>
         </div>
         
         <!-- Game Screen (Hidden by default) -->
         <div class="game-screen" id="gameScreen">
             <div class="header">
                 <div class="player-info">
-                    <div class="player-turn" id="p1Indicator"></div>
+                    <div class="player-turn active" id="p1Indicator"></div>
                     <span>Player 1: <span id="p1Score">0</span></span>
                 </div>
                 <div class="player-info">
-                    <div class="player-turn" id="p2Indicator"></div>
+                    <div class="player-turn inactive" id="p2Indicator"></div>
                     <span>Player 2: <span id="p2Score">0</span></span>
                 </div>
             </div>
@@ -268,10 +283,14 @@
                 <button class="control-btn" id="hintBtn">💡 HINT</button>
                 <button class="control-btn" id="undoBtn">↩️ UNDO</button>
             </div>
+            
+            <div class="instructions">
+                <p><strong>Controls:</strong> Drag & release the striker. Player 1: White pieces | Player 2: Black pieces | Red: Queen (5 points)</p>
+            </div>
         </div>
         
         <div class="footer">
-            <p>Carrom Pool © 2023 | Advanced Physics Update</p>
+            <p>Carrom Pool © 2023 | Fixed Version</p>
         </div>
     </div>
 
@@ -281,6 +300,8 @@
             const mainMenu = document.getElementById('mainMenu');
             const gameScreen = document.getElementById('gameScreen');
             const playBtn = document.getElementById('playBtn');
+            const practiceBtn = document.getElementById('practiceBtn');
+            const multiplayerBtn = document.getElementById('multiplayerBtn');
             const menuBtn = document.getElementById('menuBtn');
             const settingsBtn = document.getElementById('settingsBtn');
             const hintBtn = document.getElementById('hintBtn');
@@ -289,6 +310,8 @@
             const powerBar = document.getElementById('powerBar');
             const powerFill = document.getElementById('powerFill');
             const gameMessage = document.getElementById('gameMessage');
+            const p1Indicator = document.getElementById('p1Indicator');
+            const p2Indicator = document.getElementById('p2Indicator');
             
             const ctx = gameBoard.getContext('2d');
             
@@ -306,12 +329,21 @@
             let gameActive = false;
             let animationId = null;
             let isMoving = false;
+            let coins = 12850;
             
             // Switch to game screen
             playBtn.addEventListener('click', function() {
                 mainMenu.style.display = 'none';
-                gameScreen.style.display = 'block';
+                gameScreen.style.display = 'flex';
                 initGame();
+            });
+            
+            practiceBtn.addEventListener('click', function() {
+                showMessage("Practice mode would start here");
+            });
+            
+            multiplayerBtn.addEventListener('click', function() {
+                showMessage("Multiplayer mode would start here");
             });
             
             // Switch back to menu
@@ -319,18 +351,24 @@
                 if (confirm('Return to menu? Game progress will be lost.')) {
                     gameScreen.style.display = 'none';
                     mainMenu.style.display = 'block';
-                    cancelAnimationFrame(animationId);
+                    if (animationId) cancelAnimationFrame(animationId);
                 }
             });
             
             // Settings button
             settingsBtn.addEventListener('click', function() {
-                alert('Settings menu would open here');
+                showMessage("Settings would open here");
             });
             
             // Hint button
             hintBtn.addEventListener('click', function() {
-                showMessage('Try aiming for the queen in the center!');
+                if (coins >= 10) {
+                    coins -= 10;
+                    document.getElementById('coins').textContent = coins.toLocaleString();
+                    showMessage('Try aiming for the queen in the center!');
+                } else {
+                    showMessage('Not enough coins for a hint!');
+                }
             });
             
             // Undo button
@@ -341,8 +379,9 @@
             // Initialize the game
             function initGame() {
                 // Set canvas size
-                gameBoard.width = gameBoard.offsetWidth;
-                gameBoard.height = gameBoard.offsetHeight;
+                const container = document.querySelector('.board-container');
+                gameBoard.width = container.clientWidth;
+                gameBoard.height = container.clientHeight;
                 
                 // Initialize game state
                 currentPlayer = 1;
@@ -378,6 +417,8 @@
                 
                 // Start game loop
                 gameLoop();
+                
+                showMessage("Player 1's turn - Drag the striker to shoot!");
             }
             
             // Create game pieces
@@ -393,7 +434,9 @@
                     radius: 15,
                     color: 'red',
                     type: 'queen',
-                    pocketed: false
+                    pocketed: false,
+                    vx: 0,
+                    vy: 0
                 });
                 
                 // White pieces (9 pieces)
@@ -416,7 +459,9 @@
                         radius: 15,
                         color: 'white',
                         type: 'piece',
-                        pocketed: false
+                        pocketed: false,
+                        vx: 0,
+                        vy: 0
                     });
                 });
                 
@@ -440,7 +485,9 @@
                         radius: 15,
                         color: 'black',
                         type: 'piece',
-                        pocketed: false
+                        pocketed: false,
+                        vx: 0,
+                        vy: 0
                     });
                 });
             }
@@ -451,8 +498,10 @@
                 
                 e.preventDefault();
                 const rect = gameBoard.getBoundingClientRect();
-                const clientX = e.clientX || e.touches[0].clientX;
-                const clientY = e.clientY || e.touches[0].clientY;
+                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+                
+                if (!clientX || !clientY) return;
                 
                 dragStartX = clientX - rect.left;
                 dragStartY = clientY - rect.top;
@@ -462,7 +511,7 @@
                 const dy = dragStartY - striker.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 
-                if (distance < striker.radius) {
+                if (distance < striker.radius * 2) {
                     isDragging = true;
                     powerBar.style.display = 'block';
                 }
@@ -474,8 +523,10 @@
                 
                 e.preventDefault();
                 const rect = gameBoard.getBoundingClientRect();
-                const clientX = e.clientX || e.touches[0].clientX;
-                const clientY = e.clientY || e.touches[0].clientY;
+                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+                
+                if (!clientX || !clientY) return;
                 
                 dragEndX = clientX - rect.left;
                 dragEndY = clientY - rect.top;
@@ -526,52 +577,4 @@
                 ctx.beginPath();
                 ctx.moveTo(striker.x, striker.y);
                 ctx.lineTo(dragEndX, dragEndY);
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-                
-                // Draw power indicator
-                ctx.beginPath();
-                ctx.arc(dragEndX, dragEndY, 5, 0, Math.PI * 2);
-                ctx.fillStyle = power > 0.7 ? 'red' : (power > 0.3 ? 'yellow' : 'green');
-                ctx.fill();
-            }
-            
-            // Update game physics
-            function updatePhysics() {
-                // Apply friction
-                striker.vx *= 0.98;
-                striker.vy *= 0.98;
-                
-                // Update striker position
-                striker.x += striker.vx;
-                striker.y += striker.vy;
-                
-                // Check wall collisions
-                if (striker.x - striker.radius < 15 || striker.x + striker.radius > gameBoard.width - 15) {
-                    striker.vx = -striker.vx * 0.8;
-                    striker.x = Math.max(striker.radius + 15, Math.min(gameBoard.width - striker.radius - 15, striker.x));
-                }
-                
-                if (striker.y - striker.radius < 15 || striker.y + striker.radius > gameBoard.height - 15) {
-                    striker.vy = -striker.vy * 0.8;
-                    striker.y = Math.max(striker.radius + 15, Math.min(gameBoard.height - striker.radius - 15, striker.y));
-                }
-                
-                // Check collisions with pieces
-                pieces.forEach(piece => {
-                    if (piece.pocketed) return;
-                    
-                    const dx = striker.x - piece.x;
-                    const dy = striker.y - piece.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (distance < striker.radius + piece.radius) {
-                        // Collision detected
-                        const angle = Math.atan2(dy, dx);
-                        const sin = Math.sin(angle);
-                        const cos = Math.cos(angle);
-                        
-                        // Move pieces apart
-                        const overlap = striker.radius + piece.radius - distance;
-                        striker.x += overlap * cos 
+                ctx.strokeStyle = 'rgba(255, 255, 
