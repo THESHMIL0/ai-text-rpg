@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrom Pool Game</title>
+    <title>Carrom Pool - Playable Game</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Arial', sans-serif;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
         }
         
         body {
@@ -20,6 +23,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            touch-action: none;
         }
         
         .container {
@@ -128,6 +132,7 @@
             position: relative;
             width: 100%;
             margin: 0 auto;
+            touch-action: none;
         }
         
         #gameBoard {
@@ -136,6 +141,8 @@
             background: #d4af37;
             border: 15px solid #8b4513;
             border-radius: 10px;
+            display: block;
+            touch-action: none;
         }
         
         .game-ui {
@@ -156,6 +163,11 @@
             height: 15px;
             border-radius: 50%;
             background: #d4af37;
+            transition: all 0.3s;
+        }
+        
+        .player-turn.inactive {
+            background: #666;
         }
         
         .control-btn {
@@ -165,6 +177,39 @@
             padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
+        }
+        
+        .power-bar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .power-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #00ff00, #ffff00, #ff0000);
+            transition: width 0.1s;
+        }
+        
+        .game-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 30px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            z-index: 100;
         }
     </style>
 </head>
@@ -212,6 +257,10 @@
             
             <div class="board-container">
                 <canvas id="gameBoard"></canvas>
+                <div class="power-bar" id="powerBar">
+                    <div class="power-fill" id="powerFill"></div>
+                </div>
+                <div class="game-message" id="gameMessage"></div>
             </div>
             
             <div class="game-ui">
@@ -234,8 +283,29 @@
             const playBtn = document.getElementById('playBtn');
             const menuBtn = document.getElementById('menuBtn');
             const settingsBtn = document.getElementById('settingsBtn');
+            const hintBtn = document.getElementById('hintBtn');
+            const undoBtn = document.getElementById('undoBtn');
             const gameBoard = document.getElementById('gameBoard');
+            const powerBar = document.getElementById('powerBar');
+            const powerFill = document.getElementById('powerFill');
+            const gameMessage = document.getElementById('gameMessage');
+            
             const ctx = gameBoard.getContext('2d');
+            
+            // Game variables
+            let pieces = [];
+            let striker = null;
+            let isDragging = false;
+            let dragStartX = 0;
+            let dragStartY = 0;
+            let dragEndX = 0;
+            let dragEndY = 0;
+            let power = 0;
+            let currentPlayer = 1;
+            let playerScores = [0, 0];
+            let gameActive = false;
+            let animationId = null;
+            let isMoving = false;
             
             // Switch to game screen
             playBtn.addEventListener('click', function() {
@@ -246,13 +316,26 @@
             
             // Switch back to menu
             menuBtn.addEventListener('click', function() {
-                gameScreen.style.display = 'none';
-                mainMenu.style.display = 'block';
+                if (confirm('Return to menu? Game progress will be lost.')) {
+                    gameScreen.style.display = 'none';
+                    mainMenu.style.display = 'block';
+                    cancelAnimationFrame(animationId);
+                }
             });
             
             // Settings button
             settingsBtn.addEventListener('click', function() {
                 alert('Settings menu would open here');
+            });
+            
+            // Hint button
+            hintBtn.addEventListener('click', function() {
+                showMessage('Try aiming for the queen in the center!');
+            });
+            
+            // Undo button
+            undoBtn.addEventListener('click', function() {
+                showMessage('Undo feature would be implemented here');
             });
             
             // Initialize the game
@@ -261,168 +344,234 @@
                 gameBoard.width = gameBoard.offsetWidth;
                 gameBoard.height = gameBoard.offsetHeight;
                 
-                // Draw the game board
-                drawBoard();
+                // Initialize game state
+                currentPlayer = 1;
+                playerScores = [0, 0];
+                updateScores();
+                updatePlayerIndicator();
+                gameActive = true;
                 
-                // Initialize game pieces
-                drawPieces();
+                // Create game pieces
+                createPieces();
+                
+                // Create striker
+                striker = {
+                    x: gameBoard.width / 2,
+                    y: gameBoard.height - 60,
+                    radius: 15,
+                    color: 'white',
+                    vx: 0,
+                    vy: 0
+                };
+                
+                // Draw initial game state
+                drawGame();
+                
+                // Add event listeners for dragging
+                gameBoard.addEventListener('mousedown', startDrag);
+                gameBoard.addEventListener('mousemove', drag);
+                gameBoard.addEventListener('mouseup', endDrag);
+                
+                gameBoard.addEventListener('touchstart', startDrag);
+                gameBoard.addEventListener('touchmove', drag);
+                gameBoard.addEventListener('touchend', endDrag);
+                
+                // Start game loop
+                gameLoop();
             }
             
-            // Draw the carrom board
-            function drawBoard() {
-                const width = gameBoard.width;
-                const height = gameBoard.height;
+            // Create game pieces
+            function createPieces() {
+                pieces = [];
+                const centerX = gameBoard.width / 2;
+                const centerY = gameBoard.height / 2;
                 
-                // Board background
-                ctx.fillStyle = '#d4af37';
-                ctx.fillRect(0, 0, width, height);
+                // Queen (red piece in center)
+                pieces.push({
+                    x: centerX,
+                    y: centerY,
+                    radius: 15,
+                    color: 'red',
+                    type: 'queen',
+                    pocketed: false
+                });
                 
-                // Border
-                ctx.strokeStyle = '#8b4513';
-                ctx.lineWidth = 10;
-                ctx.strokeRect(0, 0, width, height);
-                
-                // Center circle
-                ctx.beginPath();
-                ctx.arc(width/2, height/2, 40, 0, Math.PI * 2);
-                ctx.strokeStyle = 'red';
-                ctx.lineWidth = 3;
-                ctx.stroke();
-                
-                // Corner pockets
-                const pockets = [
-                    {x: 0, y: 0},
-                    {x: width, y: 0},
-                    {x: 0, y: height},
-                    {x: width, y: height}
+                // White pieces (9 pieces)
+                const whitePositions = [
+                    {x: centerX, y: centerY - 40},
+                    {x: centerX - 28, y: centerY - 28},
+                    {x: centerX + 28, y: centerY - 28},
+                    {x: centerX - 40, y: centerY},
+                    {x: centerX + 40, y: centerY},
+                    {x: centerX - 28, y: centerY + 28},
+                    {x: centerX + 28, y: centerY + 28},
+                    {x: centerX, y: centerY + 40},
+                    {x: centerX - 20, y: centerY - 50}
                 ];
                 
-                pockets.forEach(pocket => {
-                    ctx.beginPath();
-                    ctx.arc(pocket.x, pocket.y, 25, 0, Math.PI * 2);
-                    ctx.fillStyle = 'black';
-                    ctx.fill();
+                whitePositions.forEach(pos => {
+                    pieces.push({
+                        x: pos.x,
+                        y: pos.y,
+                        radius: 15,
+                        color: 'white',
+                        type: 'piece',
+                        pocketed: false
+                    });
+                });
+                
+                // Black pieces (9 pieces)
+                const blackPositions = [
+                    {x: centerX + 20, y: centerY - 50},
+                    {x: centerX - 50, y: centerY - 20},
+                    {x: centerX + 50, y: centerY - 20},
+                    {x: centerX - 50, y: centerY + 20},
+                    {x: centerX + 50, y: centerY + 20},
+                    {x: centerX - 20, y: centerY + 50},
+                    {x: centerX + 20, y: centerY + 50},
+                    {x: centerX - 35, y: centerY - 35},
+                    {x: centerX + 35, y: centerY - 35}
+                ];
+                
+                blackPositions.forEach(pos => {
+                    pieces.push({
+                        x: pos.x,
+                        y: pos.y,
+                        radius: 15,
+                        color: 'black',
+                        type: 'piece',
+                        pocketed: false
+                    });
                 });
             }
             
-            // Draw game pieces
-            function drawPieces() {
-                const width = gameBoard.width;
-                const height = gameBoard.height;
+            // Start dragging
+            function startDrag(e) {
+                if (!gameActive || isMoving) return;
                 
-                // Queen (red piece in center)
+                e.preventDefault();
+                const rect = gameBoard.getBoundingClientRect();
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
+                
+                dragStartX = clientX - rect.left;
+                dragStartY = clientY - rect.top;
+                
+                // Check if dragging the striker
+                const dx = dragStartX - striker.x;
+                const dy = dragStartY - striker.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < striker.radius) {
+                    isDragging = true;
+                    powerBar.style.display = 'block';
+                }
+            }
+            
+            // During drag
+            function drag(e) {
+                if (!isDragging) return;
+                
+                e.preventDefault();
+                const rect = gameBoard.getBoundingClientRect();
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
+                
+                dragEndX = clientX - rect.left;
+                dragEndY = clientY - rect.top;
+                
+                // Calculate power based on distance from striker
+                const dx = dragEndX - striker.x;
+                const dy = dragEndY - striker.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                power = Math.min(distance / 50, 1);
+                
+                // Update power bar
+                powerFill.style.width = (power * 100) + '%';
+                
+                // Redraw game with aiming line
+                drawGame();
+                drawAimingLine();
+            }
+            
+            // End drag (shoot)
+            function endDrag(e) {
+                if (!isDragging) return;
+                
+                e.preventDefault();
+                isDragging = false;
+                powerBar.style.display = 'none';
+                
+                // Calculate shot direction and power
+                const dx = striker.x - dragEndX;
+                const dy = striker.y - dragEndY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance > 5) { // Minimum drag distance
+                    // Apply velocity to striker
+                    striker.vx = (dx / distance) * power * 15;
+                    striker.vy = (dy / distance) * power * 15;
+                    
+                    isMoving = true;
+                    showMessage('Shooting...');
+                }
+                
+                // Reset power
+                power = 0;
+                powerFill.style.width = '0%';
+            }
+            
+            // Draw aiming line
+            function drawAimingLine() {
                 ctx.beginPath();
-                ctx.arc(width/2, height/2, 15, 0, Math.PI * 2);
-                ctx.fillStyle = 'red';
-                ctx.fill();
-                ctx.strokeStyle = 'darkred';
+                ctx.moveTo(striker.x, striker.y);
+                ctx.lineTo(dragEndX, dragEndY);
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
                 ctx.lineWidth = 2;
                 ctx.stroke();
                 
-                // White pieces
-                for (let i = 0; i < 9; i++) {
-                    const angle = (i / 9) * Math.PI * 2;
-                    const radius = 35;
-                    const x = width/2 + Math.cos(angle) * radius;
-                    const y = height/2 + Math.sin(angle) * radius;
-                    
-                    ctx.beginPath();
-                    ctx.arc(x, y, 15, 0, Math.PI * 2);
-                    ctx.fillStyle = 'white';
-                    ctx.fill();
-                    ctx.strokeStyle = '#ccc';
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                }
-                
-                // Black pieces
-                for (let i = 0; i < 9; i++) {
-                    const angle = (i / 9) * Math.PI * 2;
-                    const radius = 60;
-                    const x = width/2 + Math.cos(angle) * radius;
-                    const y = height/2 + Math.sin(angle) * radius;
-                    
-                    ctx.beginPath();
-                    ctx.arc(x, y, 15, 0, Math.PI * 2);
-                    ctx.fillStyle = 'black';
-                    ctx.fill();
-                    ctx.strokeStyle = '#333';
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                }
-                
-                // Striker
+                // Draw power indicator
                 ctx.beginPath();
-                ctx.arc(width/2, height - 50, 15, 0, Math.PI * 2);
-                ctx.fillStyle = 'white';
+                ctx.arc(dragEndX, dragEndY, 5, 0, Math.PI * 2);
+                ctx.fillStyle = power > 0.7 ? 'red' : (power > 0.3 ? 'yellow' : 'green');
                 ctx.fill();
-                ctx.strokeStyle = 'black';
-                ctx.lineWidth = 3;
-                ctx.stroke();
             }
             
-            // Add touch controls for mobile
-            gameBoard.addEventListener('touchstart', handleTouchStart);
-            gameBoard.addEventListener('touchmove', handleTouchMove);
-            gameBoard.addEventListener('touchend', handleTouchEnd);
-            
-            let touchStart = {x: 0, y: 0};
-            
-            function handleTouchStart(e) {
-                e.preventDefault();
-                const touch = e.touches[0];
-                const rect = gameBoard.getBoundingClientRect();
-                touchStart.x = touch.clientX - rect.left;
-                touchStart.y = touch.clientY - rect.top;
-            }
-            
-            function handleTouchMove(e) {
-                e.preventDefault();
-                // Add aiming line visualization here
-            }
-            
-            function handleTouchEnd(e) {
-                e.preventDefault();
-                const touch = e.changedTouches[0];
-                const rect = gameBoard.getBoundingClientRect();
-                const touchEndX = touch.clientX - rect.left;
-                const touchEndY = touch.clientY - rect.top;
+            // Update game physics
+            function updatePhysics() {
+                // Apply friction
+                striker.vx *= 0.98;
+                striker.vy *= 0.98;
                 
-                // Calculate shot direction and power
-                const dx = touchEndX - touchStart.x;
-                const dy = touchEndY - touchStart.y;
-                const power = Math.min(Math.sqrt(dx*dx + dy*dy) / 50, 1);
+                // Update striker position
+                striker.x += striker.vx;
+                striker.y += striker.vy;
                 
-                // Simulate shot
-                simulateShot(power);
-            }
-            
-            // Simulate a shot
-            function simulateShot(power) {
-                // Update scores randomly for demo
-                const points = Math.floor(power * 3) + 1;
-                document.getElementById('p1Score').textContent = 
-                    parseInt(document.getElementById('p1Score').textContent) + points;
+                // Check wall collisions
+                if (striker.x - striker.radius < 15 || striker.x + striker.radius > gameBoard.width - 15) {
+                    striker.vx = -striker.vx * 0.8;
+                    striker.x = Math.max(striker.radius + 15, Math.min(gameBoard.width - striker.radius - 15, striker.x));
+                }
                 
-                // Switch turns
-                document.getElementById('p1Indicator').style.background = '#666';
-                document.getElementById('p2Indicator').style.background = '#d4af37';
+                if (striker.y - striker.radius < 15 || striker.y + striker.radius > gameBoard.height - 15) {
+                    striker.vy = -striker.vy * 0.8;
+                    striker.y = Math.max(striker.radius + 15, Math.min(gameBoard.height - striker.radius - 15, striker.y));
+                }
                 
-                // Redraw board after a delay
-                setTimeout(() => {
-                    drawBoard();
-                    drawPieces();
+                // Check collisions with pieces
+                pieces.forEach(piece => {
+                    if (piece.pocketed) return;
                     
-                    // Switch turns back
-                    document.getElementById('p1Indicator').style.background = '#d4af37';
-                    document.getElementById('p2Indicator').style.background = '#666';
-                }, 1000);
-            }
-            
-            // Initialize player indicators
-            document.getElementById('p1Indicator').style.background = '#d4af37';
-            document.getElementById('p2Indicator').style.background = '#666';
-        });
-    </script>
-</body>
-</html>
+                    const dx = striker.x - piece.x;
+                    const dy = striker.y - piece.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < striker.radius + piece.radius) {
+                        // Collision detected
+                        const angle = Math.atan2(dy, dx);
+                        const sin = Math.sin(angle);
+                        const cos = Math.cos(angle);
+                        
+                        // Move pieces apart
+                        const overlap = striker.radius + piece.radius - distance;
+                        striker.x += overlap * cos 
