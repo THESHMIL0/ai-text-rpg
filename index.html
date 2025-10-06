@@ -1,579 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrom Pool - Fixed Version</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            touch-action: none;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 500px;
-            height: 90vh;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-        
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background: linear-gradient(to right, #8b4513, #6b3409);
-            border-bottom: 2px solid #d4af37;
-        }
-        
-        .coins {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-        
-        .game-area {
-            padding: 20px;
-            text-align: center;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .game-title {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            color: #d4af37;
-            text-shadow: 3px 3px 0 #000;
-        }
-        
-        .game-subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            color: #fff;
-        }
-        
-        .menu-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin: 30px 0;
-        }
-        
-        .menu-btn {
-            padding: 15px;
-            font-size: 1.2rem;
-            background: linear-gradient(to bottom, #d4af37, #a2853e);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        
-        .menu-btn:hover, .menu-btn:active {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .game-modes {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .mode-btn {
-            padding: 10px 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid #d4af37;
-            border-radius: 10px;
-            color: white;
-            cursor: pointer;
-        }
-        
-        .mode-btn.active {
-            background: #d4af37;
-            color: #000;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 15px;
-            font-size: 0.8rem;
-            color: #aaa;
-            border-top: 1px solid #444;
-        }
-        
-        /* Game Screen Styles */
-        .game-screen {
-            display: none;
-            flex-direction: column;
-            height: 100%;
-        }
-        
-        .game-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
-            background: linear-gradient(to right, #8b4513, #6b3409);
-        }
-        
-        .board-container {
-            position: relative;
-            width: 100%;
-            flex: 1;
-            margin: 10px;
-            touch-action: none;
-        }
-        
-        #gameBoard {
-            width: 100%;
-            height: 100%;
-            background: #d4af37;
-            border: 15px solid #8b4513;
-            border-radius: 10px;
-            display: block;
-            touch-action: none;
-        }
-        
-        .player-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .player-turn {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            background: #d4af37;
-            transition: all 0.3s;
-        }
-        
-        .player-turn.inactive {
-            background: #666;
-        }
-        
-        .control-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        
-        .power-bar {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 5px;
-            overflow: hidden;
-            display: none;
-        }
-        
-        .power-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(to right, #00ff00, #ffff00, #ff0000);
-            transition: width 0.1s;
-        }
-        
-        .game-message {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
-            padding: 15px 30px;
-            border-radius: 10px;
-            text-align: center;
-            display: none;
-            z-index: 100;
-        }
-        
-        .game-ui {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px;
-            background: linear-gradient(to right, #8b4513, #6b3409);
-        }
-        
-        /* Instructions */
-        .instructions {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            margin: 0 10px 10px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrom Pool - Fixed & Improved</title>
+  <style>
+    * {margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif;-webkit-user-select:none;-moz-user-select:none;user-select:none}
+    body {background:linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d);color:white;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+    .container {width:100%;max-width:500px;height:90vh;background:rgba(0,0,0,.85);border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.5);display:flex;flex-direction:column}
+    .header,.game-header,.game-ui {display:flex;justify-content:space-between;align-items:center;padding:15px;background:linear-gradient(to right,#8b4513,#6b3409)}
+    .coins {display:flex;align-items:center;gap:5px;font-weight:bold;font-size:1.1rem}
+    .game-area {flex:1;display:flex;flex-direction:column;padding:20px;text-align:center;overflow-y:auto}
+    .game-title {font-size:2.5rem;margin-bottom:10px;color:#d4af37;text-shadow:2px 2px 0 #000}
+    .menu-buttons {display:flex;flex-direction:column;gap:15px;margin:20px 0}
+    .menu-btn {padding:15px;font-size:1.1rem;background:linear-gradient(to bottom,#d4af37,#a2853e);color:white;border:none;border-radius:10px;cursor:pointer;font-weight:bold;transition:.3s}
+    .menu-btn:hover {transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,.3)}
+    .game-modes {display:flex;justify-content:center;gap:10px;margin-top:15px}
+    .mode-btn {padding:8px 12px;background:rgba(255,255,255,.1);border:2px solid #d4af37;border-radius:10px;color:white;cursor:pointer}
+    .mode-btn.active {background:#d4af37;color:#000}
+    .footer {text-align:center;padding:10px;font-size:.8rem;color:#aaa;border-top:1px solid #444}
+    .game-screen {flex:1;display:none;flex-direction:column}
+    .board-container {flex:1;position:relative;margin:10px}
+    #gameBoard {width:100%;height:100%;display:block;background:#d4af37;border:15px solid #8b4513;border-radius:10px}
+    .player-info {display:flex;align-items:center;gap:8px}
+    .player-turn {width:14px;height:14px;border-radius:50%;background:#666;transition:.3s}
+    .player-turn.active {background:#d4af37}
+    .control-btn {background:rgba(255,255,255,.2);border:none;color:white;padding:8px 12px;border-radius:5px;cursor:pointer}
+    .power-bar {position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:200px;height:10px;background:rgba(0,0,0,.3);border-radius:5px;overflow:hidden;display:none}
+    .power-fill {height:100%;width:0%;background:linear-gradient(to right,#0f0,#ff0,#f00);transition:width .1s}
+    .game-message {position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.8);padding:12px 25px;border-radius:10px;text-align:center;display:none;z-index:10}
+    .instructions {background:rgba(0,0,0,.6);padding:10px;margin:0 10px 10px;border-radius:10px;font-size:.8rem}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Main Menu -->
-        <div class="header">
-            <div class="coins">
-                <span>🪙</span>
-                <span id="coins">12,850</span>
-            </div>
-            <button class="control-btn" id="settingsBtn">⚙️</button>
-        </div>
-        
-        <div class="game-area" id="mainMenu">
-            <h1 class="game-title">CARROM POOL</h1>
-            <p class="game-subtitle">Classic Board Game</p>
-            
-            <div class="menu-buttons">
-                <button class="menu-btn" id="playBtn">🎮 PLAY NOW</button>
-                <button class="menu-btn" id="practiceBtn">🏆 PRACTICE</button>
-                <button class="menu-btn" id="multiplayerBtn">👥 MULTIPLAYER</button>
-            </div>
-            
-            <div class="game-modes">
-                <button class="mode-btn active">CLASSIC</button>
-                <button class="mode-btn">DISCO</button>
-                <button class="mode-btn">RUSH</button>
-            </div>
-            
-            <div class="instructions">
-                <p><strong>How to Play:</strong> Drag the striker away from the pieces to aim, then release to shoot. Pocket your pieces to score points!</p>
-            </div>
-        </div>
-        
-        <!-- Game Screen (Hidden by default) -->
-        <div class="game-screen" id="gameScreen">
-            <div class="game-header">
-                <div class="player-info">
-                    <div class="player-turn active" id="p1Indicator"></div>
-                    <span>Player 1: <span id="p1Score">0</span></span>
-                </div>
-                <div class="player-info">
-                    <div class="player-turn inactive" id="p2Indicator"></div>
-                    <span>Player 2: <span id="p2Score">0</span></span>
-                </div>
-            </div>
-            
-            <div class="board-container">
-                <canvas id="gameBoard"></canvas>
-                <div class="power-bar" id="powerBar">
-                    <div class="power-fill" id="powerFill"></div>
-                </div>
-                <div class="game-message" id="gameMessage"></div>
-            </div>
-            
-            <div class="game-ui">
-                <button class="control-btn" id="menuBtn">📋 MENU</button>
-                <button class="control-btn" id="hintBtn">💡 HINT</button>
-                <button class="control-btn" id="undoBtn">↩️ UNDO</button>
-            </div>
-            
-            <div class="instructions">
-                <p><strong>Controls:</strong> Drag & release the striker. Player 1: White pieces | Player 2: Black pieces | Red: Queen (5 points)</p>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>Carrom Pool © 2023 | Fixed Version</p>
-        </div>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="coins">🪙 <span id="coins">12,850</span></div>
+      <button class="control-btn" id="settingsBtn">⚙️</button>
     </div>
 
-    <script>
-        // Game initialization
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get DOM elements
-            const mainMenu = document.getElementById('mainMenu');
-            const gameScreen = document.getElementById('gameScreen');
-            const playBtn = document.getElementById('playBtn');
-            const practiceBtn = document.getElementById('practiceBtn');
-            const multiplayerBtn = document.getElementById('multiplayerBtn');
-            const menuBtn = document.getElementById('menuBtn');
-            const settingsBtn = document.getElementById('settingsBtn');
-            const hintBtn = document.getElementById('hintBtn');
-            const undoBtn = document.getElementById('undoBtn');
-            const gameBoard = document.getElementById('gameBoard');
-            const powerBar = document.getElementById('powerBar');
-            const powerFill = document.getElementById('powerFill');
-            const gameMessage = document.getElementById('gameMessage');
-            const p1Indicator = document.getElementById('p1Indicator');
-            const p2Indicator = document.getElementById('p2Indicator');
-            const p1Score = document.getElementById('p1Score');
-            const p2Score = document.getElementById('p2Score');
-            const coinsDisplay = document.getElementById('coins');
-            
-            const ctx = gameBoard.getContext('2d');
-            
-            // Game variables
-            let pieces = [];
-            let striker = null;
-            let isDragging = false;
-            let dragStartX = 0;
-            let dragStartY = 0;
-            let dragEndX = 0;
-            let dragEndY = 0;
-            let power = 0;
-            let currentPlayer = 1;
-            let playerScores = [0, 0];
-            let gameActive = false;
-            let animationId = null;
-            let isMoving = false;
-            let coins = 12850;
-            
-            // Switch to game screen
-            playBtn.addEventListener('click', function() {
-                mainMenu.style.display = 'none';
-                gameScreen.style.display = 'flex';
-                initGame();
-            });
-            
-            practiceBtn.addEventListener('click', function() {
-                showMessage("Practice mode would start here");
-            });
-            
-            multiplayerBtn.addEventListener('click', function() {
-                showMessage("Multiplayer mode would start here");
-            });
-            
-            // Switch back to menu
-            menuBtn.addEventListener('click', function() {
-                if (confirm('Return to menu? Game progress will be lost.')) {
-                    gameScreen.style.display = 'none';
-                    mainMenu.style.display = 'block';
-                    if (animationId) cancelAnimationFrame(animationId);
-                }
-            });
-            
-            // Settings button
-            settingsBtn.addEventListener('click', function() {
-                showMessage("Settings would open here");
-            });
-            
-            // Hint button
-            hintBtn.addEventListener('click', function() {
-                if (coins >= 10) {
-                    coins -= 10;
-                    coinsDisplay.textContent = coins.toLocaleString();
-                    showMessage('Try aiming for the queen in the center!');
-                } else {
-                    showMessage('Not enough coins for a hint!');
-                }
-            });
-            
-            // Undo button
-            undoBtn.addEventListener('click', function() {
-                showMessage('Undo feature would be implemented here');
-            });
-            
-            // Initialize the game
-            function initGame() {
-                // Set canvas size
-                const container = document.querySelector('.board-container');
-                gameBoard.width = container.clientWidth;
-                gameBoard.height = container.clientHeight;
-                
-                // Initialize game state
-                currentPlayer = 1;
-                playerScores = [0, 0];
-                updateScores();
-                updatePlayerIndicator();
-                gameActive = true;
-                
-                // Create game pieces
-                createPieces();
-                
-                // Create striker
-                striker = {
-                    x: gameBoard.width / 2,
-                    y: gameBoard.height - 60,
-                    radius: 15,
-                    color: 'white',
-                    vx: 0,
-                    vy: 0
-                };
-                
-                // Draw initial game state
-                drawGame();
-                
-                // Add event listeners for dragging
-                gameBoard.addEventListener('mousedown', startDrag);
-                gameBoard.addEventListener('mousemove', drag);
-                gameBoard.addEventListener('mouseup', endDrag);
-                
-                gameBoard.addEventListener('touchstart', startDrag);
-                gameBoard.addEventListener('touchmove', drag);
-                gameBoard.addEventListener('touchend', endDrag);
-                
-                // Start game loop
-                gameLoop();
-                
-                showMessage("Player 1's turn - Drag the striker to shoot!");
-            }
-            
-            // Create game pieces
-            function createPieces() {
-                pieces = [];
-                const centerX = gameBoard.width / 2;
-                const centerY = gameBoard.height / 2;
-                
-                // Queen (red piece in center)
-                pieces.push({
-                    x: centerX,
-                    y: centerY,
-                    radius: 15,
-                    color: 'red',
-                    type: 'queen',
-                    pocketed: false,
-                    vx: 0,
-                    vy: 0
-                });
-                
-                // White pieces (9 pieces)
-                const whitePositions = [
-                    {x: centerX, y: centerY - 40},
-                    {x: centerX - 28, y: centerY - 28},
-                    {x: centerX + 28, y: centerY - 28},
-                    {x: centerX - 40, y: centerY},
-                    {x: centerX + 40, y: centerY},
-                    {x: centerX - 28, y: centerY + 28},
-                    {x: centerX + 28, y: centerY + 28},
-                    {x: centerX, y: centerY + 40},
-                    {x: centerX - 20, y: centerY - 50}
-                ];
-                
-                whitePositions.forEach(pos => {
-                    pieces.push({
-                        x: pos.x,
-                        y: pos.y,
-                        radius: 15,
-                        color: 'white',
-                        type: 'piece',
-                        pocketed: false,
-                        vx: 0,
-                        vy: 0
-                    });
-                });
-                
-                // Black pieces (9 pieces)
-                const blackPositions = [
-                    {x: centerX + 20, y: centerY - 50},
-                    {x: centerX - 50, y: centerY - 20},
-                    {x: centerX + 50, y: centerY - 20},
-                    {x: centerX - 50, y: centerY + 20},
-                    {x: centerX + 50, y: centerY + 20},
-                    {x: centerX - 20, y: centerY + 50},
-                    {x: centerX + 20, y: centerY + 50},
-                    {x: centerX - 35, y: centerY - 35},
-                    {x: centerX + 35, y: centerY - 35}
-                ];
-                
-                blackPositions.forEach(pos => {
-                    pieces.push({
-                        x: pos.x,
-                        y: pos.y,
-                        radius: 15,
-                        color: 'black',
-                        type: 'piece',
-                        pocketed: false,
-                        vx: 0,
-                        vy: 0
-                    });
-                });
-            }
-            
-            // Start dragging
-            function startDrag(e) {
-                if (!gameActive || isMoving) return;
-                
-                e.preventDefault();
-                const rect = gameBoard.getBoundingClientRect();
-                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-                
-                if (!clientX || !clientY) return;
-                
-                dragStartX = clientX - rect.left;
-                dragStartY = clientY - rect.top;
-                
-                // Check if dragging the striker
-                const dx = dragStartX - striker.x;
-                const dy = dragStartY - striker.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance < striker.radius * 2) {
-                    isDragging = true;
-                    powerBar.style.display = 'block';
-                }
-            }
-            
-            // During drag
-            function drag(e) {
-                if (!isDragging) return;
-                
-                e.preventDefault();
-                const rect = gameBoard.getBoundingClientRect();
-                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-                
-                if (!clientX || !clientY) return;
-                
-                dragEndX = clientX - rect.left;
-                dragEndY = clientY - rect.top;
-                
-                // Calculate power based on distance from striker
-                const dx = dragEndX - striker.x;
-                const dy = dragEndY - striker.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                power = Math.min(distance / 50, 1);
-                
-                // Update power bar
-                powerFill.style.width = (power * 100) + '%';
-                
-                // Redraw game with aiming line
-                drawGame();
-                drawAimingLine();
-            }
-            
-            // End drag (shoot)
-            function endDrag(e) {
-                if (!isDragging) return;
-                
-                e.preventDefault();
-                isDragging = false;
-                powerBar.style.display = 'none';
-                
-                // Calculate shot direction and power
-                const dx = striker.x - dragEndX;
-                const dy = striker.y - dragEndY;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance > 5) { // Minimum drag distance
-                    // Apply velocity to striker
-                    striker.vx = (dx / distance) * pow
+    <!-- Menu -->
+    <div class="game-area" id="mainMenu">
+      <h1 class="game-title">CARROM POOL</h1>
+      <p>Classic Board Game</p>
+      <div class="menu-buttons">
+        <button class="menu-btn" id="playBtn">🎮 PLAY NOW</button>
+        <button class="menu-btn" id="practiceBtn">🏆 PRACTICE</button>
+        <button class="menu-btn" id="multiplayerBtn">👥 MULTIPLAYER</button>
+      </div>
+      <div class="game-modes">
+        <button class="mode-btn active">CLASSIC</button>
+        <button class="mode-btn">DISCO</button>
+        <button class="mode-btn">RUSH</button>
+      </div>
+      <div class="instructions"><b>How to Play:</b> Drag the striker to aim & release to shoot.</div>
+    </div>
+
+    <!-- Game Screen -->
+    <div class="game-screen" id="gameScreen">
+      <div class="game-header">
+        <div class="player-info"><div id="p1Indicator" class="player-turn active"></div> P1: <span id="p1Score">0</span></div>
+        <div class="player-info"><div id="p2Indicator" class="player-turn"></div> P2: <span id="p2Score">0</span></div>
+      </div>
+      <div class="board-container">
+        <canvas id="gameBoard"></canvas>
+        <div class="power-bar" id="powerBar"><div class="power-fill" id="powerFill"></div></div>
+        <div class="game-message" id="gameMessage"></div>
+      </div>
+      <div class="game-ui">
+        <button class="control-btn" id="menuBtn">📋 MENU</button>
+        <button class="control-btn" id="hintBtn">💡 HINT</button>
+        <button class="control-btn" id="undoBtn">↩️ UNDO</button>
+      </div>
+      <div class="instructions"><b>Controls:</b> P1 = White | P2 = Black | Red = Queen (5 pts)</div>
+    </div>
+
+    <div class="footer">Carrom Pool © 2025 | Improved</div>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const mainMenu = document.getElementById("mainMenu");
+    const gameScreen = document.getElementById("gameScreen");
+    const playBtn = document.getElementById("playBtn");
+    const menuBtn = document.getElementById("menuBtn");
+    const settingsBtn = document.getElementById("settingsBtn");
+    const hintBtn = document.getElementById("hintBtn");
+    const undoBtn = document.getElementById("undoBtn");
+    const gameBoard = document.getElementById("gameBoard");
+    const ctx = gameBoard.getContext("2d");
+    const powerBar = document.getElementById("powerBar");
+    const powerFill = document.getElementById("powerFill");
+    const gameMessage = document.getElementById("gameMessage");
+    const p1Indicator = document.getElementById("p1Indicator");
+    const p2Indicator = document.getElementById("p2Indicator");
+    const p1ScoreEl = document.getElementById("p1Score");
+    const p2ScoreEl = document.getElementById("p2Score");
+    const coinsEl = document.getElementById("coins");
+
+    let pieces = [], striker, dragging=false, dragX=0, dragY=0, power=0;
+    let currentPlayer=1, scores=[0,0], isMoving=false, anim=null, coins=12850;
+
+    const STRIKER_RADIUS=15, PIECE_RADIUS=15, FRICTION=0.985;
+
+    playBtn.onclick=()=>{mainMenu.style.display="none";gameScreen.style.display="flex";initGame();}
+    menuBtn.onclick=()=>{if(confirm("Quit game?")){cancelAnimationFrame(anim);gameScreen.style.display="none";mainMenu.style.display="block";}}
+    settingsBtn.onclick=()=>showMessage("Settings coming soon");
+    hintBtn.onclick=()=>{if(coins>=10){coins-=10;coinsEl.textContent=coins.toLocaleString();showMessage("Try aiming center!")}else showMessage("Not enough coins");}
+    undoBtn.onclick=()=>showMessage("Undo not implemented yet");
+
+    function initGame(){
+      resizeCanvas();
+      scores=[0,0];updateScores();currentPlayer=1;updateIndicators();
+      pieces=[];makePieces();
+      striker={x:gameBoard.width/2,y:gameBoard.height-60,r:STRIKER_RADIUS,vx:0,vy:0,color:"white"};
+      addControls();
+      gameLoop();showMessage("Player 1 turn");
+    }
+    function resizeCanvas(){gameBoard.width=gameBoard.parentElement.clientWidth;gameBoard.height=gameBoard.parentElement.clientHeight;}
+    window.onresize=()=>resizeCanvas();
+
+    function makePieces(){
+      const cx=gameBoard.width/2,cy=gameBoard.height/2;
+      pieces.push({x:cx,y:cy,r:PIECE_RADIUS,color:"red",queen:true,vx:0,vy:0,pocketed:false});
+      for(let i=0;i<9;i++)pieces.push({x:cx+Math.cos(i*40*Math.PI/180)*60,y:cy+Math.sin(i*40*Math.PI/180)*60,r:PIECE_RADIUS,color:i%2?"white":"black",vx:0,vy:0,pocketed:false});
+    }
+
+    function addControls(){
+      ["mousedown","touchstart"].forEach(ev=>gameBoard.addEventListener(ev,startDrag));
+      ["mousemove","touchmove"].forEach(ev=>gameBoard.addEventListener(ev,drag));
+      ["mouseup","touchend"].forEach(ev=>gameBoard.addEventListener(ev,endDrag));
+    }
+    function getXY(e){if(e.touches){return{x:e.touches[0].clientX,y:e.touches[0].clientY}}return{x:e.clientX,y:e.clientY}}
+    function startDrag(e){if(isMoving)return;const pos=getXY(e);const rect=gameBoard.getBoundingClientRect();const x=pos.x-rect.left,y=pos.y-rect.top;if(Math.hypot(x-striker.x,y-striker.y)<STRIKER_RADIUS*2){dragging=true;dragX=x;dragY=y;powerBar.style.display="block";}}
+    function drag(e){if(!dragging)return;const pos=getXY(e);const rect=gameBoard.getBoundingClientRect();dragX=pos.x-rect.left;dragY=pos.y-rect.top;power=Math.min(Math.hypot(dragX-striker.x,dragY-striker.y)/60,1);powerFill.style.width=(power*100)+"%";}
+    function endDrag(){if(!dragging)return;dragging=false;powerBar.style.display="none";const dx=striker.x-dragX,dy=striker.y-dragY,dist=Math.hypot(dx,dy);if(dist>5){striker.vx=(dx/dist)*power*18;striker.vy=(dy/dist)*power*18;isMoving=true;}power=0;powerFill.style.width="0%";}
+
+    function updatePhysics(obj){obj.x+=obj.vx;obj.y+=obj.vy;obj.vx*=FRICTION;obj.vy*=FRICTION;}
+
+    function checkCollisions(){
+      pieces.forEach(p=>{
+        if(p.pocketed)return;
+        const dx=striker.x-p.x,dy=striker.y-p.y,dist=Math.hypot(dx,dy);
+        if(dist<striker.r+p.r){const angle=Math.atan2(dy,dx);const overlap=striker.r+p.r-dist;striker.x+=Math.cos(angle)*overlap/2;striker.y+=Math.sin(angle)*overlap/2;p.x-=Math.cos(angle)*overlap/2;p.y-=Math.sin(angle)*overlap/2;[striker.vx,p.vx]=[p.vx,striker.vx];[striker.vy,p.vy]=[p.vy,striker.vy];}
+      });
+    }
+
+    function checkPockets(){
+      const pockets=[{x:15,y:15},{x:gameBoard.width-15,y:15},{x:15,y:gameBoard.height-15},{x:gameBoard.width-15,y:gameBoard.height-15}];
+      pockets.forEach(pk=>{
+        if(Math.hypot(striker.x-pk.x,striker.y-pk.y)<25){showMessage("Foul!");scores[currentPlayer-1]=Math.max(0,scores[currentPlayer-1]-1);resetStriker();}
+        pieces.forEach(p=>{if(!p.pocketed&&Math.hypot(p.x-pk.x,p.y-pk.y)<25){p.pocketed=true;if((currentPlayer===1&&p.color==="white")||(currentPlayer===2&&p.color==="black")){scores[currentPlayer-1]++;showMessage("+1 point");}else if(p.queen){scores[currentPlayer-1]+=5;showMessage("Queen! +5");}else{scores[currentPlayer-1]=Math.max(0,scores[currentPlayer-1]-1);showMessage("Foul! -1");}updateScores();}});
+      });
+    }
+
+    function resetStriker(){striker.x=gameBoard.width/2;striker.y=currentPlayer===1?gameBoard.height-60:60;striker.vx=striker.vy=0;}
+
+    function endTurn(){currentPlayer=currentPlayer===1?2:1;updateIndicators();resetStriker();showMessage("Player "+currentPlayer+" turn");if(scores[0]>=5||scores[1]>=5){let w=scores[0]>=5?1:2;showMessage("Player "+w+" Wins!");setTimeout(()=>{if(confirm("Play again?"))initGame();else{gameScreen.style.display="none";mainMenu.style.display="block";}},2000);}}
+
+    function draw(){ctx.clearRect(0,0,gameBoard.width,gameBoard.height);ctx.fillStyle="#d4af37";ctx.fillRect(0,0,gameBoard.width,gameBoard.height);ctx.strokeStyle="#8b4513";ctx.lineWidth=12;ctx.strokeRect(0,0,gameBoard.width,gameBoard.height);
+      // pockets
+      [{x:15,y:15},{x:gameBoard.width-15,y:15},{x:15,y:gameBoard.height-15},{x:gameBoard.width-15,y:gameBoard.height-15}].forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,25,0,Math.PI*2);ctx.fillStyle="black";ctx.fill();});
+      pieces.forEach(p=>{if(!p.pocketed){ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill();ctx.strokeStyle="#000";ctx.stroke();}});
+      ctx.beginPath();ctx.arc(striker.x,striker.y,striker.r,0,Math.PI*2);ctx.fillStyle="white";ctx.fill();ctx.strokeStyle="black";ctx.stroke();
+      if(dragging){ctx.beginPath();ctx.moveTo(striker.x,striker.y);ctx.lineTo(dragX,dragY);ctx.strokeStyle="rgba(255,255,255,.7)";ctx.stroke();}
+    }
+
+    function gameLoop(){if(isMoving){updatePhysics(striker);pieces.forEach(updatePhysics);checkCollisions();checkPockets();if(Math.abs(striker.vx)+Math.abs(striker.vy)<0.1&&pieces.every(p=>p.pocketed||Math.abs(p.vx)+Math.abs(p.vy)<0.1)){isMoving=false;endTurn();}}draw();anim=requestAnimationFrame(gameLoop);}
+
+    function updateScores(){p1ScoreEl.textContent=scores[0];p2ScoreEl.textContent=scores[1];}
+    function updateIndicators(){p1Indicator.classList.toggle("active",currentPlayer===1);p2Indicator.classList.toggle("active",currentPlayer===2);}
+    function showMessage(txt){gameMessage.textContent=txt;gameMessage.style.display="block";setTimeout(()=>gameMessage.style.display="none",1500);}
+  });
+  </script>
+</body>
+</html>
