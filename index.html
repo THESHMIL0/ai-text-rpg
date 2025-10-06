@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrom Pool - Playable Game</title>
+    <title>Carrom Pool - Fixed Version</title>
     <style>
         * {
             margin: 0;
@@ -29,6 +29,7 @@
         .container {
             width: 100%;
             max-width: 500px;
+            height: 90vh;
             background: rgba(0, 0, 0, 0.8);
             border-radius: 20px;
             overflow: hidden;
@@ -55,6 +56,9 @@
         .game-area {
             padding: 20px;
             text-align: center;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
         
         .game-title {
@@ -89,7 +93,7 @@
             transition: all 0.3s;
         }
         
-        .menu-btn:hover {
+        .menu-btn:hover, .menu-btn:active {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
@@ -130,12 +134,20 @@
             height: 100%;
         }
         
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: linear-gradient(to right, #8b4513, #6b3409);
+        }
+        
         .board-container {
             position: relative;
             width: 100%;
-            margin: 0 auto;
-            touch-action: none;
             flex: 1;
+            margin: 10px;
+            touch-action: none;
         }
         
         #gameBoard {
@@ -146,13 +158,6 @@
             border-radius: 10px;
             display: block;
             touch-action: none;
-        }
-        
-        .game-ui {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px;
-            background: linear-gradient(to right, #8b4513, #6b3409);
         }
         
         .player-info {
@@ -215,13 +220,20 @@
             z-index: 100;
         }
         
+        .game-ui {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background: linear-gradient(to right, #8b4513, #6b3409);
+        }
+        
         /* Instructions */
         .instructions {
             background: rgba(0, 0, 0, 0.7);
-            padding: 15px;
-            margin: 10px;
+            padding: 10px;
+            margin: 0 10px 10px;
             border-radius: 10px;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
     </style>
 </head>
@@ -259,7 +271,7 @@
         
         <!-- Game Screen (Hidden by default) -->
         <div class="game-screen" id="gameScreen">
-            <div class="header">
+            <div class="game-header">
                 <div class="player-info">
                     <div class="player-turn active" id="p1Indicator"></div>
                     <span>Player 1: <span id="p1Score">0</span></span>
@@ -297,6 +309,7 @@
     <script>
         // Game initialization
         document.addEventListener('DOMContentLoaded', function() {
+            // Get DOM elements
             const mainMenu = document.getElementById('mainMenu');
             const gameScreen = document.getElementById('gameScreen');
             const playBtn = document.getElementById('playBtn');
@@ -312,6 +325,9 @@
             const gameMessage = document.getElementById('gameMessage');
             const p1Indicator = document.getElementById('p1Indicator');
             const p2Indicator = document.getElementById('p2Indicator');
+            const p1Score = document.getElementById('p1Score');
+            const p2Score = document.getElementById('p2Score');
+            const coinsDisplay = document.getElementById('coins');
             
             const ctx = gameBoard.getContext('2d');
             
@@ -364,7 +380,7 @@
             hintBtn.addEventListener('click', function() {
                 if (coins >= 10) {
                     coins -= 10;
-                    document.getElementById('coins').textContent = coins.toLocaleString();
+                    coinsDisplay.textContent = coins.toLocaleString();
                     showMessage('Try aiming for the queen in the center!');
                 } else {
                     showMessage('Not enough coins for a hint!');
@@ -560,21 +576,4 @@
                 
                 if (distance > 5) { // Minimum drag distance
                     // Apply velocity to striker
-                    striker.vx = (dx / distance) * power * 15;
-                    striker.vy = (dy / distance) * power * 15;
-                    
-                    isMoving = true;
-                    showMessage('Shooting...');
-                }
-                
-                // Reset power
-                power = 0;
-                powerFill.style.width = '0%';
-            }
-            
-            // Draw aiming line
-            function drawAimingLine() {
-                ctx.beginPath();
-                ctx.moveTo(striker.x, striker.y);
-                ctx.lineTo(dragEndX, dragEndY);
-                ctx.strokeStyle = 'rgba(255, 255, 
+                    striker.vx = (dx / distance) * pow
