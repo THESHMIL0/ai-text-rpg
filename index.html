@@ -102,7 +102,11 @@
     let pieces = [], striker, dragging=false, dragX=0, dragY=0, power=0;
     let currentPlayer=1, scores=[0,0], isMoving=false, anim=null, coins=12850;
 
-    const STRIKER_RADIUS=15, PIECE_RADIUS=15, FRICTION=0.985;
+    const STRIKER_RADIUS=15, PIECE_RADIUS=15, FRICTION=0.985, BOARD_MARGIN=20;
+    
+    // Physics parameters
+    const MIN_VELOCITY = 0.1;
+    const ELASTICITY = 0.8; // Bounce factor
 
     playBtn.onclick=()=>{mainMenu.style.display="none";gameScreen.style.display="flex";initGame();}
     menuBtn.onclick=()=>{if(confirm("Quit game?")){cancelAnimationFrame(anim);gameScreen.style.display="none";mainMenu.style.display="block";}}
@@ -137,14 +141,82 @@
     function drag(e){if(!dragging)return;const pos=getXY(e);const rect=gameBoard.getBoundingClientRect();dragX=pos.x-rect.left;dragY=pos.y-rect.top;power=Math.min(Math.hypot(dragX-striker.x,dragY-striker.y)/60,1);powerFill.style.width=(power*100)+"%";}
     function endDrag(){if(!dragging)return;dragging=false;powerBar.style.display="none";const dx=striker.x-dragX,dy=striker.y-dragY,dist=Math.hypot(dx,dy);if(dist>5){striker.vx=(dx/dist)*power*18;striker.vy=(dy/dist)*power*18;isMoving=true;}power=0;powerFill.style.width="0%";}
 
-    function updatePhysics(obj){obj.x+=obj.vx;obj.y+=obj.vy;obj.vx*=FRICTION;obj.vy*=FRICTION;}
+    function updatePhysics(obj){
+      obj.x+=obj.vx;
+      obj.y+=obj.vy;
+      obj.vx*=FRICTION;
+      obj.vy*=FRICTION;
+      
+      // Boundary collision - keep objects inside the board
+      if(obj.x < BOARD_MARGIN + obj.r) {
+        obj.x = BOARD_MARGIN + obj.r;
+        obj.vx = -obj.vx * ELASTICITY;
+      }
+      if(obj.x > gameBoard.width - BOARD_MARGIN - obj.r) {
+        obj.x = gameBoard.width - BOARD_MARGIN - obj.r;
+        obj.vx = -obj.vx * ELASTICITY;
+      }
+      if(obj.y < BOARD_MARGIN + obj.r) {
+        obj.y = BOARD_MARGIN + obj.r;
+        obj.vy = -obj.vy * ELASTICITY;
+      }
+      if(obj.y > gameBoard.height - BOARD_MARGIN - obj.r) {
+        obj.y = gameBoard.height - BOARD_MARGIN - obj.r;
+        obj.vy = -obj.vy * ELASTICITY;
+      }
+    }
+
+    function resolveCollision(obj1, obj2) {
+      const dx = obj2.x - obj1.x;
+      const dy = obj2.y - obj1.y;
+      const distance = Math.hypot(dx, dy);
+      const minDistance = obj1.r + obj2.r;
+      
+      if (distance < minDistance) {
+        // Calculate collision normal
+        const nx = dx / distance;
+        const ny = dy / distance;
+        
+        // Separate the objects
+        const overlap = minDistance - distance;
+        obj1.x -= overlap * nx * 0.5;
+        obj1.y -= overlap * ny * 0.5;
+        obj2.x += overlap * nx * 0.5;
+        obj2.y += overlap * ny * 0.5;
+        
+        // Calculate relative velocity
+        const dvx = obj2.vx - obj1.vx;
+        const dvy = obj2.vy - obj1.vy;
+        
+        // Calculate relative velocity in the normal direction
+        const speed = dvx * nx + dvy * ny;
+        
+        // Only resolve if objects are moving towards each other
+        if (speed < 0) return;
+        
+        // Apply collision impulse (elastic collision with equal mass)
+        const impulse = 2 * speed / 2; // 2 is for 2 objects with equal mass
+        obj1.vx += impulse * nx;
+        obj1.vy += impulse * ny;
+        obj2.vx -= impulse * nx;
+        obj2.vy -= impulse * ny;
+      }
+    }
 
     function checkCollisions(){
-      pieces.forEach(p=>{
-        if(p.pocketed)return;
-        const dx=striker.x-p.x,dy=striker.y-p.y,dist=Math.hypot(dx,dy);
-        if(dist<striker.r+p.r){const angle=Math.atan2(dy,dx);const overlap=striker.r+p.r-dist;striker.x+=Math.cos(angle)*overlap/2;striker.y+=Math.sin(angle)*overlap/2;p.x-=Math.cos(angle)*overlap/2;p.y-=Math.sin(angle)*overlap/2;[striker.vx,p.vx]=[p.vx,striker.vx];[striker.vy,p.vy]=[p.vy,striker.vy];}
+      // Check collisions between striker and pieces
+      pieces.forEach(p => {
+        if(!p.pocketed) resolveCollision(striker, p);
       });
+      
+      // Check collisions between pieces
+      for(let i = 0; i < pieces.length; i++) {
+        if(pieces[i].pocketed) continue;
+        for(let j = i+1; j < pieces.length; j++) {
+          if(pieces[j].pocketed) continue;
+          resolveCollision(pieces[i], pieces[j]);
+        }
+      }
     }
 
     function checkPockets(){
@@ -159,15 +231,82 @@
 
     function endTurn(){currentPlayer=currentPlayer===1?2:1;updateIndicators();resetStriker();showMessage("Player "+currentPlayer+" turn");if(scores[0]>=5||scores[1]>=5){let w=scores[0]>=5?1:2;showMessage("Player "+w+" Wins!");setTimeout(()=>{if(confirm("Play again?"))initGame();else{gameScreen.style.display="none";mainMenu.style.display="block";}},2000);}}
 
-    function draw(){ctx.clearRect(0,0,gameBoard.width,gameBoard.height);ctx.fillStyle="#d4af37";ctx.fillRect(0,0,gameBoard.width,gameBoard.height);ctx.strokeStyle="#8b4513";ctx.lineWidth=12;ctx.strokeRect(0,0,gameBoard.width,gameBoard.height);
-      // pockets
-      [{x:15,y:15},{x:gameBoard.width-15,y:15},{x:15,y:gameBoard.height-15},{x:gameBoard.width-15,y:gameBoard.height-15}].forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,25,0,Math.PI*2);ctx.fillStyle="black";ctx.fill();});
-      pieces.forEach(p=>{if(!p.pocketed){ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill();ctx.strokeStyle="#000";ctx.stroke();}});
-      ctx.beginPath();ctx.arc(striker.x,striker.y,striker.r,0,Math.PI*2);ctx.fillStyle="white";ctx.fill();ctx.strokeStyle="black";ctx.stroke();
-      if(dragging){ctx.beginPath();ctx.moveTo(striker.x,striker.y);ctx.lineTo(dragX,dragY);ctx.strokeStyle="rgba(255,255,255,.7)";ctx.stroke();}
+    function draw(){
+      ctx.clearRect(0,0,gameBoard.width,gameBoard.height);
+      ctx.fillStyle="#d4af37";
+      ctx.fillRect(0,0,gameBoard.width,gameBoard.height);
+      ctx.strokeStyle="#8b4513";
+      ctx.lineWidth=12;
+      ctx.strokeRect(0,0,gameBoard.width,gameBoard.height);
+      
+      // Draw pockets
+      [{x:15,y:15},{x:gameBoard.width-15,y:15},{x:15,y:gameBoard.height-15},{x:gameBoard.width-15,y:gameBoard.height-15}].forEach(p=>{
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,25,0,Math.PI*2);
+        ctx.fillStyle="black";
+        ctx.fill();
+      });
+      
+      // Draw pieces
+      pieces.forEach(p=>{
+        if(!p.pocketed){
+          ctx.beginPath();
+          ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+          ctx.fillStyle=p.color;
+          ctx.fill();
+          ctx.strokeStyle="#000";
+          ctx.stroke();
+        }
+      });
+      
+      // Draw striker
+      ctx.beginPath();
+      ctx.arc(striker.x,striker.y,striker.r,0,Math.PI*2);
+      ctx.fillStyle="white";
+      ctx.fill();
+      ctx.strokeStyle="black";
+      ctx.stroke();
+      
+      // Draw aim line
+      if(dragging){
+        ctx.beginPath();
+        ctx.moveTo(striker.x,striker.y);
+        ctx.lineTo(dragX,dragY);
+        ctx.strokeStyle="rgba(255,255,255,.7)";
+        ctx.lineWidth=2;
+        ctx.stroke();
+      }
     }
 
-    function gameLoop(){if(isMoving){updatePhysics(striker);pieces.forEach(updatePhysics);checkCollisions();checkPockets();if(Math.abs(striker.vx)+Math.abs(striker.vy)<0.1&&pieces.every(p=>p.pocketed||Math.abs(p.vx)+Math.abs(p.vy)<0.1)){isMoving=false;endTurn();}}draw();anim=requestAnimationFrame(gameLoop);}
+    function gameLoop(){
+      if(isMoving){
+        // Update striker physics
+        updatePhysics(striker);
+        
+        // Update pieces physics
+        pieces.forEach(p => {
+          if(!p.pocketed) updatePhysics(p);
+        });
+        
+        // Check all collisions
+        checkCollisions();
+        
+        // Check for pocketed pieces
+        checkPockets();
+        
+        // Check if everything has stopped moving
+        const strikerMoving = Math.abs(striker.vx) > MIN_VELOCITY || Math.abs(striker.vy) > MIN_VELOCITY;
+        const piecesMoving = pieces.some(p => !p.pocketed && (Math.abs(p.vx) > MIN_VELOCITY || Math.abs(p.vy) > MIN_VELOCITY));
+        
+        if(!strikerMoving && !piecesMoving && isMoving){
+          isMoving = false;
+          endTurn();
+        }
+      }
+      
+      draw();
+      anim = requestAnimationFrame(gameLoop);
+    }
 
     function updateScores(){p1ScoreEl.textContent=scores[0];p2ScoreEl.textContent=scores[1];}
     function updateIndicators(){p1Indicator.classList.toggle("active",currentPlayer===1);p2Indicator.classList.toggle("active",currentPlayer===2);}
