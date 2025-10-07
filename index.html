@@ -160,7 +160,6 @@
       const STRIKER_RADIUS = 15, PIECE_RADIUS = 14, FRICTION = 0.985, ELASTICITY = 0.9;
       const BOARD_MARGIN = 25, MIN_VELOCITY = 0.08;
 
-      // Disable page scroll & pull-to-refresh
       document.body.addEventListener("touchmove", e => e.preventDefault(), { passive: false });
 
       playBtn.onclick = () => { mainMenu.style.display = "none"; gameScreen.style.display = "flex"; initGame(); };
@@ -242,6 +241,8 @@
       function updatePhysics(obj) {
         obj.x += obj.vx; obj.y += obj.vy;
         obj.vx *= FRICTION; obj.vy *= FRICTION;
+        if (Math.abs(obj.vx) < MIN_VELOCITY) obj.vx = 0;
+        if (Math.abs(obj.vy) < MIN_VELOCITY) obj.vy = 0;
         if (obj.x < BOARD_MARGIN + obj.r || obj.x > gameBoard.width - BOARD_MARGIN - obj.r) obj.vx *= -ELASTICITY;
         if (obj.y < BOARD_MARGIN + obj.r || obj.y > gameBoard.height - BOARD_MARGIN - obj.r) obj.vy *= -ELASTICITY;
         obj.x = Math.min(Math.max(obj.x, BOARD_MARGIN + obj.r), gameBoard.width - BOARD_MARGIN - obj.r);
@@ -255,7 +256,7 @@
             const a = objs[i], b = objs[j];
             const dx = b.x - a.x, dy = b.y - a.y, dist = Math.hypot(dx, dy);
             const minDist = a.r + b.r;
-            if (dist < minDist) {
+            if (dist < minDist && dist > 0) {
               const nx = dx / dist, ny = dy / dist;
               const overlap = (minDist - dist) / 2;
               a.x -= overlap * nx; a.y -= overlap * ny;
@@ -319,7 +320,6 @@
         }
       }
 
-      function draw() {
-        ctx.clearRect(0, 0, gameBoard.width, gameBoard.height);
-        ctx.fillStyle = "#d4af37";
-        ctx.fillRect(0, 0, gameBoard.width, gameBoard.height);
+      function updateScores() {
+        p1ScoreEl.textContent = scores[0];
+        p2Score
