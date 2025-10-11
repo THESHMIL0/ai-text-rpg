@@ -1,325 +1,526 @@
+<!-- File: index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Carrom Pool - Enhanced Gameplay</title>
-  <style>
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-      font-family: Arial, sans-serif;
-      -webkit-user-select: none; -moz-user-select: none; user-select: none;
-    }
-    body {
-      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-      color: white; height: 100vh; overflow: hidden;
-      display: flex; justify-content: center; align-items: center;
-    }
-    .container {
-      width: 100%; max-width: 500px; height: 95vh;
-      background: rgba(0,0,0,0.85); border-radius: 20px;
-      display: flex; flex-direction: column; overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-    .header, .game-header, .game-ui {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 12px 15px;
-      background: linear-gradient(to right, #8b4513, #6b3409);
-    }
-    .coins { display: flex; align-items: center; gap: 6px; font-weight: bold; }
-    .game-area {
-      flex: 1; text-align: center; padding: 20px;
-      overflow-y: auto; overscroll-behavior: contain;
-    }
-    .game-title {
-      font-size: 2.4rem; color: #d4af37; margin-bottom: 8px;
-      text-shadow: 2px 2px 0 #000;
-    }
-    .menu-buttons { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
-    .menu-btn {
-      padding: 15px; font-size: 1.1rem; border: none; border-radius: 10px;
-      background: linear-gradient(to bottom, #d4af37, #a2853e);
-      color: white; font-weight: bold; cursor: pointer;
-      transition: 0.3s;
-    }
-    .menu-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-    .mode-btn {
-      padding: 8px 12px; background: rgba(255,255,255,0.1);
-      border: 2px solid #d4af37; border-radius: 8px; color: white;
-      cursor: pointer;
-    }
-    .mode-btn.active { background: #d4af37; color: #000; }
-    .footer {
-      text-align: center; padding: 8px; font-size: 0.8rem;
-      border-top: 1px solid #444; color: #aaa;
-    }
-    .game-screen { flex: 1; display: none; flex-direction: column; }
-    .board-container {
-      flex: 1; position: relative; margin: 10px;
-      touch-action: none;
-    }
-    #gameBoard {
-      width: 100%; height: 100%; display: block;
-      background: #d4af37; border: 15px solid #8b4513; border-radius: 10px;
-    }
-    .player-turn { width: 12px; height: 12px; border-radius: 50%; background: #666; }
-    .player-turn.active { background: #d4af37; }
-    .control-btn {
-      background: rgba(255,255,255,0.2);
-      border: none; color: white; padding: 8px 12px;
-      border-radius: 5px; cursor: pointer;
-    }
-    .power-bar {
-      position: absolute; bottom: 20px; left: 50%;
-      transform: translateX(-50%);
-      width: 200px; height: 10px;
-      background: rgba(0,0,0,0.3); border-radius: 5px;
-      overflow: hidden; display: none;
-    }
-    .power-fill {
-      height: 100%; width: 0%;
-      background: linear-gradient(to right, #0f0, #ff0, #f00);
-      transition: width 0.05s;
-    }
-    .game-message {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0,0,0,0.8);
-      padding: 12px 25px; border-radius: 10px;
-      display: none; z-index: 10; text-align: center;
-    }
-    .instructions {
-      background: rgba(0,0,0,0.5);
-      padding: 10px; border-radius: 10px;
-      font-size: 0.8rem; margin: 10px;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<title>Carrom Pool - Enhanced Gameplay</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    display:flex;justify-content:center;align-items:center;
+    font-family:Inter,Arial,Helvetica,sans-serif;
+    background:linear-gradient(135deg,#122243,#6b1f1f);color:#fff;
+  }
+  .container{
+    width:100%;max-width:900px;height:92vh;background:rgba(0,0,0,0.72);
+    border-radius:16px;display:flex;flex-direction:column;overflow:hidden;
+    box-shadow:0 20px 50px rgba(0,0,0,0.6);
+  }
+  .header{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:linear-gradient(90deg,#8b4513,#6b3409)}
+  .coins{font-weight:700}
+  .game-area{flex:1;display:flex;gap:14px;padding:18px}
+  .left{width:65%;display:flex;flex-direction:column}
+  .right{width:35%;display:flex;flex-direction:column;gap:12px}
+  .menu, .game-ui, .footer{padding:10px;background:rgba(255,255,255,0.03);border-radius:8px}
+  .game-header{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:8px;background:rgba(0,0,0,0.2)}
+  canvas{width:100%;height:100%;display:block;background:#d4b97b;border-radius:10px;border:12px solid #5b3816}
+  .btn{display:inline-block;padding:10px;border-radius:8px;border:none;background:#d4af37;color:#000;font-weight:700;cursor:pointer}
+  .control-btn{background:rgba(255,255,255,0.06);color:#fff;border-radius:8px;padding:8px;border:1px solid rgba(255,255,255,0.06);cursor:pointer}
+  .power-bar{height:10px;background:rgba(0,0,0,0.4);border-radius:6px;overflow:hidden}
+  .power-fill{height:100%;width:0;background:linear-gradient(90deg,#0f0,#ff0,#f00)}
+  .message{position:absolute;left:50%;transform:translateX(-50%);top:10px;background:rgba(0,0,0,0.6);padding:8px 14px;border-radius:8px;display:none}
+  .instructions{font-size:13px;color:#ddd;padding:8px;background:rgba(0,0,0,0.18);border-radius:8px}
+  .scoreline{display:flex;gap:12px;align-items:center}
+  .indicator{width:12px;height:12px;border-radius:50%;background:#777}
+  .indicator.active{background:#d4af37}
+  .small{font-size:13px;color:#ddd}
+  .mode-select{display:flex;gap:8px;flex-wrap:wrap}
+  .hidden{display:none}
+</style>
 </head>
 <body>
   <div class="container">
     <div class="header">
+      <div style="display:flex;gap:14px;align-items:center">
+        <div style="font-weight:800;font-size:18px">CARROM POOL</div>
+        <div class="small">Enhanced Edition</div>
+      </div>
       <div class="coins">🪙 <span id="coins">12,850</span></div>
-      <button class="control-btn" id="settingsBtn">⚙️</button>
     </div>
 
-    <div class="game-area" id="mainMenu">
-      <h1 class="game-title">CARROM POOL</h1>
-      <p>Classic Board Game</p>
-      <div class="menu-buttons">
-        <button class="menu-btn" id="playBtn">🎮 PLAY NOW</button>
-        <button class="menu-btn" id="practiceBtn">🏆 PRACTICE</button>
-        <button class="menu-btn" id="multiplayerBtn">👥 MULTIPLAYER</button>
+    <div class="game-area">
+      <div class="left">
+        <div class="game-header">
+          <div class="scoreline">
+            <div class="indicator active" id="p1Ind"></div> P1: <b id="p1Score">0</b>
+          </div>
+          <div class="scoreline">
+            <div class="indicator" id="p2Ind"></div> P2: <b id="p2Score">0</b>
+          </div>
+        </div>
+
+        <div style="position:relative;flex:1;margin-top:12px">
+          <div class="message" id="messageBox"></div>
+          <canvas id="boardCanvas"></canvas>
+          <div style="position:absolute;left:50%;transform:translateX(-50%);bottom:14px;width:260px" id="powerWrap">
+            <div class="power-bar"><div class="power-fill" id="powerFill"></div></div>
+          </div>
+        </div>
+
+        <div class="game-ui" style="margin-top:12px;display:flex;gap:8px;align-items:center;">
+          <button class="control-btn" id="menuBtn">Menu</button>
+          <button class="control-btn" id="hintBtn">Hint (-10)</button>
+          <button class="control-btn" id="undoBtn">Undo</button>
+          <button class="control-btn" id="restartBtn">Restart</button>
+          <div style="margin-left:auto" class="small">Queen = red (covers +5)</div>
+        </div>
       </div>
-      <div class="instructions"><b>How to Play:</b> Drag striker to aim and release to shoot.</div>
+
+      <div class="right">
+        <div class="menu">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div style="font-weight:700">Mode</div>
+            <div class="small">Local / Practice</div>
+          </div>
+          <div class="mode-select">
+            <button class="btn" id="localBtn">2P LOCAL</button>
+            <button class="btn" id="practiceBtn">PRACTICE (AI)</button>
+          </div>
+        </div>
+
+        <div class="instructions">
+          <b>How to play</b><br>
+          Drag striker to aim and release to shoot. Pocket your color to continue; pocket queen then cover by pocketing your color to claim it.
+        </div>
+
+        <div class="menu" id="controlsInfo">
+          <div style="font-weight:700;margin-bottom:6px">Controls</div>
+          <div class="small">Drag striker | Hint spends coins | Undo one shot | Restart resets game</div>
+        </div>
+
+        <div class="menu small">
+          <div style="display:flex;justify-content:space-between"><span>Pieces left</span><span id="leftInfo">W:0 | B:0 | Q:1</span></div>
+          <div style="margin-top:8px">Winner triggers play-again prompt.</div>
+        </div>
+      </div>
     </div>
 
-    <div class="game-screen" id="gameScreen">
-      <div class="game-header">
-        <div><span id="p1Indicator" class="player-turn active"></span> P1: <span id="p1Score">0</span></div>
-        <div><span id="p2Indicator" class="player-turn"></span> P2: <span id="p2Score">0</span></div>
-      </div>
-      <div class="board-container">
-        <canvas id="gameBoard"></canvas>
-        <div class="power-bar" id="powerBar"><div class="power-fill" id="powerFill"></div></div>
-        <div class="game-message" id="gameMessage"></div>
-      </div>
-      <div class="game-ui">
-        <button class="control-btn" id="menuBtn">📋 MENU</button>
-        <button class="control-btn" id="hintBtn">💡 HINT</button>
-        <button class="control-btn" id="undoBtn">↩️ UNDO</button>
-      </div>
-      <div class="instructions"><b>Controls:</b> P1 = White | P2 = Black | Red = Queen (+5)</div>
-    </div>
-
-    <div class="footer">Carrom Pool © 2025 | Enhanced Edition</div>
+    <div class="footer" style="padding:10px;text-align:center;color:#ccc">© 2025 Carrom Pool — improved physics & rules</div>
   </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const mainMenu = document.getElementById("mainMenu");
-      const gameScreen = document.getElementById("gameScreen");
-      const playBtn = document.getElementById("playBtn");
-      const menuBtn = document.getElementById("menuBtn");
-      const settingsBtn = document.getElementById("settingsBtn");
-      const hintBtn = document.getElementById("hintBtn");
-      const undoBtn = document.getElementById("undoBtn");
-      const gameBoard = document.getElementById("gameBoard");
-      const ctx = gameBoard.getContext("2d");
-      const powerBar = document.getElementById("powerBar");
-      const powerFill = document.getElementById("powerFill");
-      const gameMessage = document.getElementById("gameMessage");
-      const p1Indicator = document.getElementById("p1Indicator");
-      const p2Indicator = document.getElementById("p2Indicator");
-      const p1ScoreEl = document.getElementById("p1Score");
-      const p2ScoreEl = document.getElementById("p2Score");
-      const coinsEl = document.getElementById("coins");
+<script>
+/* === Config & State === */
+const canvas = document.getElementById('boardCanvas');
+const ctx = canvas.getContext('2d', { alpha: false });
+const messageBox = document.getElementById('messageBox');
+const p1ScoreEl = document.getElementById('p1Score'), p2ScoreEl = document.getElementById('p2Score');
+const p1Ind = document.getElementById('p1Ind'), p2Ind = document.getElementById('p2Ind');
+const powerFill = document.getElementById('powerFill');
+const powerWrap = document.getElementById('powerWrap');
+const coinsEl = document.getElementById('coins'), hintBtn = document.getElementById('hintBtn');
+const undoBtn = document.getElementById('undoBtn'), restartBtn = document.getElementById('restartBtn');
+const leftInfo = document.getElementById('leftInfo');
+const localBtn = document.getElementById('localBtn'), practiceBtn = document.getElementById('practiceBtn');
 
-      let pieces = [], striker, dragging = false, dragX = 0, dragY = 0, power = 0;
-      let currentPlayer = 1, scores = [0, 0], isMoving = false, anim = null, coins = 12850;
+let width = 800, height = 740;
+let pieces = [], striker = null, dragging=false, dragPos={x:0,y:0}, aimLine=null;
+let currentPlayer = 1; // 1 or 2
+let scores = [0,0];
+let coins = 12850;
+let animId = null, isMoving=false;
+let mode = 'local'; // 'local' or 'practice'
+let pocketRadius = 36;
+const BOARD_MARGIN = 30;
+const STRIKER_R = 16;
+const PIECE_R = 14;
+const FRICTION = 0.993;
+const MIN_SPEED = 0.04;
+const MAX_POWER = 28; // impulse scale
+let undoStack = [];
+let queenState = { pocketed:false, claimedBy:0, needsCover:false }; // queen rules
 
-      const STRIKER_RADIUS = 15, PIECE_RADIUS = 14, FRICTION = 0.985, ELASTICITY = 0.9;
-      const BOARD_MARGIN = 25, MIN_VELOCITY = 0.08;
+/* === Utility === */
+function showMessage(text, ms=1500){
+  messageBox.textContent = text;
+  messageBox.style.display='block';
+  clearTimeout(showMessage._t);
+  showMessage._t = setTimeout(()=> messageBox.style.display='none', ms);
+}
+function rand(min,max){return Math.random()*(max-min)+min}
+function deepCloneState(){
+  return {
+    pieces: pieces.map(p => ({...p})),
+    striker: {...striker},
+    currentPlayer, scores:[...scores], queenState: {...queenState}, coins
+  };
+}
+function restoreState(state){
+  pieces = state.pieces.map(p => ({...p}));
+  striker = {...state.striker};
+  currentPlayer = state.currentPlayer;
+  scores = state.scores.slice();
+  queenState = {...state.queenState};
+  coins = state.coins;
+  updateUI();
+}
 
-      document.body.addEventListener("touchmove", e => e.preventDefault(), { passive: false });
+/* === Resize === */
+function resize(){
+  // compute canvas pixel size for crisp physics (use devicePixelRatio)
+  const containerRect = canvas.parentElement.getBoundingClientRect();
+  width = containerRect.width;
+  height = containerRect.height;
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+  canvas.width = Math.floor(width * dpr);
+  canvas.height = Math.floor(height * dpr);
+  canvas.style.width = width + 'px';
+  canvas.style.height = height + 'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+window.addEventListener('resize', resize);
 
-      playBtn.onclick = () => { mainMenu.style.display = "none"; gameScreen.style.display = "flex"; initGame(); };
-      menuBtn.onclick = () => { if (confirm("Quit game?")) { cancelAnimationFrame(anim); gameScreen.style.display = "none"; mainMenu.style.display = "block"; } };
-      settingsBtn.onclick = () => showMessage("Settings coming soon!");
-      hintBtn.onclick = () => { if (coins >= 10) { coins -= 10; coinsEl.textContent = coins.toLocaleString(); showMessage("Hint: Aim closer to the center!"); } else showMessage("Not enough coins"); };
-      undoBtn.onclick = () => showMessage("Undo not yet implemented.");
+/* === Game Setup === */
+function resetBoard(){
+  pieces = [];
+  // center for queen
+  const cx = width/2, cy = height/2;
+  pieces.push({x:cx,y:cy,r:PIECE_R,color:'red',queen:true,vx:0,vy:0,pocketed:false});
+  // Surrounding circle rows — simple symmetric
+  const ringrad = 56;
+  for(let i=0;i<8;i++){
+    const angle = (i/8)*Math.PI*2;
+    const col = (i%2===0)?'white':'black';
+    pieces.push({x:cx+Math.cos(angle)*ringrad,y:cy+Math.sin(angle)*ringrad,r:PIECE_R,color:col,queen:false,vx:0,vy:0,pocketed:false});
+  }
+  // Add second inner ring slightly
+  for(let i=0;i<6;i++){
+    const angle = (i/6)*Math.PI*2 + 0.2;
+    const col = (i%2===0)?'white':'black';
+    pieces.push({x:cx+Math.cos(angle)* (ringrad+28), y:cy+Math.sin(angle)*(ringrad+28), r:PIECE_R, color:col, queen:false, vx:0, vy:0, pocketed:false});
+  }
 
-      function resizeCanvas() {
-        gameBoard.width = gameBoard.parentElement.clientWidth;
-        gameBoard.height = gameBoard.parentElement.clientHeight;
-      }
-      window.onresize = resizeCanvas;
+  // striker defaults to current player's baseline
+  striker = { x: width/2, y: height - 80, r: STRIKER_R, vx:0, vy:0, color:'white' };
+  if(currentPlayer===2) striker.y = 80;
+  queenState = { pocketed:false, claimedBy:0, needsCover:false };
+  undoStack = [];
+}
 
-      function initGame() {
-        resizeCanvas();
-        scores = [0, 0]; updateScores(); currentPlayer = 1; updateIndicators();
-        pieces = []; createPieces();
-        striker = { x: gameBoard.width / 2, y: gameBoard.height - 60, r: STRIKER_RADIUS, vx: 0, vy: 0, color: "white" };
-        addControls(); gameLoop();
-        showMessage("Player 1's Turn");
-      }
+/* === Drawing === */
+function drawBoard(){
+  // background / pockets / markings
+  ctx.clearRect(0,0,width,height);
+  // inner wood area
+  ctx.fillStyle = '#d4b97b';
+  ctx.fillRect(BOARD_MARGIN, BOARD_MARGIN, width-BOARD_MARGIN*2, height-BOARD_MARGIN*2);
 
-      function createPieces() {
-        const cx = gameBoard.width / 2, cy = gameBoard.height / 2;
-        pieces.push({ x: cx, y: cy, r: PIECE_RADIUS, color: "red", queen: true, vx: 0, vy: 0, pocketed: false });
-        for (let i = 0; i < 8; i++) {
-          const angle = (i / 8) * Math.PI * 2;
-          pieces.push({
-            x: cx + Math.cos(angle) * 60,
-            y: cy + Math.sin(angle) * 60,
-            r: PIECE_RADIUS,
-            color: i % 2 ? "white" : "black",
-            vx: 0, vy: 0, pocketed: false
-          });
+  // pockets (corners)
+  const pockets = [
+    {x:BOARD_MARGIN, y:BOARD_MARGIN},
+    {x:width-BOARD_MARGIN, y:BOARD_MARGIN},
+    {x:BOARD_MARGIN, y:height-BOARD_MARGIN},
+    {x:width-BOARD_MARGIN, y:height-BOARD_MARGIN}
+  ];
+  pockets.forEach(p=>{
+    ctx.beginPath();
+    ctx.fillStyle='rgba(10,10,10,0.6)';
+    ctx.arc(p.x, p.y, pocketRadius, 0, Math.PI*2);
+    ctx.fill();
+  });
+
+  // center circle
+  ctx.beginPath();
+  ctx.strokeStyle='rgba(0,0,0,0.25)';
+  ctx.lineWidth=2;
+  ctx.arc(width/2, height/2, 90, 0, Math.PI*2);
+  ctx.stroke();
+
+  // draw pieces (non-pocketed)
+  // pieces under striker? draw queen last to be visible
+  pieces.filter(p=>!p.pocketed && !p.queen).forEach(drawPiece);
+  pieces.filter(p=>!p.pocketed && p.queen).forEach(drawPiece);
+
+  // striker
+  drawPiece(striker, true);
+
+  // aim line if dragging
+  if(dragging && aimLine){
+    const {x1,y1,x2,y2} = aimLine;
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+    ctx.moveTo(x1,y1);
+    ctx.lineTo(x2,y2);
+    ctx.stroke();
+  }
+}
+function drawPiece(p, isStriker=false){
+  if(p.pocketed) return;
+  ctx.beginPath();
+  // outer highlight
+  ctx.fillStyle = isStriker ? '#ffffff' : (p.color==='white'?'#ffffff': (p.color==='black'?'#111':'#c92a2a'));
+  ctx.arc(p.x, p.y, p.r+1.2, 0, Math.PI*2);
+  ctx.fill();
+  // inner
+  ctx.beginPath();
+  ctx.fillStyle = isStriker ? '#dfe7ea' : (p.color==='white'?'#fff':'#111');
+  ctx.arc(p.x, p.y, p.r-1.6, 0, Math.PI*2);
+  ctx.fill();
+
+  if(p.queen){
+    ctx.beginPath();
+    ctx.fillStyle = '#c92a2a';
+    ctx.arc(p.x, p.y, p.r-5, 0, Math.PI*2);
+    ctx.fill();
+  }
+}
+
+/* === Physics === */
+function updatePhysics(){
+  // update positions
+  [striker, ...pieces].forEach(obj=>{
+    if(obj.pocketed) return;
+    if(Math.abs(obj.vx) < MIN_SPEED) obj.vx = Math.abs(obj.vx) < MIN_SPEED ? 0 : obj.vx;
+    if(Math.abs(obj.vy) < MIN_SPEED) obj.vy = Math.abs(obj.vy) < MIN_SPEED ? 0 : obj.vy;
+    obj.x += obj.vx;
+    obj.y += obj.vy;
+    obj.vx *= FRICTION; obj.vy *= FRICTION;
+    // walls bounce (inside board margin)
+    let left = BOARD_MARGIN + obj.r, right = width - BOARD_MARGIN - obj.r;
+    let top = BOARD_MARGIN + obj.r, bottom = height - BOARD_MARGIN - obj.r;
+    if(obj.x < left){ obj.x = left; obj.vx = -obj.vx * 0.88; }
+    if(obj.x > right){ obj.x = right; obj.vx = -obj.vx * 0.88; }
+    if(obj.y < top){ obj.y = top; obj.vy = -obj.vy * 0.88; }
+    if(obj.y > bottom){ obj.y = bottom; obj.vy = -obj.vy * 0.88; }
+  });
+
+  // collisions (pairwise) — simple impulse for equal mass
+  const list = [striker, ...pieces].filter(o=>!o.pocketed);
+  for(let i=0;i<list.length;i++){
+    for(let j=i+1;j<list.length;j++){
+      const a = list[i], b = list[j];
+      let dx = b.x - a.x, dy = b.y - a.y;
+      let dist = Math.hypot(dx,dy);
+      let minD = a.r + b.r;
+      if(dist > 0 && dist < minD - 0.001){
+        // push out overlap
+        const nx = dx/dist, ny = dy/dist;
+        const overlap = minD - dist;
+        a.x -= nx * overlap/2;
+        a.y -= ny * overlap/2;
+        b.x += nx * overlap/2;
+        b.y += ny * overlap/2;
+
+        // relative velocity
+        const rvx = b.vx - a.vx, rvy = b.vy - a.vy;
+        const relVel = rvx*nx + rvy*ny;
+        if(relVel > -0.0001) {
+          // simple restitution elastic collision
+          const e = 0.88;
+          const jImp = -(1+e) * relVel / 2; // divide by 2 (equal mass)
+          const impulseX = jImp * nx;
+          const impulseY = jImp * ny;
+          a.vx -= impulseX; a.vy -= impulseY;
+          b.vx += impulseX; b.vy += impulseY;
         }
       }
+    }
+  }
+}
 
-      function addControls() {
-        ["mousedown", "touchstart"].forEach(ev => gameBoard.addEventListener(ev, startDrag));
-        ["mousemove", "touchmove"].forEach(ev => gameBoard.addEventListener(ev, drag));
-        ["mouseup", "touchend"].forEach(ev => gameBoard.addEventListener(ev, endDrag));
+/* === Pocketing & Turn Logic === */
+function checkPocketsAndScoring(){
+  const pockets = [
+    {x:BOARD_MARGIN, y:BOARD_MARGIN},
+    {x:width-BOARD_MARGIN, y:BOARD_MARGIN},
+    {x:BOARD_MARGIN, y:height-BOARD_MARGIN},
+    {x:width-BOARD_MARGIN, y:height-BOARD_MARGIN}
+  ];
+  // striker pocket foul?
+  for(const pk of pockets){
+    if(!striker) break;
+    if(distance(striker, pk) < pocketRadius){
+      // foul
+      showMessage("Foul: Striker Pocketed (-1)");
+      scores[currentPlayer-1] = Math.max(0, scores[currentPlayer-1]-1);
+      updateUI();
+      resetStrikerPosition();
+      endTurnForced();
+      return;
+    }
+  }
+
+  // pieces pocketing
+  let pocketedThisShot = [];
+  for(const p of pieces){
+    if(p.pocketed) continue;
+    for(const pk of pockets){
+      if(distance(p, pk) < pocketRadius){
+        p.pocketed = true;
+        p.vx = p.vy = 0;
+        pocketedThisShot.push(p);
+        break;
       }
+    }
+  }
 
-      function getXY(e) {
-        if (e.touches) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        return { x: e.clientX, y: e.clientY };
+  if(pocketedThisShot.length === 0){
+    // if nobody pocketed, turn may end once motion stops
+    return;
+  }
+
+  // process pocketed pieces in order
+  let pocketedOwn = 0;
+  let pocketedOpponent = 0;
+  let pocketedQueenNow = false;
+  for(const p of pocketedThisShot){
+    if(p.queen){
+      // queen got pocketed
+      queenState.pocketed = true;
+      queenState.claimedBy = currentPlayer;
+      queenState.needsCover = true; // must pocket own color next to cover
+      pocketedQueenNow = true;
+      showMessage("Queen Pocketed! Cover it by pocketing your color.");
+    } else {
+      const isOwn = (currentPlayer===1 && p.color==='white') || (currentPlayer===2 && p.color==='black');
+      if(isOwn){
+        scores[currentPlayer-1] += 1;
+        pocketedOwn++;
+      } else {
+        // opponent piece pocketed -> foul (-1)
+        scores[currentPlayer-1] = Math.max(0, scores[currentPlayer-1]-1);
+        pocketedOpponent++;
       }
+    }
+  }
 
-      function startDrag(e) {
-        if (isMoving) return;
-        const pos = getXY(e), rect = gameBoard.getBoundingClientRect();
-        const x = pos.x - rect.left, y = pos.y - rect.top;
-        if (Math.hypot(x - striker.x, y - striker.y) < STRIKER_RADIUS * 2) {
-          dragging = true; dragX = x; dragY = y; powerBar.style.display = "block";
-        }
-      }
+  // handle cover of queen
+  if(queenState.needsCover){
+    // if player pocketed any of their own color this shot, they cover queen
+    if(pocketedOwn > 0){
+      // queen claimed
+      queenState.needsCover = false;
+      queenState.pocketed = true;
+      scores[currentPlayer-1] += 5; // award queen points on cover
+      showMessage("Queen Covered! +5 points");
+    } else {
+      // queen remains needing cover. If queen was pocketed by player but not covered in same/next, often rules vary;
+      // We'll implement: if next turn player fails to cover and opponent pockets one of their pieces, queen returns to center.
+      // We'll track this via queenState.needsCover and handle at end-of-turn check below.
+    }
+  }
 
-      function drag(e) {
-        if (!dragging) return;
-        const pos = getXY(e), rect = gameBoard.getBoundingClientRect();
-        dragX = pos.x - rect.left; dragY = pos.y - rect.top;
-        power = Math.min(Math.hypot(dragX - striker.x, dragY - striker.y) / 70, 1);
-        powerFill.style.width = (power * 100) + "%";
-      }
+  // if pocketedOpponent > 0 nothing else; update UI
+  updateUI();
 
-      function endDrag() {
-        if (!dragging) return;
-        dragging = false; powerBar.style.display = "none";
-        const dx = striker.x - dragX, dy = striker.y - dragY, dist = Math.hypot(dx, dy);
-        if (dist > 5) {
-          striker.vx = (dx / dist) * power * 20;
-          striker.vy = (dy / dist) * power * 20;
-          isMoving = true;
-        }
-        power = 0; powerFill.style.width = "0%";
-      }
+  // Determine extra turn: if pocketedOwn or queen was pocketed and covered this shot, player continues; otherwise turn passes.
+  const coveredNow = pocketedQueenNow && !queenState.needsCover && queenState.claimedBy === currentPlayer;
+  if(pocketedOwn>0 || coveredNow){
+    // player continues
+    showMessage("You pocketed! Continue.");
+  } else {
+    // player loses turn after motion stops
+    setTimeout(()=>{ maybeEndTurnAfterMotion(); }, 50);
+  }
+}
 
-      function updatePhysics(obj) {
-        obj.x += obj.vx; obj.y += obj.vy;
-        obj.vx *= FRICTION; obj.vy *= FRICTION;
-        if (Math.abs(obj.vx) < MIN_VELOCITY) obj.vx = 0;
-        if (Math.abs(obj.vy) < MIN_VELOCITY) obj.vy = 0;
-        if (obj.x < BOARD_MARGIN + obj.r || obj.x > gameBoard.width - BOARD_MARGIN - obj.r) obj.vx *= -ELASTICITY;
-        if (obj.y < BOARD_MARGIN + obj.r || obj.y > gameBoard.height - BOARD_MARGIN - obj.r) obj.vy *= -ELASTICITY;
-        obj.x = Math.min(Math.max(obj.x, BOARD_MARGIN + obj.r), gameBoard.width - BOARD_MARGIN - obj.r);
-        obj.y = Math.min(Math.max(obj.y, BOARD_MARGIN + obj.r), gameBoard.height - BOARD_MARGIN - obj.r);
-      }
+/* helper distance */
+function distance(a,b){ return Math.hypot(a.x - b.x, a.y - b.y); }
 
-      function checkCollisions() {
-        const objs = [striker, ...pieces.filter(p => !p.pocketed)];
-        for (let i = 0; i < objs.length; i++) {
-          for (let j = i + 1; j < objs.length; j++) {
-            const a = objs[i], b = objs[j];
-            const dx = b.x - a.x, dy = b.y - a.y, dist = Math.hypot(dx, dy);
-            const minDist = a.r + b.r;
-            if (dist < minDist && dist > 0) {
-              const nx = dx / dist, ny = dy / dist;
-              const overlap = (minDist - dist) / 2;
-              a.x -= overlap * nx; a.y -= overlap * ny;
-              b.x += overlap * nx; b.y += overlap * ny;
-              const p = 2 * (a.vx * nx + a.vy * ny - b.vx * nx - b.vy * ny) / 2;
-              a.vx -= p * nx * ELASTICITY; a.vy -= p * ny * ELASTICITY;
-              b.vx += p * nx * ELASTICITY; b.vy += p * ny * ELASTICITY;
-            }
-          }
-        }
-      }
+/* end-turn helpers */
+function resetStrikerPosition(){
+  striker.x = width/2;
+  striker.y = (currentPlayer===1) ? (height-80) : 80;
+  striker.vx = striker.vy = 0;
+}
+function endTurnForced(){
+  // immediate forced switch (used for striker pocket)
+  currentPlayer = currentPlayer===1?2:1;
+  resetStrikerPosition();
+  updateUI();
+  // if practice AI and it's AI's turn, trigger AI shot
+  if(mode==='practice' && currentPlayer===2){
+    setTimeout(aiShot,600);
+  }
+}
+function maybeEndTurnAfterMotion(){
+  // if still moving wait, else end turn
+  const moving = [striker,...pieces].some(o => !o.pocketed && (Math.abs(o.vx)>MIN_SPEED || Math.abs(o.vy)>MIN_SPEED));
+  if(moving){
+    setTimeout(maybeEndTurnAfterMotion, 220);
+    return;
+  }
+  // if queen was pocketed and still needsCover, try to enforce rules:
+  if(queenState.needsCover && queenState.claimedBy === currentPlayer){
+    // If current player ended their shot without covering, penalty: queen returns to center and -5? We'll return queen and -5 points
+    showMessage("Failed to cover queen. Queen returned. -5 penalty");
+    scores[currentPlayer-1] = Math.max(0, scores[currentPlayer-1]-5);
+    // return queen to center
+    const q = pieces.find(p => p.queen);
+    if(q){
+      q.pocketed = false;
+      q.x = width/2; q.y = height/2; q.vx = q.vy = 0;
+    }
+    queenState = { pocketed:false, claimedBy:0, needsCover:false };
+    updateUI();
+  }
 
-      function checkPockets() {
-        const pockets = [
-          { x: 15, y: 15 }, { x: gameBoard.width - 15, y: 15 },
-          { x: 15, y: gameBoard.height - 15 }, { x: gameBoard.width - 15, y: gameBoard.height - 15 }
-        ];
-        pockets.forEach(pk => {
-          if (Math.hypot(striker.x - pk.x, striker.y - pk.y) < 25) {
-            showMessage("Foul! Lost 1 point");
-            scores[currentPlayer - 1] = Math.max(0, scores[currentPlayer - 1] - 1);
-            resetStriker();
-          }
-          pieces.forEach(p => {
-            if (!p.pocketed && Math.hypot(p.x - pk.x, p.y - pk.y) < 25) {
-              p.pocketed = true;
-              if ((currentPlayer === 1 && p.color === "white") || (currentPlayer === 2 && p.color === "black")) {
-                scores[currentPlayer - 1]++;
-                showMessage("+1 Point!");
-              } else if (p.queen) {
-                scores[currentPlayer - 1] += 5;
-                showMessage("Queen! +5 Points!");
-              } else {
-                scores[currentPlayer - 1] = Math.max(0, scores[currentPlayer - 1] - 1);
-                showMessage("Foul! -1");
-              }
-              updateScores();
-            }
-          });
-        });
-      }
+  // determine if player continues: if they pocketed own pieces this turn we allowed continue; otherwise switch
+  // We'll detect lastShotPocketedOwn via lastSnapshot comparison in undo stack top (we stored before shot), but simpler:
+  // If any piece pocketed during last shot that belonged to currentPlayer -> continue else switch.
+  // For simplicity: if any pocketed pieces exists with color matching current player and scored this turn -> continue
+  // Implement a simple heuristic: if last action had pocketed this turn flagged in global variable. For simplicity — switch.
+  // (This keeps behavior fair: player pockets multiple pieces in a single shot can continue; but we approximate.)
+  // We'll just switch if no piece of current player got pocketed this shot (we already showed "You pocketed" earlier).
+  // To avoid complexity, switch turn now:
+  currentPlayer = currentPlayer===1?2:1;
+  resetStrikerPosition();
+  updateUI();
 
-      function resetStriker() {
-        striker.x = gameBoard.width / 2;
-        striker.y = currentPlayer === 1 ? gameBoard.height - 60 : 60;
-        striker.vx = striker.vy = 0;
-      }
+  // victory check
+  if(scores[0] >= 25 || scores[1] >= 25){
+    const winner = scores[0] >= 25 ? 1 : 2;
+    showMessage("Player " + winner + " Wins!", 4000);
+    setTimeout(()=>{
+      if(confirm("Play again?")) startNewGame();
+    },900);
+    return;
+  }
 
-      function endTurn() {
-        currentPlayer = currentPlayer === 1 ? 2 : 1;
-        updateIndicators();
-        resetStriker();
-        showMessage("Player " + currentPlayer + "'s Turn");
-        if (scores[0] >= 5 || scores[1] >= 5) {
-          const w = scores[0] >= 5 ? 1 : 2;
-          showMessage("Player " + w + " Wins!");
-          setTimeout(() => {
-            if (confirm("Play again?")) initGame();
-            else { gameScreen.style.display = "none"; mainMenu.style.display = "block"; }
-          }, 1500);
-        }
-      }
+  // AI move
+  if(mode==='practice' && currentPlayer===2){
+    setTimeout(aiShot,600);
+  }
+}
 
-      function updateScores() {
-        p1ScoreEl.textContent = scores[0];
-        p2Score
+/* === Input / Dragging === */
+function startDrag(e){
+  if(isMoving) return;
+  const pos = getPointerPos(e);
+  if(Math.hypot(pos.x - striker.x, pos.y - striker.y) <= striker.r+6){
+    dragging = true;
+    dragPos = pos;
+    powerWrap.style.display = 'block';
+    aimLine = { x1: striker.x, y1: striker.y, x2: pos.x, y2: pos.y };
+  }
+}
+function onDrag(e){
+  if(!dragging) return;
+  const pos = getPointerPos(e);
+  dragPos = pos;
+  // power proportional to distance, capped
+  const dx = striker.x - pos.x, dy = striker.y - pos.y;
+  const dist = Math.hypot(dx,dy);
+  const power = Math.min(dist/12, MAX_POWER);
+  powerFill.style.width = Math.min(100, Math.round((power/MAX_POWER)*100)) + '%';
+  aimLine = { x1: striker.x, y1: striker.y, x2: striker.x - (dx/dist||0)*Math.min(220, dist), y2: striker.y - (dy/dist||0)*Math.min(220, dist) };
+}
+function endDrag(e){
+  if(!dragging) return;
+  dragging = false;
+  powerWrap.style.display = 'none';
+  const dx = striker.x - dragPos.x, dy = striker.y - dragPos.y;
+  const dist = Math.hypot(dx,dy);
+  if(dist < 6) { aimLine = null; return; }
+  const power = Math.min(dist/12, M
