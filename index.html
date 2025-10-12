@@ -344,59 +344,80 @@
             document.getElementById('message').textContent = message;
         }
 
-        // Mouse events for dragging striker
-        canvas.addEventListener('mousedown', (e) => {
+        // Function to get position from event (mouse or touch)
+        function getPosition(e) {
             const rect = canvas.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            const mouseY = e.clientY - rect.top;
+            let clientX, clientY;
+            if (e.type.startsWith('touch')) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
 
-            // Check if clicking near striker and it's not moving
-            if (!isMoving && checkCollision({x: mouseX, y: mouseY, radius: 5}, striker)) { // Larger hit area
+        // Start drag
+        function startDrag(e) {
+            if (isMoving) return;
+            e.preventDefault();
+            const pos = getPosition(e);
+            // Check if clicking near striker
+            if (checkCollision({x: pos.x, y: pos.y, radius: 10}, striker)) { // Larger hit area for mobile
                 isDragging = true;
                 dragStartX = striker.x;
                 dragStartY = striker.y;
             }
-        });
+        }
 
-        canvas.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                const rect = canvas.getBoundingClientRect();
-                const mouseX = e.clientX - rect.left;
-                const mouseY = e.clientY - rect.top;
+        // Move drag
+        function moveDrag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            const pos = getPosition(e);
+            // Draw aiming line
+            draw();
+            const dx = dragStartX - pos.x;
+            const dy = dragStartY - pos.y;
+            const aimX = dragStartX + dx;
+            const aimY = dragStartY + dy;
+            ctx.beginPath();
+            ctx.moveTo(dragStartX, dragStartY);
+            ctx.lineTo(aimX, aimY);
+            ctx.strokeStyle = '#FF0';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
 
-                // Draw aiming line in shoot direction
-                draw();
-                const dx = dragStartX - mouseX;
-                const dy = dragStartY - mouseY;
-                const aimX = dragStartX + dx;
-                const aimY = dragStartY + dy;
-                ctx.beginPath();
-                ctx.moveTo(dragStartX, dragStartY);
-                ctx.lineTo(aimX, aimY);
-                ctx.strokeStyle = '#FF0';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-            }
-        });
+        // End drag
+        function endDrag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            const pos = getPosition(e);
+            // Calculate velocity (made stronger for better play)
+            const dx = dragStartX - pos.x;
+            const dy = dragStartY - pos.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const power = dist / 5;
+            striker.vx = (dx / 5) * (power / 5);
+            striker.vy = (dy / 5) * (power / 5);
 
-        canvas.addEventListener('mouseup', (e) => {
-            if (isDragging) {
-                const rect = canvas.getBoundingClientRect();
-                const mouseX = e.clientX - rect.left;
-                const mouseY = e.clientY - rect.top;
+            isDragging = false;
+            isMoving = true;
+        }
 
-                // Calculate velocity based on drag distance (made stronger)
-                const dx = dragStartX - mouseX;
-                const dy = dragStartY - mouseY;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                const power = dist / 5;
-                striker.vx = (dx / 5) * (power / 5);
-                striker.vy = (dy / 5) * (power / 5);
+        // Add event listeners for both mouse and touch
+        canvas.addEventListener('mousedown', startDrag);
+        canvas.addEventListener('mousemove', moveDrag);
+        canvas.addEventListener('mouseup', endDrag);
 
-                isDragging = false;
-                isMoving = true;
-            }
-        });
+        canvas.addEventListener('touchstart', startDrag);
+        canvas.addEventListener('touchmove', moveDrag);
+        canvas.addEventListener('touchend', endDrag);
 
         // Initialize game
         initPieces();
