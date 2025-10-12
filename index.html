@@ -139,10 +139,15 @@
             ctx.arc(boardSize / 2, boardSize / 2, 50, 0, Math.PI * 2);
             ctx.stroke();
 
-            // Baseline for striker (bottom for player 1, can rotate for player 2 but simplifying)
+            // Baseline for striker (bottom for player 1, top for player 2)
             ctx.beginPath();
             ctx.moveTo(100, boardSize - 50);
             ctx.lineTo(boardSize - 100, boardSize - 50);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(100, 50);
+            ctx.lineTo(boardSize - 100, 50);
             ctx.stroke();
         }
 
@@ -155,11 +160,6 @@
             ctx.strokeStyle = '#000';
             ctx.lineWidth = 1;
             ctx.stroke();
-        }
-
-        // Check if point is inside board bounds
-        function isInsideBoard(x, y) {
-            return x > pieceRadius && x < boardSize - pieceRadius && y > pieceRadius && y < boardSize - pieceRadius;
         }
 
         // Check collision between two circles
@@ -212,16 +212,17 @@
             striker.vy *= friction;
 
             // Wall collisions for striker
-            if (striker.x - striker.radius < 0 || striker.x + striker.radius > boardSize) {
+            if (striker.x < striker.radius || striker.x > boardSize - striker.radius) {
                 striker.vx = -striker.vx;
             }
-            if (striker.y - striker.radius < 0 || striker.y + striker.radius > boardSize) {
+            if (striker.y < striker.radius || striker.y > boardSize - striker.radius) {
                 striker.vy = -striker.vy;
             }
 
             // Check if striker pocketed (foul)
             if (checkPocketed(striker)) {
                 message = 'Foul! Striker pocketed.';
+                setTimeout(() => { message = ''; }, 3000);
                 resetStriker();
                 switchPlayer();
             }
@@ -234,10 +235,10 @@
                 piece.vy *= friction;
 
                 // Wall collisions
-                if (piece.x - piece.radius < 0 || piece.x + piece.radius > boardSize) {
+                if (piece.x < piece.radius || piece.x > boardSize - piece.radius) {
                     piece.vx = -piece.vx;
                 }
-                if (piece.y - piece.radius < 0 || piece.y + piece.radius > boardSize) {
+                if (piece.y < piece.radius || piece.y > boardSize - piece.radius) {
                     piece.vy = -piece.vy;
                 }
             });
@@ -266,10 +267,10 @@
                     if (piece.type === 'queen') {
                         queenPocketed = true;
                         message = 'Queen pocketed!';
+                        setTimeout(() => { message = ''; }, 3000);
                     } else if (piece.type === (currentPlayer === 1 ? 'white' : 'black')) {
                         scores[currentPlayer]++;
                     } else {
-                        // Pocketed opponent's piece, foul or bonus? Simplifying to score for current player
                         scores[currentPlayer]++;
                     }
                     return false;
@@ -289,18 +290,19 @@
                 if (!pocketedThisTurn) {
                     switchPlayer();
                 }
-                // If queen pocketed and covered (pocket own piece after), but simplifying
             }
 
-            // Check win condition (all own pieces pocketed + queen if covered)
+            // Check win condition (all own pieces pocketed + queen if pocketed)
             const whitesLeft = pieces.filter(p => p.type === 'white').length;
             const blacksLeft = pieces.filter(p => p.type === 'black').length;
             const queenLeft = pieces.some(p => p.type === 'queen');
 
-            if (currentPlayer === 1 && whitesLeft === 0 && (!queenLeft || queenPocketed)) {
+            if (whitesLeft === 0 && (queenPocketed || !queenLeft)) {
                 message = 'Player 1 Wins!';
-            } else if (currentPlayer === 2 && blacksLeft === 0 && (!queenLeft || queenPocketed)) {
+                // No timeout for win message
+            } else if (blacksLeft === 0 && (queenPocketed || !queenLeft)) {
                 message = 'Player 2 Wins!';
+                // No timeout for win message
             }
         }
 
@@ -340,7 +342,6 @@
         function updateUI() {
             document.getElementById('score').textContent = `Player 1: ${scores[1]} | Player 2: ${scores[2]}`;
             document.getElementById('message').textContent = message;
-            setTimeout(() => { message = ''; }, 3000); // Clear message after 3s
         }
 
         // Mouse events for dragging striker
@@ -349,11 +350,11 @@
             const mouseX = e.clientX - rect.left;
             const mouseY = e.clientY - rect.top;
 
-            // Check if clicking on striker and it's not moving
-            if (!isMoving && checkCollision({x: mouseX, y: mouseY, radius: 1}, striker)) {
+            // Check if clicking near striker and it's not moving
+            if (!isMoving && checkCollision({x: mouseX, y: mouseY, radius: 5}, striker)) { // Larger hit area
                 isDragging = true;
-                dragStartX = mouseX;
-                dragStartY = mouseY;
+                dragStartX = striker.x;
+                dragStartY = striker.y;
             }
         });
 
@@ -363,11 +364,15 @@
                 const mouseX = e.clientX - rect.left;
                 const mouseY = e.clientY - rect.top;
 
-                // Draw aiming line
+                // Draw aiming line in shoot direction
                 draw();
+                const dx = dragStartX - mouseX;
+                const dy = dragStartY - mouseY;
+                const aimX = dragStartX + dx;
+                const aimY = dragStartY + dy;
                 ctx.beginPath();
-                ctx.moveTo(striker.x, striker.y);
-                ctx.lineTo(mouseX, mouseY);
+                ctx.moveTo(dragStartX, dragStartY);
+                ctx.lineTo(aimX, aimY);
                 ctx.strokeStyle = '#FF0';
                 ctx.lineWidth = 2;
                 ctx.stroke();
@@ -380,12 +385,13 @@
                 const mouseX = e.clientX - rect.left;
                 const mouseY = e.clientY - rect.top;
 
-                // Calculate velocity based on drag distance
+                // Calculate velocity based on drag distance (made stronger)
                 const dx = dragStartX - mouseX;
                 const dy = dragStartY - mouseY;
-                const power = Math.sqrt(dx * dx + dy * dy) / 10; // Scale power
-                striker.vx = dx / 10 * power / 10; // Adjust speed
-                striker.vy = dy / 10 * power / 10;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const power = dist / 5;
+                striker.vx = (dx / 5) * (power / 5);
+                striker.vy = (dy / 5) * (power / 5);
 
                 isDragging = false;
                 isMoving = true;
