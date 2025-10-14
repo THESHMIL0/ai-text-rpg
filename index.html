@@ -34,12 +34,8 @@
     padding: 18px;
     border-bottom: 1px solid rgba(255,255,255,0.05);
   }
-  header h1 {
-    margin: 0; font-size: 22px; letter-spacing: 1px; color: var(--accent);
-  }
-  main {
-    padding: 16px; display: grid; grid-template-columns: 1fr 340px; gap: 12px;
-  }
+  header h1 { margin: 0; font-size: 22px; color: var(--accent); }
+  main { padding: 16px; display: grid; grid-template-columns: 1fr 340px; gap: 12px; }
   @media(max-width:850px) { main { grid-template-columns: 1fr; } }
   .panel {
     background: rgba(255,255,255,0.02);
@@ -51,7 +47,6 @@
     padding: 10px; border-radius: 10px;
     height: 220px; overflow-y: auto; font-size: 14px;
   }
-  .log div { margin-bottom: 4px; }
   .stat-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); gap: 8px; }
   .stat {
     background: rgba(255,255,255,0.03);
@@ -77,21 +72,6 @@
     color: var(--muted);
   }
   .action-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-  .shop-item, .inv-item {
-    background: rgba(255,255,255,0.03);
-    border-radius: 10px;
-    padding: 8px; display: flex; justify-content: space-between; align-items: center;
-  }
-  .shop-item strong, .inv-item strong { color: var(--accent); }
-  .hpbar {
-    height: 10px; border-radius: 999px; background: rgba(255,255,255,.08);
-    overflow: hidden; margin-top: 4px;
-  }
-  .hpfill {
-    height: 100%;
-    background: linear-gradient(90deg,var(--good),var(--accent));
-  }
-  .danger { background: linear-gradient(90deg,var(--bad),#f59e0b); }
   .small-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 4px; }
 </style>
 </head>
@@ -128,12 +108,6 @@
           <button id="restBtn" class="secondary">Rest</button>
           <button id="saveBtn" class="muted-btn">Save</button>
         </div>
-        <div id="combatActions" class="action-row" style="display:none">
-          <button id="attackBtn" class="primary">Attack</button>
-          <button id="defendBtn" class="secondary">Defend</button>
-          <button id="potionBtn" class="secondary">Potion</button>
-          <button id="runBtn" class="muted-btn">Run</button>
-        </div>
       </div>
     </section>
 
@@ -148,16 +122,88 @@
 
   <footer class="small-note" style="padding:10px;border-top:1px solid rgba(255,255,255,.05);">
     <span>Made with ❤️ for mobile</span>
-    <div>
-      <button id="exportBtn" class="secondary" style="font-size:12px;">Export</button>
-      <button id="importBtn" class="secondary" style="font-size:12px;">Import</button>
-    </div>
   </footer>
 </div>
 
 <script>
-// keep your JavaScript logic exactly the same as before 👇
-// copy-paste your <script> code from your current file here
+const startBtn = document.getElementById("startBtn");
+const setupArea = document.getElementById("setupArea");
+const gameArea = document.getElementById("gameArea");
+const log = document.getElementById("log");
+const playerStats = document.getElementById("playerStats");
+
+let player = {};
+
+startBtn.addEventListener("click", () => {
+  const name = document.getElementById("playerName").value.trim();
+  const pClass = document.getElementById("playerClass").value;
+  if (!name) {
+    alert("Please enter your hero name!");
+    return;
+  }
+
+  // setup player based on class
+  player = {
+    name,
+    class: pClass,
+    hp: pClass === "warrior" ? 120 : pClass === "rogue" ? 90 : 70,
+    maxHp: pClass === "warrior" ? 120 : pClass === "rogue" ? 90 : 70,
+    atk: pClass === "warrior" ? 15 : pClass === "rogue" ? 18 : 25,
+    gold: 50,
+    level: 1,
+    xp: 0
+  };
+
+  setupArea.style.display = "none";
+  gameArea.style.display = "block";
+  log.innerHTML = `<div>Welcome, <b>${name}</b> the ${pClass}!</div>`;
+  updateStats();
+});
+
+function updateStats() {
+  playerStats.innerHTML = `
+    <div class="stat">❤️ HP: ${player.hp}/${player.maxHp}</div>
+    <div class="stat">⚔️ ATK: ${player.atk}</div>
+    <div class="stat">💰 Gold: ${player.gold}</div>
+    <div class="stat">⭐ Level: ${player.level}</div>
+  `;
+}
+
+document.getElementById("fightBtn").addEventListener("click", () => {
+  const dmg = Math.floor(Math.random() * player.atk) + 5;
+  const reward = Math.floor(Math.random() * 20) + 10;
+  player.gold += reward;
+  player.xp += 10;
+  log.innerHTML += `<div>You fought bravely and dealt ${dmg} damage! +${reward} gold earned.</div>`;
+  updateStats();
+});
+
+document.getElementById("shopBtn").addEventListener("click", () => {
+  log.innerHTML += `<div>You visit the shop. Nothing fancy yet!</div>`;
+});
+
+document.getElementById("restBtn").addEventListener("click", () => {
+  player.hp = player.maxHp;
+  log.innerHTML += `<div>You rest and fully recover your HP.</div>`;
+  updateStats();
+});
+
+document.getElementById("saveBtn").addEventListener("click", () => {
+  localStorage.setItem("pocketRPGsave", JSON.stringify(player));
+  log.innerHTML += `<div>💾 Game saved!</div>`;
+});
+
+// auto-load saved data
+window.addEventListener("load", () => {
+  const save = localStorage.getItem("pocketRPGsave");
+  if (save) {
+    player = JSON.parse(save);
+    setupArea.style.display = "none";
+    gameArea.style.display = "block";
+    updateStats();
+    log.innerHTML = `<div>Welcome back, ${player.name}!</div>`;
+  }
+});
 </script>
 </body>
 </html>
