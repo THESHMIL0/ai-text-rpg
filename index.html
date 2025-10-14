@@ -3,312 +3,735 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-<title>Pocket RPG — Mobile Edition</title>
+<title>Pocket RPG — Visual Edition</title>
 <style>
-  :root {
-    --bg: #0b1120;
-    --card: #111827;
-    --accent: #38bdf8;
-    --accent-dark: #0ea5e9;
-    --muted: #94a3b8;
-    --text: #f1f5f9;
-    --good: #10b981;
-    --bad: #ef4444;
+  :root{
+    --bg:#07101a; --card:#0b1220; --panel:#0f1724; --accent:#38bdf8; --accent-2:#0ea5e9;
+    --good:#10b981; --bad:#ef4444; --muted:#94a3b8; --glass: rgba(255,255,255,0.03);
+    --text:#e6f0fb;
   }
-  html, body {
-    height: 100%; margin: 0; font-family: "Inter", system-ui, sans-serif;
-    background: radial-gradient(circle at top, #0b132b, #060b16);
-    color: var(--text);
-  }
-  body {
-    display: flex; align-items: center; justify-content: center; padding: 12px;
-  }
-  .app {
-    width: 100%; max-width: 800px;
-    background: linear-gradient(180deg, var(--card), #0b1220);
-    border-radius: 20px; overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,.6);
-  }
-  header {
-    text-align: center;
-    padding: 18px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
-  header h1 { margin: 0; font-size: 22px; color: var(--accent); }
-  main { padding: 16px; display: grid; grid-template-columns: 1fr 340px; gap: 12px; }
-  @media(max-width:850px) { main { grid-template-columns: 1fr; } }
-  .panel {
-    background: rgba(255,255,255,0.02);
-    border-radius: 12px;
-    padding: 12px;
-  }
-  .log {
-    background: rgba(0,0,0,0.2);
-    padding: 10px; border-radius: 10px;
-    height: 220px; overflow-y: auto; font-size: 14px;
-  }
-  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); gap: 8px; }
-  .stat {
-    background: rgba(255,255,255,0.03);
-    border-radius: 10px; text-align: center;
-    padding: 8px; font-size: 14px;
-  }
-  .hpbar {
-    height: 10px;
-    background: rgba(255,255,255,.1);
-    border-radius: 999px;
-    overflow: hidden;
-    margin-top: 4px;
-  }
-  .hpfill {
-    height: 100%;
-    background: linear-gradient(90deg,var(--good),var(--accent));
-    width: 100%;
-    transition: width 0.3s;
-  }
-  button {
-    padding: 10px 12px; border: none; border-radius: 10px;
-    font-weight: 600; cursor: pointer;
-    transition: 0.2s; font-size: 15px;
-  }
-  button:hover { transform: translateY(-2px); }
-  .primary {
-    background: linear-gradient(180deg, var(--accent), var(--accent-dark));
-    color: #012a3a;
-  }
-  .secondary {
-    background: transparent; border: 1px solid rgba(255,255,255,0.1);
-    color: var(--accent);
-  }
-  .muted-btn {
-    background: rgba(255,255,255,0.04);
-    color: var(--muted);
-  }
-  .action-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-  .small-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 4px; }
+  html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;color:var(--text);background:linear-gradient(180deg,#041226 0%, #06121b 100%);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:920px;margin:12px auto;padding:12px}
+  .app{background:linear-gradient(180deg,var(--card),#071827);border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(2,6,23,.7)}
+  header{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;gap:12px;justify-content:space-between}
+  header h1{margin:0;font-size:18px;color:var(--accent)}
+  header .small{color:var(--muted);font-size:13px}
+  main{display:grid;grid-template-columns:1fr 360px;gap:12px;padding:12px}
+  @media(max-width:880px){main{grid-template-columns:1fr}}
+  .panel{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:12px;border-radius:10px;min-height:120px}
+  .row{display:flex;gap:10px;align-items:center}
+  .col{display:flex;flex-direction:column;gap:8px}
+  .center{text-align:center}
+  .hero-card, .enemy-card{background:var(--panel);border-radius:12px;padding:12px;display:flex;gap:12px;align-items:center}
+  .avatar {width:86px;height:86px;border-radius:12px;background:linear-gradient(180deg,#071833,#0e2b48);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 -6px 18px rgba(0,0,0,.6)}
+  .avatar svg{width:64px;height:64px}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+  .stat{background:var(--glass);border-radius:10px;padding:8px;font-size:14px;text-align:center}
+  .hpbar{height:12px;border-radius:999px;background:rgba(255,255,255,0.06);overflow:hidden}
+  .hpfill{height:100%;background:linear-gradient(90deg,var(--good),var(--accent));transition:width .28s}
+  .xpbar{height:8px;border-radius:999px;background:rgba(255,255,255,0.04);overflow:hidden}
+  .xpfill{height:100%;background:linear-gradient(90deg,#fbbf24,#f97316);transition:width .3s}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  button{padding:10px 12px;border-radius:10px;border:0;font-weight:700;cursor:pointer}
+  .btn-primary{background:linear-gradient(180deg,var(--accent),var(--accent-2));color:#022a33;box-shadow:0 6px 24px rgba(3,35,45,.35)}
+  .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--accent)}
+  .btn-muted{background:rgba(255,255,255,0.03);color:var(--muted)}
+  .log{background:rgba(0,0,0,0.12);border-radius:8px;padding:10px;height:220px;overflow:auto;font-size:14px}
+  .log .entry{margin-bottom:6px}
+  .shop-item,.inv-item{background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;display:flex;justify-content:space-between;align-items:center}
+  .small-note{font-size:12px;color:var(--muted)}
+  footer{padding:8px 12px;border-top:1px solid rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center}
+  .flex-between{display:flex;justify-content:space-between;align-items:center}
+  /* responsive avatar & enemy */
+  .enemy-avatar{width:110px;height:110px;border-radius:10px;background:linear-gradient(180deg,#091a1f,#07101a);display:flex;align-items:center;justify-content:center}
+  .muted{color:var(--muted)}
+  .danger{color:var(--bad)}
+  .good{color:var(--good)}
+  /* small helper */
+  .pill{padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.02);font-weight:700}
 </style>
 </head>
 <body>
-<div class="app">
-  <header>
-    <h1>⚔️ Pocket RPG</h1>
-    <div class="small-note">A lightweight mobile text RPG</div>
-  </header>
-
-  <main>
-    <section class="panel">
-      <div id="setupArea">
-        <div style="text-align:center">
-          <input id="playerName" type="text" placeholder="Enter hero name" style="width:90%;padding:10px;border-radius:8px;background:#0f172a;border:1px solid rgba(255,255,255,.08);color:white;">
-          <div style="height:10px"></div>
-          <select id="playerClass" style="width:90%;padding:10px;border-radius:8px;background:#0f172a;border:1px solid rgba(255,255,255,.08);color:white;">
-            <option value="warrior">Warrior — high HP, medium damage</option>
-            <option value="rogue">Rogue — agile, high crit chance</option>
-            <option value="mage">Mage — fragile but powerful</option>
-          </select>
-          <div style="height:10px"></div>
-          <button id="startBtn" class="primary" style="width:90%">Start Adventure</button>
-          <div class="small-note">Progress auto-saves in your browser.</div>
+<div class="wrap">
+  <div class="app" id="app">
+    <header>
+      <div>
+        <h1>⚔️ Pocket RPG — Visual Edition</h1>
+        <div class="small muted">Touch-friendly — Mobile optimized</div>
+      </div>
+      <div class="flex-between" style="gap:8px">
+        <div class="small-note muted" id="saveIndicator">Not saved</div>
+        <div style="display:flex;gap:6px">
+          <button class="btn-ghost" id="exportBtn">Export</button>
+          <button class="btn-ghost" id="importBtn">Import</button>
         </div>
       </div>
+    </header>
 
-      <div id="gameArea" style="display:none">
-        <div id="playerStats" class="stat-grid"></div>
-        <div class="log" id="log"></div>
-        <div id="actions" class="action-row">
-          <button id="fightBtn" class="primary">Fight</button>
-          <button id="shopBtn" class="secondary">Shop</button>
-          <button id="restBtn" class="secondary">Rest</button>
-          <button id="saveBtn" class="muted-btn">Save</button>
+    <main>
+      <!-- Left: Game view -->
+      <section class="panel">
+        <!-- Setup / In-game top -->
+        <div id="setupBlock" class="col center">
+          <div style="width:92%">
+            <input id="playerName" placeholder="Enter hero name" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);font-weight:700">
+            <div style="height:8px"></div>
+            <select id="playerClass" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)">
+              <option value="warrior">Warrior — tanky</option>
+              <option value="rogue">Rogue — crits</option>
+              <option value="mage">Mage — powerful spells</option>
+            </select>
+            <div style="height:8px"></div>
+            <button id="startBtn" class="btn-primary" style="width:100%">Start Adventure</button>
+            <div class="small-note" style="margin-top:8px">Progress saves in browser automatically.</div>
+          </div>
         </div>
-      </div>
-    </section>
 
-    <aside class="panel">
-      <div style="text-align:center;font-weight:600;">🏪 Shop & Inventory</div>
-      <div id="shop" style="margin-top:10px;"></div>
-      <hr style="border:1px solid rgba(255,255,255,0.05);margin:10px 0;">
-      <div><strong>🎒 Inventory</strong></div>
-      <div id="inventoryList" style="margin-top:6px;"></div>
-    </aside>
-  </main>
+        <div id="gameBlock" style="display:none">
+          <!-- hero + enemy panels -->
+          <div class="row" style="justify-content:space-between">
+            <div class="hero-card" style="flex:1;gap:12px">
+              <div class="avatar" id="heroAvatar" title="Hero avatar">
+                <!-- SVG will be injected -->
+              </div>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div>
+                    <div id="heroName" style="font-weight:800"></div>
+                    <div id="heroClass" class="muted small-note"></div>
+                  </div>
+                  <div class="pill" id="goldPill">💰 0</div>
+                </div>
 
-  <footer class="small-note" style="padding:10px;border-top:1px solid rgba(255,255,255,.05);">
-    <span>Made with ❤️ for mobile</span>
-  </footer>
+                <div style="height:8px"></div>
+                <div id="heroHpText" style="font-weight:700">HP</div>
+                <div class="hpbar"><div class="hpfill" id="heroHpFill" style="width:100%"></div></div>
+
+                <div style="height:8px"></div>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <div class="pill" id="atkPill">⚔️ 0</div>
+                  <div class="pill" id="lvlPill">⭐ 1</div>
+                  <div class="pill" id="xpPill">XP</div>
+                </div>
+                <div style="height:8px"></div>
+                <div class="xpbar"><div class="xpfill" id="heroXpFill" style="width:0%"></div></div>
+              </div>
+            </div>
+
+            <div class="enemy-card" style="width:320px;flex-shrink:0">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                  <div id="enemyName" style="font-weight:800">—</div>
+                  <div id="enemyInfo" class="muted small-note">No enemy</div>
+                </div>
+                <div class="enemy-avatar" id="enemyAvatar"><!-- svg --> </div>
+              </div>
+
+              <div style="height:8px"></div>
+              <div id="enemyHpText" style="font-weight:700">Enemy HP</div>
+              <div class="hpbar"><div class="hpfill" id="enemyHpFill" style="width:0%"></div></div>
+
+              <div style="height:8px"></div>
+              <div style="display:flex;gap:8px">
+                <div class="pill" id="enemyAtk">⚔️ 0</div>
+                <div class="pill" id="enemyReward">💰 0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- actions -->
+          <div class="actions" style="margin-top:12px">
+            <button id="fightBtn" class="btn-primary">Attack</button>
+            <button id="defendBtn" class="btn-ghost">Defend</button>
+            <button id="potionBtn" class="btn-ghost">Use Potion</button>
+            <button id="runBtn" class="btn-muted">Run</button>
+            <button id="shopToggle" class="btn-ghost" style="margin-left:auto">Shop</button>
+            <button id="restBtn" class="btn-ghost">Rest (10g)</button>
+            <button id="saveBtn" class="btn-muted">Save</button>
+          </div>
+
+          <!-- combat log -->
+          <div style="height:10px"></div>
+          <div class="log" id="log"></div>
+        </div>
+      </section>
+
+      <!-- Right: shop & inventory -->
+      <aside class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:800">🏪 Shop</div>
+          <div class="small-note muted">Buy items to help</div>
+        </div>
+        <div id="shopList" style="margin-top:10px"></div>
+
+        <div style="height:12px"></div>
+        <div style="font-weight:800">🎒 Inventory</div>
+        <div id="inventoryList" style="margin-top:8px"></div>
+
+        <div style="height:14px"></div>
+        <div style="font-weight:800">⚙️ Controls</div>
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+          <button id="exportSave" class="btn-ghost">Export Save</button>
+          <button id="importSave" class="btn-ghost">Import Save</button>
+          <button id="resetBtn" class="btn-muted">Reset</button>
+        </div>
+        <div style="height:8px"></div>
+        <div class="small-note muted">Tip: Export to backup your progress.</div>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="small-note muted">Made with ❤️ — tap Attack to begin combat</div>
+      <div class="small-note muted" id="versionTag">v1.2 — visual & organized</div>
+    </footer>
+  </div>
 </div>
 
 <script>
-const startBtn = document.getElementById("startBtn");
-const setupArea = document.getElementById("setupArea");
-const gameArea = document.getElementById("gameArea");
-const log = document.getElementById("log");
-const playerStats = document.getElementById("playerStats");
-const shopDiv = document.getElementById("shop");
-const invList = document.getElementById("inventoryList");
+/* ========== Organized Visual RPG Engine (Single-file) ==========
 
-let player = {};
-let enemy = null;
-let inventory = [];
+Sections:
+- Data (items, enemies)
+- Helpers (DOM, random)
+- State (player, enemy, inventory)
+- UI rendering (update hero/enemy panels, shop, inventory)
+- Actions (start, fight, defend, potion, run, shop buy, rest)
+- Save / Load / Export / Import
+- Level up and XP system
 
-function logMsg(msg) {
-  log.innerHTML += `<div>${msg}</div>`;
-  log.scrollTop = log.scrollHeight;
-}
+Images: small inline SVGs used for hero and enemy icons (no external network).
+*/
 
-// Start button
-startBtn.addEventListener("click", () => {
-  const name = document.getElementById("playerName").value.trim();
-  const pClass = document.getElementById("playerClass").value;
-  if (!name) return alert("Please enter your hero name!");
+// ---------------- Data ----------------
+const ITEMS = [
+  { id: 'potion', name: 'Health Potion', desc: 'Heals 40 HP', price: 18, heal: 40 },
+  { id: 'superPotion', name: 'Super Potion', desc: 'Heals 90 HP', price: 45, heal: 90 },
+  { id: 'ironSword', name: 'Iron Sword', desc: '+4 Attack (equip)', price: 80, equip: { atk: 4 } },
+];
 
-  player = {
-    name,
-    class: pClass,
-    hp: pClass === "warrior" ? 120 : pClass === "rogue" ? 90 : 70,
-    maxHp: pClass === "warrior" ? 120 : pClass === "rogue" ? 90 : 70,
-    atk: pClass === "warrior" ? 15 : pClass === "rogue" ? 18 : 25,
-    gold: 50,
-    level: 1,
-    xp: 0
+const ENEMY_TEMPLATES = [
+  { id: 'goblin', name: 'Goblin', baseHp: 40, atk: 8, reward: 18, svg: 'goblin' },
+  { id: 'slime', name: 'Slime', baseHp: 30, atk: 5, reward: 10, svg: 'slime' },
+  { id: 'wolf', name: 'Wolf', baseHp: 60, atk: 12, reward: 28, svg: 'wolf' },
+  { id: 'orc', name: 'Orc', baseHp: 100, atk: 16, reward: 55, svg: 'orc' },
+  { id: 'skeleton', name: 'Skeleton', baseHp: 80, atk: 14, reward: 40, svg: 'skeleton' },
+];
+
+// ---------------- Helpers ----------------
+const qs = sel => document.querySelector(sel);
+const qsa = sel => Array.from(document.querySelectorAll(sel));
+const randInt = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+
+function svgFor(name){
+  // Minimal inline SVG icons (monochrome shapes)
+  const svgs = {
+    hero: `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="20" r="10" fill="#66c8ff"/>
+        <rect x="12" y="34" width="40" height="18" rx="6" fill="#7dd3fc"/>
+      </svg>`,
+    goblin: `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="22" width="48" height="28" rx="8" fill="#7ee787"/>
+        <circle cx="22" cy="18" r="8" fill="#6fdc7a"/>
+        <circle cx="42" cy="18" r="8" fill="#6fdc7a"/>
+      </svg>`,
+    slime: `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 38 Q32 8 56 38 Q44 54 32 52 Q20 54 8 38 Z" fill="#9be3ff"/>
+      </svg>`,
+    wolf: `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <path d="M48 22 L56 18 L50 30 L56 38 L44 36 L36 44 L30 36 L18 38 L24 30 L18 18 L28 22 L32 14 Z" fill="#cbd5e1"/>
+      </svg>`,
+    orc: `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="18" width="44" height="30" rx="6" fill="#8bde99"/>
+        <rect x="22" y="12" width="20" height="12" rx="6" fill="#6ccf6a"/>
+      </svg>`,
+    skeleton: `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="18" r="8" fill="#ffffff"/>
+        <rect x="18" y="30" width="28" height="22" rx="4" fill="#f3f4f6"/>
+      </svg>`,
   };
-
-  setupArea.style.display = "none";
-  gameArea.style.display = "block";
-  log.innerHTML = `<div>Welcome, <b>${name}</b> the ${pClass}!</div>`;
-  updateStats();
-});
-
-// Update player stats + HP bar
-function updateStats() {
-  const hpPercent = Math.max(0, (player.hp / player.maxHp) * 100);
-  playerStats.innerHTML = `
-    <div class="stat">❤️ HP: ${player.hp}/${player.maxHp}
-      <div class="hpbar"><div class="hpfill" style="width:${hpPercent}%;"></div></div>
-    </div>
-    <div class="stat">⚔️ ATK: ${player.atk}</div>
-    <div class="stat">💰 Gold: ${player.gold}</div>
-    <div class="stat">⭐ Level: ${player.level}</div>
-  `;
+  return svgs[name] || svgs.hero;
 }
 
-// Fight logic
-document.getElementById("fightBtn").addEventListener("click", () => {
-  if (!enemy) {
-    enemy = {
-      name: ["Goblin", "Slime", "Wolf", "Orc", "Skeleton"][Math.floor(Math.random() * 5)],
-      hp: Math.floor(Math.random() * 60) + 40,
-      atk: Math.floor(Math.random() * 10) + 5
-    };
-    logMsg(`A wild <b>${enemy.name}</b> appears!`);
+// ---------------- State ----------------
+let state = {
+  player: null,       // object after start or load
+  inventory: [],      // items ids
+  equipped: {},       // e.g. { weapon: 'ironSword' }
+  enemy: null,        // live enemy object
+  inCombat: false,
+  autosaveTimer: null,
+};
+
+// XP & Level helpers
+function xpToLevel(l){ return 50 + (l-1)*50; }
+
+// ---------------- DOM elements ----------------
+const dom = {
+  setupBlock: qs('#setupBlock'),
+  gameBlock: qs('#gameBlock'),
+  startBtn: qs('#startBtn'),
+  playerName: qs('#playerName'),
+  playerClass: qs('#playerClass'),
+
+  heroAvatar: qs('#heroAvatar'),
+  heroName: qs('#heroName'),
+  heroClass: qs('#heroClass'),
+  heroHpText: qs('#heroHpText'),
+  heroHpFill: qs('#heroHpFill'),
+  heroXpFill: qs('#heroXpFill'),
+  goldPill: qs('#goldPill'),
+  atkPill: qs('#atkPill'),
+  lvlPill: qs('#lvlPill'),
+
+  enemyAvatar: qs('#enemyAvatar'),
+  enemyName: qs('#enemyName'),
+  enemyInfo: qs('#enemyInfo'),
+  enemyHpFill: qs('#enemyHpFill'),
+  enemyAtk: qs('#enemyAtk'),
+  enemyReward: qs('#enemyReward'),
+
+  fightBtn: qs('#fightBtn'),
+  defendBtn: qs('#defendBtn'),
+  potionBtn: qs('#potionBtn'),
+  runBtn: qs('#runBtn'),
+  shopToggle: qs('#shopToggle'),
+  restBtn: qs('#restBtn'),
+  saveBtn: qs('#saveBtn'),
+
+  log: qs('#log'),
+  shopList: qs('#shopList'),
+  inventoryList: qs('#inventoryList'),
+
+  exportBtn: qs('#exportBtn'),
+  importBtn: qs('#importBtn'),
+  exportSave: qs('#exportSave'),
+  importSave: qs('#importSave'),
+  resetBtn: qs('#resetBtn'),
+  saveIndicator: qs('#saveIndicator'),
+};
+
+// ---------------- UI Rendering ----------------
+function renderHero(){
+  const p = state.player;
+  if(!p) return;
+  dom.heroAvatar.innerHTML = svgFor('hero');
+  dom.heroName.textContent = p.name;
+  dom.heroClass.textContent = `${p.class} • ${p.classSpecial || ''}`;
+  dom.goldPill.textContent = `💰 ${p.gold}`;
+  dom.atkPill.textContent = `⚔️ ${p.atk + (state.equipped.weapon? (ITEMS.find(i=>i.id===state.equipped.weapon)?.equip?.atk || 0) : 0)}`;
+  dom.lvlPill.textContent = `⭐ ${p.level}`;
+  const hpPercent = Math.round((p.hp / p.maxHp) * 100);
+  dom.heroHpFill.style.width = `${hpPercent}%`;
+  dom.heroHpText.textContent = `HP: ${p.hp} / ${p.maxHp}`;
+  const xpPercent = Math.round((p.xp / xpToLevel(p.level)) * 100);
+  dom.heroXpFill.style.width = `${xpPercent}%`;
+  dom.saveIndicator && (dom.saveIndicator.textContent = 'Unsaved');
+}
+
+function renderEnemy(){
+  const e = state.enemy;
+  if(!e){
+    dom.enemyName.textContent = '—';
+    dom.enemyInfo.textContent = 'No enemy';
+    dom.enemyAvatar.innerHTML = '';
+    dom.enemyHpFill.style.width = `0%`;
+    dom.enemyAtk.textContent = '⚔️ 0';
+    dom.enemyReward.textContent = '💰 0';
+    return;
   }
+  dom.enemyAvatar.innerHTML = svgFor(e.svg);
+  dom.enemyName.textContent = e.name;
+  dom.enemyInfo.textContent = `Level ${e.level}`;
+  const hpPercent = Math.round((e.hp / e.maxHp) * 100);
+  dom.enemyHpFill.style.width = `${hpPercent}%`;
+  dom.enemyHpText && (dom.enemyHpText.textContent = `Enemy HP: ${e.hp} / ${e.maxHp}`);
+  dom.enemyAtk.textContent = `⚔️ ${e.atk}`;
+  dom.enemyReward.textContent = `💰 ${e.reward}`;
+}
 
-  const playerDmg = Math.floor(Math.random() * player.atk) + 5;
-  enemy.hp -= playerDmg;
-  logMsg(`You hit the ${enemy.name} for ${playerDmg} damage.`);
+function renderShop(){
+  dom.shopList.innerHTML = '';
+  ITEMS.forEach(it=>{
+    const node = document.createElement('div');
+    node.className = 'shop-item';
+    node.innerHTML = `<div>
+        <div style="font-weight:700">${it.name}</div>
+        <div class="small-note">${it.desc}</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div class="muted small-note">g ${it.price}</div>
+        <button class="btn-primary" data-buy="${it.id}">Buy</button>
+      </div>`;
+    dom.shopList.appendChild(node);
+  });
+  // attach listeners
+  dom.shopList.querySelectorAll('[data-buy]').forEach(btn=>{
+    btn.addEventListener('click', ()=> {
+      const id = btn.getAttribute('data-buy');
+      buyItem(id);
+    });
+  });
+}
 
-  if (enemy.hp <= 0) {
-    const reward = Math.floor(Math.random() * 30) + 20;
-    player.gold += reward;
-    player.xp += 15;
-    logMsg(`🎉 You defeated the ${enemy.name}! You earn ${reward} gold.`);
-    enemy = null;
-    updateStats();
+function renderInventory(){
+  dom.inventoryList.innerHTML = '';
+  if(state.inventory.length === 0) {
+    dom.inventoryList.innerHTML = '<div class="small-note muted">Empty</div>';
+    return;
+  }
+  state.inventory.forEach((itId, idx) => {
+    const it = ITEMS.find(i=>i.id===itId) || {name:itId};
+    const row = document.createElement('div');
+    row.className = 'inv-item';
+    row.innerHTML = `<div>${it.name}</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-ghost" data-use="${idx}">Use</button>
+        <button class="btn-muted" data-drop="${idx}">Drop</button>
+      </div>`;
+    dom.inventoryList.appendChild(row);
+  });
+  dom.inventoryList.querySelectorAll('[data-use]').forEach(b=>{
+    b.addEventListener('click', ()=> {
+      const i = +b.getAttribute('data-use');
+      useItem(i);
+    });
+  });
+  dom.inventoryList.querySelectorAll('[data-drop]').forEach(b=>{
+    b.addEventListener('click', ()=> {
+      const i = +b.getAttribute('data-drop');
+      state.inventory.splice(i,1);
+      renderInventory(); saveQuick();
+    });
+  });
+}
+
+// ---------------- Actions ----------------
+function startGame(){
+  const name = dom.playerName.value.trim();
+  const cls = dom.playerClass.value;
+  if(!name){ alert('Enter hero name'); return; }
+  const base = createPlayer(name, cls);
+  state.player = base;
+  state.inventory = ['potion','potion'];
+  state.equipped = {};
+  state.enemy = null;
+  state.inCombat = false;
+  dom.setupBlock.style.display = 'none';
+  dom.gameBlock.style.display = 'block';
+  renderHero();
+  renderEnemy();
+  renderShop();
+  renderInventory();
+  logClear();
+  logMsg(`Welcome, <b>${state.player.name}</b> the ${state.player.class}!`);
+  scheduleAutoSave();
+}
+
+function createPlayer(name, cls){
+  let p = { name, class: cls, level:1, xp:0, gold:60 };
+  if(cls==='warrior'){ p.maxHp = 150; p.hp = 150; p.atk = 14; p.classSpecial = 'Sturdy'; }
+  else if(cls==='rogue'){ p.maxHp = 110; p.hp = 110; p.atk = 16; p.classSpecial = 'Agile'; }
+  else { p.maxHp = 90; p.hp = 90; p.atk = 20; p.classSpecial = 'Arcane'; }
+  return p;
+}
+
+function spawnEnemy(){
+  if(state.enemy) return;
+  const tpl = ENEMY_TEMPLATES[randInt(0, ENEMY_TEMPLATES.length-1)];
+  const level = clamp(state.player.level + randInt(-1,1), 1, 10);
+  const hp = Math.max(10, Math.floor(tpl.baseHp * (1 + (level-1)*0.12)));
+  const atk = Math.max(1, Math.floor(tpl.atk * (1 + (level-1)*0.08)));
+  state.enemy = { name: tpl.name, svg: tpl.svg, level, hp, maxHp: hp, atk, reward: tpl.reward + (level-1)*5 };
+  state.inCombat = true;
+  renderEnemy();
+  logMsg(`A wild <b>${state.enemy.name}</b> appears! (Lvl ${state.enemy.level})`);
+}
+
+function playerAttack(){
+  if(!state.player) return;
+  if(!state.enemy) { spawnEnemy(); return; } // first click spawns
+  // compute damage
+  const weaponBonus = state.equipped.weapon ? (ITEMS.find(i=>i.id===state.equipped.weapon)?.equip?.atk || 0) : 0;
+  const baseAtk = state.player.atk + weaponBonus;
+  let dmg = Math.floor(Math.random() * (baseAtk / 2)) + Math.ceil(baseAtk * 0.6);
+  // crit chance for rogue
+  if(state.player.class === 'rogue' && Math.random() < 0.18){
+    dmg = Math.round(dmg * 1.6);
+    logMsg(`<span class="good">CRIT! You strike hard for ${dmg} damage!</span>`);
+  } else {
+    logMsg(`You hit the ${state.enemy.name} for <b>${dmg}</b> damage.`);
+  }
+  state.enemy.hp = Math.max(0, state.enemy.hp - dmg);
+  renderEnemy();
+
+  if(state.enemy.hp <= 0){
+    // victory
+    const reward = state.enemy.reward;
+    const xpGain = 15 + state.enemy.level * 5;
+    state.player.gold += reward;
+    state.player.xp += xpGain;
+    logMsg(`<span class="good">🎉 You defeated the ${state.enemy.name}! +${reward} gold, +${xpGain} XP</span>`);
+    state.enemy = null;
+    state.inCombat = false;
+    handleLevelUp();
+    renderHero();
+    renderEnemy();
+    renderInventory();
+    saveQuick();
     return;
   }
 
-  // Enemy attacks back
-  const enemyDmg = Math.floor(Math.random() * enemy.atk) + 2;
-  player.hp -= enemyDmg;
-  logMsg(`The ${enemy.name} hits you for ${enemyDmg} damage!`);
+  // enemy retaliates
+  setTimeout(()=> enemyAttack(false), 350);
+}
 
-  if (player.hp <= 0) {
-    player.hp = 0;
-    updateStats();
-    logMsg(`💀 You were defeated! Game Over.`);
-    player.gold = Math.max(0, player.gold - 20);
-    logMsg(`You lose 20 gold and wake up at the inn...`);
-    player.hp = player.maxHp;
+function enemyAttack(isDefended){
+  if(!state.enemy || !state.player) return;
+  let atk = state.enemy.atk;
+  const damage = Math.max(1, Math.floor(Math.random() * (atk / 2)) + Math.ceil(atk * 0.6) - (isDefended?4:0));
+  state.player.hp = Math.max(0, state.player.hp - damage);
+  logMsg(`<span class="danger">The ${state.enemy.name} hits you for ${damage} damage.</span>`);
+  renderHero();
+  if(state.player.hp <= 0){
+    onPlayerDeath();
+  } else {
+    saveQuick();
   }
-  updateStats();
-});
+}
 
-// Shop logic
-document.getElementById("shopBtn").addEventListener("click", () => {
-  shopDiv.innerHTML = `
-    <div class="shop-item">
-      <span>🧴 Potion (heal 30 HP)</span>
-      <button class="primary" onclick="buyItem('potion',20)">Buy - 20g</button>
-    </div>
-  `;
-  logMsg("You browse the shop items.");
-});
+function defendAction(){
+  if(!state.enemy){ logMsg('No enemy to defend from — spawn one by Attack!'); return; }
+  logMsg('You brace for the incoming attack (defend reduces damage).');
+  setTimeout(()=> enemyAttack(true), 300);
+}
 
-function buyItem(item, cost) {
-  if (player.gold < cost) {
-    logMsg("❌ Not enough gold!");
+function usePotionFromButton(){
+  if(state.inventory.includes('superPotion') || state.inventory.includes('potion')){
+    // prefer super
+    const idx = state.inventory.indexOf(state.inventory.includes('superPotion') ? 'superPotion' : 'potion');
+    useItem(idx);
+  } else {
+    logMsg('No potions in inventory. Visit shop.');
+  }
+}
+
+function runAction(){
+  if(!state.enemy){ logMsg('No enemy to run from.'); return; }
+  const chance = Math.random();
+  if(chance < 0.55){
+    logMsg('You successfully ran away.');
+    state.enemy = null;
+    state.inCombat = false;
+    renderEnemy();
+    saveQuick();
+  } else {
+    logMsg('Failed to run! The enemy attacks as you flee.');
+    enemyAttack(false);
+  }
+}
+
+function buyItem(itemId){
+  const it = ITEMS.find(i=>i.id===itemId);
+  if(!it){ logMsg('Item not found'); return; }
+  if(state.player.gold < it.price){ logMsg('Not enough gold.'); return; }
+  state.player.gold -= it.price;
+  // equip or add to inventory
+  if(it.equip){
+    state.equipped.weapon = it.id;
+    logMsg(`You bought and equipped ${it.name}.`);
+  } else {
+    state.inventory.push(it.id);
+    logMsg(`You bought ${it.name}.`);
+  }
+  renderHero(); renderInventory(); renderShop();
+  saveQuick();
+}
+
+function useItem(index){
+  const id = state.inventory[index];
+  if(!id) return;
+  const it = ITEMS.find(i=>i.id===id);
+  if(!it){ state.inventory.splice(index,1); renderInventory(); saveQuick(); return; }
+  if(it.heal){
+    const before = state.player.hp;
+    state.player.hp = Math.min(state.player.maxHp, state.player.hp + it.heal);
+    logMsg(`You used ${it.name}. Healed ${state.player.hp - before} HP.`);
+    state.inventory.splice(index,1);
+    renderInventory();
+    renderHero();
+    saveQuick();
     return;
   }
-  player.gold -= cost;
-  inventory.push(item);
-  logMsg(`You bought a ${item}.`);
-  updateInventory();
-  updateStats();
+  // fallback
+  logMsg(`Used ${it.name}.`);
+  state.inventory.splice(index,1);
+  renderInventory(); saveQuick();
 }
 
-function updateInventory() {
-  invList.innerHTML = inventory.map((item, i) => `
-    <div class="inv-item">
-      <span>${item}</span>
-      <button class="secondary" onclick="useItem(${i})">Use</button>
-    </div>
-  `).join("");
-}
-
-// Use potion
-function useItem(i) {
-  const item = inventory[i];
-  if (item === "potion") {
-    player.hp = Math.min(player.maxHp, player.hp + 30);
-    logMsg("🧴 You used a potion and healed 30 HP.");
-  }
-  inventory.splice(i, 1);
-  updateInventory();
-  updateStats();
-}
-
-// Rest logic
-document.getElementById("restBtn").addEventListener("click", () => {
+function restAction(){
   const cost = 10;
-  if (player.gold < cost) {
-    logMsg("❌ Not enough gold to rest!");
-    return;
-  }
-  player.gold -= cost;
-  player.hp = player.maxHp;
-  logMsg(`💤 You rested at the inn for ${cost} gold. HP fully restored.`);
-  updateStats();
-});
+  if(state.player.gold < cost){ logMsg('Not enough gold to rest.'); return; }
+  state.player.gold -= cost;
+  state.player.hp = state.player.maxHp;
+  logMsg(`You rested at the inn for ${cost} gold. HP restored.`);
+  renderHero();
+  saveQuick();
+}
 
-// Save + load
-document.getElementById("saveBtn").addEventListener("click", () => {
-  localStorage.setItem("pocketRPGsave", JSON.stringify({player, inventory}));
-  logMsg("💾 Game saved!");
-});
-
-window.addEventListener("load", () => {
-  const save = localStorage.getItem("pocketRPGsave");
-  if (save) {
-    const data = JSON.parse(save);
-    player = data.player;
-    inventory = data.inventory || [];
-    setupArea.style.display = "none";
-    gameArea.style.display = "block";
-    updateStats();
-    updateInventory();
-    logMsg(`Welcome back, ${player.name}!`);
+// Level up
+function handleLevelUp(){
+  while(state.player.xp >= xpToLevel(state.player.level)){
+    state.player.xp -= xpToLevel(state.player.level);
+    state.player.level += 1;
+    // increase stats
+    state.player.maxHp = Math.floor(state.player.maxHp * 1.12) + 6;
+    state.player.atk = Math.floor(state.player.atk * 1.06) + 1;
+    state.player.hp = state.player.maxHp;
+    logMsg(`<span class="good">Level up! You reached level ${state.player.level} — HP & ATK increased.</span>`);
   }
+  renderHero();
+}
+
+// Player death handling
+function onPlayerDeath(){
+  logMsg(`<span class="danger">💀 You were defeated... you lose some gold and awake at the inn.</span>`);
+  state.player.gold = Math.max(0, Math.floor(state.player.gold * 0.6));
+  state.player.hp = state.player.maxHp;
+  state.enemy = null;
+  state.inCombat = false;
+  renderHero();
+  renderEnemy();
+  saveQuick();
+}
+
+// ---------------- Logging ----------------
+function logMsg(html){
+  const div = document.createElement('div');
+  div.className = 'entry';
+  div.innerHTML = html;
+  dom.log.appendChild(div);
+  dom.log.scrollTop = dom.log.scrollHeight;
+}
+function logClear(){ dom.log.innerHTML = ''; }
+
+// ---------------- Save / Load ----------------
+function saveQuick(){
+  const save = {
+    player: state.player,
+    inventory: state.inventory,
+    equipped: state.equipped,
+  };
+  localStorage.setItem('pocketRPGsave', JSON.stringify(save));
+  dom.saveIndicator.textContent = 'Saved';
+  clearTimeout(state.autosaveTimer);
+  state.autosaveTimer = setTimeout(()=> dom.saveIndicator.textContent = 'Unsaved', 2000);
+}
+
+function loadSave(){
+  const raw = localStorage.getItem('pocketRPGsave');
+  if(!raw) return false;
+  try{
+    const data = JSON.parse(raw);
+    state.player = data.player;
+    state.inventory = data.inventory || [];
+    state.equipped = data.equipped || {};
+    state.enemy = null; state.inCombat = false;
+    dom.setupBlock.style.display = 'none';
+    dom.gameBlock.style.display = 'block';
+    renderHero(); renderEnemy(); renderInventory(); renderShop();
+    logMsg(`Welcome back, ${state.player.name}!`);
+    return true;
+  } catch(err){ console.error('load error', err); return false; }
+}
+
+function exportSaveToFile(){
+  const data = JSON.stringify({ player: state.player, inventory: state.inventory, equipped: state.equipped }, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${(state.player?.name || 'pocket_rpg')}_save.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importSaveFromFile(file){
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try{
+      const data = JSON.parse(e.target.result);
+      state.player = data.player;
+      state.inventory = data.inventory || [];
+      state.equipped = data.equipped || {};
+      dom.setupBlock.style.display = 'none';
+      dom.gameBlock.style.display = 'block';
+      renderHero(); renderEnemy(); renderInventory(); renderShop();
+      logMsg('Save imported.');
+      saveQuick();
+    } catch(err){ alert('Invalid save file'); }
+  };
+  reader.readAsText(file);
+}
+
+function resetGame(){
+  if(!confirm('Reset your save? This cannot be undone.')) return;
+  localStorage.removeItem('pocketRPGsave');
+  location.reload();
+}
+
+// ---------------- Events ----------------
+dom.startBtn.addEventListener('click', startGame);
+dom.fightBtn.addEventListener('click', playerAttack);
+dom.defendBtn.addEventListener('click', defendAction);
+dom.potionBtn.addEventListener('click', usePotionFromButton);
+dom.runBtn.addEventListener('click', runAction);
+dom.shopToggle.addEventListener('click', ()=> {
+  // toggle or show shop panel - we'll scroll to shop
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  dom.shopList.scrollIntoView({ behavior: 'smooth' });
+  logMsg('Opened the shop.');
 });
+dom.restBtn.addEventListener('click', restAction);
+dom.saveBtn.addEventListener('click', ()=> { saveQuick(); logMsg('Game saved.'); });
+
+dom.exportBtn.addEventListener('click', exportSaveToFile);
+dom.importBtn.addEventListener('click', ()=> {
+  const input = document.createElement('input'); input.type='file'; input.accept='application/json';
+  input.onchange = e => { const f = e.target.files[0]; if(f) importSaveFromFile(f); };
+  input.click();
+});
+dom.exportSave && dom.exportSave.addEventListener('click', exportSaveToFile);
+dom.importSave && dom.importSave.addEventListener('click', ()=> {
+  const input = document.createElement('input'); input.type='file'; input.accept='application/json';
+  input.onchange = e => { const f = e.target.files[0]; if(f) importSaveFromFile(f); };
+  input.click();
+});
+dom.resetBtn.addEventListener('click', resetGame);
+
+// Shop buy buttons attachment uses renderShop() which reattaches listeners
+function attachGlobalShortcuts(){
+  // keyboard (for desktop testing)
+  window.addEventListener('keydown', (e)=> {
+    if(e.key === 'a') playerAttack();
+    if(e.key === 'd') defendAction();
+  });
+}
+attachGlobalShortcuts();
+
+// ---------------- Init ----------------
+(function init(){
+  renderShop();
+  renderInventory();
+  if(loadSave()){
+    // loaded
+  } else {
+    // show setup
+    dom.setupBlock.style.display = 'flex';
+    dom.gameBlock.style.display = 'none';
+    logClear();
+  }
+})();
 </script>
 </body>
 </html>
