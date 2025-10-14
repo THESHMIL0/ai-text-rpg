@@ -53,6 +53,19 @@
     border-radius: 10px; text-align: center;
     padding: 8px; font-size: 14px;
   }
+  .hpbar {
+    height: 10px;
+    background: rgba(255,255,255,.1);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .hpfill {
+    height: 100%;
+    background: linear-gradient(90deg,var(--good),var(--accent));
+    width: 100%;
+    transition: width 0.3s;
+  }
   button {
     padding: 10px 12px; border: none; border-radius: 10px;
     font-weight: 600; cursor: pointer;
@@ -131,18 +144,24 @@ const setupArea = document.getElementById("setupArea");
 const gameArea = document.getElementById("gameArea");
 const log = document.getElementById("log");
 const playerStats = document.getElementById("playerStats");
+const shopDiv = document.getElementById("shop");
+const invList = document.getElementById("inventoryList");
 
 let player = {};
+let enemy = null;
+let inventory = [];
 
+function logMsg(msg) {
+  log.innerHTML += `<div>${msg}</div>`;
+  log.scrollTop = log.scrollHeight;
+}
+
+// Start button
 startBtn.addEventListener("click", () => {
   const name = document.getElementById("playerName").value.trim();
   const pClass = document.getElementById("playerClass").value;
-  if (!name) {
-    alert("Please enter your hero name!");
-    return;
-  }
+  if (!name) return alert("Please enter your hero name!");
 
-  // setup player based on class
   player = {
     name,
     class: pClass,
@@ -160,48 +179,134 @@ startBtn.addEventListener("click", () => {
   updateStats();
 });
 
+// Update player stats + HP bar
 function updateStats() {
+  const hpPercent = Math.max(0, (player.hp / player.maxHp) * 100);
   playerStats.innerHTML = `
-    <div class="stat">❤️ HP: ${player.hp}/${player.maxHp}</div>
+    <div class="stat">❤️ HP: ${player.hp}/${player.maxHp}
+      <div class="hpbar"><div class="hpfill" style="width:${hpPercent}%;"></div></div>
+    </div>
     <div class="stat">⚔️ ATK: ${player.atk}</div>
     <div class="stat">💰 Gold: ${player.gold}</div>
     <div class="stat">⭐ Level: ${player.level}</div>
   `;
 }
 
+// Fight logic
 document.getElementById("fightBtn").addEventListener("click", () => {
-  const dmg = Math.floor(Math.random() * player.atk) + 5;
-  const reward = Math.floor(Math.random() * 20) + 10;
-  player.gold += reward;
-  player.xp += 10;
-  log.innerHTML += `<div>You fought bravely and dealt ${dmg} damage! +${reward} gold earned.</div>`;
+  if (!enemy) {
+    enemy = {
+      name: ["Goblin", "Slime", "Wolf", "Orc", "Skeleton"][Math.floor(Math.random() * 5)],
+      hp: Math.floor(Math.random() * 60) + 40,
+      atk: Math.floor(Math.random() * 10) + 5
+    };
+    logMsg(`A wild <b>${enemy.name}</b> appears!`);
+  }
+
+  const playerDmg = Math.floor(Math.random() * player.atk) + 5;
+  enemy.hp -= playerDmg;
+  logMsg(`You hit the ${enemy.name} for ${playerDmg} damage.`);
+
+  if (enemy.hp <= 0) {
+    const reward = Math.floor(Math.random() * 30) + 20;
+    player.gold += reward;
+    player.xp += 15;
+    logMsg(`🎉 You defeated the ${enemy.name}! You earn ${reward} gold.`);
+    enemy = null;
+    updateStats();
+    return;
+  }
+
+  // Enemy attacks back
+  const enemyDmg = Math.floor(Math.random() * enemy.atk) + 2;
+  player.hp -= enemyDmg;
+  logMsg(`The ${enemy.name} hits you for ${enemyDmg} damage!`);
+
+  if (player.hp <= 0) {
+    player.hp = 0;
+    updateStats();
+    logMsg(`💀 You were defeated! Game Over.`);
+    player.gold = Math.max(0, player.gold - 20);
+    logMsg(`You lose 20 gold and wake up at the inn...`);
+    player.hp = player.maxHp;
+  }
   updateStats();
 });
 
+// Shop logic
 document.getElementById("shopBtn").addEventListener("click", () => {
-  log.innerHTML += `<div>You visit the shop. Nothing fancy yet!</div>`;
+  shopDiv.innerHTML = `
+    <div class="shop-item">
+      <span>🧴 Potion (heal 30 HP)</span>
+      <button class="primary" onclick="buyItem('potion',20)">Buy - 20g</button>
+    </div>
+  `;
+  logMsg("You browse the shop items.");
 });
 
+function buyItem(item, cost) {
+  if (player.gold < cost) {
+    logMsg("❌ Not enough gold!");
+    return;
+  }
+  player.gold -= cost;
+  inventory.push(item);
+  logMsg(`You bought a ${item}.`);
+  updateInventory();
+  updateStats();
+}
+
+function updateInventory() {
+  invList.innerHTML = inventory.map((item, i) => `
+    <div class="inv-item">
+      <span>${item}</span>
+      <button class="secondary" onclick="useItem(${i})">Use</button>
+    </div>
+  `).join("");
+}
+
+// Use potion
+function useItem(i) {
+  const item = inventory[i];
+  if (item === "potion") {
+    player.hp = Math.min(player.maxHp, player.hp + 30);
+    logMsg("🧴 You used a potion and healed 30 HP.");
+  }
+  inventory.splice(i, 1);
+  updateInventory();
+  updateStats();
+}
+
+// Rest logic
 document.getElementById("restBtn").addEventListener("click", () => {
+  const cost = 10;
+  if (player.gold < cost) {
+    logMsg("❌ Not enough gold to rest!");
+    return;
+  }
+  player.gold -= cost;
   player.hp = player.maxHp;
-  log.innerHTML += `<div>You rest and fully recover your HP.</div>`;
+  logMsg(`💤 You rested at the inn for ${cost} gold. HP fully restored.`);
   updateStats();
 });
 
+// Save + load
 document.getElementById("saveBtn").addEventListener("click", () => {
-  localStorage.setItem("pocketRPGsave", JSON.stringify(player));
-  log.innerHTML += `<div>💾 Game saved!</div>`;
+  localStorage.setItem("pocketRPGsave", JSON.stringify({player, inventory}));
+  logMsg("💾 Game saved!");
 });
 
-// auto-load saved data
 window.addEventListener("load", () => {
   const save = localStorage.getItem("pocketRPGsave");
   if (save) {
-    player = JSON.parse(save);
+    const data = JSON.parse(save);
+    player = data.player;
+    inventory = data.inventory || [];
     setupArea.style.display = "none";
     gameArea.style.display = "block";
     updateStats();
-    log.innerHTML = `<div>Welcome back, ${player.name}!</div>`;
+    updateInventory();
+    logMsg(`Welcome back, ${player.name}!`);
   }
 });
 </script>
