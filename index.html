@@ -1,428 +1,432 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrom Pool Game</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        #game-container {
-            position: relative;
-        }
-        #canvas {
-            border: 2px solid #333;
-            background-color: #8B4513; /* Brown wood-like color for board */
-        }
-        #turn-indicator {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            color: white;
-            font-size: 20px;
-        }
-        #score {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: white;
-            font-size: 20px;
-        }
-        #message {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            font-size: 24px;
-            text-align: center;
-        }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Pocket RPG — Simple Mobile RPG</title>
+<style>
+  :root{--bg:#0f1724;--card:#0b1220;--accent:#7dd3fc;--muted:#94a3b8;--good:#10b981;--bad:#ef4444;}
+  html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+  body{background:linear-gradient(180deg,#071127 0%, #071827 100%);color:#e6eef6;display:flex;align-items:center;justify-content:center;padding:16px}
+  .app{width:100%;max-width:820px;background:linear-gradient(180deg,var(--card),#061224);border-radius:14px;box-shadow:0 10px 30px rgba(2,6,23,.7);overflow:hidden}
+  header{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.03);display:flex;align-items:center;gap:10px}
+  header h1{margin:0;font-size:18px}
+  main{display:grid;grid-template-columns:1fr 380px;gap:12px;padding:12px}
+  @media(max-width:880px){main{grid-template-columns:1fr;}}
+  .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:10px;min-height:120px}
+  .log{height:220px;overflow:auto;padding:8px;background:rgba(0,0,0,0.15);border-radius:8px;font-size:14px}
+  .stats{display:flex;flex-wrap:wrap;gap:8px}
+  .stat{background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;min-width:110px;text-align:center}
+  .buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  button{flex:1;min-width:80px;padding:10px;border-radius:10px;border:0;background:linear-gradient(180deg,var(--accent),#3cc9ef);color:#012331;font-weight:700;font-size:15px;box-shadow:0 6px 14px rgba(0,0,0,.4)}
+  .secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--accent);font-weight:600}
+  .small{padding:8px;font-size:13px}
+  .muted{color:var(--muted);font-size:13px}
+  .center{text-align:center}
+  footer{padding:12px;border-top:1px solid rgba(255,255,255,.02);display:flex;gap:8px;align-items:center;justify-content:space-between}
+  .shop{display:flex;flex-direction:column;gap:8px}
+  .item{display:flex;align-items:center;justify-content:space-between;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02)}
+  input[type=text],select{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+  .big{font-size:16px;padding:12px}
+  .hpbar{height:10px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden}
+  .hpfill{height:100%;background:linear-gradient(90deg,#10b981,#7dd3fc)}
+  .danger{background:linear-gradient(90deg,#ef4444,#f97316)}
+  .action-row{display:flex;gap:8px;margin-top:8px}
+  .muted-btn{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.02);color:var(--muted)}
+  .small-note{font-size:12px;color:var(--muted)}
+</style>
 </head>
 <body>
-    <div id="game-container">
-        <canvas id="canvas" width="600" height="600"></canvas>
-        <div id="turn-indicator">Player 1's Turn (White)</div>
-        <div id="score">Player 1: 0 | Player 2: 0</div>
-        <div id="message"></div>
+<div class="app" id="app">
+  <header>
+    <h1>Pocket RPG</h1>
+    <div class="muted small-note">Tiny text-RPG — mobile-first</div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div id="setupArea">
+        <div class="center">
+          <input id="playerName" type="text" placeholder="Enter your name (e.g. Arin)" />
+          <div style="height:8px"></div>
+          <select id="playerClass" >
+            <option value="warrior">Warrior — high HP, medium damage</option>
+            <option value="rogue">Rogue — medium HP, higher crit chance</option>
+            <option value="mage">Mage — low HP, high damage spells</option>
+          </select>
+          <div style="height:8px"></div>
+          <button id="startBtn" class="big">Start Adventure</button>
+        </div>
+        <div style="height:12px"></div>
+        <div class="muted small-note">Tip: your progress is saved in the browser (localStorage).</div>
+      </div>
+
+      <div id="gameArea" style="display:none">
+        <div class="stats" id="playerStats"></div>
+
+        <div style="height:10px"></div>
+        <div class="log" id="log"></div>
+
+        <div class="action-row" id="actions">
+          <button id="fightBtn">Fight</button>
+          <button id="shopBtn" class="secondary">Shop</button>
+          <button id="restBtn" class="secondary">Rest</button>
+          <button id="saveBtn" class="muted-btn">Save</button>
+        </div>
+
+        <div id="combatActions" style="display:none" class="action-row">
+          <button id="attackBtn">Attack</button>
+          <button id="defendBtn" class="secondary">Defend</button>
+          <button id="potionBtn" class="secondary">Use Potion</button>
+          <button id="runBtn" class="secondary">Run</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="center"><strong>Shop & Inventory</strong></div>
+      <div style="height:10px"></div>
+      <div class="shop" id="shop">
+        <!-- items injected here -->
+      </div>
+
+      <div style="height:12px"></div>
+      <div><strong>Inventory</strong></div>
+      <div id="inventoryList" style="margin-top:8px"></div>
+    </aside>
+  </main>
+
+  <footer>
+    <div class="muted small-note">Made for mobile — paste into index.html</div>
+    <div>
+      <button id="exportBtn" class="secondary small">Export Save</button>
+      <button id="importBtn" class="secondary small">Import Save</button>
     </div>
+  </footer>
+</div>
 
-    <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const boardSize = 600;
-        const pocketRadius = 20;
-        const pieceRadius = 15;
-        const strikerRadius = 18;
-        const friction = 0.98; // Friction factor to slow down pieces
-        const pocketPositions = [
-            {x: 30, y: 30},
-            {x: boardSize - 30, y: 30},
-            {x: 30, y: boardSize - 30},
-            {x: boardSize - 30, y: boardSize - 30}
-        ];
+<script>
+/* Simple mobile-friendly RPG
+   - Save/load via localStorage
+   - Combat with enemies, XP, leveling, simple shop
+*/
 
-        // Colors
-        const boardColor = '#8B4513';
-        const lineColor = '#FFD700'; // Gold for lines
-        const whitePieceColor = '#FFFFFF';
-        const blackPieceColor = '#000000';
-        const queenColor = '#FF0000';
-        const strikerColor = '#00FFFF'; // Cyan for striker
+// ====== Data & Helpers ======
+const ITEMS = [
+  {id:'potion',name:'Health Potion',desc:'Restores 40 HP',price:15},
+  {id:'strongPotion',name:'Strong Potion',desc:'Restores 80 HP',price:40},
+  {id:'ironSword',name:'Iron Sword',desc:'+3 attack',price:60},
+];
 
-        let pieces = [];
-        let striker = {x: boardSize / 2, y: boardSize - 50, vx: 0, vy: 0, color: strikerColor, radius: strikerRadius, isStriker: true};
-        let currentPlayer = 1; // 1 for white, 2 for black
-        let scores = {1: 0, 2: 0};
-        let queenPocketed = false;
-        let isDragging = false;
-        let dragStartX, dragStartY;
-        let isMoving = false;
-        let message = '';
+const ENEMIES = [
+  {name:'Rat',hp:30,att:6,xp:12,gold:8},
+  {name:'Bandit',hp:55,att:10,xp:26,gold:18},
+  {name:'Wolf',hp:70,att:12,xp:34,gold:28},
+  {name:'Orc',hp:110,att:16,xp:70,gold:60},
+];
 
-        // Initialize pieces
-        function initPieces() {
-            pieces = [];
-            // Queen in center
-            pieces.push({x: boardSize / 2, y: boardSize / 2, vx: 0, vy: 0, color: queenColor, radius: pieceRadius, type: 'queen'});
+function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
 
-            // White and black pieces arranged in a pattern
-            const centerX = boardSize / 2;
-            const centerY = boardSize / 2;
-            const offset = pieceRadius * 2 + 5;
+// ====== Game State ======
+let state = {
+  player: null,
+  enemy: null,
+  inCombat: false,
+};
 
-            // Inner circle (alternating)
-            for (let i = 0; i < 6; i++) {
-                const angle = (Math.PI * 2 / 6) * i;
-                const x = centerX + Math.cos(angle) * offset;
-                const y = centerY + Math.sin(angle) * offset;
-                pieces.push({x, y, vx: 0, vy: 0, color: i % 2 === 0 ? whitePieceColor : blackPieceColor, radius: pieceRadius, type: i % 2 === 0 ? 'white' : 'black'});
-            }
+// ====== DOM ======
+const el = {
+  setupArea: document.getElementById('setupArea'),
+  gameArea: document.getElementById('gameArea'),
+  playerName: document.getElementById('playerName'),
+  playerClass: document.getElementById('playerClass'),
+  startBtn: document.getElementById('startBtn'),
+  playerStats: document.getElementById('playerStats'),
+  log: document.getElementById('log'),
+  fightBtn: document.getElementById('fightBtn'),
+  shopBtn: document.getElementById('shopBtn'),
+  restBtn: document.getElementById('restBtn'),
+  saveBtn: document.getElementById('saveBtn'),
+  combatActions: document.getElementById('combatActions'),
+  attackBtn: document.getElementById('attackBtn'),
+  defendBtn: document.getElementById('defendBtn'),
+  potionBtn: document.getElementById('potionBtn'),
+  runBtn: document.getElementById('runBtn'),
+  shop: document.getElementById('shop'),
+  inventoryList: document.getElementById('inventoryList'),
+  exportBtn: document.getElementById('exportBtn'),
+  importBtn: document.getElementById('importBtn'),
+};
 
-            // Outer circle (alternating, more pieces)
-            for (let i = 0; i < 12; i++) {
-                const angle = (Math.PI * 2 / 12) * i;
-                const x = centerX + Math.cos(angle) * offset * 2;
-                const y = centerY + Math.sin(angle) * offset * 2;
-                pieces.push({x, y, vx: 0, vy: 0, color: i % 2 === 0 ? blackPieceColor : whitePieceColor, radius: pieceRadius, type: i % 2 === 0 ? 'black' : 'white'});
-            }
-        }
+// ====== Player creation ======
+function newPlayer(name,cls){
+  let base = {name,level:1,xp:0,gold:50,inventory:{potion:2},equips:{attack:0}};
+  if(cls==='warrior'){
+    base.maxHp=140; base.hp=140; base.attack=12; base.crit=6;
+  } else if(cls==='rogue'){
+    base.maxHp=110; base.hp=110; base.attack=10; base.crit=14;
+  } else {
+    base.maxHp=85; base.hp=85; base.attack=14; base.crit=8;
+  }
+  return {...base,cls};
+}
 
-        // Draw the board
-        function drawBoard() {
-            ctx.fillStyle = boardColor;
-            ctx.fillRect(0, 0, boardSize, boardSize);
+// ====== Rendering ======
+function appendLog(text, color){
+  const p = document.createElement('div');
+  p.innerHTML = text;
+  if(color) p.style.color = color;
+  el.log.appendChild(p);
+  el.log.scrollTop = el.log.scrollHeight;
+}
+function renderStats(){
+  const p = state.player;
+  el.playerStats.innerHTML = `
+    <div class="stat"><strong>${p.name}</strong><div class="muted">${p.cls} • Lv ${p.level}</div></div>
+    <div class="stat"><div>HP</div><div style="height:8px"></div>
+      <div class="hpbar"><div class="hpfill" style="width:${(p.hp/p.maxHp)*100}%"></div></div>
+      <div class="muted">${p.hp} / ${p.maxHp}</div></div>
+    <div class="stat"><div>Attack</div><div style="font-weight:700">${p.attack + (p.equips.attack||0)}</div></div>
+    <div class="stat"><div>XP</div><div class="muted">${p.xp} / ${xpToLevel(p.level)}</div></div>
+    <div class="stat"><div>Gold</div><div style="font-weight:700">${p.gold}</div></div>
+  `;
+  renderInventory();
+}
+function renderShop(){
+  el.shop.innerHTML = '';
+  ITEMS.forEach(it=>{
+    const row = document.createElement('div'); row.className='item';
+    row.innerHTML = `<div><strong>${it.name}</strong><div class="muted small-note">${it.desc}</div></div>
+                     <div style="text-align:right">
+                       <div class="muted small-note">₹${it.price}</div>
+                       <div style="height:6px"></div>
+                       <button class="small" onclick="buyItem('${it.id}')">Buy</button>
+                     </div>`;
+    el.shop.appendChild(row);
+  });
+}
+function renderInventory(){
+  el.inventoryList.innerHTML = '';
+  const inv = state.player.inventory;
+  for(const k in inv){
+    const item = ITEMS.find(i=>i.id===k);
+    if(!item) continue;
+    const row = document.createElement('div'); row.className='item';
+    row.innerHTML = `<div><strong>${item.name}</strong><div class="muted small-note">${item.desc}</div></div>
+                     <div style="text-align:right">
+                       x${inv[k]} <div style="height:6px"></div>
+                       <button class="small" onclick="useItem('${k}')">Use</button>
+                     </div>`;
+    el.inventoryList.appendChild(row);
+  }
+  if(Object.keys(inv).length===0) el.inventoryList.innerHTML = '<div class="muted small-note">Empty</div>';
+}
 
-            // Draw corner pockets
-            ctx.fillStyle = '#000';
-            pocketPositions.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, pocketRadius, 0, Math.PI * 2);
-                ctx.fill();
-            });
+// ====== Game mechanics ======
+function xpToLevel(l){ return 30 + (l-1)*40; }
 
-            // Draw lines (for carrom board design)
-            ctx.strokeStyle = lineColor;
-            ctx.lineWidth = 2;
-            // Outer border lines
-            ctx.strokeRect(20, 20, boardSize - 40, boardSize - 40);
+function levelCheck(){
+  while(state.player.xp >= xpToLevel(state.player.level)){
+    state.player.xp -= xpToLevel(state.player.level);
+    state.player.level++;
+    state.player.maxHp += 12;
+    state.player.attack += 2;
+    state.player.hp = state.player.maxHp;
+    appendLog(`<strong>Level up! You reached level ${state.player.level}</strong>`, 'goldenrod');
+  }
+  renderStats();
+}
 
-            // Center circle
-            ctx.beginPath();
-            ctx.arc(boardSize / 2, boardSize / 2, 50, 0, Math.PI * 2);
-            ctx.stroke();
+function startCombat(){
+  if(state.inCombat) return;
+  state.inCombat = true;
+  state.enemy = JSON.parse(JSON.stringify(ENEMIES[randInt(0,ENEMIES.length-1)]));
+  appendLog(`<strong>Encounter: ${state.enemy.name} appears!</strong>`, '#fbbf24');
+  el.combatActions.style.display = 'flex';
+  el.actions.style.display = 'none';
+  renderStats();
+}
 
-            // Baseline for striker (bottom for player 1, top for player 2)
-            ctx.beginPath();
-            ctx.moveTo(100, boardSize - 50);
-            ctx.lineTo(boardSize - 100, boardSize - 50);
-            ctx.stroke();
+function endCombat(won){
+  state.inCombat = false;
+  el.combatActions.style.display = 'none';
+  el.actions.style.display = 'flex';
+  if(won){
+    appendLog(`<strong>You defeated the ${state.enemy.name}!</strong>`, '#a7f3d0');
+    state.player.xp += state.enemy.xp;
+    state.player.gold += state.enemy.gold;
+    levelCheck();
+  } else {
+    appendLog(`<strong>You fled or were defeated.</strong>`, 'var(--muted)');
+  }
+  state.enemy = null;
+  saveToStorage();
+  renderStats();
+}
 
-            ctx.beginPath();
-            ctx.moveTo(100, 50);
-            ctx.lineTo(boardSize - 100, 50);
-            ctx.stroke();
-        }
+function enemyTurn(defending=false){
+  if(!state.enemy || state.player.hp<=0) return;
+  const dmg = Math.max(1, state.enemy.att + randInt(-3,3) - (defending?4:0));
+  state.player.hp = clamp(state.player.hp - dmg, 0, state.player.maxHp);
+  appendLog(`Enemy ${state.enemy.name} hits you for ${dmg} damage.`);
+  if(state.player.hp <= 0){
+    appendLog(`<strong>You fell in battle...</strong>`, 'var(--bad)');
+    // lose some gold & xp
+    state.player.gold = Math.max(0, Math.floor(state.player.gold * 0.6));
+    state.player.xp = Math.max(0, state.player.xp - 5);
+    endCombat(false);
+  }
+  renderStats();
+}
 
-        // Draw a piece
-        function drawPiece(piece) {
-            ctx.beginPath();
-            ctx.arc(piece.x, piece.y, piece.radius, 0, Math.PI * 2);
-            ctx.fillStyle = piece.color;
-            ctx.fill();
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-        }
+// ====== Actions exposed to buttons ======
+window.buyItem = function(itemId){
+  const item = ITEMS.find(i=>i.id===itemId);
+  if(!item) return;
+  if(state.player.gold < item.price){ appendLog("Not enough gold."); return; }
+  state.player.gold -= item.price;
+  state.player.inventory[itemId] = (state.player.inventory[itemId]||0) + 1;
+  appendLog(`Bought ${item.name}.`);
+  renderStats();
+  saveToStorage();
+};
 
-        // Check collision between two circles
-        function checkCollision(p1, p2) {
-            const dx = p1.x - p2.x;
-            const dy = p1.y - p2.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            return dist < p1.radius + p2.radius;
-        }
+window.useItem = function(itemId){
+  const count = state.player.inventory[itemId]||0;
+  if(count<=0){ appendLog("No item to use."); return; }
+  if(itemId==='potion'){
+    state.player.hp = clamp(state.player.hp + 40, 0, state.player.maxHp);
+    appendLog("You used a Health Potion. +40 HP");
+  } else if(itemId==='strongPotion'){
+    state.player.hp = clamp(state.player.hp + 80, 0, state.player.maxHp);
+    appendLog("You used a Strong Potion. +80 HP");
+  } else if(itemId==='ironSword'){
+    state.player.equips.attack = 3;
+    appendLog("Equipped Iron Sword: +3 attack");
+  }
+  state.player.inventory[itemId] = count - 1;
+  if(state.player.inventory[itemId] <= 0) delete state.player.inventory[itemId];
+  renderStats();
+  saveToStorage();
+};
 
-        // Resolve collision (elastic)
-        function resolveCollision(p1, p2) {
-            const dx = p2.x - p1.x;
-            const dy = p2.y - p1.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            const nx = dx / dist;
-            const ny = dy / dist;
-            const relativeVx = p1.vx - p2.vx;
-            const relativeVy = p1.vy - p2.vy;
-            const speed = relativeVx * nx + relativeVy * ny;
+// start fight
+el.fightBtn.addEventListener('click', ()=> startCombat());
+el.shopBtn.addEventListener('click', ()=> { renderShop(); appendLog('Opened the shop.'); });
+el.restBtn.addEventListener('click', ()=>{
+  state.player.hp = state.player.maxHp;
+  appendLog('You rested and restored HP.');
+  renderStats(); saveToStorage();
+});
+el.saveBtn.addEventListener('click', ()=> { saveToStorage(); appendLog('Game saved.'); });
 
-            if (speed < 0) return; // Already separating
+// combat controls
+el.attackBtn.addEventListener('click', ()=>{
+  if(!state.inCombat||!state.enemy) return;
+  const player = state.player;
+  const crit = (Math.random()*100 < player.crit) ? 1.6 : 1.0;
+  let dmg = Math.round((player.attack + (player.equips.attack||0) + randInt(-3,3)) * crit);
+  state.enemy.hp = clamp(state.enemy.hp - dmg, 0, state.enemy.hp);
+  appendLog(`You hit ${state.enemy.name} for ${dmg}${crit>1? ' (CRIT!)':''}.`);
+  if(state.enemy.hp <= 0){
+    endCombat(true);
+    return;
+  }
+  enemyTurn(false);
+});
+el.defendBtn.addEventListener('click', ()=>{
+  appendLog('You brace for the enemy strike.');
+  enemyTurn(true);
+});
+el.potionBtn.addEventListener('click', ()=>{
+  useBestPotion();
+});
+el.runBtn.addEventListener('click', ()=>{
+  const success = Math.random() < 0.5;
+  appendLog(success ? 'You escaped!' : 'Could not escape!');
+  if(success) endCombat(false);
+  else enemyTurn(false);
+});
 
-            const impulse = 2 * speed / 2; // Assuming equal mass
-            p1.vx -= impulse * nx;
-            p1.vy -= impulse * ny;
-            p2.vx += impulse * nx;
-            p2.vy += impulse * ny;
-        }
+// import/export
+el.exportBtn.addEventListener('click', ()=>{
+  const data = JSON.stringify(state.player);
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `${state.player.name || 'rpg_save'}.json`;
+  a.click(); URL.revokeObjectURL(url);
+});
+el.importBtn.addEventListener('click', ()=>{
+  const input = document.createElement('input'); input.type='file'; input.accept='application/json';
+  input.onchange = e => {
+    const f = e.target.files[0];
+    if(!f) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try{
+        const json = JSON.parse(ev.target.result);
+        state.player = json;
+        appendLog('Imported save file.');
+        enterGame();
+      }catch(err){ appendLog('Import failed: invalid file.'); }
+    };
+    reader.readAsText(f);
+  };
+  input.click();
+});
 
-        // Check if piece is pocketed
-        function checkPocketed(piece) {
-            for (let pocket of pocketPositions) {
-                const dx = piece.x - pocket.x;
-                const dy = piece.y - pocket.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < pocketRadius - piece.radius + 5) { // +5 for tolerance
-                    return true;
-                }
-            }
-            return false;
-        }
+// helper: use best potion automatically
+function useBestPotion(){
+  if((state.player.inventory.strongPotion||0) > 0) return useItem('strongPotion');
+  if((state.player.inventory.potion||0) > 0) return useItem('potion');
+  appendLog('No potions available.');
+}
 
-        // Update physics
-        function updatePhysics() {
-            // Update striker
-            striker.x += striker.vx;
-            striker.y += striker.vy;
-            striker.vx *= friction;
-            striker.vy *= friction;
+// ====== Save / Load ======
+function saveToStorage(){
+  if(!state.player) return;
+  localStorage.setItem('pocketRpgSave', JSON.stringify(state.player));
+}
+function loadFromStorage(){
+  const raw = localStorage.getItem('pocketRpgSave');
+  if(!raw) return null;
+  try { return JSON.parse(raw); } catch(e){ return null; }
+}
 
-            // Wall collisions for striker
-            if (striker.x < striker.radius || striker.x > boardSize - striker.radius) {
-                striker.vx = -striker.vx;
-            }
-            if (striker.y < striker.radius || striker.y > boardSize - striker.radius) {
-                striker.vy = -striker.vy;
-            }
+// ====== Start / Enter game ======
+function enterGame(){
+  el.setupArea.style.display = 'none';
+  el.gameArea.style.display = 'block';
+  renderShop();
+  renderStats();
+  appendLog('Welcome, ' + state.player.name + '!');
+}
 
-            // Check if striker pocketed (foul)
-            if (checkPocketed(striker)) {
-                message = 'Foul! Striker pocketed.';
-                setTimeout(() => { message = ''; }, 3000);
-                resetStriker();
-                switchPlayer();
-            }
+el.startBtn.addEventListener('click', ()=>{
+  const name = el.playerName.value.trim() || 'Hero';
+  const cls = el.playerClass.value;
+  state.player = newPlayer(name, cls);
+  saveToStorage();
+  enterGame();
+});
 
-            // Update pieces
-            pieces.forEach(piece => {
-                piece.x += piece.vx;
-                piece.y += piece.vy;
-                piece.vx *= friction;
-                piece.vy *= friction;
+// Load saved automatically if exists
+(function init(){
+  const saved = loadFromStorage();
+  if(saved){
+    // ask quickly: automatic restore — we won't prompt UI; just restore
+    state.player = saved;
+    enterGame();
+    appendLog('Save loaded from your browser.');
+  } else {
+    appendLog('Create a hero to start your adventure.');
+  }
+})();
 
-                // Wall collisions
-                if (piece.x < piece.radius || piece.x > boardSize - piece.radius) {
-                    piece.vx = -piece.vx;
-                }
-                if (piece.y < piece.radius || piece.y > boardSize - piece.radius) {
-                    piece.vy = -piece.vy;
-                }
-            });
-
-            // Check collisions between striker and pieces
-            pieces.forEach(piece => {
-                if (checkCollision(striker, piece)) {
-                    resolveCollision(striker, piece);
-                }
-            });
-
-            // Check collisions between pieces
-            for (let i = 0; i < pieces.length; i++) {
-                for (let j = i + 1; j < pieces.length; j++) {
-                    if (checkCollision(pieces[i], pieces[j])) {
-                        resolveCollision(pieces[i], pieces[j]);
-                    }
-                }
-            }
-
-            // Check pocketed pieces
-            let pocketedThisTurn = false;
-            pieces = pieces.filter(piece => {
-                if (checkPocketed(piece)) {
-                    pocketedThisTurn = true;
-                    if (piece.type === 'queen') {
-                        queenPocketed = true;
-                        message = 'Queen pocketed!';
-                        setTimeout(() => { message = ''; }, 3000);
-                    } else if (piece.type === (currentPlayer === 1 ? 'white' : 'black')) {
-                        scores[currentPlayer]++;
-                    } else {
-                        scores[currentPlayer]++;
-                    }
-                    return false;
-                }
-                return true;
-            });
-
-            // Check if all moving stopped
-            const allStopped = Math.abs(striker.vx) < 0.1 && Math.abs(striker.vy) < 0.1 &&
-                pieces.every(p => Math.abs(p.vx) < 0.1 && Math.abs(p.vy) < 0.1);
-
-            if (allStopped) {
-                striker.vx = 0;
-                striker.vy = 0;
-                pieces.forEach(p => { p.vx = 0; p.vy = 0; });
-                isMoving = false;
-                if (!pocketedThisTurn) {
-                    switchPlayer();
-                }
-            }
-
-            // Check win condition (all own pieces pocketed + queen if pocketed)
-            const whitesLeft = pieces.filter(p => p.type === 'white').length;
-            const blacksLeft = pieces.filter(p => p.type === 'black').length;
-            const queenLeft = pieces.some(p => p.type === 'queen');
-
-            if (whitesLeft === 0 && (queenPocketed || !queenLeft)) {
-                message = 'Player 1 Wins!';
-                // No timeout for win message
-            } else if (blacksLeft === 0 && (queenPocketed || !queenLeft)) {
-                message = 'Player 2 Wins!';
-                // No timeout for win message
-            }
-        }
-
-        // Reset striker position
-        function resetStriker() {
-            striker.x = boardSize / 2;
-            striker.y = currentPlayer === 1 ? boardSize - 50 : 50;
-            striker.vx = 0;
-            striker.vy = 0;
-        }
-
-        // Switch player
-        function switchPlayer() {
-            currentPlayer = currentPlayer === 1 ? 2 : 1;
-            document.getElementById('turn-indicator').textContent = `Player ${currentPlayer}'s Turn (${currentPlayer === 1 ? 'White' : 'Black'})`;
-            resetStriker();
-        }
-
-        // Draw everything
-        function draw() {
-            drawBoard();
-            pieces.forEach(drawPiece);
-            drawPiece(striker);
-        }
-
-        // Game loop
-        function gameLoop() {
-            if (isMoving) {
-                updatePhysics();
-            }
-            draw();
-            updateUI();
-            requestAnimationFrame(gameLoop);
-        }
-
-        // Update UI
-        function updateUI() {
-            document.getElementById('score').textContent = `Player 1: ${scores[1]} | Player 2: ${scores[2]}`;
-            document.getElementById('message').textContent = message;
-        }
-
-        // Function to get position from event (mouse or touch)
-        function getPosition(e) {
-            const rect = canvas.getBoundingClientRect();
-            let clientX, clientY;
-            if (e.type.startsWith('touch')) {
-                clientX = e.touches[0].clientX;
-                clientY = e.touches[0].clientY;
-            } else {
-                clientX = e.clientX;
-                clientY = e.clientY;
-            }
-            return {
-                x: clientX - rect.left,
-                y: clientY - rect.top
-            };
-        }
-
-        // Start drag
-        function startDrag(e) {
-            if (isMoving) return;
-            e.preventDefault();
-            const pos = getPosition(e);
-            // Check if clicking near striker
-            if (checkCollision({x: pos.x, y: pos.y, radius: 10}, striker)) { // Larger hit area for mobile
-                isDragging = true;
-                dragStartX = striker.x;
-                dragStartY = striker.y;
-            }
-        }
-
-        // Move drag
-        function moveDrag(e) {
-            if (!isDragging) return;
-            e.preventDefault();
-            const pos = getPosition(e);
-            // Draw aiming line
-            draw();
-            const dx = dragStartX - pos.x;
-            const dy = dragStartY - pos.y;
-            const aimX = dragStartX + dx;
-            const aimY = dragStartY + dy;
-            ctx.beginPath();
-            ctx.moveTo(dragStartX, dragStartY);
-            ctx.lineTo(aimX, aimY);
-            ctx.strokeStyle = '#FF0';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-        }
-
-        // End drag
-        function endDrag(e) {
-            if (!isDragging) return;
-            e.preventDefault();
-            const pos = getPosition(e);
-            // Calculate velocity (made stronger for better play)
-            const dx = dragStartX - pos.x;
-            const dy = dragStartY - pos.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            const power = dist / 5;
-            striker.vx = (dx / 5) * (power / 5);
-            striker.vy = (dy / 5) * (power / 5);
-
-            isDragging = false;
-            isMoving = true;
-        }
-
-        // Add event listeners for both mouse and touch
-        canvas.addEventListener('mousedown', startDrag);
-        canvas.addEventListener('mousemove', moveDrag);
-        canvas.addEventListener('mouseup', endDrag);
-
-        canvas.addEventListener('touchstart', startDrag);
-        canvas.addEventListener('touchmove', moveDrag);
-        canvas.addEventListener('touchend', endDrag);
-
-        // Initialize game
-        initPieces();
-        resetStriker();
-        gameLoop();
-    </script>
+// expose for debugging on mobile console
+window.__state = state;
+</script>
 </body>
 </html>
