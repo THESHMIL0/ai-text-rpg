@@ -1,317 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Text RPG Adventure</title>
+    <title>Text RPG Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: 'Courier New', monospace;
-            background: #1a1a1a;
-            color: #00ff00;
-            max-width: 800px;
-            margin: 0 auto;
+            background: #000;
+            color: #0f0;
+            font-family: Arial, sans-serif;
             padding: 20px;
             line-height: 1.6;
         }
+        
         .game-container {
-            border: 2px solid #00ff00;
+            max-width: 600px;
+            margin: 0 auto;
+            border: 2px solid #0f0;
             padding: 20px;
-            border-radius: 10px;
-            background: #0a0a0a;
+            background: #111;
         }
+        
         .screen {
             display: none;
         }
+        
         .active {
             display: block;
         }
-        button {
-            background: #003300;
-            color: #00ff00;
-            border: 1px solid #00ff00;
-            padding: 10px 20px;
-            margin: 5px;
-            cursor: pointer;
-            font-family: 'Courier New', monospace;
+        
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #0f0;
         }
-        button:hover {
-            background: #005500;
-        }
-        .stat {
-            margin: 5px 0;
-        }
-        .log {
-            border: 1px solid #00ff00;
-            padding: 10px;
-            height: 200px;
-            overflow-y: auto;
-            margin: 20px 0;
-            background: #000;
-        }
-        .choice {
+        
+        .menu-option {
+            background: #002200;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 15px;
             margin: 10px 0;
+            width: 100%;
+            text-align: center;
+            font-size: 18px;
+            cursor: pointer;
         }
-    </style>
-</head>
-<body>
-    <div class="game-container">
-        <!-- START SCREEN -->
-        <div id="start-screen" class="screen active">
-            <h1>🎮 TEXT RPG ADVENTURE</h1>
-            <p>Welcome to the Dragon's Breath Tavern!</p>
-            <button onclick="showScreen('character-screen')">START GAME</button>
-        </div>
-
-        <!-- CHARACTER CREATION -->
-        <div id="character-screen" class="screen">
-            <h2>CREATE YOUR CHARACTER</h2>
-            <div>
-                <label>Name: </label>
-                <input type="text" id="player-name" placeholder="Enter your name">
-            </div>
-            <div>
-                <h3>Choose Your Class:</h3>
-                <button onclick="selectClass('warrior')">⚔️ WARRIOR</button>
-                <button onclick="selectClass('mage')">🔮 MAGE</button>
-                <button onclick="selectClass('rogue')">🗡️ ROGUE</button>
-            </div>
-            <div id="class-stats" style="margin: 20px 0;"></div>
-            <button onclick="startGame()" id="start-game-btn" disabled>BEGIN ADVENTURE</button>
-        </div>
-
-        <!-- MAIN GAME SCREEN -->
-        <div id="game-screen" class="screen">
-            <div style="display: flex; justify-content: space-between;">
-                <div id="player-stats">
-                    <h3>STATS</h3>
-                    <div class="stat" id="stat-name"></div>
-                    <div class="stat" id="stat-class"></div>
-                    <div class="stat" id="stat-hp"></div>
-                    <div class="stat" id="stat-gold"></div>
-                    <div class="stat" id="stat-xp"></div>
-                </div>
-                <div id="inventory">
-                    <h3>INVENTORY</h3>
-                    <div id="inventory-items"></div>
-                </div>
-            </div>
-
-            <div class="log" id="game-log"></div>
-
-            <div id="location-description"></div>
-
-            <div id="choices" class="choice"></div>
-        </div>
-    </div>
-
-    <script>
-        // Game State
-        const gameState = {
-            player: {
-                name: '',
-                class: '',
-                hp: 0,
-                maxHp: 0,
-                gold: 10,
-                xp: 0,
-                level: 1,
-                inventory: ['Health Potion']
-            },
-            currentLocation: 'tavern',
-            gameLog: []
-        };
-
-        // Class Definitions
-        const classes = {
-            warrior: { hp: 30, attack: 8, defense: 5 },
-            mage: { hp: 20, attack: 10, defense: 3 },
-            rogue: { hp: 25, attack: 7, defense: 4 }
-        };
-
-        // Game Locations
-        const locations = {
-            tavern: {
-                name: "Dragon's Breath Tavern",
-                description: "You're in a smoky tavern. An old man waves you over.",
-                choices: [
-                    { text: "Talk to the old man", action: "talkOldMan" },
-                    { text: "Check the notice board", action: "checkBoard" },
-                    { text: "Go to the market", action: "goMarket" }
-                ]
-            },
-            market: {
-                name: "Town Market",
-                description: "Busy market square. Merchants shout their wares.",
-                choices: [
-                    { text: "Buy health potion (5 gold)", action: "buyPotion" },
-                    { text: "Listen for rumors", action: "listenRumors" },
-                    { text: "Return to tavern", action: "goTavern" }
-                ]
-            },
-            forest: {
-                name: "Dark Forest",
-                description: "Spooky forest. You hear strange noises.",
-                choices: [
-                    { text: "Search for herbs", action: "searchHerbs" },
-                    { text: "Fight the goblin!", action: "fightGoblin" },
-                    { text: "Return to town", action: "goTavern" }
-                ]
-            }
-        };
-
-        // Game Functions
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
-            document.getElementById(screenId).classList.add('active');
+        
+        .menu-option:hover {
+            background: #004400;
         }
-
-        function selectClass(className) {
-            const classInfo = classes[className];
-            document.getElementById('class-stats').innerHTML = `
-                <strong>${className.toUpperCase()} Stats:</strong><br>
-                HP: ${classInfo.hp}<br>
-                Attack: ${classInfo.attack}<br>
-                Defense: ${classInfo.defense}
-            `;
-            gameState.player.class = className;
-            gameState.player.hp = classInfo.hp;
-            gameState.player.maxHp = classInfo.hp;
-            document.getElementById('start-game-btn').disabled = false;
+        
+        .class-option {
+            background: #002200;
+            border: 1px solid #0f0;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
         }
-
-        function startGame() {
-            const name = document.getElementById('player-name').value;
-            if (!name) {
-                alert('Please enter your name!');
-                return;
-            }
-            gameState.player.name = name;
-            showScreen('game-screen');
-            updateGameDisplay();
-            addToLog(`Welcome, ${name} the ${gameState.player.class}! Your adventure begins...`);
-            loadLocation('tavern');
+        
+        .class-option.selected {
+            background: #004400;
+            border: 2px solid #0f0;
         }
-
-        function loadLocation(locationId) {
-            gameState.currentLocation = locationId;
-            const location = locations[locationId];
-            
-            document.getElementById('location-description').innerHTML = `
-                <h2>${location.name}</h2>
-                <p>${location.description}</p>
-            `;
-
-            const choicesDiv = document.getElementById('choices');
-            choicesDiv.innerHTML = '';
-            
-            location.choices.forEach(choice => {
-                const button = document.createElement('button');
-                button.textContent = choice.text;
-                button.onclick = () => handleChoice(choice.action);
-                choicesDiv.appendChild(button);
-            });
+        
+        .stats {
+            background: #001100;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #0f0;
         }
-
-        function handleChoice(action) {
-            switch(action) {
-                case 'talkOldMan':
-                    addToLog("Old Man: 'The blacksmith disappeared! Rumor says goblins took him to the forest.'");
-                    locations.tavern.choices.push({ text: "Go to forest and investigate", action: "goForest" });
-                    loadLocation('tavern');
-                    break;
-                case 'checkBoard':
-                    addToLog("Notice: 'REWARD - Clear goblins from forest. 50 gold!'");
-                    gameState.player.xp += 10;
-                    break;
-                case 'goMarket':
-                    loadLocation('market');
-                    break;
-                case 'goTavern':
-                    loadLocation('tavern');
-                    break;
-                case 'buyPotion':
-                    if (gameState.player.gold >= 5) {
-                        gameState.player.gold -= 5;
-                        gameState.player.inventory.push('Health Potion');
-                        addToLog("Bought Health Potion! Added to inventory.");
-                    } else {
-                        addToLog("Not enough gold!");
-                    }
-                    updateGameDisplay();
-                    break;
-                case 'listenRumors':
-                    addToLog("Merchant: 'They say the old ruins are haunted... but full of treasure!'");
-                    break;
-                case 'goForest':
-                    loadLocation('forest');
-                    break;
-                case 'searchHerbs':
-                    if (Math.random() > 0.5) {
-                        addToLog("Found healing herbs! Restored 5 HP.");
-                        gameState.player.hp = Math.min(gameState.player.hp + 5, gameState.player.maxHp);
-                    } else {
-                        addToLog("Found nothing but weeds.");
-                    }
-                    updateGameDisplay();
-                    break;
-                case 'fightGoblin':
-                    fightGoblin();
-                    break;
-            }
-        }
-
-        function fightGoblin() {
-            const goblinHp = 15;
-            const playerDamage = classes[gameState.player.class].attack;
-            
-            addToLog("⚔️ You attack the goblin!");
-            addToLog(`You deal ${playerDamage} damage!`);
-            
-            if (playerDamage >= goblinHp) {
-                addToLog("🎉 You defeated the goblin! Found 20 gold and gained 25 XP!");
-                gameState.player.gold += 20;
-                gameState.player.xp += 25;
-                
-                // Check level up
-                if (gameState.player.xp >= 50) {
-                    gameState.player.level = 2;
-                    gameState.player.maxHp += 10;
-                    gameState.player.hp = gameState.player.maxHp;
-                    addToLog("🎊 LEVEL UP! You reached level 2! Max HP increased.");
-                }
-            } else {
-                addToLog("💀 The goblin counterattacks! You lose 8 HP.");
-                gameState.player.hp -= 8;
-                
-                if (gameState.player.hp <= 0) {
-                    addToLog("😵 You were defeated! Game over...");
-                    setTimeout(() => {
-                        if (confirm("You died! Restart game?")) {
-                            location.reload();
-                        }
-                    }, 1000);
-                }
-            }
-            
-            updateGameDisplay();
-        }
-
-        function addToLog(message) {
-            gameState.gameLog.push(message);
-            const logDiv = document.getElementById('game-log');
-            logDiv.innerHTML = gameState.gameLog.map(msg => `> ${msg}`).join('<br>');
-            logDiv.scrollTop = logDiv.scrollHeight;
-        }
-
-        function updateGameDisplay() {
-            document.getElementById('stat-name').textContent = `Name: ${gameState.player.name}`;
-            document.getElementById('stat-class').textContent = `Class: ${gameState.player.class}`;
-            document.getElementById('stat-hp').textContent = `HP: ${gameState.player.hp}/${gameState.player.maxHp}`;
-            document.getElementById('stat-gold').textContent = `Gold: ${gameState.player.gold}`;
-            document.getElementById('stat-xp').textContent = `XP: ${gameState.player.xp}/50`;
-            document.getElementById('inventory-items').textContent = gameState.player.inventory.join(', ');
-        }
-    </script>
-</body>
-</html>
+        
+        .game-log
