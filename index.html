@@ -1,499 +1,200 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" class="dark">
 <head>
-    <title>Text RPG Game</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background: #000;
-            color: #0f0;
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            line-height: 1.6;
-            background-image: url('https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-4.0.3&w=600');
-            background-size: cover;
-            background-attachment: fixed;
-        }
-        
-        .game-container {
-            max-width: 600px;
-            margin: 0 auto;
-            border: 2px solid #0f0;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-        }
-        
-        .screen {
-            display: none;
-        }
-        
-        .active {
-            display: block;
-        }
-        
-        h1, h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #0f0;
-            text-shadow: 0 0 10px #0f0;
-        }
-        
-        .character-image {
-            width: 100px;
-            height: 100px;
-            border: 2px solid #0f0;
-            border-radius: 10px;
-            margin: 10px auto;
-            display: block;
-        }
-        
-        .location-image {
-            width: 100%;
-            max-height: 200px;
-            object-fit: cover;
-            border: 2px solid #0f0;
-            border-radius: 10px;
-            margin: 10px 0;
-        }
-        
-        .class-option {
-            background: rgba(0, 34, 0, 0.7);
-            border: 1px solid #0f0;
-            padding: 15px;
-            margin: 10px 0;
-            cursor: pointer;
-            border-radius: 8px;
-        }
-        
-        .class-option.selected {
-            background: rgba(0, 68, 0, 0.9);
-            border: 2px solid #0f0;
-            box-shadow: 0 0 15px #0f0;
-        }
-        
-        .class-image {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 2px solid #0f0;
-            margin-right: 15px;
-            float: left;
-        }
-        
-        .stats {
-            background: rgba(0, 17, 0, 0.7);
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #0f0;
-            border-radius: 8px;
-        }
-        
-        .game-log {
-            height: 200px;
-            overflow-y: auto;
-            border: 1px solid #0f0;
-            padding: 10px;
-            margin: 10px 0;
-            background: rgba(0, 0, 0, 0.9);
-            border-radius: 8px;
-        }
-        
-        button {
-            background: rgba(0, 51, 0, 0.8);
-            color: #0f0;
-            border: 1px solid #0f0;
-            padding: 15px;
-            margin: 10px 0;
-            width: 100%;
-            font-size: 18px;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-        
-        button:hover {
-            background: rgba(0, 85, 0, 0.9);
-            box-shadow: 0 0 10px #0f0;
-        }
-        
-        .menu-option {
-            background: rgba(0, 34, 0, 0.7);
-            color: #0f0;
-            border: 1px solid #0f0;
-            padding: 20px;
-            margin: 15px 0;
-            text-align: center;
-            font-size: 20px;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: all 0.3s;
-        }
-        
-        .menu-option:hover {
-            background: rgba(0, 68, 0, 0.9);
-            transform: scale(1.05);
-        }
-    </style>
-</head>
-<body>
-    <div class="game-container">
-        <!-- START SCREEN -->
-        <div id="start-screen" class="screen active">
-            <img src="https://i.imgur.com/6Q8VJ2p.png" alt="RPG Logo" class="character-image" style="width: 150px; height: 150px;">
-            <h1>🎮 TEXT RPG ADVENTURE</h1>
-            <p style="text-align: center; margin-bottom: 30px; font-size: 18px;">A fantasy text-based roleplaying game</p>
-            
-            <div class="menu-option" onclick="showScreen('character-screen')">
-                🎯 NEW GAME
-            </div>
-            <div class="menu-option" onclick="showScreen('load-screen')">
-                💾 LOAD GAME
-            </div>
-            <div class="menu-option" onclick="showScreen('about-screen')">
-                ℹ️ ABOUT
-            </div>
-        </div>
-
-        <!-- CHARACTER CREATION -->
-        <div id="character-screen" class="screen">
-            <h2>CREATE YOUR CHARACTER</h2>
-            
-            <img src="https://i.imgur.com/3JQ8W9a.png" alt="Character Creation" class="character-image">
-            
-            <input type="text" id="player-name" placeholder="Enter your character name" oninput="checkStartGame()" style="background: #000; color: #0f0; border: 1px solid #0f0; padding: 12px; width: 100%; margin: 15px 0; font-size: 16px; border-radius: 5px;">
-            
-            <h3>CHOOSE YOUR CLASS:</h3>
-            
-            <div class="class-option" onclick="selectClass('warrior')">
-                <img src="https://i.imgur.com/4X8vJ9c.png" alt="Warrior" class="class-image">
-                <strong>⚔️ WARRIOR</strong><br>
-                High HP and strength. Good with weapons.
-            </div>
-            
-            <div class="class-option" onclick="selectClass('mage')">
-                <img src="https://i.imgur.com/9Z8vJ9d.png" alt="Mage" class="class-image">
-                <strong>🔮 MAGE</strong><br>
-                Powerful spells. Low defense but high damage.
-            </div>
-            
-            <div class="class-option" onclick="selectClass('rogue')">
-                <img src="https://i.imgur.com/2X8vJ9e.png" alt="Rogue" class="class-image">
-                <strong>🗡️ ROGUE</strong><br>
-                Stealthy and fast. Good at avoiding damage.
-            </div>
-            
-            <div id="class-stats" class="stats">
-                Select a class to see stats...
-            </div>
-            
-            <button id="start-game-btn" onclick="startGame()" disabled>🚀 BEGIN ADVENTURE →</button>
-            <button onclick="showScreen('start-screen')">← BACK TO MENU</button>
-        </div>
-
-        <!-- MAIN GAME -->
-        <div id="game-screen" class="screen">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; background: rgba(0,20,0,0.7); padding: 10px; border-radius: 8px;">
-                <div><strong id="player-display-name"></strong></div>
-                <div>⭐ Level: <span id="player-level">1</span></div>
-            </div>
-            
-            <div style="display: flex; justify-content: space-between; margin-bottom: 20px; background: rgba(0,20,0,0.7); padding: 10px; border-radius: 8px;">
-                <div>❤️ HP: <span id="player-hp">0</span>/<span id="player-max-hp">0</span></div>
-                <div>💰 Gold: <span id="player-gold">0</span></div>
-                <div>📊 XP: <span id="player-xp">0</span></div>
-            </div>
-            
-            <div class="game-log" id="game-log">
-                > Welcome to your adventure!
-            </div>
-            
-            <div id="location-info" style="margin: 15px 0;">
-                <img id="location-image" class="location-image" src="" alt="Location">
-                <h3 id="location-name">Starting Location</h3>
-                <p id="location-desc">You begin your journey...</p>
-            </div>
-            
-            <div id="game-choices">
-                <!-- Choices will appear here -->
-            </div>
-            
-            <button onclick="showScreen('start-screen')">🏠 MAIN MENU</button>
-        </div>
-
-        <!-- OTHER SCREENS -->
-        <div id="load-screen" class="screen">
-            <h2>💾 LOAD GAME</h2>
-            <p>No saved games found.</p>
-            <button onclick="showScreen('start-screen')">← BACK</button>
-        </div>
-        
-        <div id="about-screen" class="screen">
-            <h2>ℹ️ ABOUT</h2>
-            <p>A text-based RPG adventure. Make choices, fight monsters, and complete quests!</p>
-            <button onclick="showScreen('start-screen')">← BACK</button>
-        </div>
-    </div>
-
+    <title>Dungeon Delvers Online</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
     <script>
-        // Game data with image URLs
-        const game = {
-            player: {
-                name: "",
-                class: "",
-                level: 1,
-                hp: 0,
-                maxHp: 0,
-                gold: 10,
-                xp: 0,
-                inventory: ["Health Potion"]
-            },
-            currentLocation: "tavern",
-            locations: {
-                tavern: {
-                    name: "Dragon's Breath Tavern",
-                    description: "You're in a cozy tavern. The air smells of ale and roasted meat. An old man gestures for you to join him.",
-                    image: "https://i.imgur.com/8Jv9K2p.jpg",
-                    choices: [
-                        { text: "🗣️ Talk to the old man", action: "talkOldMan" },
-                        { text: "📋 Look at notice board", action: "checkBoard" },
-                        { text: "🏪 Go to market", action: "goMarket" }
-                    ]
-                },
-                market: {
-                    name: "Town Market", 
-                    description: "The market is bustling with activity. Merchants call out their wares.",
-                    image: "https://i.imgur.com/9Kv8J2p.jpg",
-                    choices: [
-                        { text: "🧪 Buy health potion (5 gold)", action: "buyPotion" },
-                        { text: "💰 Sell your potion (3 gold)", action: "sellPotion" },
-                        { text: "🏠 Return to tavern", action: "goTavern" }
-                    ]
-                },
-                forest: {
-                    name: "Dark Forest",
-                    description: "Tall trees block the sunlight. You hear strange noises in the distance.",
-                    image: "https://i.imgur.com/7Jv9K2p.jpg",
-                    choices: [
-                        { text: "🌿 Search for herbs", action: "searchHerbs" },
-                        { text: "⚔️ Fight the goblin!", action: "fightGoblin" },
-                        { text: "🏠 Return to town", action: "goTavern" }
-                    ]
-                }
-            },
-            classes: {
-                warrior: { 
-                    hp: 30, 
-                    attack: 8, 
-                    defense: 5,
-                    image: "https://i.imgur.com/4X8vJ9c.png"
-                },
-                mage: { 
-                    hp: 20, 
-                    attack: 10, 
-                    defense: 3,
-                    image: "https://i.imgur.com/9Z8vJ9d.png"
-                },
-                rogue: { 
-                    hp: 25, 
-                    attack: 7, 
-                    defense: 4,
-                    image: "https://i.imgur.com/2X8vJ9e.png"
-                }
-            }
-        };
-
-        // [REST OF THE JAVASCRIPT CODE REMAINS THE SAME AS BEFORE]
-        // Game functions
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
-            document.getElementById(screenId).classList.add('active');
-        }
-
-        function selectClass(className) {
-            // Remove selection from all classes
-            document.querySelectorAll('.class-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            
-            // Add selection to clicked class
-            event.currentTarget.classList.add('selected');
-            
-            const classInfo = game.classes[className];
-            game.player.class = className;
-            game.player.hp = classInfo.hp;
-            game.player.maxHp = classInfo.hp;
-            
-            document.getElementById('class-stats').innerHTML = `
-                <strong>${className.toUpperCase()} STATS:</strong><br>
-                ❤️ HP: ${classInfo.hp}<br>
-                ⚔️ Attack: ${classInfo.attack}<br> 
-                🛡️ Defense: ${classInfo.defense}
-            `;
-            
-            checkStartGame();
-        }
-
-        function checkStartGame() {
-            const name = document.getElementById('player-name').value.trim();
-            const hasClass = game.player.class !== "";
-            document.getElementById('start-game-btn').disabled = !(name && hasClass);
-        }
-
-        function startGame() {
-            game.player.name = document.getElementById('player-name').value.trim();
-            if (!game.player.name) {
-                alert("Please enter your character name!");
-                return;
-            }
-            
-            showScreen('game-screen');
-            updateGameDisplay();
-            addToLog(`🎉 Welcome, ${game.player.name} the ${game.player.class}!`);
-            loadLocation('tavern');
-        }
-
-        function loadLocation(locationId) {
-            game.currentLocation = locationId;
-            const location = game.locations[locationId];
-            
-            document.getElementById('location-name').textContent = location.name;
-            document.getElementById('location-desc').textContent = location.description;
-            document.getElementById('location-image').src = location.image;
-            
-            const choicesDiv = document.getElementById('game-choices');
-            choicesDiv.innerHTML = '';
-            
-            location.choices.forEach(choice => {
-                const button = document.createElement('button');
-                button.textContent = choice.text;
-                button.onclick = () => handleChoice(choice.action);
-                choicesDiv.appendChild(button);
-            });
-        }
-
-        function handleChoice(action) {
-            switch(action) {
-                case 'talkOldMan':
-                    addToLog("👴 Old Man: 'The blacksmith has disappeared! They say goblins took him to the forest.'");
-                    game.locations.tavern.choices.push({ 
-                        text: "🌲 Investigate the forest", 
-                        action: "goForest" 
-                    });
-                    loadLocation('tavern');
-                    break;
-                    
-                case 'checkBoard':
-                    addToLog("📋 Notice: 'REWARD - Clear goblins from forest. 50 gold reward!'");
-                    game.player.xp += 5;
-                    break;
-                    
-                case 'goMarket':
-                    loadLocation('market');
-                    break;
-                    
-                case 'goTavern':
-                    loadLocation('tavern');
-                    break;
-                    
-                case 'buyPotion':
-                    if (game.player.gold >= 5) {
-                        game.player.gold -= 5;
-                        game.player.inventory.push('Health Potion');
-                        addToLog("🧪 Bought Health Potion! Added to inventory.");
-                    } else {
-                        addToLog("💸 Not enough gold!");
-                    }
-                    break;
-                    
-                case 'sellPotion':
-                    if (game.player.inventory.includes('Health Potion')) {
-                        game.player.gold += 3;
-                        game.player.inventory = game.player.inventory.filter(item => item !== 'Health Potion');
-                        addToLog("💰 Sold Health Potion for 3 gold!");
-                    } else {
-                        addToLog("❌ You don't have any potions to sell!");
-                    }
-                    break;
-                    
-                case 'goForest':
-                    loadLocation('forest');
-                    break;
-                    
-                case 'searchHerbs':
-                    if (Math.random() > 0.3) {
-                        addToLog("🌿 Found healing herbs! Restored 5 HP.");
-                        game.player.hp = Math.min(game.player.hp + 5, game.player.maxHp);
-                    } else {
-                        addToLog("🍃 Found nothing but weeds.");
-                    }
-                    break;
-                    
-                case 'fightGoblin':
-                    fightGoblin();
-                    break;
-            }
-            
-            updateGameDisplay();
-        }
-
-        function fightGoblin() {
-            const playerClass = game.classes[game.player.class];
-            const playerDamage = playerClass.attack;
-            const goblinHp = 15;
-            
-            addToLog("⚔️ You attack the goblin!");
-            addToLog(`💥 You deal ${playerDamage} damage!`);
-            
-            if (playerDamage >= goblinHp) {
-                addToLog("🎉 You defeated the goblin! Gained 20 gold and 25 XP!");
-                game.player.gold += 20;
-                game.player.xp += 25;
-                
-                if (game.player.xp >= 50) {
-                    game.player.level = 2;
-                    game.player.maxHp += 10;
-                    game.player.hp = game.player.maxHp;
-                    addToLog("🎊 LEVEL UP! You reached level 2! +10 Max HP!");
-                }
-            } else {
-                addToLog("💢 The goblin fights back! You lose 8 HP.");
-                game.player.hp -= 8;
-                
-                if (game.player.hp <= 0) {
-                    addToLog("💀 You were defeated! Game over...");
-                    setTimeout(() => {
-                        if (confirm("You died! Restart game?")) {
-                            location.reload();
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            500: '#6366f1',
+                        },
+                        secondary: {
+                            500: '#ec4899',
                         }
-                    }, 1000);
+                    }
                 }
             }
         }
+    </script>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <custom-navbar></custom-navbar>
+    
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Game Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4 text-primary-500">Dungeon Delvers Online</h1>
+                <p class="text-xl text-gray-300">A text-based RPG adventure in your browser</p>
+            </div>
 
-        function addToLog(message) {
-            const log = document.getElementById('game-log');
-            log.innerHTML += `> ${message}<br>`;
-            log.scrollTop = log.scrollHeight;
+            <!-- Game Container -->
+            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+                <div class="p-6 border-b border-gray-700 bg-gray-700">
+                    <h2 class="text-2xl font-semibold text-secondary-500">The Forgotten Crypt</h2>
+                    <p class="text-gray-300 mt-2">Level 1 | XP: 0/100 | Health: 100/100</p>
+                </div>
+                
+                <!-- Game Text Display -->
+                <div id="game-text" class="p-6 h-96 overflow-y-auto font-mono text-gray-200 bg-gray-900">
+                    <p class="mb-4">You stand before the entrance of the Forgotten Crypt, a place shunned by villagers for generations. The stone archway is crumbling, and a cold wind whispers from within.</p>
+                    <p class="mb-4">Your torch flickers as you take your first steps into the darkness...</p>
+                    <p class="text-primary-400 font-semibold">What will you do?</p>
+                </div>
+                
+                <!-- Game Controls -->
+                <div class="p-6 bg-gray-800 border-t border-gray-700">
+                    <div class="flex flex-col space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="gameAction('north')" class="bg-primary-500 hover:bg-primary-600 text-white py-3 px-4 rounded-lg flex items-center justify-center transition">
+                                <i data-feather="arrow-up" class="mr-2"></i> Go North
+                            </button>
+                            <button onclick="gameAction('look')" class="bg-gray-700 hover:bg-gray-600 text-white py-3 px-4 rounded-lg flex items-center justify-center transition">
+                                <i data-feather="eye" class="mr-2"></i> Look Around
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="gameAction('inventory')" class="bg-gray-700 hover:bg-gray-600 text-white py-3 px-4 rounded-lg flex items-center justify-center transition">
+                                <i data-feather="package" class="mr-2"></i> Inventory
+                            </button>
+                            <button onclick="gameAction('stats')" class="bg-gray-700 hover:bg-gray-600 text-white py-3 px-4 rounded-lg flex items-center justify-center transition">
+                                <i data-feather="activity" class="mr-2"></i> Stats
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <div class="flex">
+                            <input type="text" id="command-input" placeholder="Type a command..." class="flex-grow bg-gray-700 text-white px-4 py-3 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <button onclick="submitCommand()" class="bg-secondary-500 hover:bg-secondary-600 text-white px-6 py-3 rounded-r-lg transition">
+                                <i data-feather="send"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Character Info -->
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-gray-800 p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold mb-4 text-primary-500">Character</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <p class="text-gray-400">Name:</p>
+                            <p class="text-white">Aelar the Brave</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400">Class:</p>
+                            <p class="text-white">Warrior</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400">Level:</p>
+                            <p class="text-white">1</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800 p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold mb-4 text-primary-500">Stats</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <p class="text-gray-400">Strength:</p>
+                            <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                <div class="bg-secondary-500 h-2.5 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-gray-400">Dexterity:</p>
+                            <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                <div class="bg-secondary-500 h-2.5 rounded-full" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-gray-400">Intelligence:</p>
+                            <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                <div class="bg-secondary-500 h-2.5 rounded-full" style="width: 40%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800 p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold mb-4 text-primary-500">Inventory</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <i data-feather="sword" class="text-gray-400 mr-3"></i>
+                            <p class="text-white">Iron Sword</p>
+                        </div>
+                        <div class="flex items-center">
+                            <i data-feather="shield" class="text-gray-400 mr-3"></i>
+                            <p class="text-white">Wooden Shield</p>
+                        </div>
+                        <div class="flex items-center">
+                            <i data-feather="droplet" class="text-gray-400 mr-3"></i>
+                            <p class="text-white">Health Potion (3)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <custom-footer></custom-footer>
+    
+    <script src="components/navbar.js"></script>
+    <script src="components/footer.js"></script>
+    <script src="script.js"></script>
+    <script>
+        feather.replace();
+        
+        function gameAction(action) {
+            const gameText = document.getElementById('game-text');
+            let response = "";
+            
+            switch(action) {
+                case 'north':
+                    response = "You move cautiously northward. The corridor narrows and the air grows colder. You hear faint scratching sounds from the walls...";
+                    break;
+                case 'look':
+                    response = "You examine your surroundings. The crypt walls are lined with ancient carvings. There's a faint glow coming from the north, and the floor is covered in dust except for what might be... footprints?";
+                    break;
+                case 'inventory':
+                    response = "Inventory:\n- Iron Sword\n- Wooden Shield\n- Health Potion (3)\n- Torch\n- 15 gold coins";
+                    break;
+                case 'stats':
+                    response = "Character Stats:\nLevel: 1\nHealth: 100/100\nStrength: 8\nDexterity: 6\nIntelligence: 4\nXP: 0/100";
+                    break;
+                default:
+                    response = "I don't understand that command. Try 'go [direction]', 'look', 'inventory', or 'stats'.";
+            }
+            
+            gameText.innerHTML += `<p class="mt-4 text-primary-400">> ${action}</p><p class="mb-4">${response}</p>`;
+            gameText.scrollTop = gameText.scrollHeight;
         }
-
-        function updateGameDisplay() {
-            document.getElementById('player-display-name').textContent = 
-                `${game.player.name} the ${game.player.class}`;
-            document.getElementById('player-level').textContent = game.player.level;
-            document.getElementById('player-hp').textContent = game.player.hp;
-            document.getElementById('player-max-hp').textContent = game.player.maxHp;
-            document.getElementById('player-gold').textContent = game.player.gold;
-            document.getElementById('player-xp').textContent = game.player.xp;
+        
+        function submitCommand() {
+            const input = document.getElementById('command-input');
+            if (input.value.trim() !== '') {
+                gameAction(input.value.toLowerCase());
+                input.value = '';
+            }
         }
+        
+        // Allow Enter key to submit command
+        document.getElementById('command-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitCommand();
+            }
+        });
     </script>
 </body>
 </html>
