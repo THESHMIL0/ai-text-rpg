@@ -1,0 +1,41 @@
+/* Custom scrollbar for game text */
+#game-text::-webkit-scrollbar {
+    width: 8px;
+}
+
+#game-text::-webkit-scrollbar-track {
+    background: #1f2937;
+}
+
+#game-text::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    border-radius: 4px;
+}
+
+#game-text::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}
+
+/* Font styling for game text */
+#game-text {
+    line-height: 1.6;
+    font-size: 1.05rem;
+}
+
+/* Animation for new text */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#game-text p {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    #game-text {
+        height: 60vh;
+        font-size: 1rem;
+    }
+}
