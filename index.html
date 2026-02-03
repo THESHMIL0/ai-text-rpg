@@ -1,200 +1,69 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dungeon Delvers Online</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            500: '#6366f1',
-                        },
-                        secondary: {
-                            500: '#ec4899',
-                        }
-                    }
-                }
-            }
+    <title>Happy Valentine's Day</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffe6e6;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
         }
-    </script>
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 400px;
+        }
+        h1 {
+            color: #d63384;
+            font-size: 2.5rem;
+        }
+        p {
+            color: #555;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        .heart {
+            font-size: 5rem;
+            color: #ff4d4d;
+            animation: beat 1s infinite alternate;
+        }
+        @keyframes beat {
+            to { transform: scale(1.1); }
+        }
+        .btn {
+            background-color: #d63384;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover { background-color: #b02a6b; }
+    </style>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen">
-    <custom-navbar></custom-navbar>
-    
-    <main class="container mx-auto px-4 py-8">
-        <div class="max-w-4xl mx-auto">
-            <!-- Game Header -->
-            <div class="text-center mb-12">
-                <h1 class="text-4xl md:text-5xl font-bold mb-4 text-primary-500">Dungeon Delvers Online</h1>
-                <p class="text-xl text-gray-300">A text-based RPG adventure in your browser</p>
-            </div>
+<body>
 
-            <!-- Game Container -->
-            <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
-                <div class="p-6 border-b border-gray-700 bg-gray-700">
-                    <h2 class="text-2xl font-semibold text-secondary-500">The Forgotten Crypt</h2>
-                    <p class="text-gray-300 mt-2">Level 1 | XP: 0/100 | Health: 100/100</p>
-                </div>
-                
-                <!-- Game Text Display -->
-                <div id="game-text" class="p-6 h-96 overflow-y-auto font-mono text-gray-200 bg-gray-900">
-                    <p class="mb-4">You stand before the entrance of the Forgotten Crypt, a place shunned by villagers for generations. The stone archway is crumbling, and a cold wind whispers from within.</p>
-                    <p class="mb-4">Your torch flickers as you take your first steps into the darkness...</p>
-                    <p class="text-primary-400 font-semibold">What will you do?</p>
-                </div>
-                
-                <!-- Game Controls -->
-                <div class="p-6 bg-gray-800 border-t border-gray-700">
-                    <div class="flex flex-col space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <button onclick="gameAction('north')" class="bg-primary-500 hover:bg-primary-600 text-white py-3 px-4 rounded-lg flex items-center justify-center transition">
-                                <i data-feather="arrow-up" class="mr-2"></i> Go North
-                            </button>
-                            <button onclick="gameAction('look')" class="bg-gray-700 hover:bg-gray-600 text-white py-3 px-4 rounded-lg flex items-center justify-center transition">
-                                <i data-feather="eye" class="mr-2"></i> Look Around
-                            </button>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <button onclick="gameAction('inventory')" class="bg-gray-700 hover:bg-gray-600 text-white py-3 px-4 rounded-lg flex items-center justify-center transition">
-                                <i data-feather="package" class="mr-2"></i> Inventory
-                            </button>
-                            <button onclick="gameAction('stats')" class="bg-gray-700 hover:bg-gray-600 text-white py-3 px-4 rounded-lg flex items-center justify-center transition">
-                                <i data-feather="activity" class="mr-2"></i> Stats
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-6">
-                        <div class="flex">
-                            <input type="text" id="command-input" placeholder="Type a command..." class="flex-grow bg-gray-700 text-white px-4 py-3 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
-                            <button onclick="submitCommand()" class="bg-secondary-500 hover:bg-secondary-600 text-white px-6 py-3 rounded-r-lg transition">
-                                <i data-feather="send"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Character Info -->
-            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-gray-800 p-6 rounded-lg shadow">
-                    <h3 class="text-xl font-semibold mb-4 text-primary-500">Character</h3>
-                    <div class="space-y-3">
-                        <div>
-                            <p class="text-gray-400">Name:</p>
-                            <p class="text-white">Aelar the Brave</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-400">Class:</p>
-                            <p class="text-white">Warrior</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-400">Level:</p>
-                            <p class="text-white">1</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-gray-800 p-6 rounded-lg shadow">
-                    <h3 class="text-xl font-semibold mb-4 text-primary-500">Stats</h3>
-                    <div class="space-y-3">
-                        <div>
-                            <p class="text-gray-400">Strength:</p>
-                            <div class="w-full bg-gray-700 rounded-full h-2.5">
-                                <div class="bg-secondary-500 h-2.5 rounded-full" style="width: 80%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <p class="text-gray-400">Dexterity:</p>
-                            <div class="w-full bg-gray-700 rounded-full h-2.5">
-                                <div class="bg-secondary-500 h-2.5 rounded-full" style="width: 60%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <p class="text-gray-400">Intelligence:</p>
-                            <div class="w-full bg-gray-700 rounded-full h-2.5">
-                                <div class="bg-secondary-500 h-2.5 rounded-full" style="width: 40%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-gray-800 p-6 rounded-lg shadow">
-                    <h3 class="text-xl font-semibold mb-4 text-primary-500">Inventory</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center">
-                            <i data-feather="sword" class="text-gray-400 mr-3"></i>
-                            <p class="text-white">Iron Sword</p>
-                        </div>
-                        <div class="flex items-center">
-                            <i data-feather="shield" class="text-gray-400 mr-3"></i>
-                            <p class="text-white">Wooden Shield</p>
-                        </div>
-                        <div class="flex items-center">
-                            <i data-feather="droplet" class="text-gray-400 mr-3"></i>
-                            <p class="text-white">Health Potion (3)</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-    
-    <custom-footer></custom-footer>
-    
-    <script src="components/navbar.js"></script>
-    <script src="components/footer.js"></script>
-    <script src="script.js"></script>
-    <script>
-        feather.replace();
-        
-        function gameAction(action) {
-            const gameText = document.getElementById('game-text');
-            let response = "";
-            
-            switch(action) {
-                case 'north':
-                    response = "You move cautiously northward. The corridor narrows and the air grows colder. You hear faint scratching sounds from the walls...";
-                    break;
-                case 'look':
-                    response = "You examine your surroundings. The crypt walls are lined with ancient carvings. There's a faint glow coming from the north, and the floor is covered in dust except for what might be... footprints?";
-                    break;
-                case 'inventory':
-                    response = "Inventory:\n- Iron Sword\n- Wooden Shield\n- Health Potion (3)\n- Torch\n- 15 gold coins";
-                    break;
-                case 'stats':
-                    response = "Character Stats:\nLevel: 1\nHealth: 100/100\nStrength: 8\nDexterity: 6\nIntelligence: 4\nXP: 0/100";
-                    break;
-                default:
-                    response = "I don't understand that command. Try 'go [direction]', 'look', 'inventory', or 'stats'.";
-            }
-            
-            gameText.innerHTML += `<p class="mt-4 text-primary-400">> ${action}</p><p class="mb-4">${response}</p>`;
-            gameText.scrollTop = gameText.scrollHeight;
-        }
-        
-        function submitCommand() {
-            const input = document.getElementById('command-input');
-            if (input.value.trim() !== '') {
-                gameAction(input.value.toLowerCase());
-                input.value = '';
-            }
-        }
-        
-        // Allow Enter key to submit command
-        document.getElementById('command-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                submitCommand();
-            }
-        });
-    </script>
+    <div class="container">
+        <div class="heart">❤️</div>
+        <h1>Happy Valentine's Day!</h1>
+        <p>To the most special person in my life.</p>
+        <p>Here is to another year of memories.</p>
+        <a href="#" class="btn" onclick="alert('I love you! ❤️')">Click Me</a>
+    </div>
+
 </body>
 </html>
