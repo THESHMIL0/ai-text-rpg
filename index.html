@@ -47,7 +47,7 @@
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 2000; display: flex; justify-content: center; align-items: center;
-            background: rgba(255,255,255,0.7); backdrop-filter: blur(25px);
+            background: rgba(255,255,255,0.8); backdrop-filter: blur(25px);
             transition: opacity 0.6s ease-out;
         }
 
@@ -59,12 +59,11 @@
         }
         @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* HEADER ANIMATION */
         h1 { font-family: 'Dancing Script', cursive; color: var(--primary); font-size: 2.8rem; margin: 0; line-height: 1.2; }
         .heart-beat { display: inline-block; animation: beat 1s infinite alternate; }
         @keyframes beat { to { transform: scale(1.2); } }
 
-        /* BUTTONS */
+        /* BUTTONS & INPUTS */
         .btn {
             background: linear-gradient(135deg, var(--primary), #ff4757);
             color: white; border: none; padding: 14px 25px;
@@ -80,23 +79,27 @@
             text-align: center; font-size: 1.1rem;
         }
 
-        /* DREAM DATE BOX */
-        .dream-date-box {
-            background: #fff0f6; border: 2px dashed var(--primary);
-            padding: 15px; border-radius: 20px; margin: 20px 0;
-            position: relative;
+        /* TRUTH OR DARE BOX */
+        .tod-box {
+            background: white; padding: 20px; border-radius: 20px;
+            margin: 20px 0; border: 2px solid #eee;
         }
-        .generated-date {
-            font-weight: bold; color: #d63031; min-height: 60px;
-            display: flex; align-items: center; justify-content: center;
+        .tod-result {
+            font-size: 1.1rem; font-weight: bold; color: var(--primary);
+            min-height: 50px; display: flex; align-items: center; justify-content: center;
+            margin: 10px 0;
         }
 
-        /* ZODIAC & BDAY */
-        .info-pill {
-            background: white; padding: 10px 20px; border-radius: 50px;
-            font-size: 0.85rem; display: inline-block; margin: 5px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05); color: #555;
+        /* HEART POPPING GAME */
+        .pop-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+            margin: 20px 0; padding: 10px; background: rgba(255,255,255,0.5);
+            border-radius: 15px;
         }
+        .pop-heart {
+            font-size: 1.5rem; cursor: pointer; transition: 0.2s;
+        }
+        .pop-heart.popped { transform: scale(0); opacity: 0; }
 
         /* MOOD GRID */
         .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 25px 0; }
@@ -117,25 +120,11 @@
         .album-art { width: 40px; height: 40px; border-radius: 50%; background: #000; animation: spin 4s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* MODAL */
-        #message-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);
-            z-index: 3000; justify-content: center; align-items: center;
-        }
-        .modal-content {
-            background: white; padding: 30px; border-radius: 30px;
-            max-width: 85%; width: 350px; text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: popIn 0.3s ease;
-        }
+        /* MODAL & TYPEWRITER */
+        #message-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: 3000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 30px; max-width: 85%; width: 350px; text-align: center; animation: popIn 0.3s ease; }
         @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        /* TYPEWRITER TEXT */
-        .typewriter-text {
-            font-family: 'Courier New', Courier, monospace;
-            text-align: left; line-height: 1.6; font-size: 0.95rem;
-            min-height: 100px; /* Prevents layout shift */
-        }
+        .typewriter-text { font-family: 'Courier New', Courier, monospace; text-align: left; line-height: 1.6; font-size: 0.95rem; min-height: 100px; }
 
         /* FLOATING EMOJIS */
         .floating-emoji { position: fixed; pointer-events: none; z-index: 9999; }
@@ -152,10 +141,10 @@
     <div id="login-screen" class="glass-card">
         <div style="padding: 2rem; width: 100%; max-width: 400px; text-align: center;">
             <h1 style="margin-bottom: 10px;">Theshu & Ayu ❤️</h1>
-            <p>Only my Summer Girl can enter.</p>
-            <input type="text" id="password-input" placeholder="Type your name..." autocomplete="off">
+            <p>Only my Kitchu can enter.</p>
+            <input type="text" id="password-input" placeholder="Enter password..." autocomplete="off">
             <button class="btn" style="margin-top: 20px;" onclick="checkPassword()">Unlock</button>
-            <p id="error-msg" style="color:#ff4757; display:none; margin-top:10px;">Hint: Ayushka</p>
+            <p id="error-msg" style="color:#ff4757; display:none; margin-top:10px;">Hint: kitchu</p>
         </div>
     </div>
 
@@ -163,16 +152,23 @@
         <h1>Theshuuuuu <span class="heart-beat">❤️</span> Ayuuuuu</h1>
         <p style="margin-top: 10px; color: #666;">Distance means nothing when you mean everything.</p>
 
-        <div>
-            <div class="info-pill">🎂 Her B-Day: <span id="bday-timer">...</span></div>
-            <div class="info-pill">♓ + ♍ = Soulmates</div>
+        <div style="margin-bottom: 15px;">
+            <div style="background: white; padding: 5px 15px; border-radius: 20px; display: inline-block; font-size: 0.8rem; margin: 5px;">🎂 Her B-Day: <span id="bday-timer">...</span></div>
+            <div style="background: white; padding: 5px 15px; border-radius: 20px; display: inline-block; font-size: 0.8rem; margin: 5px;">♓ + ♍ = Soulmates</div>
         </div>
 
-        <div class="dream-date-box">
-            <p style="margin:0; font-size: 0.8rem; text-transform:uppercase; letter-spacing:1px; color:#888;">🔮 Our Future Date</p>
-            <div class="generated-date" id="date-result">❓ Tap button to see our future...</div>
-            <button class="btn" style="padding: 8px 15px; width: auto; font-size: 0.9rem;" onclick="generateDate()">Generate Date ✨</button>
+        <div class="tod-box">
+            <p style="margin:0; font-size: 0.8rem; text-transform:uppercase; letter-spacing:1px; color:#888;">🔥 Truth or Dare</p>
+            <div class="tod-result" id="tod-text">Are you ready to play? 😏</div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn" style="background: #a29bfe;" onclick="playTOD('truth')">Truth</button>
+                <button class="btn" style="background: #ff7675;" onclick="playTOD('dare')">Dare</button>
+            </div>
         </div>
+
+        <p style="font-size: 0.8rem; color: #888; margin-bottom: 5px;">🎈 POP THE HEARTS (STRESS RELIEF)</p>
+        <div class="pop-grid" id="pop-grid">
+            </div>
 
         <div class="mood-grid">
             <button class="mood-btn" onclick="openMessage('miss')">💌<br>Miss You</button>
@@ -198,19 +194,12 @@
             </div>
         </div>
 
-        <div style="position:relative; background:white; padding:15px; border-radius:15px; margin-top:20px; cursor:pointer; overflow:hidden;" onclick="this.querySelector('.overlay').style.opacity='0'">
-            <div class="overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; background:#dfe6e9; display:flex; align-items:center; justify-content:center; color:#636e72; font-weight:bold; transition:0.5s;">Tap to Reveal Coupon ✨</div>
-            <div style="border: 2px dashed var(--primary); padding: 10px; color: var(--primary); font-weight:bold;">🎟️ COUPON: Unlimited Hugs 🫂</div>
-        </div>
-
         <button class="btn" id="danger-btn" style="background: #ff4757; margin-top: 20px;" onclick="triggerExplosion()">🚫 DO NOT PRESS</button>
 
     </div>
 
     <div class="music-player" id="music-bar" style="display:none;">
-        <div class="album-art">
-            <div style="width:10px; height:10px; background:white; border-radius:50%; margin: 15px auto;"></div>
-        </div>
+        <div class="album-art"><div style="width:10px; height:10px; background:white; border-radius:50%; margin: 15px auto;"></div></div>
         <div style="flex-grow: 1; text-align: left;">
             <div style="font-weight: bold; font-size: 0.9rem;">Tum Hi Ho 🎵</div>
             <div style="font-size: 0.7rem; color: #888;">Playing for my Summer Girl...</div>
@@ -226,23 +215,24 @@
     </div>
 
     <script>
-        const password = "Ayushka"; 
+        // --- UPDATED PASSWORD ---
+        const password = "kitchu"; 
         
-        // --- NEW QUIZ DATA (5 QUESTIONS) ---
+        // --- QUIZ DATA ---
         const quizData = [
             { q: "What is my favorite color?", a: ["Red", "Black", "Pink"], correct: 1 }, 
             { q: "What animal do I love?", a: ["Dog", "Cat", "Dinosaur"], correct: 1 },
             { q: "What is my favorite hobby?", a: ["Gaming", "Watching your photos", "Both"], correct: 2 },
             { q: "Who do I love the most?", a: ["Pizza", "Ayuuuu", "Sleep"], correct: 1 },
-            { q: "What do I like to eat? (Be careful 😉)", a: ["Ice Cream", "Ayuu 🦋✨", "Burger"], correct: 1 }
+            { q: "What do I like to eat? 😉", a: ["Ice Cream", "Ayuu 🦋✨", "Burger"], correct: 1 }
         ];
         let currentQuizIndex = 0;
-        let typewriterTimeout; // Variable to control typing speed
+        let typewriterTimeout;
 
         // 1. LOCK SCREEN
         function checkPassword() {
             const input = document.getElementById("password-input").value;
-            if (input.toLowerCase() === password.toLowerCase()) {
+            if (input === password) {
                 document.getElementById("login-screen").style.opacity = "0";
                 setTimeout(() => {
                     document.getElementById("login-screen").style.display = "none";
@@ -254,26 +244,53 @@
             }
         }
 
-        // 2. BIRTHDAY LOGIC
+        // 2. TRUTH OR DARE GAME
+        const truths = [
+            "What was your first impression of me?",
+            "What is your favorite photo of us?",
+            "When did you realize you loved me?",
+            "What is the naughtiest dream you've had about me? 😉",
+            "What is one thing you want to do with me right now?"
+        ];
+        const dares = [
+            "Send me a selfie right now! 📸",
+            "Send me a voice note saying 'I love you Theshuuuuu' ❤️",
+            "Blow a kiss to the screen 😘",
+            "Close your eyes and imagine I'm hugging you.",
+            "Send me your favorite sticker on chat."
+        ];
+        function playTOD(type) {
+            const list = type === 'truth' ? truths : dares;
+            const random = list[Math.floor(Math.random() * list.length)];
+            document.getElementById("tod-text").innerText = random;
+        }
+
+        // 3. HEART POPPING GAME
+        const popGrid = document.getElementById("pop-grid");
+        for(let i=0; i<10; i++) {
+            let heart = document.createElement("div");
+            heart.innerText = "❤️";
+            heart.className = "pop-heart";
+            heart.onclick = function() {
+                this.classList.add("popped");
+                setTimeout(() => {
+                    this.classList.remove("popped"); // Reset after 2s
+                }, 2000);
+            };
+            popGrid.appendChild(heart);
+        }
+
+        // 4. BIRTHDAY LOGIC
         function updateBirthday() {
             const now = new Date();
-            let bday = new Date(now.getFullYear(), 8, 22); // Month 8 = Sept
+            let bday = new Date(now.getFullYear(), 8, 22); 
             if (now > bday) bday.setFullYear(now.getFullYear() + 1);
             const diff = Math.ceil((bday - now) / (1000 * 60 * 60 * 24));
             document.getElementById("bday-timer").innerText = `${diff} Days`;
         }
         updateBirthday();
 
-        // 3. DREAM DATE GENERATOR
-        const activities = ["Sharing a Chocolate Cone 🍦", "Watching a SRK Movie 🎬", "Walking on the Beach 🌊", "Stargazing ✨", "Late Night Long Drive 🚗"];
-        const places = ["in Mumbai", "in Paris", "in the Maldives", "under the moonlight", "on a rooftop"];
-        function generateDate() {
-            const act = activities[Math.floor(Math.random()*activities.length)];
-            const plc = places[Math.floor(Math.random()*places.length)];
-            document.getElementById("date-result").innerText = `${act} ${plc}`;
-        }
-
-        // 4. QUIZ LOGIC
+        // 5. QUIZ LOGIC
         function startQuiz() { currentQuizIndex = 0; showQuizQuestion(); }
         function showQuizQuestion() {
             const q = quizData[currentQuizIndex];
@@ -290,24 +307,22 @@
                     document.getElementById("gift-lock-view").style.display = "none";
                     document.getElementById("gift-unlocked-view").style.display = "block";
                 }
-            } else { alert("Wrong! 🥺 Don't you know Theshuuuuu?"); }
+            } else { alert("Wrong! 🥺 Don't you know me?"); }
         }
 
-        // 5. FIXED TYPEWRITER EFFECT
+        // 6. MESSAGES & TYPEWRITER
         function typeWriter(text, i) {
             const container = document.querySelector(".typewriter-text");
-            if (!container) return; // Safety check
-            
+            if (!container) return;
             if (i < text.length) {
                 container.innerHTML += text.charAt(i);
                 typewriterTimeout = setTimeout(() => typeWriter(text, i + 1), 50);
             }
         }
 
-        // 6. MESSAGES
         function openMessage(type) {
             let content = "";
-            clearTimeout(typewriterTimeout); // Stop any previous typing
+            clearTimeout(typewriterTimeout); 
 
             if(type === 'miss') content = `<h3>Missing Theshuuuuu?</h3><p>I am just a text away. I love you! ❤️</p>`;
             if(type === 'sad') content = `<h3>Don't be Sad! 🍦</h3><p>Here is a virtual Ice Cream for my Summer Girl.</p><div style="font-size:3rem">🍦</div>`;
@@ -315,7 +330,6 @@
             if(type === 'note') {
                 content = `<h3>My Dear Ayushka...</h3><div class="typewriter-text"></div>`;
                 showModal(content);
-                // Clear content first to fix the bug, then start typing
                 setTimeout(() => {
                     document.querySelector(".typewriter-text").innerHTML = ""; 
                     typeWriter("Every day with you is a blessing. Even though we are miles apart, you are the closest person to my heart. I love you more than words can say. ❤️", 0);
@@ -333,7 +347,7 @@
         }
         function closeModal() { 
             document.getElementById("message-modal").style.display = "none"; 
-            clearTimeout(typewriterTimeout); // Stop typing when closed
+            clearTimeout(typewriterTimeout); 
         }
 
         // 7. EXPLOSION & KISS
