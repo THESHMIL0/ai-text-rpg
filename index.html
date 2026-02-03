@@ -44,6 +44,7 @@
             position: relative;
             width: 360px; height: 600px;
             perspective: 1500px;
+            transform-style: preserve-3d;
         }
 
         /* PAGES */
@@ -56,7 +57,7 @@
             transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
             display: flex; flex-direction: column; align-items: center; text-align: center;
             border-left: 2px solid rgba(0,0,0,0.1);
-            backface-visibility: hidden;
+            backface-visibility: hidden; /* Hides the back when flipped */
             background-image: var(--spine-shadow);
         }
 
@@ -66,7 +67,7 @@
             justify-content: center; border-left: 8px solid rgba(0,0,0,0.2);
         }
         
-        /* Z-INDEX STACKING (Important for 8 pages) */
+        /* Z-INDEX STACKING */
         #p1 { z-index: 90; }
         #p2 { z-index: 80; }
         #p3 { z-index: 70; }
@@ -76,7 +77,11 @@
         #p7 { z-index: 30; }
         #p8 { z-index: 20; }
 
-        .flipped { transform: rotateY(-180deg); }
+        /* FLIP LOGIC */
+        .flipped { 
+            transform: rotateY(-180deg); 
+            pointer-events: none; /* CRITICAL FIX: Allows clicking page underneath */
+        }
 
         /* CONTENT STYLES */
         h1 { font-family: 'Dancing Script', cursive; font-size: 2.8rem; margin: 0; text-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
@@ -179,7 +184,7 @@
             <p style="opacity: 0.9; font-size: 1rem; letter-spacing: 2px;">VOL. 1</p>
             <br><br>
             <p>🔒 Enter Password:</p>
-            <input type="text" id="pass" placeholder="hint: kushu">
+            <input type="text" id="pass" placeholder="hint: kushu" onkeypress="handleEnter(event)">
             <button class="btn" onclick="unlock()">Open Book 📖</button>
             <p id="err" style="color:red; display:none; font-size:0.8rem; margin-top:5px;">Wrong password!</p>
         </div>
@@ -299,6 +304,10 @@
         let isPlaying = false;
         
         // --- BOOK LOGIC ---
+        function handleEnter(e) {
+            if(e.key === "Enter") unlock();
+        }
+
         function unlock() {
             let input = document.getElementById('pass').value.trim().toLowerCase();
             if(input === password) {
@@ -359,15 +368,19 @@
         }
         loadQ();
 
-        // --- TYPEWRITER ---
+        // --- FIXED TYPEWRITER ---
         function startLetter() {
             const text = "My Dearest Ayushka,\n\nEvery day without you feels incomplete, but knowing I have you makes it all worth it.\n\nYou are my gamer girl, my summer girl, and my forever love.\n\nLove,\nTheshmil (Kitchu) ❤️";
             const container = document.getElementById("typewriter-container");
+            
+            // 1. Clear text
             container.textContent = "";
             clearTimeout(typewriterTimeout);
+            
             let i = 0;
             function type() {
                 if (i < text.length) {
+                    // 2. Use proper text appending
                     container.textContent += text.charAt(i);
                     i++;
                     typewriterTimeout = setTimeout(type, 50); 
@@ -393,11 +406,3 @@
         }
 
         // --- SCANNER ---
-        let scanTimeout;
-        function startScan() {
-            document.getElementById('scan-line').style.display = 'block';
-            document.getElementById('scan-res').innerText = "Scanning...";
-            scanTimeout = setTimeout(() => {
-                document.getElementById('scan-line').style.display = 'none';
-                document.getElementById('scan-res').innerText = "100% Match! ❤️";
-          
