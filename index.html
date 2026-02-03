@@ -87,6 +87,32 @@
         }
         .mood-btn:hover { background: white; transform: translateY(-3px); color: var(--primary); }
 
+        /* ZODIAC CARD */
+        .zodiac-box {
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+            color: white; padding: 15px; border-radius: 20px; margin-top: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* SCRATCH CARD */
+        .scratch-container {
+            position: relative; width: 100%; height: 100px;
+            background: white; border-radius: 15px; overflow: hidden;
+            margin-top: 20px; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .scratch-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #dfe6e9; color: #636e72;
+            display: flex; align-items: center; justify-content: center; font-weight: bold;
+            transition: opacity 0.5s; z-index: 2;
+        }
+        .scratch-overlay:hover { opacity: 0; } /* Simple hover to reveal */
+        .hidden-coupon {
+            color: var(--primary); font-weight: bold; font-size: 1.1rem; border: 2px dashed var(--primary); padding: 10px;
+        }
+
         /* MUSIC PLAYER BAR */
         .music-player {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
@@ -119,7 +145,7 @@
         @keyframes floatUp { to { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
 
         /* QUIZ OPTION */
-        .quiz-opt { background: #eee; margin: 5px 0; padding: 10px; border-radius: 10px; cursor: pointer; }
+        .quiz-opt { background: #eee; margin: 5px 0; padding: 10px; border-radius: 10px; cursor: pointer; transition:0.2s; }
         .quiz-opt:hover { background: var(--primary); color: white; }
 
     </style>
@@ -145,6 +171,12 @@
             <div id="bday-timer" style="font-size: 1.2rem; font-weight: bold; color: var(--primary);">Calculating...</div>
         </div>
 
+        <div class="zodiac-box">
+            <div style="font-size: 1.5rem; margin-bottom: 5px;">♓ Pisces 🤝 Virgo ♍</div>
+            <div style="font-size: 0.9rem;">Opposites Attract • Soulmates</div>
+            <div style="font-size: 0.8rem; opacity: 0.9;">(Water + Earth = Perfect Match)</div>
+        </div>
+
         <div class="mood-grid">
             <button class="mood-btn" onclick="openMessage('miss')">💌<br>Miss Theshu</button>
             <button class="mood-btn" onclick="openMessage('sad')">🍦<br>Want Ice Cream</button>
@@ -167,6 +199,11 @@
                 <h3 style="color: var(--primary);">Your Favorite!</h3>
                 <small>I owe you an Ice Cream date soon!</small>
             </div>
+        </div>
+
+        <div class="scratch-container">
+            <div class="scratch-overlay">Tap/Hover to Reveal Hidden Coupon ✨</div>
+            <div class="hidden-coupon">🎟️ COUPON: Unlimited Hugs 🫂</div>
         </div>
 
         <button class="btn" id="danger-btn" style="background: #ff4757; margin-top: 20px;" onclick="triggerExplosion()">🚫 DO NOT PRESS</button>
@@ -194,11 +231,11 @@
     <script>
         const password = "Ayushka"; 
         
-        // --- QUIZ DATA (Personalized for Theshmil) ---
+        // --- QUIZ DATA (FIXED OPTIONS) ---
         const quizData = [
             { q: "When is Theshmil's Birthday?", a: ["Sept 22", "March 14", "Dec 25"], correct: 1 }, 
             { q: "What does he call you?", a: ["Babe", "Ayuuuuu", "Honey"], correct: 1 },
-            { q: "Who loves you more?", a: ["Theshuuuuu", "Theshuuuuu", "Theshuuuuu"], correct: 0 } 
+            { q: "Who loves the other person more?", a: ["Theshuuuuu 🙋‍♂️", "Ayuuuuu 🤷‍♀️", "Both Equally ⚖️"], correct: 0 } 
         ];
         let currentQuizIndex = 0;
 
@@ -257,7 +294,7 @@
                     document.getElementById("gift-unlocked-view").style.display = "block";
                 }
             } else {
-                alert("Hawww! Wrong answer! 🥺 Try again, Ayu!");
+                alert("Hawww! Wrong answer! 🥺 You don't know Theshuuuuu? Try again!");
             }
         }
 
@@ -282,7 +319,7 @@
             if(type === 'miss') content = `<h3>Missing Theshuuuuu?</h3><p>Remember, I am just one call away. I love you! ❤️</p>`;
             if(type === 'sad') content = `<h3>Don't be Sad! 🍦</h3><p>Here is a virtual Ice Cream for my Summer Girl. Smile now!</p><div style="font-size:3rem">🍦</div>`;
             if(type === 'bollywood') content = `<h3>Filmy Style 🎬</h3><p>"Tujh mein rab dikhta hai, yaara main kya karoon?" 🎶</p>`;
-            if(type === 'us') content = `<h3>Theshmil & Ayushka</h3><p>Born March 14 & Sept 22.<br>Destined to be together. 🔒</p>`;
+            if(type === 'us') content = `<h3>Theshmil & Ayushka</h3><p>Pisces & Virgo.<br>Opposites Attract.<br>Destined to be together. 🔒</p>`;
             showModal(content);
         }
 
