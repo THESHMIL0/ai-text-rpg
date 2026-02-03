@@ -9,16 +9,16 @@
         body {
             margin: 0;
             padding: 0;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
-            font-family: 'Segoe UI', sans-serif;
-            overflow: hidden;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
         }
 
-        /* LOGIN SCREEN OVERLAY */
+        /* LOGIN SCREEN */
         #login-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -33,137 +33,186 @@
         
         #login-box {
             background: white;
-            padding: 2rem;
+            padding: 2.5rem;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
         input {
-            padding: 10px;
-            border-radius: 5px;
+            padding: 12px;
+            border-radius: 8px;
             border: 1px solid #ddd;
-            margin-top: 10px;
+            margin-top: 15px;
             font-size: 1rem;
             outline: none;
+            width: 200px;
+            text-align: center;
         }
 
-        /* MAIN CONTENT CARD */
+        /* MAIN APP CONTAINER */
         .container {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.92);
             padding: 2rem;
-            border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
             max-width: 90%;
-            width: 380px;
+            width: 400px;
             text-align: center;
             display: none; /* Hidden until login */
+            margin: 20px 0;
             position: relative;
             z-index: 10;
         }
 
-        h1 { color: #d63384; margin-bottom: 5px; }
-        p { color: #555; line-height: 1.5; }
+        h1 { color: #d63384; margin-bottom: 5px; font-size: 2rem; }
+        p { color: #666; line-height: 1.6; }
 
-        /* BUTTONS */
+        /* INTERACTIVE BUTTONS */
         .btn {
-            background: #d63384;
+            background: linear-gradient(45deg, #ff6b6b, #d63384);
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 12px 25px;
             border-radius: 50px;
             font-size: 1rem;
             cursor: pointer;
             margin: 10px 0;
-            transition: transform 0.1s;
-            width: 80%;
-            font-weight: bold;
+            width: 100%;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(214, 51, 132, 0.3);
         }
-        .btn:active { transform: scale(0.95); }
-        .btn-secondary { background: #ff8fa3; }
+        .btn:hover { transform: translateY(-2px); }
+        .btn:active { transform: scale(0.98); }
+
+        /* "OPEN WHEN" GRID */
+        .mood-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .mood-btn {
+            background: white;
+            border: 2px solid #ffb3c1;
+            color: #d63384;
+            padding: 15px 5px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        .mood-btn:hover { background: #fff0f5; border-color: #d63384; }
+
+        /* POPUP MODAL FOR MESSAGES */
+        #message-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 80%;
+            text-align: center;
+            animation: popIn 0.3s ease;
+        }
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* GOLDEN TICKET */
+        .ticket {
+            background: #fff8e1;
+            border: 2px dashed #cca000;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            position: relative;
+        }
+        .ticket h3 { margin: 0; color: #b8860b; font-size: 1.2rem; }
+        .ticket-date { font-weight: bold; font-size: 1.5rem; color: #333; margin: 10px 0; }
 
         /* KISS ANIMATION */
         .kiss {
             position: absolute;
-            font-size: 2rem;
+            font-size: 2.5rem;
             animation: floatUp 1.5s ease-out forwards;
             pointer-events: none;
+            z-index: 999;
         }
         @keyframes floatUp {
             0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-150px) scale(1.5); opacity: 0; }
+            100% { transform: translateY(-200px) scale(1.5); opacity: 0; }
         }
 
-        /* TIMER BOX */
-        #timer-box {
-            background: #fff0f5;
-            border: 2px dashed #d63384;
-            border-radius: 15px;
-            padding: 15px;
-            margin: 20px 0;
+        .close-btn {
+            margin-top: 15px;
+            background: #eee;
+            color: #333;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
         }
-        #timer {
-            font-weight: bold;
-            color: #d63384;
-            font-size: 1.4rem;
-        }
-        #timer-label {
-            font-size: 0.9rem;
-            color: #888;
-            margin-bottom: 5px;
-        }
-
-        /* HIDDEN LETTER */
-        .hidden-content { display: none; margin-top: 15px; text-align: left; font-size: 0.9rem; }
-        
     </style>
 </head>
 <body>
 
     <div id="login-screen">
         <div id="login-box">
-            <h2>🔒 Locked</h2>
-            <p>Enter your beautiful name to open:</p>
-            <input type="text" id="password-input" placeholder="Name...">
+            <h2>🔒 Priority Access</h2>
+            <p>Enter name to unlock:</p>
+            <input type="text" id="password-input" placeholder="Her Name...">
             <br>
-            <button class="btn" onclick="checkPassword()">Unlock ❤️</button>
-            <p id="error-msg" style="color:red; display:none; margin-top:10px;">Try again, gorgeous! hint: Ayushka</p>
+            <button class="btn" style="width: auto; margin-top: 20px;" onclick="checkPassword()">Unlock ❤️</button>
+            <p id="error-msg" style="color:red; display:none; margin-top:10px;">Hint: Ayushka</p>
         </div>
     </div>
 
     <div class="container" id="main-content">
         <h1>Hey Ayushka! ❤️</h1>
-        <p>I can't wait for the day the distance closes.</p>
-        
-        <div id="timer-box">
-            <div id="timer-label">Counting down to August 18, 2026 ✈️</div>
-            <div id="timer">Calculating...</div>
+        <p>Since I can't be there to tell you this in person, click on how you are feeling right now:</p>
+
+        <div class="mood-grid">
+            <button class="mood-btn" onclick="openMessage('miss')">💌<br>Miss You</button>
+            <button class="mood-btn" onclick="openMessage('sad')">😢<br>Feeling Sad</button>
+            <button class="mood-btn" onclick="openMessage('happy')">🥰<br>Feeling Happy</button>
+            <button class="mood-btn" onclick="openMessage('us')">📸<br>Us</button>
         </div>
 
-        <button class="btn" onclick="sendKiss()" style="position: relative;">
+        <button class="btn" onclick="sendKiss()" style="position: relative; overflow: hidden;">
             💋 Send Me a Kiss
         </button>
 
-        <button class="btn btn-secondary" onclick="showReason()">Why I Miss You 🎲</button>
-        <p id="reason-text" style="min-height: 40px; color: #d63384; font-style: italic; font-weight: 500;"></p>
-
-        <div style="margin-top: 20px; cursor: pointer; border-top: 1px solid #ddd; padding-top: 10px;" onclick="toggleLetter()">
-            <span style="font-size: 2rem;">💌</span><br>
-            <small>(Tap to read letter)</small>
+        <div class="ticket">
+            <h3>✨ BOARDING PASS ✨</h3>
+            <p style="margin: 5px 0; font-size: 0.9rem;">PASSENGER: AYUSHKA & ME</p>
+            <div class="ticket-date">AUG 18, 2026</div>
+            <p style="margin: 0; color: #b8860b; font-size: 0.9rem;">DESTINATION: TOGETHER FOREVER</p>
+            <div style="margin-top:10px; font-size: 0.8rem; color: #888;">Valid for one lifetime of happiness</div>
         </div>
-        <div id="letter" class="hidden-content">
-            <p><strong>My Dearest Ayushka,</strong></p>
-            <p>Looking at that countdown is the only thing keeping me sane. Every second that ticks by is one second closer to holding you.</p>
-            <p>August 18th is going to be the best day of my life.</p>
-            <p>Happy Valentine's Day! ❤️</p>
+    </div>
+
+    <div id="message-modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div style="font-size: 3rem; margin-bottom: 10px;" id="modal-emoji"></div>
+            <h3 id="modal-title" style="color: #d63384; margin: 0;"></h3>
+            <p id="modal-body" style="font-size: 1.1rem; margin: 15px 0;"></p>
+            <button class="close-btn" onclick="closeModal()">Close</button>
         </div>
     </div>
 
     <script>
-        // --- CONFIGURATION ---
+        // --- PASSWORD CONFIG ---
         const password = "Ayushka"; 
-        // SETTING THE REUNION DATE
-        const reunionDate = new Date("2026-08-18T00:00:00").getTime();
 
         // 1. LOCK SCREEN LOGIC
         function checkPassword() {
@@ -179,58 +228,55 @@
             }
         }
 
-        // 2. COUNTDOWN LOGIC (COUNTING DOWN)
-        const timerInterval = setInterval(function() {
-            const now = new Date().getTime();
-            const distance = reunionDate - now;
-
-            if (distance < 0) {
-                // If the date has passed
-                document.getElementById("timer").innerHTML = "I'M HERE! ❤️";
-                document.getElementById("timer-label").innerHTML = "Distance Closed";
-            } else {
-                // Calculate time remaining
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                document.getElementById("timer").innerHTML = 
-                    `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        // 2. OPEN WHEN MESSAGES
+        const messages = {
+            'miss': {
+                emoji: "🌏",
+                title: "When you miss me...",
+                text: "Just remember that I am looking at the same moon. Distance is temporary, but my love for you is permanent. Call me? 📞"
+            },
+            'sad': {
+                emoji: "🧸",
+                title: "When you are sad...",
+                text: "I wish I could wrap my arms around you right now. Take a deep breath. You are stronger than you know, and I am so proud of you."
+            },
+            'happy': {
+                emoji: "✨",
+                title: "When you are happy...",
+                text: "Your smile is literally my favorite thing in the world. Seeing you happy makes my entire day. Keep shining, love!"
+            },
+            'us': {
+                emoji: "🔒",
+                title: "About Us...",
+                text: "We are writing the best love story ever. It might have some long chapters apart, but the ending is going to be worth it."
             }
-        }, 1000);
+        };
+
+        function openMessage(mood) {
+            const data = messages[mood];
+            document.getElementById("modal-emoji").innerText = data.emoji;
+            document.getElementById("modal-title").innerText = data.title;
+            document.getElementById("modal-body").innerText = data.text;
+            document.getElementById("message-modal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("message-modal").style.display = "none";
+        }
 
         // 3. KISS ANIMATION
         function sendKiss() {
             const button = document.querySelector("button[onclick='sendKiss()']");
             const kiss = document.createElement("div");
             kiss.classList.add("kiss");
-            kiss.innerText = "💋";
+            kiss.innerText = ["💋", "❤️", "😍"][Math.floor(Math.random() * 3)]; // Random icon
+            
             const rect = button.getBoundingClientRect();
             kiss.style.left = (rect.left + rect.width / 2) + (Math.random() * 40 - 20) + "px";
             kiss.style.top = rect.top + "px";
+            
             document.body.appendChild(kiss);
             setTimeout(() => kiss.remove(), 1500);
-        }
-
-        // 4. REASONS GENERATOR
-        const reasons = [
-            "Your smile is my favorite thing 📸",
-            "I miss holding your hand 🤝",
-            "You make me laugh like no one else 😂",
-            "Distance means nothing when you mean everything 🌍",
-            "I love our video calls 📱",
-            "I can't wait to hug you 🫂"
-        ];
-        function showReason() {
-            const text = document.getElementById("reason-text");
-            text.innerText = reasons[Math.floor(Math.random() * reasons.length)];
-        }
-
-        // 5. LETTER TOGGLE
-        function toggleLetter() {
-            const letter = document.getElementById("letter");
-            letter.style.display = letter.style.display === "block" ? "none" : "block";
         }
     </script>
 </body>
