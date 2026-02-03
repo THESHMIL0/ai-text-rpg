@@ -12,14 +12,14 @@
         :root {
             --primary: #ff6b81; /* Bollywood Pink */
             --accent: #ffa502; /* Summer Orange */
-            --glass: rgba(255, 255, 255, 0.8);
+            --glass: rgba(255, 255, 255, 0.9);
         }
         * { box-sizing: border-box; }
 
         body {
             margin: 0; padding: 0; min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
-            /* SUMMER GIRL THEME GRADIENT */
+            /* SUMMER LOVE GRADIENT */
             background: linear-gradient(-45deg, #ff9a9e, #fecfef, #f6e58d, #ffbe76);
             background-size: 400% 400%;
             animation: gradientBG 10s ease infinite;
@@ -34,12 +34,12 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* GLASS CARD DESIGN */
+        /* GLASS CARD */
         .glass-card {
             background: var(--glass);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 2px solid rgba(255, 255, 255, 0.6);
+            border: 2px solid white;
             border-radius: 30px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
@@ -48,7 +48,7 @@
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 2000; display: flex; justify-content: center; align-items: center;
-            background: rgba(255,255,255,0.6); backdrop-filter: blur(25px);
+            background: rgba(255,255,255,0.7); backdrop-filter: blur(25px);
             transition: opacity 0.6s ease-out;
         }
 
@@ -60,15 +60,12 @@
         }
         @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
+        /* HEADER ANIMATION */
         h1 { font-family: 'Dancing Script', cursive; color: var(--primary); font-size: 2.8rem; margin: 0; line-height: 1.2; }
-        
-        /* INPUTS & BUTTONS */
-        input {
-            width: 100%; padding: 15px; margin-top: 15px;
-            border: 2px solid white; background: rgba(255,255,255,0.6);
-            border-radius: 15px; outline: none; text-align: center; font-size: 1.1rem;
-        }
-        
+        .heart-beat { display: inline-block; animation: beat 1s infinite alternate; }
+        @keyframes beat { to { transform: scale(1.2); } }
+
+        /* BUTTONS */
         .btn {
             background: linear-gradient(135deg, var(--primary), #ff4757);
             color: white; border: none; padding: 14px 25px;
@@ -78,52 +75,47 @@
             transition: transform 0.2s;
         }
         .btn:active { transform: scale(0.95); }
+        input {
+            width: 100%; padding: 15px; margin-top: 15px; border: 2px solid white;
+            background: rgba(255,255,255,0.6); border-radius: 15px; outline: none;
+            text-align: center; font-size: 1.1rem;
+        }
+
+        /* DREAM DATE BOX */
+        .dream-date-box {
+            background: #fff0f6; border: 2px dashed var(--primary);
+            padding: 15px; border-radius: 20px; margin: 20px 0;
+            position: relative;
+        }
+        .generated-date {
+            font-weight: bold; color: #d63031; min-height: 60px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* ZODIAC & BDAY */
+        .info-pill {
+            background: white; padding: 10px 20px; border-radius: 50px;
+            font-size: 0.85rem; display: inline-block; margin: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); color: #555;
+        }
 
         /* MOOD GRID */
         .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 25px 0; }
         .mood-btn {
-            background: rgba(255,255,255,0.7); border: none; padding: 15px;
+            background: white; border: none; padding: 15px;
             border-radius: 20px; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.05);
         }
-        .mood-btn:hover { background: white; transform: translateY(-3px); color: var(--primary); }
+        .mood-btn:hover { transform: translateY(-3px); color: var(--primary); }
 
-        /* ZODIAC CARD */
-        .zodiac-box {
-            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
-            color: white; padding: 15px; border-radius: 20px; margin-top: 20px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        /* SCRATCH CARD */
-        .scratch-container {
-            position: relative; width: 100%; height: 100px;
-            background: white; border-radius: 15px; overflow: hidden;
-            margin-top: 20px; cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            display: flex; align-items: center; justify-content: center;
-        }
-        .scratch-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #dfe6e9; color: #636e72;
-            display: flex; align-items: center; justify-content: center; font-weight: bold;
-            transition: opacity 0.5s; z-index: 2;
-        }
-        .scratch-overlay:hover { opacity: 0; } /* Simple hover to reveal */
-        .hidden-coupon {
-            color: var(--primary); font-weight: bold; font-size: 1.1rem; border: 2px dashed var(--primary); padding: 10px;
-        }
-
-        /* MUSIC PLAYER BAR */
+        /* MUSIC PLAYER */
         .music-player {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px;
-            background: rgba(255, 255, 255, 0.95);
+            width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95);
             padding: 12px 20px; border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            display: flex; align-items: center; gap: 15px;
-            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 15px; z-index: 100;
         }
-        .album-art { width: 40px; height: 40px; border-radius: 50%; background: #000; overflow: hidden; animation: spin 4s linear infinite; }
+        .album-art { width: 40px; height: 40px; border-radius: 50%; background: #000; animation: spin 4s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* MODAL */
@@ -135,10 +127,15 @@
         .modal-content {
             background: white; padding: 30px; border-radius: 30px;
             max-width: 85%; width: 350px; text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            animation: popIn 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: popIn 0.3s ease;
         }
         @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* TYPEWRITER EFFECT */
+        .typewriter-text {
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left; line-height: 1.6; font-size: 0.95rem;
+        }
 
         /* FLOATING EMOJIS */
         .floating-emoji { position: fixed; pointer-events: none; z-index: 9999; }
@@ -163,24 +160,24 @@
     </div>
 
     <div class="container glass-card" id="main-content">
-        <h1>Theshuuuuu<br>&<br>Ayuuuuu</h1>
-        <p style="margin-top: 10px; color: #666;">Distance is just a number. We are forever. ♾️</p>
+        <h1>Theshuuuuu <span class="heart-beat">❤️</span> Ayuuuuu</h1>
+        <p style="margin-top: 10px; color: #666;">Distance means nothing when you mean everything.</p>
 
-        <div style="background: rgba(255,255,255,0.5); padding: 10px; border-radius: 15px; margin: 15px 0; border: 1px solid white;">
-            <p style="margin:0; font-size: 0.8rem; font-weight: bold; color: var(--accent);">🎂 HER BIRTHDAY COUNTDOWN</p>
-            <div id="bday-timer" style="font-size: 1.2rem; font-weight: bold; color: var(--primary);">Calculating...</div>
+        <div>
+            <div class="info-pill">🎂 Her B-Day: <span id="bday-timer">...</span></div>
+            <div class="info-pill">♓ + ♍ = Soulmates</div>
         </div>
 
-        <div class="zodiac-box">
-            <div style="font-size: 1.5rem; margin-bottom: 5px;">♓ Pisces 🤝 Virgo ♍</div>
-            <div style="font-size: 0.9rem;">Opposites Attract • Soulmates</div>
-            <div style="font-size: 0.8rem; opacity: 0.9;">(Water + Earth = Perfect Match)</div>
+        <div class="dream-date-box">
+            <p style="margin:0; font-size: 0.8rem; text-transform:uppercase; letter-spacing:1px; color:#888;">🔮 Our Future Date</p>
+            <div class="generated-date" id="date-result">❓ Tap button to see our future...</div>
+            <button class="btn" style="padding: 8px 15px; width: auto; font-size: 0.9rem;" onclick="generateDate()">Generate Date ✨</button>
         </div>
 
         <div class="mood-grid">
-            <button class="mood-btn" onclick="openMessage('miss')">💌<br>Miss Theshu</button>
+            <button class="mood-btn" onclick="openMessage('miss')">💌<br>Miss You</button>
             <button class="mood-btn" onclick="openMessage('sad')">🍦<br>Want Ice Cream</button>
-            <button class="mood-btn" onclick="openMessage('bollywood')">🎬<br>Bollywood Mode</button>
+            <button class="mood-btn" onclick="openMessage('note')">📝<br>Love Note</button>
             <button class="mood-btn" onclick="openMessage('us')">🔒<br>Our Future</button>
         </div>
 
@@ -201,9 +198,9 @@
             </div>
         </div>
 
-        <div class="scratch-container">
-            <div class="scratch-overlay">Tap/Hover to Reveal Hidden Coupon ✨</div>
-            <div class="hidden-coupon">🎟️ COUPON: Unlimited Hugs 🫂</div>
+        <div style="position:relative; background:white; padding:15px; border-radius:15px; margin-top:20px; cursor:pointer; overflow:hidden;" onclick="this.querySelector('.overlay').style.opacity='0'">
+            <div class="overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; background:#dfe6e9; display:flex; align-items:center; justify-content:center; color:#636e72; font-weight:bold; transition:0.5s;">Tap to Reveal Coupon ✨</div>
+            <div style="border: 2px dashed var(--primary); padding: 10px; color: var(--primary); font-weight:bold;">🎟️ COUPON: Unlimited Hugs 🫂</div>
         </div>
 
         <button class="btn" id="danger-btn" style="background: #ff4757; margin-top: 20px;" onclick="triggerExplosion()">🚫 DO NOT PRESS</button>
@@ -231,7 +228,7 @@
     <script>
         const password = "Ayushka"; 
         
-        // --- QUIZ DATA (FIXED OPTIONS) ---
+        // --- QUIZ DATA ---
         const quizData = [
             { q: "When is Theshmil's Birthday?", a: ["Sept 22", "March 14", "Dec 25"], correct: 1 }, 
             { q: "What does he call you?", a: ["Babe", "Ayuuuuu", "Honey"], correct: 1 },
@@ -254,72 +251,65 @@
             }
         }
 
-        // 2. BIRTHDAY LOGIC (Sept 22)
+        // 2. BIRTHDAY LOGIC
         function updateBirthday() {
             const now = new Date();
-            const currentYear = now.getFullYear();
-            let bday = new Date(`September 22, ${currentYear}`);
-            if (now > bday) bday = new Date(`September 22, ${currentYear + 1}`);
-            
-            const diff = bday - now;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            document.getElementById("bday-timer").innerText = `${days} Days to go! 🎉`;
+            let bday = new Date(now.getFullYear(), 8, 22); // Month is 0-indexed (8 is Sept)
+            if (now > bday) bday.setFullYear(now.getFullYear() + 1);
+            const diff = Math.ceil((bday - now) / (1000 * 60 * 60 * 24));
+            document.getElementById("bday-timer").innerText = `${diff} Days`;
         }
         updateBirthday();
 
-        // 3. QUIZ LOGIC
-        function startQuiz() {
-            currentQuizIndex = 0;
-            showQuizQuestion();
+        // 3. DREAM DATE GENERATOR
+        const activities = ["Sharing a Chocolate Cone 🍦", "Watching a SRK Movie 🎬", "Walking on the Beach 🌊", "Stargazing ✨", "Late Night Long Drive 🚗"];
+        const places = ["in Mumbai", "in Paris", "in the Maldives", "under the moonlight", "on a rooftop"];
+        function generateDate() {
+            const act = activities[Math.floor(Math.random()*activities.length)];
+            const plc = places[Math.floor(Math.random()*places.length)];
+            document.getElementById("date-result").innerText = `${act} ${plc}`;
         }
 
+        // 4. QUIZ LOGIC
+        function startQuiz() { currentQuizIndex = 0; showQuizQuestion(); }
         function showQuizQuestion() {
             const q = quizData[currentQuizIndex];
-            let html = `<h3 style="color:var(--primary)">Question ${currentQuizIndex + 1}</h3><p>${q.q}</p>`;
-            q.a.forEach((opt, index) => {
-                html += `<div class="quiz-opt" onclick="checkAnswer(${index})">${opt}</div>`;
-            });
+            let html = `<h3 style="color:var(--primary)">Q${currentQuizIndex + 1}: ${q.q}</h3>`;
+            q.a.forEach((opt, index) => { html += `<div class="quiz-opt" onclick="checkAnswer(${index})">${opt}</div>`; });
             showModal(html);
         }
-
-        function checkAnswer(selectedIndex) {
-            if (selectedIndex === quizData[currentQuizIndex].correct) {
+        function checkAnswer(idx) {
+            if (idx === quizData[currentQuizIndex].correct) {
                 currentQuizIndex++;
-                if (currentQuizIndex < quizData.length) {
-                    showQuizQuestion(); 
-                } else {
-                    closeModal();
-                    createEmoji("🍦"); createEmoji("🎉");
+                if (currentQuizIndex < quizData.length) showQuizQuestion(); 
+                else {
+                    closeModal(); createEmoji("🍦");
                     document.getElementById("gift-lock-view").style.display = "none";
                     document.getElementById("gift-unlocked-view").style.display = "block";
                 }
-            } else {
-                alert("Hawww! Wrong answer! 🥺 You don't know Theshuuuuu? Try again!");
+            } else { alert("Wrong! 🥺 Try again!"); }
+        }
+
+        // 5. TYPEWRITER EFFECT
+        function typeWriter(text, i, fn) {
+            if (i < text.length) {
+                document.querySelector(".typewriter-text").innerHTML += text.charAt(i);
+                setTimeout(() => typeWriter(text, i + 1, fn), 50);
             }
         }
 
-        // 4. EXPLOSION (LAG FREE)
-        let isExploding = false;
-        function triggerExplosion() {
-            if (isExploding) return;
-            isExploding = true;
-            const btn = document.getElementById("danger-btn");
-            btn.innerText = "I LOVE YOUUUUU! ❤️";
-            let count = 0;
-            const interval = setInterval(() => {
-                createEmoji(["❤️", "💖", "🌸"][Math.floor(Math.random()*3)]);
-                count++;
-                if (count > 30) { clearInterval(interval); isExploding = false; btn.innerText = "🚫 DO NOT PRESS"; }
-            }, 100);
-        }
-
-        // 5. MESSAGES
+        // 6. MESSAGES
         function openMessage(type) {
             let content = "";
-            if(type === 'miss') content = `<h3>Missing Theshuuuuu?</h3><p>Remember, I am just one call away. I love you! ❤️</p>`;
-            if(type === 'sad') content = `<h3>Don't be Sad! 🍦</h3><p>Here is a virtual Ice Cream for my Summer Girl. Smile now!</p><div style="font-size:3rem">🍦</div>`;
-            if(type === 'bollywood') content = `<h3>Filmy Style 🎬</h3><p>"Tujh mein rab dikhta hai, yaara main kya karoon?" 🎶</p>`;
-            if(type === 'us') content = `<h3>Theshmil & Ayushka</h3><p>Pisces & Virgo.<br>Opposites Attract.<br>Destined to be together. 🔒</p>`;
+            if(type === 'miss') content = `<h3>Missing Theshuuuuu?</h3><p>I am just a text away. I love you! ❤️</p>`;
+            if(type === 'sad') content = `<h3>Don't be Sad! 🍦</h3><p>Here is a virtual Ice Cream for my Summer Girl.</p><div style="font-size:3rem">🍦</div>`;
+            if(type === 'note') {
+                content = `<h3>My Dear Ayushka...</h3><div class="typewriter-text"></div>`;
+                showModal(content);
+                setTimeout(() => typeWriter("Every day with you is a blessing. Even though we are miles apart, you are the closest person to my heart. I love you more than words can say. ❤️", 0), 500);
+                return;
+            }
+            if(type === 'us') content = `<h3>Theshmil & Ayushka</h3><p>Pisces & Virgo.<br>Opposites Attract.<br>Forever. 🔒</p>`;
             showModal(content);
         }
 
@@ -329,8 +319,14 @@
         }
         function closeModal() { document.getElementById("message-modal").style.display = "none"; }
 
-        // HELPER: Floating Emojis
+        // 7. EXPLOSION & KISS
         function sendKiss() { createEmoji("💋"); }
+        function triggerExplosion() {
+            const btn = document.getElementById("danger-btn");
+            btn.innerText = "I LOVE YOUUUUU! ❤️";
+            for(let i=0; i<30; i++) setTimeout(() => createEmoji(["💌","❤️","🍦"][Math.floor(Math.random()*3)]), i*100);
+            setTimeout(() => btn.innerText = "🚫 DO NOT PRESS", 3000);
+        }
         function createEmoji(char) {
             const el = document.createElement("div");
             el.innerText = char;
