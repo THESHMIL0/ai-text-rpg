@@ -3,67 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Valentine's Day</title>
+    <title>For Ayushka ❤️</title>
     <style>
+        /* RESET & BODY SETUP */
         body {
             margin: 0;
             padding: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #ffe6e6;
-            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ffe6e6 0%, #ffc0cb 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; /* Keeps falling hearts inside the screen */
             text-align: center;
         }
+
+        /* CARD CONTAINER */
         .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 400px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            max-width: 90%;
+            width: 400px;
+            position: relative;
+            z-index: 10; /* Ensures card stays above falling hearts */
+            border: 2px solid white;
         }
+
+        /* TEXT STYLES */
         h1 {
             color: #d63384;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
         }
-        p {
-            color: #555;
-            font-size: 1.2rem;
-            line-height: 1.6;
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
         }
-        .heart {
-            font-size: 5rem;
+
+        /* PULSING HEART */
+        .big-heart {
+            font-size: 4rem;
             color: #ff4d4d;
-            animation: beat 1s infinite alternate;
+            animation: beat 1.2s infinite alternate;
+            margin-bottom: 10px;
         }
+
         @keyframes beat {
-            to { transform: scale(1.1); }
+            to { transform: scale(1.15); }
         }
+
+        /* BUTTON STYLE */
         .btn {
-            background-color: #d63384;
+            background: linear-gradient(45deg, #ff4d4d, #d63384);
             color: white;
-            padding: 10px 20px;
+            padding: 12px 25px;
             border: none;
             border-radius: 50px;
             font-size: 1rem;
             cursor: pointer;
-            margin-top: 20px;
-            text-decoration: none;
-            display: inline-block;
+            margin-top: 15px;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
         }
-        .btn:hover { background-color: #b02a6b; }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* DYNAMIC REASON TEXT */
+        #reason-display {
+            min-height: 50px;
+            color: #d63384;
+            font-style: italic;
+            font-weight: 500;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* HIDDEN LETTER STYLES */
+        .letter-box {
+            margin-top: 25px;
+            background: #fff0f5;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px dashed #ffb3c1;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .letter-box:hover {
+            background: #ffe6eb;
+        }
+
+        #letter-content {
+            display: none; /* Hidden by default */
+            text-align: left;
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: #444;
+            line-height: 1.6;
+        }
+
+        /* FALLING EMOJI ANIMATION */
+        .emoji-rain {
+            position: absolute;
+            top: -50px;
+            font-size: 1.5rem;
+            animation: fall linear forwards;
+            z-index: 1; /* Behind the card */
+            opacity: 0.6;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="heart">❤️</div>
-        <h1>Happy Valentine's Day!</h1>
-        <p>To the most special person in my life.</p>
-        <p>Here is to another year of memories.</p>
-        <a href="#" class="btn" onclick="alert('I love you! ❤️')">Click Me</a>
+        <div class="big-heart">❤️</div>
+        <h1>For Ayushka</h1>
+        <p class="subtitle">Miles apart, but you're always in my heart.</p>
+
+        <div id="reason-display">Click the button to see why I miss you...</div>
+        <button class="btn" onclick="showReason()">Tell me why 💌</button>
+
+        <div class="letter-box" onclick="toggleLetter()">
+            <div id="envelope-icon" style="font-size: 2rem;">📩</div>
+            <div style="font-size: 0.9rem; color: #888;">Tap to open my letter</div>
+            
+            <div id="letter-content">
+                <p><strong>Dearest Ayushka,</strong></p>
+                <p>Even though we can't be together today, I want you to know that you are the first thing I think of when I wake up and the last thing on my mind before I sleep.</p>
+                <p>Distance is just a test to see how far love can travel, and mine has traveled all the way to you. I can't wait for the day we close this distance.</p>
+                <p>Happy Valentine's Day! ❤️✈️</p>
+            </div>
+        </div>
     </div>
+
+    <script>
+        // 1. REASONS GENERATOR
+        const reasons = [
+            "I miss your voice 📞",
+            "I miss your laugh 😂",
+            "I miss our late night talks 🌙",
+            "I miss simply being near you 🥺",
+            "I miss the way you understand me 🧠",
+            "I am counting the days until I see you 🗓️",
+            "You are my favorite notification 🔔",
+            "Distance means so little when you mean so much 🌍"
+        ];
+
+        function showReason() {
+            const display = document.getElementById("reason-display");
+            // Pick a random reason
+            const randomIndex = Math.floor(Math.random() * reasons.length);
+            display.innerText = reasons[randomIndex];
+            // Add a little pop effect
+            display.style.transform = "scale(1.1)";
+            setTimeout(() => display.style.transform = "scale(1)", 200);
+        }
+
+        // 2. TOGGLE LETTER
+        function toggleLetter() {
+            const content = document.getElementById("letter-content");
+            const icon = document.getElementById("envelope-icon");
+            
+            if (content.style.display === "block") {
+                content.style.display = "none";
+                icon.innerHTML = "📩";
+            } else {
+                content.style.display = "block";
+                icon.innerHTML = "📖"; // Open book emoji
+            }
+        }
+
+        // 3. FALLING HEARTS BACKGROUND
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("emoji-rain");
+            heart.innerText = Math.random() > 0.5 ? "❤️" : "✈️"; // Random mix of hearts and planes
+            
+            // Random position and speed
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = Math.random() * 3 + 2 + "s";
+            heart.style.fontSize = Math.random() * 1.5 + 1 + "rem";
+            
+            document.body.appendChild(heart);
+
+            // Remove element after animation to keep browser fast
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+
+        // Create a new heart every 300 milliseconds
+        setInterval(createHeart, 300);
+    </script>
 
 </body>
 </html>
