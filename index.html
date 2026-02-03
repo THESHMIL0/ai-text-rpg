@@ -11,263 +11,232 @@
         :root {
             --primary: #ff6b81; 
             --bg-color: #2d3436;
-            --paper: #fdfbf7;
+            --paper: #fff;
             --text: #2d3436;
             --cover: linear-gradient(135deg, #ff9a9e, #fad0c4);
-            --shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         /* THESHU DARK MODE */
         body.dark-mode {
             --primary: #00d2d3;
-            --text: #000;
-            --paper: #dcdde1; 
-            --cover: linear-gradient(135deg, #000000, #485460);
+            --bg-color: #000;
+            --paper: #1e1e1e;
+            --text: #fff;
+            --cover: linear-gradient(135deg, #2d3436, #000000);
         }
 
         * { box-sizing: border-box; }
 
         body {
-            margin: 0; padding: 0; min-height: 100vh;
+            margin: 0; padding: 0; height: 100vh;
             display: flex; justify-content: center; align-items: center;
             background: var(--bg-color);
-            background-image: radial-gradient(#444 1px, transparent 1px);
-            background-size: 20px 20px;
             font-family: 'Poppins', sans-serif;
-            overflow: hidden;
-            transition: background 0.5s;
+            overflow: hidden; /* Prevents scroll */
+            transition: background 0.3s;
         }
 
-        /* BOOK CONTAINER */
-        .book {
+        /* APP CONTAINER (Mobile Friendly) */
+        .app-container {
+            width: 100%; height: 100%;
+            max-width: 450px; /* Limits width on PC */
             position: relative;
-            width: 90vw; max-width: 360px; /* Responsive Width */
-            height: 80vh; max-height: 600px;
-            perspective: 1500px;
+            background: var(--paper);
+            color: var(--text);
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
 
         /* PAGES */
         .page {
-            position: absolute; width: 100%; height: 100%; padding: 20px;
-            background: var(--paper); color: var(--text);
-            border-radius: 5px 15px 15px 5px;
-            box-shadow: inset 10px 0 20px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.2);
-            transform-origin: left center;
-            transition: transform 1s ease-in-out, z-index 0.5s; /* Smooth transition */
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            padding: 30px 20px;
             display: flex; flex-direction: column; align-items: center; text-align: center;
-            border-left: 2px solid rgba(0,0,0,0.1);
-            backface-visibility: hidden; /* Hides back of page */
+            opacity: 0; pointer-events: none; /* Hidden by default */
+            transform: scale(0.95);
+            transition: all 0.4s ease;
+            overflow-y: auto; /* Allows scrolling if content is long */
         }
 
-        /* COVER STYLE */
+        /* ACTIVE PAGE */
+        .page.active {
+            opacity: 1; pointer-events: all;
+            transform: scale(1);
+            z-index: 10;
+        }
+
+        /* LOCK SCREEN OVERLAY */
         #cover-page {
-            background: var(--cover); color: white; z-index: 100;
-            justify-content: center; border-left: 8px solid rgba(0,0,0,0.2);
+            background: var(--cover);
+            z-index: 1000; color: white;
+            justify-content: center;
+            transform: translateY(0);
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
         
-        /* Z-INDEX STACKING */
-        #p1 { z-index: 90; }
-        #p2 { z-index: 80; }
-        #p3 { z-index: 70; }
-        #p4 { z-index: 60; }
-        #p5 { z-index: 50; }
-        #p6 { z-index: 40; }
-        #p7 { z-index: 30; }
-        #p8 { z-index: 20; }
+        #cover-page.unlocked { transform: translateY(-100%); }
 
-        /* FLIP LOGIC */
-        .flipped { 
-            transform: rotateY(-180deg); 
-            pointer-events: none; /* Allows clicking through */
-        }
-
-        /* CONTENT STYLES */
-        h1 { font-family: 'Dancing Script', cursive; font-size: 2.5rem; margin: 0; text-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
-        h2 { font-family: 'Cinzel', serif; margin-bottom: 10px; border-bottom: 2px solid var(--primary); padding-bottom: 5px; font-size: 1.2rem; }
-        
+        /* BUTTONS */
         .btn {
             background: var(--primary); color: white; border: none;
-            padding: 12px 30px; border-radius: 50px; cursor: pointer;
-            margin-top: 15px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: transform 0.1s; font-size: 1rem;
+            padding: 15px 40px; border-radius: 50px; cursor: pointer;
+            margin-top: 20px; font-weight: bold; font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            touch-action: manipulation; /* Improves touch response */
         }
         .btn:active { transform: scale(0.95); }
 
-        .nav-btns {
-            margin-top: auto; display: flex; gap: 10px; width: 100%; justify-content: space-between; align-items: center;
+        /* NAVIGATION BAR */
+        .nav-bar {
+            position: absolute; bottom: 20px; left: 0; width: 100%;
+            display: flex; justify-content: space-between; padding: 0 30px;
+            z-index: 20;
         }
-        .nav-btn { background: transparent; color: var(--text); border: 2px solid var(--text); padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 1rem; font-weight: bold; }
+        .nav-btn {
+            background: transparent; border: 2px solid var(--text);
+            color: var(--text); padding: 8px 15px; border-radius: 20px;
+            font-weight: bold; cursor: pointer;
+        }
 
+        /* INPUT */
         input {
-            padding: 12px; border-radius: 10px; border: none; 
-            text-align: center; width: 80%; margin-top: 10px;
-            background: rgba(255,255,255,0.3); color: inherit; font-weight: bold; font-size: 1rem;
+            padding: 15px; border-radius: 15px; border: none; 
+            text-align: center; width: 80%; margin-top: 20px;
+            background: rgba(255,255,255,0.3); color: white; font-weight: bold; font-size: 1.1rem;
         }
-        input::placeholder { color: rgba(255,255,255,0.8); }
+        input::placeholder { color: rgba(255,255,255,0.7); }
 
-        /* PAGE 2: DATE SIM */
-        .sim-grid { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 10px 0; }
-        .sim-chip { padding: 8px 12px; border: 1px solid var(--primary); border-radius: 15px; font-size: 0.9rem; cursor: pointer; background: white; }
+        /* CONTENT STYLING */
+        h1 { font-family: 'Dancing Script', cursive; font-size: 3.5rem; margin: 0; }
+        h2 { font-family: 'Cinzel', serif; border-bottom: 3px solid var(--primary); padding-bottom: 5px; margin-bottom: 20px; }
+
+        /* THEME TOGGLE */
+        .theme-btn { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; z-index: 50; }
+
+        /* INTERACTIVE ELEMENTS */
+        .sim-grid { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 15px 0; }
+        .sim-chip { padding: 10px 15px; border: 1px solid var(--primary); border-radius: 20px; font-size: 0.9rem; background: transparent; color: var(--text); transition:0.2s; }
         .sim-chip.active { background: var(--primary); color: white; }
 
-        /* PAGE 3: QUIZ */
-        .quiz-opt { width: 100%; background: rgba(0,0,0,0.05); margin: 8px 0; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 500; }
+        .quiz-opt { width: 100%; background: rgba(0,0,0,0.05); margin: 8px 0; padding: 15px; border-radius: 10px; font-weight: 500; cursor: pointer; }
         
-        /* PAGE 4: LETTER (FIXED) */
+        /* LETTER FIX */
         #typewriter-container {
-            text-align: left; font-size: 0.95rem; line-height: 1.5;
+            text-align: left; font-size: 1rem; line-height: 1.6;
             font-family: 'Indie Flower', cursive;
-            background: repeating-linear-gradient(transparent, transparent 24px, #eee 25px);
-            padding: 15px; border-radius: 5px; height: 50%; overflow-y: auto;
-            white-space: pre-wrap; /* Preserves spaces */
-            word-wrap: break-word; /* Prevents overflow */
-            width: 100%;
+            background: repeating-linear-gradient(transparent, transparent 29px, rgba(0,0,0,0.1) 30px);
+            padding: 20px; width: 100%; height: 300px; overflow-y: auto;
+            white-space: pre-wrap; word-wrap: break-word; /* Fixes text squishing */
         }
 
-        /* PAGE 5: POLAROID */
-        .polaroid-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .polaroid { background: white; padding: 5px 5px 20px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); transform: rotate(-2deg); cursor: pointer; }
-        .polaroid-img { width: 100%; height: 70px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
-        
-        /* PAGE 6: CHECKLIST */
-        .bucket-list { text-align: left; width: 100%; margin-top: 20px; font-family: 'Indie Flower', cursive; font-size: 1.2rem; }
-        .bucket-item { margin: 10px 0; cursor: pointer; padding: 5px; }
-        .bucket-item.checked { text-decoration: line-through; color: var(--primary); opacity: 0.7; }
+        /* VINYL */
+        .record { width: 150px; height: 150px; background: #111; border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: spin 2s linear infinite; animation-play-state: paused; margin: 20px auto; }
+        .record.playing { animation-play-state: running; }
+        .record-label { width: 60px; height: 60px; background: var(--primary); border-radius: 50%; border: 20px solid #111; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* PAGE 7: VINYL */
-        .record-container { width: 140px; height: 140px; border-radius: 50%; background: #111; margin: 30px auto; display: flex; align-items: center; justify-content: center; border: 5px solid #333; position: relative; }
-        .record-label { width: 50px; height: 50px; background: var(--primary); border-radius: 50%; border: 15px solid #222; }
-        .spinning { animation: spin 2s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* PAGE 8: SCANNER */
-        .scanner-box { width: 100px; height: 140px; border: 2px solid var(--primary); border-radius: 20px; margin: 20px auto; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: rgba(0,0,0,0.1); position: relative; overflow: hidden; }
+        /* SCANNER */
+        .scan-pad { width: 100px; height: 140px; border: 3px solid var(--primary); border-radius: 20px; margin: 20px auto; display: flex; justify-content: center; align-items: center; font-size: 3rem; position: relative; overflow: hidden; }
         .scan-line { position: absolute; width: 100%; height: 5px; background: var(--primary); top: 0; animation: scan 1.5s linear infinite; display: none; }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 
         /* EXTRAS */
-        .cat { font-size: 3rem; cursor: pointer; animation: bounce 2s infinite; margin-top: 10px; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-        .float { position: fixed; pointer-events: none; animation: up 3s linear forwards; z-index: 100; }
+        .float { position: fixed; pointer-events: none; animation: up 3s linear forwards; z-index: 9999; font-size: 2rem; }
         @keyframes up { to { transform: translateY(-100vh); opacity: 0; } }
 
     </style>
 </head>
 <body>
 
-    <div class="book">
+    <div class="app-container">
         
-        <div class="page" id="cover-page">
-            <h1 style="font-size: 3rem;">Theshu <br>&<br> Ayu</h1>
-            <p style="opacity: 0.9; font-size: 1rem; letter-spacing: 2px;">VOL. 1</p>
-            <br><br>
-            <p>🔒 Enter Password:</p>
-            <input type="text" id="pass" placeholder="hint: kushu" onkeyup="if(event.key === 'Enter') unlock()">
-            <button class="btn" id="unlock-btn" onclick="unlock()" ontouchend="unlock()">Open Book 📖</button>
-            <p id="err" style="color:#d63031; display:none; font-size:0.9rem; margin-top:10px; background:white; padding:5px 10px; border-radius:10px; font-weight:bold;">Wrong password!</p>
+        <div class="theme-btn" onclick="toggleTheme()">🌗</div>
+
+        <div class="page active" id="cover-page">
+            <div style="margin-top: 50px;">
+                <h1 style="font-size: 4rem;">Theshu <br>&<br> Ayu</h1>
+                <p style="opacity: 0.9; letter-spacing: 2px; margin-top: 10px;">VOL. 1</p>
+                <br><br>
+                <p>🔒 Enter Password:</p>
+                <input type="text" id="pass" placeholder="hint: kushu" onkeyup="if(event.key === 'Enter') unlock()">
+                <button class="btn" onclick="unlock()">Open Book 📖</button>
+                <p id="err" style="display:none; margin-top:10px; color:#ff6b81; background:white; padding:5px; border-radius:5px; font-weight:bold;">Wrong Password!</p>
+            </div>
         </div>
 
-        <div class="page" id="p1">
-            <div style="position:absolute; top:15px; right:15px; cursor:pointer; font-size:1.5rem;" onclick="toggleTheme()">🌗</div>
-            <h2>The Introduction</h2>
-            <div style="font-size: 4rem; margin: 20px 0;">👸🏻❤️🤴🏻</div>
-            <p style="font-size:1rem; font-style: italic;">"Distance gives us a reason to love harder."</p>
+        <div class="page" id="page-1">
+            <h2>The Beginning</h2>
+            <div style="font-size: 5rem; margin: 30px 0;">👸🏻❤️🤴🏻</div>
+            <p style="font-size:1.1rem; font-style: italic;">"Distance gives us a reason to love harder."</p>
             
-            <div style="background: rgba(0,0,0,0.05); padding: 15px; border-radius: 10px; margin: 20px 0; width: 100%;">
+            <div style="background: rgba(0,0,0,0.05); padding: 20px; border-radius: 15px; margin: 30px 0; width: 100%;">
                 <div>🎂 <b>Her B-Day Countdown:</b></div>
-                <div id="bday" style="font-size: 1.5rem; color: var(--primary); font-weight: bold;">...</div>
+                <div id="bday" style="font-size: 1.8rem; color: var(--primary); font-weight: bold;">...</div>
             </div>
             <button class="btn" onclick="createEmoji('💋')">Send Kiss 💋</button>
-            <div class="nav-btns"><span></span><button class="nav-btn" onclick="flip(1)">Next ➡️</button></div>
+            <div class="nav-bar"><span></span><button class="nav-btn" onclick="nextPage(2)">Next ➡️</button></div>
         </div>
 
-        <div class="page" id="p2">
+        <div class="page" id="page-2">
             <h2>Date Simulator</h2>
-            <p style="font-size:0.9rem;">Plan our future date 🎮</p>
-            <p style="margin: 10px 0 5px 0; font-weight:bold;">1. Location:</p>
+            <p>Plan our future date 🎮</p>
+            <br>
+            <p><b>1. Location:</b></p>
             <div class="sim-grid">
                 <div class="sim-chip" onclick="setSim('loc', 'Beach', this)">Beach 🏖️</div>
                 <div class="sim-chip" onclick="setSim('loc', 'Bed', this)">Bed 🛏️</div>
                 <div class="sim-chip" onclick="setSim('loc', 'Rooftop', this)">Rooftop 🌃</div>
             </div>
-            <p style="margin: 10px 0 5px 0; font-weight:bold;">2. Food:</p>
+            <p><b>2. Food:</b></p>
             <div class="sim-grid">
                 <div class="sim-chip" onclick="setSim('food', 'Ice Cream', this)">Ice Cream 🍦</div>
                 <div class="sim-chip" onclick="setSim('food', 'Pizza', this)">Pizza 🍕</div>
                 <div class="sim-chip" onclick="setSim('food', 'Me', this)">You 😉</div>
             </div>
-            <button class="btn" style="font-size: 0.9rem;" onclick="runDate()">Simulate</button>
-            <div id="sim-res" style="color:var(--primary); font-size:0.9rem; margin-top:10px; font-weight:bold;"></div>
-            <div class="nav-btns"><button class="nav-btn" onclick="unflip(1)">⬅️</button><button class="nav-btn" onclick="flip(2)">➡️</button></div>
+            <button class="btn" onclick="runDate()">Simulate</button>
+            <div id="sim-res" style="color:var(--primary); font-weight:bold; margin-top:20px; font-size:1.1rem;"></div>
+            <div class="nav-bar"><button class="nav-btn" onclick="nextPage(1)">⬅️ Back</button><button class="nav-btn" onclick="nextPage(3)">Next ➡️</button></div>
         </div>
 
-        <div class="page" id="p3">
-            <h2>The Love Quiz</h2>
-            <div id="quiz-box" style="width: 100%; margin-top: 20px;">
-                <p id="q-text" style="font-weight:bold; font-size: 1.1rem;">Question 1</p>
+        <div class="page" id="page-3">
+            <h2>Love Quiz</h2>
+            <div id="quiz-container" style="width:100%; margin-top:20px;">
+                <p id="q-text" style="font-weight:bold; font-size:1.2rem;">Question 1</p>
                 <div id="opts"></div>
             </div>
-            <div id="gift-box" style="display:none; margin-top: 40px;">
-                <div style="font-size:5rem;">🍦</div>
+            <div id="gift-box" style="display:none; margin-top:50px;">
+                <div style="font-size:6rem;">🍦</div>
                 <h3 style="color:var(--primary);">Correct!</h3>
                 <p>I owe you a Mango Ice Cream!</p>
             </div>
-            <div class="nav-btns"><button class="nav-btn" onclick="unflip(2)">⬅️</button><button class="nav-btn" onclick="flip(3)">➡️</button></div>
+            <div class="nav-bar"><button class="nav-btn" onclick="nextPage(2)">⬅️ Back</button><button class="nav-btn" onclick="nextPage(4)">Next ➡️</button></div>
         </div>
 
-        <div class="page" id="p4">
-            <h2>Letter for Ayu</h2>
+        <div class="page" id="page-4">
+            <h2>My Letter</h2>
             <div id="typewriter-container"></div>
-            <button class="btn" style="font-size:0.9rem; padding:10px 20px; margin-top:10px;" onclick="startLetter()">Read Letter 💌</button>
-            <div class="nav-btns"><button class="nav-btn" onclick="unflip(3)">⬅️</button><button class="nav-btn" onclick="flip(4)">➡️</button></div>
+            <button class="btn" style="margin-top:10px;" onclick="startLetter()">Read Letter 💌</button>
+            <div class="nav-bar"><button class="nav-btn" onclick="nextPage(3)">⬅️ Back</button><button class="nav-btn" onclick="nextPage(5)">Next ➡️</button></div>
         </div>
 
-        <div class="page" id="p5">
-            <h2>Ayu's Gallery</h2>
-            <div class="polaroid-grid">
-                <div class="polaroid" onclick="alert('You look beautiful here! ❤️')"><div class="polaroid-img">👩🏻</div><div style="font-size:0.7rem;">My Cutie</div></div>
-                <div class="polaroid" onclick="alert('That smile! 😍')"><div class="polaroid-img">✨</div><div style="font-size:0.7rem;">Best Smile</div></div>
-                <div class="polaroid" onclick="alert('Summer vibes ☀️')"><div class="polaroid-img">🏖️</div><div style="font-size:0.7rem;">Summer Girl</div></div>
-                <div class="polaroid" onclick="alert('Us soon! 💑')"><div class="polaroid-img">💑</div><div style="font-size:0.7rem;">Us Soon</div></div>
-            </div>
-            <div class="nav-btns"><button class="nav-btn" onclick="unflip(4)">⬅️</button><button class="nav-btn" onclick="flip(5)">➡️</button></div>
-        </div>
-
-        <div class="page" id="p6">
-            <h2>Our Bucket List</h2>
-            <div class="bucket-list">
-                <div class="bucket-item" onclick="this.classList.toggle('checked')">⬜ Meet in person ✈️</div>
-                <div class="bucket-item" onclick="this.classList.toggle('checked')">⬜ Hug tightly 🫂</div>
-                <div class="bucket-item" onclick="this.classList.toggle('checked')">⬜ Late night drive 🚗</div>
-                <div class="bucket-item" onclick="this.classList.toggle('checked')">⬜ Eat Ice Cream 🍦</div>
-                <div class="bucket-item" onclick="this.classList.toggle('checked')">⬜ Get Married 💍</div>
-            </div>
-            <div class="nav-btns"><button class="nav-btn" onclick="unflip(5)">⬅️</button><button class="nav-btn" onclick="flip(6)">➡️</button></div>
-        </div>
-
-        <div class="page" id="p7">
+        <div class="page" id="page-5">
             <h2>Our Mixtape</h2>
-            <p style="font-size:0.8rem;">Tap to play "Tum Hi Ho" 🎵</p>
-            <div class="record-container" id="record" onclick="toggleMusic()">
-                <div class="record-label"></div>
-            </div>
-            <div id="music-status" style="color:var(--primary); font-weight:bold;">Paused</div>
-            <div class="nav-btns"><button class="nav-btn" onclick="unflip(6)">⬅️</button><button class="nav-btn" onclick="flip(7)">➡️</button></div>
+            <p>Tap to play "Tum Hi Ho" 🎵</p>
+            <div class="record" id="record" onclick="toggleMusic()"><div class="record-label"></div></div>
+            <div id="music-status" style="font-weight:bold; color:var(--primary);">Paused</div>
+            <div class="nav-bar"><button class="nav-btn" onclick="nextPage(4)">⬅️ Back</button><button class="nav-btn" onclick="nextPage(6)">Next ➡️</button></div>
         </div>
 
-        <div class="page" id="p8">
+        <div class="page" id="page-6">
             <h2>Love Scanner</h2>
-            <p style="font-size:0.8rem;">Hold to Scan Fingerprint 🧬</p>
-            <div class="scanner-box" onmousedown="startScan()" onmouseup="stopScan()" ontouchstart="startScan()" ontouchend="stopScan()">
+            <p>Hold finger to match 🧬</p>
+            <div class="scan-pad" onmousedown="startScan()" onmouseup="stopScan()" ontouchstart="startScan()" ontouchend="stopScan()">
                 <div class="scan-line" id="scan-line"></div>
                 👆
             </div>
-            <div id="scan-res" style="height:30px; font-weight:bold;"></div>
-            <div style="display:flex; align-items:center; gap:10px; margin-top: auto;">
-                <div class="cat" onclick="petCat()">🐈‍⬛</div>
-                <div id="cat-say" style="font-size:0.8rem; opacity:0; transition:0.3s;">Meow!</div>
-            </div>
-            <div class="nav-btns"><button class="nav-btn" onclick="unflip(7)">⬅️</button><span>End.</span></div>
+            <div id="scan-res" style="height:30px; font-weight:bold; margin-top:10px;"></div>
+            <div class="nav-bar"><button class="nav-btn" onclick="nextPage(5)">⬅️ Back</button><span>End.</span></div>
         </div>
 
     </div>
@@ -279,39 +248,28 @@
         let typewriterTimeout;
         let isPlaying = false;
         
-        // --- BOOK LOGIC ---
+        // --- NAVIGATION ---
         function unlock() {
             let input = document.getElementById('pass').value.trim().toLowerCase();
-            const btn = document.getElementById('unlock-btn');
-            
             if(input === password) {
-                btn.innerText = "Opening...";
-                document.getElementById('err').style.display = 'none';
-                
-                // Force Flip with a tiny delay to allow UI to update
-                setTimeout(() => {
-                    document.getElementById('cover-page').classList.add('flipped');
-                    // Safety: Force z-index change after flip to prevent stuck clicks
-                    setTimeout(() => { document.getElementById('cover-page').style.zIndex = -1; }, 500);
-                }, 200);
-                
+                // Slide up cover
+                document.getElementById('cover-page').classList.add('unlocked');
+                // Ensure Page 1 is active underneath
+                document.getElementById('page-1').classList.add('active');
             } else {
                 document.getElementById('err').style.display = 'block';
-                btn.innerText = "Open Book 📖";
             }
         }
 
-        function flip(pageId) { 
-            const page = document.getElementById('p'+pageId);
-            page.classList.add('flipped');
-            // Force underlying layer logic
-            setTimeout(() => { page.style.zIndex = 100 - pageId - 20; }, 500);
+        function nextPage(num) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => {
+                if(p.id !== 'cover-page') p.classList.remove('active');
+            });
+            // Show target page
+            document.getElementById('page-' + num).classList.add('active');
         }
-        function unflip(pageId) { 
-            const page = document.getElementById('p'+pageId);
-            page.classList.remove('flipped');
-            page.style.zIndex = 100 - pageId * 10; // Restore Z-index
-        }
+
         function toggleTheme() { document.body.classList.toggle('dark-mode'); }
 
         // --- BDAY ---
@@ -346,7 +304,7 @@
         let qIdx = 0;
         function loadQ() {
             if(qIdx >= qs.length) {
-                document.getElementById('quiz-box').style.display='none';
+                document.getElementById('quiz-container').style.display='none';
                 document.getElementById('gift-box').style.display='block';
                 return;
             }
@@ -361,17 +319,15 @@
         }
         loadQ();
 
-        // --- TYPEWRITER (Space Fix) ---
+        // --- FIXED TYPEWRITER ---
         function startLetter() {
-            // Using standard string ensures spaces are respected
             const text = "My Dearest Ayushka,\n\nEvery day without you feels incomplete, but knowing I have you makes it all worth it.\n\nYou are my gamer girl, my summer girl, and my forever love.\n\nLove,\nTheshmil (Kitchu) ❤️";
             const container = document.getElementById("typewriter-container");
-            container.innerText = ""; // Clear
+            container.innerText = "";
             clearTimeout(typewriterTimeout);
             let i = 0;
             function type() {
                 if (i < text.length) {
-                    // Check if char is newline, otherwise add char
                     container.innerText += text.charAt(i);
                     i++;
                     typewriterTimeout = setTimeout(type, 50); 
@@ -385,9 +341,45 @@
             const rec = document.getElementById('record');
             const status = document.getElementById('music-status');
             if(isPlaying) {
-                rec.classList.remove('spinning');
+                rec.classList.remove('playing');
                 status.innerText = "Paused";
                 isPlaying = false;
             } else {
-                rec.classList.add('spinning');
-                status.innerText = "No
+                rec.classList.add('playing');
+                status.innerText = "Now Playing: Tum Hi Ho 🎵";
+                isPlaying = true;
+                createEmoji("🎵");
+            }
+        }
+
+        // --- SCANNER ---
+        let scanTimeout;
+        function startScan() {
+            document.getElementById('scan-line').style.display = 'block';
+            document.getElementById('scan-res').innerText = "Scanning...";
+            scanTimeout = setTimeout(() => {
+                document.getElementById('scan-line').style.display = 'none';
+                document.getElementById('scan-res').innerText = "100% Match! ❤️";
+                createEmoji("💖");
+            }, 2000);
+        }
+        function stopScan() {
+            clearTimeout(scanTimeout);
+            document.getElementById('scan-line').style.display = 'none';
+            if(document.getElementById('scan-res').innerText !== "100% Match! ❤️") {
+                document.getElementById('scan-res').innerText = "Scan Failed";
+            }
+        }
+
+        // --- EXTRAS ---
+        function createEmoji(char) {
+            let el = document.createElement('div');
+            el.innerText = char; el.className = 'float';
+            el.style.left = Math.random()*80+10 + '%';
+            el.style.top = '100vh';
+            document.body.appendChild(el);
+            setTimeout(()=>el.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
