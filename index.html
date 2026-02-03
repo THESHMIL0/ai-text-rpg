@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Theshuuuuu & Ayuuuuu ❤️</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;500;700&family=Orbitron:wght@500&display=swap" rel="stylesheet">
 
     <style>
         /* --- CSS VARIABLES --- */
@@ -14,14 +14,18 @@
             --bg-gradient: linear-gradient(-45deg, #ff9a9e, #fecfef, #f6e58d, #ffbe76);
             --glass: rgba(255, 255, 255, 0.9);
             --text: #2f3542;
+            --shadow: 0 15px 35px rgba(0,0,0,0.1);
+            --font-main: 'Poppins', sans-serif;
         }
 
-        /* DARK MODE VARIABLES (Theshu's Mode) */
+        /* DARK MODE (GAMER MODE) VARIABLES */
         body.dark-mode {
-            --primary: #ff4757; 
-            --bg-gradient: linear-gradient(-45deg, #000000, #2d3436, #1e272e, #000000);
-            --glass: rgba(0, 0, 0, 0.85);
+            --primary: #00d2d3; /* Neon Cyan */
+            --bg-gradient: #000000;
+            --glass: rgba(20, 20, 20, 0.9);
             --text: #ffffff;
+            --shadow: 0 0 20px rgba(0, 210, 211, 0.4);
+            --font-main: 'Orbitron', sans-serif; /* Gamer Font */
         }
 
         * { box-sizing: border-box; }
@@ -32,10 +36,10 @@
             background: var(--bg-gradient);
             background-size: 400% 400%;
             animation: gradientBG 10s ease infinite;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font-main);
             overflow-x: hidden;
             color: var(--text);
-            transition: background 0.5s ease;
+            transition: all 0.5s ease;
         }
 
         @keyframes gradientBG {
@@ -44,12 +48,23 @@
             100% { background-position: 0% 50%; }
         }
 
+        /* GAMER RGB BORDER ANIMATION */
+        body.dark-mode .glass-card {
+            border: 2px solid transparent;
+            background-clip: padding-box, border-box;
+            background-origin: padding-box, border-box;
+            background-image: linear-gradient(#111, #111), linear-gradient(90deg, #ff0000, #00ff00, #0000ff, #ff0000);
+            background-size: 200% 200%;
+            animation: rgbBorder 3s linear infinite;
+        }
+        @keyframes rgbBorder { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+
         /* THEME TOGGLE */
         .theme-switch {
             position: absolute; top: 20px; right: 20px;
             background: rgba(255,255,255,0.5); padding: 10px; border-radius: 50px;
             cursor: pointer; z-index: 1000; border: 2px solid white;
-            font-size: 0.8rem; font-weight: bold;
+            font-size: 0.8rem; font-weight: bold; color: #333;
         }
 
         /* GLASS CARD */
@@ -59,8 +74,8 @@
             -webkit-backdrop-filter: blur(15px);
             border: 2px solid rgba(255,255,255,0.3);
             border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            transition: background 0.3s;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
         }
 
         /* LOCK SCREEN */
@@ -83,7 +98,7 @@
         .heart-beat { display: inline-block; animation: beat 1s infinite alternate; }
         @keyframes beat { to { transform: scale(1.2); } }
 
-        /* BUTTONS & INPUTS */
+        /* BUTTONS */
         .btn {
             background: linear-gradient(135deg, var(--primary), #e84393);
             color: white; border: none; padding: 14px 25px;
@@ -93,10 +108,41 @@
             transition: transform 0.2s;
         }
         .btn:active { transform: scale(0.95); }
+        body.dark-mode .btn { background: linear-gradient(90deg, #00d2d3, #2e86de); color: black; }
+
         input {
             width: 100%; padding: 15px; margin-top: 15px; border: 2px solid rgba(255,255,255,0.5);
             background: rgba(255,255,255,0.2); border-radius: 15px; outline: none;
             text-align: center; font-size: 1.1rem; color: var(--text);
+        }
+
+        /* SPIN WHEEL */
+        .wheel-container { position: relative; width: 250px; height: 250px; margin: 20px auto; }
+        .wheel {
+            width: 100%; height: 100%; border-radius: 50%; border: 5px solid var(--primary);
+            background: conic-gradient(
+                #ff9ff3 0deg 60deg, 
+                #feca57 60deg 120deg, 
+                #ff6b6b 120deg 180deg, 
+                #48dbfb 180deg 240deg, 
+                #1dd1a1 240deg 300deg, 
+                #5f27cd 300deg 360deg
+            );
+            transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+        .wheel-arrow {
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; border-left: 15px solid transparent;
+            border-right: 15px solid transparent; border-top: 20px solid var(--text);
+            z-index: 10;
+        }
+        .wheel-btn {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 60px; height: 60px; background: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; cursor: pointer; box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            font-size: 0.8rem; color: #333;
         }
 
         /* KITTY CORNER */
@@ -107,20 +153,9 @@
         .cat-box:hover { transform: scale(1.05); }
         .cat-emoji { font-size: 4rem; }
         .bubble {
-            position: absolute; top: -10px; right: 20px;
-            background: white; color: black; padding: 5px 10px;
-            border-radius: 10px; font-size: 0.8rem; display: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: absolute; top: -10px; right: 20px; background: white; color: black;
+            padding: 5px 10px; border-radius: 10px; font-size: 0.8rem; display: none;
         }
-
-        /* HEART POPPING GAME */
-        .pop-grid {
-            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
-            margin: 20px 0; padding: 10px; background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-        }
-        .pop-heart { font-size: 1.5rem; cursor: pointer; transition: 0.2s; }
-        .pop-heart.popped { transform: scale(0); opacity: 0; }
 
         /* MOOD GRID */
         .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 25px 0; }
@@ -145,14 +180,10 @@
         #message-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); z-index: 3000; justify-content: center; align-items: center; }
         .modal-content { background: white; color: #333; padding: 30px; border-radius: 30px; max-width: 85%; width: 350px; text-align: center; animation: popIn 0.3s ease; }
         @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .typewriter-text { font-family: 'Courier New', Courier, monospace; text-align: left; line-height: 1.6; font-size: 0.95rem; min-height: 100px; }
-
-        /* FLOATING EMOJIS */
+        
         .floating-emoji { position: fixed; pointer-events: none; z-index: 9999; }
         @keyframes floatUp { to { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
-
-        /* QUIZ OPTION */
-        .quiz-opt { background: #eee; margin: 5px 0; padding: 10px; border-radius: 10px; cursor: pointer; transition:0.2s; color: #333; }
+        .quiz-opt { background: #eee; margin: 5px 0; padding: 10px; border-radius: 10px; cursor: pointer; color: #333; }
         .quiz-opt:hover { background: var(--primary); color: white; }
 
     </style>
@@ -176,8 +207,18 @@
         <p style="margin-top: 10px; opacity: 0.8;">Distance means nothing when you mean everything.</p>
 
         <div style="margin-bottom: 15px;">
-            <div style="background: rgba(255,255,255,0.8); color:#333; padding: 5px 15px; border-radius: 20px; display: inline-block; font-size: 0.8rem; margin: 5px;">🎂 Her B-Day: <span id="bday-timer">...</span></div>
-            <div style="background: rgba(255,255,255,0.8); color:#333; padding: 5px 15px; border-radius: 20px; display: inline-block; font-size: 0.8rem; margin: 5px;">♓ + ♍ = Soulmates</div>
+            <div style="background: rgba(255,255,255,0.5); color:var(--text); padding: 5px 15px; border-radius: 20px; display: inline-block; font-size: 0.8rem; margin: 5px;">🎂 Her B-Day: <span id="bday-timer">...</span></div>
+            <div style="background: rgba(255,255,255,0.5); color:var(--text); padding: 5px 15px; border-radius: 20px; display: inline-block; font-size: 0.8rem; margin: 5px;">♓ + ♍ = Soulmates</div>
+        </div>
+
+        <div style="margin: 20px 0;">
+            <p style="font-size:0.8rem; opacity:0.7;">🎡 SPIN THE WHEEL OF LOVE</p>
+            <div class="wheel-container">
+                <div class="wheel-arrow"></div>
+                <div class="wheel" id="wheel"></div>
+                <div class="wheel-btn" onclick="spinWheel()">SPIN</div>
+            </div>
+            <p id="wheel-result" style="font-weight:bold; color:var(--primary); min-height:25px;"></p>
         </div>
 
         <div class="cat-box" onclick="petCat()">
@@ -185,10 +226,6 @@
             <div class="cat-emoji">🐈‍⬛</div>
             <p style="margin:0; font-size:0.7rem; opacity:0.7;">Tap to pet Kitchu's Cat</p>
         </div>
-
-        <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 5px;">🎈 POP THE HEARTS (STRESS RELIEF)</p>
-        <div class="pop-grid" id="pop-grid">
-            </div>
 
         <div class="mood-grid">
             <button class="mood-btn" onclick="openMessage('miss')">💌<br>Miss You</button>
@@ -246,7 +283,6 @@
             { q: "What do I like to eat? 😉", a: ["Ice Cream", "Ayuu 🦋✨", "Burger"], correct: 1 }
         ];
         let currentQuizIndex = 0;
-        let typewriterTimeout;
 
         // 1. THEME TOGGLE (Ayu vs Theshu)
         function toggleTheme() {
@@ -268,26 +304,30 @@
             }
         }
 
-        // 3. KITTY LOGIC
+        // 3. SPIN WHEEL LOGIC
+        function spinWheel() {
+            const wheel = document.getElementById("wheel");
+            const resultText = document.getElementById("wheel-result");
+            const deg = Math.floor(5000 + Math.random() * 5000); // Spin lots of times
+            wheel.style.transform = `rotate(${deg}deg)`;
+            
+            const prizes = ["Virtual Hug 🫂", "Song Dedication 🎵", "Late Night Call 📞", "Ice Cream Date 🍦", "Unlimited Kisses 💋", "Movie Night 🎬"];
+            
+            resultText.innerText = "Spinning...";
+            setTimeout(() => {
+                const result = prizes[Math.floor(Math.random() * prizes.length)];
+                resultText.innerText = `You won: ${result}! 🎉`;
+                createEmoji("🎁");
+            }, 3000);
+        }
+
+        // 4. KITTY LOGIC
         function petCat() {
             const sounds = ["Meow! 😽", "Purrr... ❤️", "Feed me! 🐟", "I love you!"];
             const bubble = document.getElementById("cat-bubble");
             bubble.innerText = sounds[Math.floor(Math.random() * sounds.length)];
             bubble.style.display = "block";
             setTimeout(() => bubble.style.display = "none", 2000);
-        }
-
-        // 4. HEART POPPING GAME
-        const popGrid = document.getElementById("pop-grid");
-        for(let i=0; i<10; i++) {
-            let heart = document.createElement("div");
-            heart.innerText = "❤️";
-            heart.className = "pop-heart";
-            heart.onclick = function() {
-                this.classList.add("popped");
-                setTimeout(() => { this.classList.remove("popped"); }, 2000);
-            };
-            popGrid.appendChild(heart);
         }
 
         // 5. BIRTHDAY LOGIC
@@ -320,33 +360,12 @@
             } else { alert("Wrong! 🥺 Don't you know me?"); }
         }
 
-        // 7. MESSAGES & TYPEWRITER
-        function typeWriter(text, i) {
-            const container = document.querySelector(".typewriter-text");
-            if (!container) return;
-            if (i < text.length) {
-                container.innerHTML += text.charAt(i);
-                typewriterTimeout = setTimeout(() => typeWriter(text, i + 1), 50);
-            }
-        }
-
+        // 7. MESSAGES
         function openMessage(type) {
             let content = "";
-            clearTimeout(typewriterTimeout); 
-
             if(type === 'miss') content = `<h3>Missing Theshuuuuu?</h3><p>I am just a text away. I love you! ❤️</p>`;
             if(type === 'sad') content = `<h3>Don't be Sad! 🍦</h3><p>Here is a virtual Ice Cream for my Summer Girl.</p><div style="font-size:3rem">🍦</div>`;
-            
-            if(type === 'note') {
-                content = `<h3>My Dear Ayushka...</h3><div class="typewriter-text"></div>`;
-                showModal(content);
-                setTimeout(() => {
-                    document.querySelector(".typewriter-text").innerHTML = ""; 
-                    typeWriter("Every day with you is a blessing. Even though we are miles apart, you are the closest person to my heart. I love you more than words can say. ❤️", 0);
-                }, 100);
-                return;
-            }
-
+            if(type === 'note') content = `<h3>My Dear Ayushka...</h3><p>Every day with you is a blessing. Even though we are miles apart, you are the closest person to my heart. I love you more than words can say. ❤️</p>`;
             if(type === 'us') content = `<h3>Theshmil & Ayushka</h3><p>Pisces & Virgo.<br>Opposites Attract.<br>Forever. 🔒</p>`;
             showModal(content);
         }
@@ -355,10 +374,7 @@
             document.getElementById("modal-body").innerHTML = html;
             document.getElementById("message-modal").style.display = "flex";
         }
-        function closeModal() { 
-            document.getElementById("message-modal").style.display = "none"; 
-            clearTimeout(typewriterTimeout); 
-        }
+        function closeModal() { document.getElementById("message-modal").style.display = "none"; }
 
         // 8. EXPLOSION & KISS
         function sendKiss() { createEmoji("💋"); }
