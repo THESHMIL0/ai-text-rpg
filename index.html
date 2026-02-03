@@ -52,7 +52,7 @@
 
         /* MAIN APP CONTAINER */
         .container {
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.95);
             padding: 2rem;
             border-radius: 30px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.2);
@@ -68,7 +68,7 @@
         h1 { color: #d63384; margin-bottom: 5px; font-size: 2rem; }
         p { color: #666; line-height: 1.6; }
 
-        /* INTERACTIVE BUTTONS */
+        /* BUTTONS */
         .btn {
             background: linear-gradient(45deg, #ff6b6b, #d63384);
             color: white;
@@ -83,10 +83,9 @@
             transition: transform 0.2s, box-shadow 0.2s;
             box-shadow: 0 4px 15px rgba(214, 51, 132, 0.3);
         }
-        .btn:hover { transform: translateY(-2px); }
-        .btn:active { transform: scale(0.98); }
+        .btn:active { transform: scale(0.95); }
 
-        /* "OPEN WHEN" GRID */
+        /* MOOD GRID */
         .mood-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -105,7 +104,36 @@
         }
         .mood-btn:hover { background: #fff0f5; border-color: #d63384; }
 
-        /* POPUP MODAL FOR MESSAGES */
+        /* FUTURE DATE JAR */
+        .date-jar {
+            background: #e3f2fd;
+            border: 2px dashed #2196f3;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        #date-idea {
+            font-weight: bold;
+            color: #1565c0;
+            margin-top: 10px;
+            min-height: 1.5rem;
+        }
+
+        /* LOVE CALCULATOR */
+        .love-calc {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        #love-result {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #d63384;
+            display: none;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* MODAL POPUP */
         #message-modal {
             display: none;
             position: fixed;
@@ -128,19 +156,6 @@
             to { transform: scale(1); opacity: 1; }
         }
 
-        /* GOLDEN TICKET */
-        .ticket {
-            background: #fff8e1;
-            border: 2px dashed #cca000;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 10px;
-            position: relative;
-        }
-        .ticket h3 { margin: 0; color: #b8860b; font-size: 1.2rem; }
-        .ticket-date { font-weight: bold; font-size: 1.5rem; color: #333; margin: 10px 0; }
-
-        /* KISS ANIMATION */
         .kiss {
             position: absolute;
             font-size: 2.5rem;
@@ -152,16 +167,9 @@
             0% { transform: translateY(0) scale(1); opacity: 1; }
             100% { transform: translateY(-200px) scale(1.5); opacity: 0; }
         }
+        
+        .close-btn { margin-top: 15px; padding: 8px 20px; background: #eee; border: none; border-radius: 20px; cursor: pointer; }
 
-        .close-btn {
-            margin-top: 15px;
-            background: #eee;
-            color: #333;
-            padding: 8px 20px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
@@ -179,26 +187,32 @@
 
     <div class="container" id="main-content">
         <h1>Hey Ayushka! ❤️</h1>
-        <p>Since I can't be there to tell you this in person, click on how you are feeling right now:</p>
+        <p>I can't wait to see you. Until then, here is a little something to make you smile.</p>
 
+        <button class="btn" onclick="sendKiss()" style="position: relative; overflow: hidden; margin-bottom: 20px;">
+            💋 Send Me a Kiss
+        </button>
+
+        <p style="font-size: 0.9rem; color: #888; margin-bottom: 5px;">TAP TO OPEN:</p>
         <div class="mood-grid">
             <button class="mood-btn" onclick="openMessage('miss')">💌<br>Miss You</button>
             <button class="mood-btn" onclick="openMessage('sad')">😢<br>Feeling Sad</button>
             <button class="mood-btn" onclick="openMessage('happy')">🥰<br>Feeling Happy</button>
-            <button class="mood-btn" onclick="openMessage('us')">📸<br>Us</button>
+            <button class="mood-btn" onclick="openMessage('us')">🔒<br>Our Future</button>
         </div>
 
-        <button class="btn" onclick="sendKiss()" style="position: relative; overflow: hidden;">
-            💋 Send Me a Kiss
-        </button>
-
-        <div class="ticket">
-            <h3>✨ BOARDING PASS ✨</h3>
-            <p style="margin: 5px 0; font-size: 0.9rem;">PASSENGER: AYUSHKA & ME</p>
-            <div class="ticket-date">AUG 18, 2026</div>
-            <p style="margin: 0; color: #b8860b; font-size: 0.9rem;">DESTINATION: TOGETHER FOREVER</p>
-            <div style="margin-top:10px; font-size: 0.8rem; color: #888;">Valid for one lifetime of happiness</div>
+        <div class="date-jar">
+            <p style="margin:0; font-size: 0.9rem;">🔮 FUTURE DATE JAR</p>
+            <p id="date-idea">❓</p>
+            <button class="btn" style="background: #2196f3; font-size: 0.9rem; padding: 8px;" onclick="pickDate()">Pick a Date Idea</button>
         </div>
+
+        <div class="love-calc">
+            <p>🧬 US COMPATIBILITY SCAN</p>
+            <button class="btn" id="calc-btn" style="background: #333;" onclick="calculateLove()">Tap to Scan</button>
+            <div id="love-result">100% MATCH! 🔥</div>
+        </div>
+
     </div>
 
     <div id="message-modal" onclick="closeModal()">
@@ -211,10 +225,9 @@
     </div>
 
     <script>
-        // --- PASSWORD CONFIG ---
         const password = "Ayushka"; 
 
-        // 1. LOCK SCREEN LOGIC
+        // 1. LOCK SCREEN
         function checkPassword() {
             const input = document.getElementById("password-input").value;
             if (input.toLowerCase() === password.toLowerCase()) {
@@ -233,22 +246,22 @@
             'miss': {
                 emoji: "🌏",
                 title: "When you miss me...",
-                text: "Just remember that I am looking at the same moon. Distance is temporary, but my love for you is permanent. Call me? 📞"
+                text: "Look at the sky. We are under the same one. I am probably thinking of you right this second. Text me 'I love you' and see what happens. 😉"
             },
             'sad': {
-                emoji: "🧸",
+                emoji: "🫂",
                 title: "When you are sad...",
-                text: "I wish I could wrap my arms around you right now. Take a deep breath. You are stronger than you know, and I am so proud of you."
+                text: "I hate that I can't hug you right now. But remember: You are brave, you are beautiful, and you are LOVED. This feeling will pass."
             },
             'happy': {
                 emoji: "✨",
                 title: "When you are happy...",
-                text: "Your smile is literally my favorite thing in the world. Seeing you happy makes my entire day. Keep shining, love!"
+                text: "Your happiness is my favorite thing. Save this moment! I can't wait to make more happy memories with you."
             },
             'us': {
-                emoji: "🔒",
-                title: "About Us...",
-                text: "We are writing the best love story ever. It might have some long chapters apart, but the ending is going to be worth it."
+                emoji: "💍",
+                title: "Our Future...",
+                text: "One day, there will be no more goodbyes, only goodnights. We will make up for all this lost time."
             }
         };
 
@@ -269,7 +282,7 @@
             const button = document.querySelector("button[onclick='sendKiss()']");
             const kiss = document.createElement("div");
             kiss.classList.add("kiss");
-            kiss.innerText = ["💋", "❤️", "😍"][Math.floor(Math.random() * 3)]; // Random icon
+            kiss.innerText = ["💋", "❤️", "😍"][Math.floor(Math.random() * 3)];
             
             const rect = button.getBoundingClientRect();
             kiss.style.left = (rect.left + rect.width / 2) + (Math.random() * 40 - 20) + "px";
@@ -277,6 +290,37 @@
             
             document.body.appendChild(kiss);
             setTimeout(() => kiss.remove(), 1500);
+        }
+
+        // 4. FUTURE DATE GENERATOR
+        const dates = [
+            "Late night drive with no destination 🚗",
+            "Cooking a messy dinner together 🍝",
+            "Movie marathon in a blanket fort ⛺",
+            "Watching the sunset on the beach 🌅",
+            "A grocery store run (yes, even that is romantic) 🛒",
+            "Stargazing in silence ✨"
+        ];
+        function pickDate() {
+            const display = document.getElementById("date-idea");
+            display.innerText = "Thinking...";
+            setTimeout(() => {
+                display.innerText = dates[Math.floor(Math.random() * dates.length)];
+            }, 500);
+        }
+
+        // 5. LOVE CALCULATOR
+        function calculateLove() {
+            const btn = document.getElementById("calc-btn");
+            const result = document.getElementById("love-result");
+            
+            btn.innerText = "Scanning...";
+            btn.style.background = "#555";
+            
+            setTimeout(() => {
+                btn.style.display = "none";
+                result.style.display = "block";
+            }, 1500);
         }
     </script>
 </body>
