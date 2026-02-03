@@ -3,31 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Theshuuuuu & Ayuuuuu ❤️</title>
+    <title>The Story of Us ❤️</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;500;700&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;500;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- CSS VARIABLES --- */
         :root {
-            --primary: #ff6b81; /* Default Pink */
-            --bg-gradient: linear-gradient(-45deg, #ff9a9e, #fecfef, #f6e58d, #ffbe76);
-            --glass: rgba(255, 255, 255, 0.9);
-            --text: #2f3542;
-            --shadow: 0 15px 35px rgba(0,0,0,0.1);
-            --font-main: 'Poppins', sans-serif;
-            --btn-grad: linear-gradient(135deg, #ff6b81, #e84393);
+            --primary: #ff6b81; 
+            --bg-color: #fce4ec;
+            --paper: #fff;
+            --text: #2d3436;
+            --cover: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            --shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* DARK MODE (GAMER MODE) VARIABLES */
+        /* THESHU DARK MODE */
         body.dark-mode {
-            --primary: #00d2d3; /* Neon Cyan */
-            --bg-gradient: #050505;
-            --glass: rgba(20, 20, 20, 0.95);
-            --text: #ffffff;
-            --shadow: 0 0 20px rgba(0, 210, 211, 0.2);
-            --font-main: 'Orbitron', sans-serif; /* Gamer Font */
-            --btn-grad: linear-gradient(90deg, #00d2d3, #2e86de);
+            --primary: #00d2d3;
+            --bg-color: #1e272e;
+            --paper: #2d3436;
+            --text: #dfe6e9;
+            --cover: linear-gradient(135deg, #000000, #485460);
         }
 
         * { box-sizing: border-box; }
@@ -35,383 +31,279 @@
         body {
             margin: 0; padding: 0; min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
-            background: var(--bg-gradient);
-            background-size: 400% 400%;
-            animation: gradientBG 10s ease infinite;
-            font-family: var(--font-main);
-            overflow-x: hidden;
+            background: var(--bg-color);
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            transition: background 0.5s;
+        }
+
+        /* BOOK CONTAINER */
+        .book {
+            position: relative;
+            width: 350px; height: 550px;
+            perspective: 1500px;
+        }
+
+        /* PAGES */
+        .page {
+            position: absolute;
+            width: 100%; height: 100%;
+            padding: 20px;
+            background: var(--paper);
             color: var(--text);
-            transition: all 0.5s ease;
+            border-radius: 5px 15px 15px 5px;
+            box-shadow: inset 5px 0 10px rgba(0,0,0,0.05), 0 5px 15px rgba(0,0,0,0.1);
+            transform-origin: left center;
+            transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            border-left: 2px solid rgba(0,0,0,0.1);
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* COVER STYLE */
+        #cover-page {
+            background: var(--cover);
+            color: white;
+            z-index: 10;
+            justify-content: center;
+            border-left: 5px solid rgba(0,0,0,0.2);
         }
+        
+        /* Z-INDEX STACKING */
+        #p1 { z-index: 9; }
+        #p2 { z-index: 8; }
+        #p3 { z-index: 7; }
+        #p4 { z-index: 6; }
 
-        /* GAMER RGB BORDER ANIMATION */
-        body.dark-mode .glass-card {
-            border: 2px solid transparent;
-            background-clip: padding-box, border-box;
-            background-origin: padding-box, border-box;
-            background-image: linear-gradient(#111, #111), linear-gradient(90deg, #ff0000, #00ff00, #0000ff, #ff0000);
-            background-size: 200% 200%;
-            animation: rgbBorder 3s linear infinite;
-        }
-        @keyframes rgbBorder { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+        /* FLIP CLASSES */
+        .flipped { transform: rotateY(-180deg); }
 
-        /* THEME TOGGLE */
-        .theme-switch {
-            position: absolute; top: 20px; right: 20px;
-            background: rgba(255,255,255,0.5); padding: 10px; border-radius: 50px;
-            cursor: pointer; z-index: 1000; border: 2px solid white;
-            font-size: 0.8rem; font-weight: bold; color: #333;
-        }
-
-        /* GLASS CARD */
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 30px;
-            box-shadow: var(--shadow);
-            transition: all 0.3s;
-        }
-
-        /* LOCK SCREEN */
-        #login-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 2000; display: flex; justify-content: center; align-items: center;
-            background: var(--glass); backdrop-filter: blur(25px);
-            transition: opacity 0.6s ease-out;
-        }
-
-        /* MAIN APP */
-        .container {
-            padding: 2.5rem; max-width: 90%; width: 420px;
-            text-align: center; display: none; margin-bottom: 50px;
-            animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        h1 { font-family: 'Dancing Script', cursive; color: var(--primary); font-size: 2.8rem; margin: 0; line-height: 1.2; }
-        .heart-beat { display: inline-block; animation: beat 1s infinite alternate; }
-        @keyframes beat { to { transform: scale(1.2); } }
-
-        /* BUTTONS */
+        /* CONTENT STYLES */
+        h1 { font-family: 'Dancing Script', cursive; font-size: 2.5rem; margin: 0; }
+        h2 { font-family: 'Cinzel', serif; margin-bottom: 5px; }
+        
         .btn {
-            background: var(--btn-grad);
-            color: white; border: none; padding: 14px 25px;
-            border-radius: 50px; font-size: 1rem; font-weight: 600;
-            cursor: pointer; margin: 10px 0; width: 100%;
-            box-shadow: 0 10px 20px rgba(0,0,0, 0.2);
-            transition: transform 0.2s;
+            background: var(--primary); color: white; border: none;
+            padding: 10px 20px; border-radius: 50px; cursor: pointer;
+            margin-top: 15px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .btn:active { transform: scale(0.95); }
-        
+
+        .nav-btns {
+            margin-top: auto; display: flex; gap: 10px; width: 100%; justify-content: space-between;
+        }
+        .nav-btn { background: transparent; color: var(--text); border: 1px solid var(--text); padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; }
+
         input {
-            width: 100%; padding: 15px; margin-top: 15px; border: 2px solid rgba(255,255,255,0.5);
-            background: rgba(255,255,255,0.2); border-radius: 15px; outline: none;
-            text-align: center; font-size: 1.1rem; color: var(--text);
+            padding: 10px; border-radius: 10px; border: none; 
+            text-align: center; width: 80%; margin-top: 10px;
+            background: rgba(255,255,255,0.3); color: inherit;
         }
 
-        /* DATE SIMULATOR */
-        .date-sim-box {
-            background: rgba(255,255,255,0.5); border: 2px dashed var(--primary);
-            padding: 15px; border-radius: 20px; margin: 20px 0;
-        }
-        .sim-options { display: flex; gap: 10px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
-        .sim-btn {
-            background: white; border: 1px solid #ccc; padding: 8px 12px; border-radius: 10px; cursor: pointer; color: #333; font-size: 0.9rem;
-        }
-        .sim-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
-        .sim-result { font-weight: bold; margin-top: 15px; min-height: 40px; color: var(--primary); }
-
-        /* KITTY CORNER */
-        .cat-box {
-            position: relative; margin: 20px 0; cursor: pointer;
-            padding: 10px; border-radius: 20px; transition: transform 0.2s;
-        }
-        .cat-box:hover { transform: scale(1.05); }
-        .cat-emoji { font-size: 4rem; }
-        .bubble {
-            position: absolute; top: -10px; right: 20px; background: white; color: black;
-            padding: 5px 10px; border-radius: 10px; font-size: 0.8rem; display: none;
+        /* THEME SWITCH */
+        .theme-toggle {
+            position: absolute; top: 10px; right: 10px;
+            font-size: 1.2rem; cursor: pointer; opacity: 0.7;
         }
 
-        /* MOOD GRID */
-        .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 25px 0; }
-        .mood-btn {
-            background: rgba(255,255,255,0.8); border: none; padding: 15px;
-            border-radius: 20px; cursor: pointer; transition: 0.3s; color: #333;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.05);
-        }
-        .mood-btn:hover { transform: translateY(-3px); color: var(--primary); }
+        /* PAGE 2: DATE SIM */
+        .sim-grid { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; margin: 10px 0; }
+        .sim-chip { padding: 5px 10px; border: 1px solid var(--primary); border-radius: 10px; font-size: 0.8rem; cursor: pointer; }
+        .sim-chip.active { background: var(--primary); color: white; }
 
-        /* MODAL */
-        #message-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); z-index: 3000; justify-content: center; align-items: center; }
-        .modal-content { background: white; color: #333; padding: 30px; border-radius: 30px; max-width: 85%; width: 350px; text-align: center; animation: popIn 0.3s ease; }
-        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        
-        .floating-emoji { position: fixed; pointer-events: none; z-index: 9999; }
-        @keyframes floatUp { to { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
-        .quiz-opt { background: #eee; margin: 5px 0; padding: 10px; border-radius: 10px; cursor: pointer; color: #333; }
-        .quiz-opt:hover { background: var(--primary); color: white; }
-        .typewriter-text { font-family: 'Courier New', Courier, monospace; text-align: left; line-height: 1.6; font-size: 0.95rem; min-height: 100px; }
+        /* PAGE 3: QUIZ */
+        .quiz-opt { width: 100%; background: rgba(0,0,0,0.05); margin: 5px 0; padding: 8px; border-radius: 8px; cursor: pointer; }
+
+        /* KITTY */
+        .cat { font-size: 3rem; cursor: pointer; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        /* FLOATING EMOJI */
+        .float { position: fixed; pointer-events: none; animation: up 3s linear forwards; z-index: 100; }
+        @keyframes up { to { transform: translateY(-100vh); opacity: 0; } }
 
     </style>
 </head>
 <body>
 
-    <div class="theme-switch" onclick="toggleTheme()">🌗 Ayu/Theshu Mode</div>
-
-    <div id="login-screen" class="glass-card">
-        <div style="padding: 2rem; width: 100%; max-width: 400px; text-align: center;">
-            <h1 style="margin-bottom: 10px;">Theshu & Ayu ❤️</h1>
-            <p>Only my Kitchu can enter.</p>
-            <input type="text" id="password-input" placeholder="Enter password..." autocomplete="off">
-            <button class="btn" style="margin-top: 20px;" onclick="checkPassword()">Unlock</button>
-            <p id="error-msg" style="color:#ff4757; display:none; margin-top:10px;">Hint: kitchu</p>
-        </div>
-    </div>
-
-    <div class="container glass-card" id="main-content">
-        <h1>Theshuuuuu <span class="heart-beat">❤️</span> Ayuuuuu</h1>
-        <p style="margin-top: 10px; opacity: 0.8;">Distance means nothing when you mean everything.</p>
-
-        <div style="margin-bottom: 15px;">
-            <div style="background: rgba(255,255,255,0.5); color:var(--text); padding: 5px 15px; border-radius: 20px; display: inline-block; font-size: 0.8rem; margin: 5px;">🎂 Her B-Day: <span id="bday-timer">...</span></div>
-            <div style="background: rgba(255,255,255,0.5); color:var(--text); padding: 5px 15px; border-radius: 20px; display: inline-block; font-size: 0.8rem; margin: 5px;">♓ + ♍ = Soulmates</div>
+    <div class="book">
+        
+        <div class="page" id="cover-page">
+            <h1 style="font-size: 3.5rem;">Theshu <br>&<br> Ayu</h1>
+            <p style="opacity: 0.8; font-size: 0.9rem;">Chapter 1: The Beginning</p>
+            <br>
+            <p>🔒 Enter Password:</p>
+            <input type="text" id="pass" placeholder="hint: kitchu">
+            <button class="btn" onclick="unlock()">Open Book 📖</button>
+            <p id="err" style="color:red; display:none; font-size:0.8rem; margin-top:5px;">Wrong password!</p>
         </div>
 
-        <div class="date-sim-box">
-            <p style="margin:0; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; opacity:0.8;">🎮 PLAN OUR VIRTUAL DATE</p>
+        <div class="page" id="p1">
+            <div class="theme-toggle" onclick="toggleTheme()">🌗</div>
+            <h2>My Summer Girl</h2>
+            <div style="font-size: 3rem;">👸🏻❤️🤴🏻</div>
+            <p style="font-size:0.9rem;">"Distance means nothing when you mean everything."</p>
             
-            <p style="margin:10px 0 5px 0; font-size:0.9rem;">1. Choose Location:</p>
-            <div class="sim-options" id="opt-loc">
-                <button class="sim-btn" onclick="selectSim('loc', 'Beach', this)">Beach 🏖️</button>
-                <button class="sim-btn" onclick="selectSim('loc', 'Bed', this)">Bed 🛏️</button>
-                <button class="sim-btn" onclick="selectSim('loc', 'Rooftop', this)">Rooftop 🌃</button>
+            <div style="background: rgba(0,0,0,0.05); padding: 10px; border-radius: 10px; margin: 10px 0;">
+                <div>🎂 <b>Her B-Day:</b> <span id="bday">...</span></div>
+                <div>✨ <b>Match:</b> Pisces + Virgo</div>
             </div>
 
-            <p style="margin:10px 0 5px 0; font-size:0.9rem;">2. Choose Food:</p>
-            <div class="sim-options" id="opt-food">
-                <button class="sim-btn" onclick="selectSim('food', 'Ice Cream', this)">Ice Cream 🍦</button>
-                <button class="sim-btn" onclick="selectSim('food', 'Pizza', this)">Pizza 🍕</button>
-                <button class="sim-btn" onclick="selectSim('food', 'Me', this)">You 😉</button>
+            <button class="btn" onclick="createEmoji('💋')">Send Kiss 💋</button>
+
+            <div class="nav-btns">
+                <span></span> <button class="nav-btn" onclick="flip(1)">Next ➡️</button>
+            </div>
+        </div>
+
+        <div class="page" id="p2">
+            <h2>Date Simulator</h2>
+            <p style="font-size:0.8rem;">Let's plan our future date 🎮</p>
+
+            <p style="margin: 5px 0; font-weight:bold;">1. Where?</p>
+            <div class="sim-grid">
+                <div class="sim-chip" onclick="setSim('loc', 'Beach', this)">Beach 🏖️</div>
+                <div class="sim-chip" onclick="setSim('loc', 'Bed', this)">Bed 🛏️</div>
+                <div class="sim-chip" onclick="setSim('loc', 'Rooftop', this)">Rooftop 🌃</div>
             </div>
 
-            <button class="btn" style="margin-top:15px; width:auto; padding: 8px 20px;" onclick="runSimulation()">Start Date ❤️</button>
-            <div class="sim-result" id="sim-result"></div>
-        </div>
-
-        <div class="cat-box" onclick="petCat()">
-            <div class="bubble" id="cat-bubble">Meow!</div>
-            <div class="cat-emoji">🐈‍⬛</div>
-            <p style="margin:0; font-size:0.7rem; opacity:0.7;">Tap to pet Kitchu's Cat</p>
-        </div>
-
-        <div class="mood-grid">
-            <button class="mood-btn" onclick="openMessage('miss')">💌<br>Miss You</button>
-            <button class="mood-btn" onclick="openMessage('sad')">🍦<br>Want Ice Cream</button>
-            <button class="mood-btn" onclick="openMessage('note')">📝<br>Love Note</button>
-            <button class="mood-btn" onclick="openMessage('us')">🔒<br>Our Future</button>
-        </div>
-
-        <button class="btn" onclick="sendKiss()">💋 Send Theshu a Kiss</button>
-
-        <div style="background: rgba(255,255,255,0.9); color: #333; padding: 20px; border-radius: 20px; margin: 20px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
-            <div id="gift-lock-view">
-                <div style="font-size: 3rem;">🎁</div>
-                <h3>Surprise for Ayushka</h3>
-                <p style="font-size: 0.8rem; color: #888;">Answer 5 questions about Theshmil to unlock!</p>
-                <button class="btn" style="background: #2f3542;" onclick="startQuiz()">Start Quiz 🧠</button>
+            <p style="margin: 5px 0; font-weight:bold;">2. Food?</p>
+            <div class="sim-grid">
+                <div class="sim-chip" onclick="setSim('food', 'Ice Cream', this)">Ice Cream 🍦</div>
+                <div class="sim-chip" onclick="setSim('food', 'Pizza', this)">Pizza 🍕</div>
+                <div class="sim-chip" onclick="setSim('food', 'Me', this)">You 😉</div>
             </div>
+
+            <button class="btn" style="font-size: 0.8rem; padding: 5px 15px;" onclick="runDate()">Simulate</button>
+            <div id="sim-res" style="color:var(--primary); font-size:0.8rem; min-height:40px; margin-top:10px; font-weight:bold;"></div>
+
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="unflip(1)">⬅️ Back</button>
+                <button class="nav-btn" onclick="flip(2)">Next ➡️</button>
+            </div>
+        </div>
+
+        <div class="page" id="p3">
+            <h2>The Quiz</h2>
             
-            <div id="gift-unlocked-view" style="display:none; animation: popIn 0.5s;">
-                <div style="font-size: 4rem;">🍦😋</div>
-                <h3 style="color: var(--primary);">Your Favorite!</h3>
-                <small>I owe you an Ice Cream date soon!</small>
+            <div id="quiz-box" style="width: 100%;">
+                <p id="q-text" style="font-weight:bold;">Question 1</p>
+                <div id="opts"></div>
+            </div>
+
+            <div id="gift-box" style="display:none;">
+                <div style="font-size:4rem;">🍦</div>
+                <h3 style="color:var(--primary);">You Won!</h3>
+                <p>I owe you an Ice Cream!</p>
+            </div>
+
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="unflip(2)">⬅️ Back</button>
+                <button class="nav-btn" onclick="flip(3)">Next ➡️</button>
             </div>
         </div>
 
-        <button class="btn" id="danger-btn" style="background: #ff4757; margin-top: 20px;" onclick="triggerExplosion()">🚫 DO NOT PRESS</button>
+        <div class="page" id="p4">
+            <h2>For Ayushka...</h2>
+            
+            <div style="text-align: left; font-size: 0.85rem; line-height: 1.6; font-family: monospace; background: rgba(0,0,0,0.03); padding: 10px; border-radius: 10px; height: 200px; overflow-y: auto;">
+                My Dearest Ayushka,<br><br>
+                Every day without you feels incomplete, but knowing I have you makes it all worth it. <br><br>
+                You are my gamer girl, my summer girl, and my forever love.<br><br>
+                Love,<br>Theshmil (Kitchu) ❤️
+            </div>
 
-    </div>
+            <div style="display:flex; align-items:center; gap:10px; margin-top:15px;">
+                <div class="cat" onclick="petCat()">🐈‍⬛</div>
+                <div id="cat-say" style="font-size:0.8rem; opacity:0; transition:0.3s;">Meow!</div>
+            </div>
 
-    <div id="message-modal" onclick="closeModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <div id="modal-body"></div>
-            <button class="btn" onclick="closeModal()" style="margin-top: 20px; width: auto;">Close</button>
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="unflip(3)">⬅️ Back</button>
+                <span>The End.</span>
+            </div>
         </div>
+
     </div>
 
     <script>
-        const password = "kitchu"; 
+        // --- CONFIG ---
+        const password = "kitchu";
+        let currentSim = { loc: '', food: '' };
         
-        // --- QUIZ DATA ---
-        const quizData = [
-            { q: "What is my favorite color?", a: ["Red", "Black", "Pink"], correct: 1 }, 
-            { q: "What animal do I love?", a: ["Dog", "Cat", "Dinosaur"], correct: 1 },
-            { q: "What is my favorite hobby?", a: ["Gaming", "Watching your photos", "Both"], correct: 2 },
-            { q: "Who do I love the most?", a: ["Pizza", "Ayuuuu", "Sleep"], correct: 1 },
-            { q: "What do I like to eat? 😉", a: ["Ice Cream", "Ayuu 🦋✨", "Burger"], correct: 1 }
-        ];
-        let currentQuizIndex = 0;
-        let selectedLoc = "";
-        let selectedFood = "";
-        let typewriterTimeout;
-
-        // 1. THEME TOGGLE
-        function toggleTheme() {
-            document.body.classList.toggle("dark-mode");
-        }
-
-        // 2. LOCK SCREEN
-        function checkPassword() {
-            const input = document.getElementById("password-input").value;
-            if (input === password) {
-                document.getElementById("login-screen").style.opacity = "0";
-                setTimeout(() => {
-                    document.getElementById("login-screen").style.display = "none";
-                    document.getElementById("main-content").style.display = "block";
-                }, 600);
+        // --- BOOK LOGIC ---
+        function unlock() {
+            if(document.getElementById('pass').value === password) {
+                document.getElementById('cover-page').classList.add('flipped');
             } else {
-                document.getElementById("error-msg").style.display = "block";
+                document.getElementById('err').style.display = 'block';
             }
         }
+        function flip(pageId) { document.getElementById('p'+pageId).classList.add('flipped'); }
+        function unflip(pageId) { document.getElementById('p'+pageId).classList.remove('flipped'); }
 
-        // 3. DATE SIMULATOR LOGIC
-        function selectSim(type, val, btn) {
-            if(type === 'loc') selectedLoc = val;
-            if(type === 'food') selectedFood = val;
-            
-            // Visual feedback
-            let parent = type === 'loc' ? document.getElementById('opt-loc') : document.getElementById('opt-food');
-            let buttons = parent.getElementsByClassName('sim-btn');
-            for(let b of buttons) b.classList.remove('selected');
-            btn.classList.add('selected');
+        function toggleTheme() { document.body.classList.toggle('dark-mode'); }
+
+        // --- BDAY ---
+        const now = new Date();
+        let bday = new Date(now.getFullYear(), 8, 22);
+        if(now > bday) bday.setFullYear(now.getFullYear()+1);
+        document.getElementById('bday').innerText = Math.ceil((bday-now)/(1000*60*60*24)) + " Days";
+
+        // --- DATE SIM ---
+        function setSim(type, val, el) {
+            currentSim[type] = val;
+            let siblings = el.parentElement.children;
+            for(let sib of siblings) sib.classList.remove('active');
+            el.classList.add('active');
+        }
+        function runDate() {
+            const res = document.getElementById('sim-res');
+            if(!currentSim.loc || !currentSim.food) { res.innerText = "Pick both options!"; return; }
+            res.innerText = currentSim.food === 'Me' ? 
+                `At the ${currentSim.loc}... just eating kisses! 😘` : 
+                `Chilling at ${currentSim.loc} eating ${currentSim.food}! ✨`;
+            createEmoji("❤️");
         }
 
-        function runSimulation() {
-            const resBox = document.getElementById('sim-result');
-            if(!selectedLoc || !selectedFood) {
-                resBox.innerText = "Please select both a location and food! 🥺";
+        // --- QUIZ ---
+        const qs = [
+            {q: "Fav Color?", a: ["Red","Black","Blue"], c: 1},
+            {q: "Fav Animal?", a: ["Dog","Cat","Bird"], c: 1},
+            {q: "Fav Hobby?", a: ["Gaming","Photos","Both"], c: 2},
+            {q: "What I eat?", a: ["Ayuu 😉","Pizza","Rice"], c: 0}
+        ];
+        let qIdx = 0;
+        
+        function loadQ() {
+            if(qIdx >= qs.length) {
+                document.getElementById('quiz-box').style.display='none';
+                document.getElementById('gift-box').style.display='block';
                 return;
             }
-            resBox.innerText = "Simulating Date...";
-            
-            setTimeout(() => {
-                let story = "";
-                if(selectedFood === "Me") {
-                    story = `We are at the ${selectedLoc}, and honestly... I'm just eating you up with kisses. 😘🔥`;
-                } else {
-                    story = `We are chilling at the ${selectedLoc}, sharing ${selectedFood}, and listening to Bollywood songs. Perfect. ✨`;
-                }
-                resBox.innerText = story;
-                createEmoji("❤️");
-            }, 1000);
+            document.getElementById('q-text').innerText = qs[qIdx].q;
+            let html = "";
+            qs[qIdx].a.forEach((ans, i) => {
+                html += `<div class="quiz-opt" onclick="check(${i})">${ans}</div>`;
+            });
+            document.getElementById('opts').innerHTML = html;
         }
+        function check(i) {
+            if(i === qs[qIdx].c) { qIdx++; loadQ(); createEmoji("✅"); }
+            else { alert("Wrong! 🥺"); }
+        }
+        loadQ(); // Init quiz
 
-        // 4. KITTY LOGIC
+        // --- EXTRAS ---
         function petCat() {
-            const sounds = ["Meow! 😽", "Purrr... ❤️", "Feed me! 🐟", "I love you!"];
-            const bubble = document.getElementById("cat-bubble");
-            bubble.innerText = sounds[Math.floor(Math.random() * sounds.length)];
-            bubble.style.display = "block";
-            setTimeout(() => bubble.style.display = "none", 2000);
-        }
-
-        // 5. BIRTHDAY LOGIC
-        function updateBirthday() {
-            const now = new Date();
-            let bday = new Date(now.getFullYear(), 8, 22); 
-            if (now > bday) bday.setFullYear(now.getFullYear() + 1);
-            const diff = Math.ceil((bday - now) / (1000 * 60 * 60 * 24));
-            document.getElementById("bday-timer").innerText = `${diff} Days`;
-        }
-        updateBirthday();
-
-        // 6. QUIZ LOGIC
-        function startQuiz() { currentQuizIndex = 0; showQuizQuestion(); }
-        function showQuizQuestion() {
-            const q = quizData[currentQuizIndex];
-            let html = `<h3 style="color:var(--primary)">Q${currentQuizIndex + 1}: ${q.q}</h3>`;
-            q.a.forEach((opt, index) => { html += `<div class="quiz-opt" onclick="checkAnswer(${index})">${opt}</div>`; });
-            showModal(html);
-        }
-        function checkAnswer(idx) {
-            if (idx === quizData[currentQuizIndex].correct) {
-                currentQuizIndex++;
-                if (currentQuizIndex < quizData.length) showQuizQuestion(); 
-                else {
-                    closeModal(); createEmoji("🦋");
-                    document.getElementById("gift-lock-view").style.display = "none";
-                    document.getElementById("gift-unlocked-view").style.display = "block";
-                }
-            } else { alert("Wrong! 🥺 Don't you know me?"); }
-        }
-
-        // 7. MESSAGES & TYPEWRITER
-        function typeWriter(text, i) {
-            const container = document.querySelector(".typewriter-text");
-            if (!container) return;
-            if (i < text.length) {
-                container.innerHTML += text.charAt(i);
-                typewriterTimeout = setTimeout(() => typeWriter(text, i + 1), 50);
-            }
-        }
-
-        function openMessage(type) {
-            let content = "";
-            clearTimeout(typewriterTimeout); 
-
-            if(type === 'miss') content = `<h3>Missing Theshuuuuu?</h3><p>I am just a text away. I love you! ❤️</p>`;
-            if(type === 'sad') content = `<h3>Don't be Sad! 🍦</h3><p>Here is a virtual Ice Cream for my Summer Girl.</p><div style="font-size:3rem">🍦</div>`;
-            
-            if(type === 'note') {
-                content = `<h3>My Dear Ayushka...</h3><div class="typewriter-text"></div>`;
-                showModal(content);
-                setTimeout(() => {
-                    document.querySelector(".typewriter-text").innerHTML = ""; 
-                    typeWriter("Every day with you is a blessing. Even though we are miles apart, you are the closest person to my heart. I love you more than words can say. ❤️", 0);
-                }, 100);
-                return;
-            }
-
-            if(type === 'us') content = `<h3>Theshmil & Ayushka</h3><p>Pisces & Virgo.<br>Opposites Attract.<br>Forever. 🔒</p>`;
-            showModal(content);
-        }
-
-        function showModal(html) {
-            document.getElementById("modal-body").innerHTML = html;
-            document.getElementById("message-modal").style.display = "flex";
-        }
-        function closeModal() { 
-            document.getElementById("message-modal").style.display = "none"; 
-            clearTimeout(typewriterTimeout); 
-        }
-
-        // 8. EXPLOSION & KISS
-        function sendKiss() { createEmoji("💋"); }
-        function triggerExplosion() {
-            const btn = document.getElementById("danger-btn");
-            btn.innerText = "I LOVE YOUUUUU! ❤️";
-            for(let i=0; i<30; i++) setTimeout(() => createEmoji(["💌","❤️","🍦"][Math.floor(Math.random()*3)]), i*100);
-            setTimeout(() => btn.innerText = "🚫 DO NOT PRESS", 3000);
+            document.getElementById('cat-say').style.opacity = 1;
+            setTimeout(() => document.getElementById('cat-say').style.opacity = 0, 1500);
         }
         function createEmoji(char) {
-            const el = document.createElement("div");
-            el.innerText = char;
-            el.classList.add("floating-emoji");
-            el.style.left = Math.random() * 80 + 10 + "vw";
-            el.style.top = "100vh";
-            el.style.fontSize = (Math.random() * 2 + 1.5) + "rem";
-            el.style.animation = "floatUp 3s linear forwards"; 
+            let el = document.createElement('div');
+            el.innerText = char; el.className = 'float';
+            el.style.left = Math.random()*80+10 + '%';
+            el.style.top = '100vh'; el.style.fontSize = '2rem';
             document.body.appendChild(el);
-            setTimeout(() => el.remove(), 3000); 
+            setTimeout(()=>el.remove(), 3000);
         }
     </script>
 </body>
