@@ -16,16 +16,18 @@
             --text: #2f3542;
             --shadow: 0 15px 35px rgba(0,0,0,0.1);
             --font-main: 'Poppins', sans-serif;
+            --btn-grad: linear-gradient(135deg, #ff6b81, #e84393);
         }
 
         /* DARK MODE (GAMER MODE) VARIABLES */
         body.dark-mode {
             --primary: #00d2d3; /* Neon Cyan */
-            --bg-gradient: #000000;
-            --glass: rgba(20, 20, 20, 0.9);
+            --bg-gradient: #050505;
+            --glass: rgba(20, 20, 20, 0.95);
             --text: #ffffff;
-            --shadow: 0 0 20px rgba(0, 210, 211, 0.4);
+            --shadow: 0 0 20px rgba(0, 210, 211, 0.2);
             --font-main: 'Orbitron', sans-serif; /* Gamer Font */
+            --btn-grad: linear-gradient(90deg, #00d2d3, #2e86de);
         }
 
         * { box-sizing: border-box; }
@@ -89,7 +91,7 @@
         /* MAIN APP */
         .container {
             padding: 2.5rem; max-width: 90%; width: 420px;
-            text-align: center; display: none; margin-bottom: 90px;
+            text-align: center; display: none; margin-bottom: 50px;
             animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -100,7 +102,7 @@
 
         /* BUTTONS */
         .btn {
-            background: linear-gradient(135deg, var(--primary), #e84393);
+            background: var(--btn-grad);
             color: white; border: none; padding: 14px 25px;
             border-radius: 50px; font-size: 1rem; font-weight: 600;
             cursor: pointer; margin: 10px 0; width: 100%;
@@ -108,42 +110,24 @@
             transition: transform 0.2s;
         }
         .btn:active { transform: scale(0.95); }
-        body.dark-mode .btn { background: linear-gradient(90deg, #00d2d3, #2e86de); color: black; }
-
+        
         input {
             width: 100%; padding: 15px; margin-top: 15px; border: 2px solid rgba(255,255,255,0.5);
             background: rgba(255,255,255,0.2); border-radius: 15px; outline: none;
             text-align: center; font-size: 1.1rem; color: var(--text);
         }
 
-        /* SPIN WHEEL */
-        .wheel-container { position: relative; width: 250px; height: 250px; margin: 20px auto; }
-        .wheel {
-            width: 100%; height: 100%; border-radius: 50%; border: 5px solid var(--primary);
-            background: conic-gradient(
-                #ff9ff3 0deg 60deg, 
-                #feca57 60deg 120deg, 
-                #ff6b6b 120deg 180deg, 
-                #48dbfb 180deg 240deg, 
-                #1dd1a1 240deg 300deg, 
-                #5f27cd 300deg 360deg
-            );
-            transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1);
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        /* DATE SIMULATOR */
+        .date-sim-box {
+            background: rgba(255,255,255,0.5); border: 2px dashed var(--primary);
+            padding: 15px; border-radius: 20px; margin: 20px 0;
         }
-        .wheel-arrow {
-            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
-            width: 0; height: 0; border-left: 15px solid transparent;
-            border-right: 15px solid transparent; border-top: 20px solid var(--text);
-            z-index: 10;
+        .sim-options { display: flex; gap: 10px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+        .sim-btn {
+            background: white; border: 1px solid #ccc; padding: 8px 12px; border-radius: 10px; cursor: pointer; color: #333; font-size: 0.9rem;
         }
-        .wheel-btn {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 60px; height: 60px; background: white; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: bold; cursor: pointer; box-shadow: 0 0 10px rgba(0,0,0,0.2);
-            font-size: 0.8rem; color: #333;
-        }
+        .sim-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
+        .sim-result { font-weight: bold; margin-top: 15px; min-height: 40px; color: var(--primary); }
 
         /* KITTY CORNER */
         .cat-box {
@@ -166,16 +150,6 @@
         }
         .mood-btn:hover { transform: translateY(-3px); color: var(--primary); }
 
-        /* MUSIC PLAYER */
-        .music-player {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.95);
-            padding: 12px 20px; border-radius: 20px; color: #333;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 15px; z-index: 100;
-        }
-        .album-art { width: 40px; height: 40px; border-radius: 50%; background: #000; animation: spin 4s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
         /* MODAL */
         #message-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); z-index: 3000; justify-content: center; align-items: center; }
         .modal-content { background: white; color: #333; padding: 30px; border-radius: 30px; max-width: 85%; width: 350px; text-align: center; animation: popIn 0.3s ease; }
@@ -185,6 +159,7 @@
         @keyframes floatUp { to { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
         .quiz-opt { background: #eee; margin: 5px 0; padding: 10px; border-radius: 10px; cursor: pointer; color: #333; }
         .quiz-opt:hover { background: var(--primary); color: white; }
+        .typewriter-text { font-family: 'Courier New', Courier, monospace; text-align: left; line-height: 1.6; font-size: 0.95rem; min-height: 100px; }
 
     </style>
 </head>
@@ -211,14 +186,25 @@
             <div style="background: rgba(255,255,255,0.5); color:var(--text); padding: 5px 15px; border-radius: 20px; display: inline-block; font-size: 0.8rem; margin: 5px;">♓ + ♍ = Soulmates</div>
         </div>
 
-        <div style="margin: 20px 0;">
-            <p style="font-size:0.8rem; opacity:0.7;">🎡 SPIN THE WHEEL OF LOVE</p>
-            <div class="wheel-container">
-                <div class="wheel-arrow"></div>
-                <div class="wheel" id="wheel"></div>
-                <div class="wheel-btn" onclick="spinWheel()">SPIN</div>
+        <div class="date-sim-box">
+            <p style="margin:0; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; opacity:0.8;">🎮 PLAN OUR VIRTUAL DATE</p>
+            
+            <p style="margin:10px 0 5px 0; font-size:0.9rem;">1. Choose Location:</p>
+            <div class="sim-options" id="opt-loc">
+                <button class="sim-btn" onclick="selectSim('loc', 'Beach', this)">Beach 🏖️</button>
+                <button class="sim-btn" onclick="selectSim('loc', 'Bed', this)">Bed 🛏️</button>
+                <button class="sim-btn" onclick="selectSim('loc', 'Rooftop', this)">Rooftop 🌃</button>
             </div>
-            <p id="wheel-result" style="font-weight:bold; color:var(--primary); min-height:25px;"></p>
+
+            <p style="margin:10px 0 5px 0; font-size:0.9rem;">2. Choose Food:</p>
+            <div class="sim-options" id="opt-food">
+                <button class="sim-btn" onclick="selectSim('food', 'Ice Cream', this)">Ice Cream 🍦</button>
+                <button class="sim-btn" onclick="selectSim('food', 'Pizza', this)">Pizza 🍕</button>
+                <button class="sim-btn" onclick="selectSim('food', 'Me', this)">You 😉</button>
+            </div>
+
+            <button class="btn" style="margin-top:15px; width:auto; padding: 8px 20px;" onclick="runSimulation()">Start Date ❤️</button>
+            <div class="sim-result" id="sim-result"></div>
         </div>
 
         <div class="cat-box" onclick="petCat()">
@@ -255,15 +241,6 @@
 
     </div>
 
-    <div class="music-player" id="music-bar" style="display:none;">
-        <div class="album-art"><div style="width:10px; height:10px; background:white; border-radius:50%; margin: 15px auto;"></div></div>
-        <div style="flex-grow: 1; text-align: left;">
-            <div style="font-weight: bold; font-size: 0.9rem;">Tum Hi Ho 🎵</div>
-            <div style="font-size: 0.7rem; color: #888;">Playing for my Summer Girl...</div>
-        </div>
-        <div style="color: var(--primary);">❚❚</div>
-    </div>
-
     <div id="message-modal" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div id="modal-body"></div>
@@ -283,8 +260,11 @@
             { q: "What do I like to eat? 😉", a: ["Ice Cream", "Ayuu 🦋✨", "Burger"], correct: 1 }
         ];
         let currentQuizIndex = 0;
+        let selectedLoc = "";
+        let selectedFood = "";
+        let typewriterTimeout;
 
-        // 1. THEME TOGGLE (Ayu vs Theshu)
+        // 1. THEME TOGGLE
         function toggleTheme() {
             document.body.classList.toggle("dark-mode");
         }
@@ -297,28 +277,42 @@
                 setTimeout(() => {
                     document.getElementById("login-screen").style.display = "none";
                     document.getElementById("main-content").style.display = "block";
-                    document.getElementById("music-bar").style.display = "flex"; 
                 }, 600);
             } else {
                 document.getElementById("error-msg").style.display = "block";
             }
         }
 
-        // 3. SPIN WHEEL LOGIC
-        function spinWheel() {
-            const wheel = document.getElementById("wheel");
-            const resultText = document.getElementById("wheel-result");
-            const deg = Math.floor(5000 + Math.random() * 5000); // Spin lots of times
-            wheel.style.transform = `rotate(${deg}deg)`;
+        // 3. DATE SIMULATOR LOGIC
+        function selectSim(type, val, btn) {
+            if(type === 'loc') selectedLoc = val;
+            if(type === 'food') selectedFood = val;
             
-            const prizes = ["Virtual Hug 🫂", "Song Dedication 🎵", "Late Night Call 📞", "Ice Cream Date 🍦", "Unlimited Kisses 💋", "Movie Night 🎬"];
+            // Visual feedback
+            let parent = type === 'loc' ? document.getElementById('opt-loc') : document.getElementById('opt-food');
+            let buttons = parent.getElementsByClassName('sim-btn');
+            for(let b of buttons) b.classList.remove('selected');
+            btn.classList.add('selected');
+        }
+
+        function runSimulation() {
+            const resBox = document.getElementById('sim-result');
+            if(!selectedLoc || !selectedFood) {
+                resBox.innerText = "Please select both a location and food! 🥺";
+                return;
+            }
+            resBox.innerText = "Simulating Date...";
             
-            resultText.innerText = "Spinning...";
             setTimeout(() => {
-                const result = prizes[Math.floor(Math.random() * prizes.length)];
-                resultText.innerText = `You won: ${result}! 🎉`;
-                createEmoji("🎁");
-            }, 3000);
+                let story = "";
+                if(selectedFood === "Me") {
+                    story = `We are at the ${selectedLoc}, and honestly... I'm just eating you up with kisses. 😘🔥`;
+                } else {
+                    story = `We are chilling at the ${selectedLoc}, sharing ${selectedFood}, and listening to Bollywood songs. Perfect. ✨`;
+                }
+                resBox.innerText = story;
+                createEmoji("❤️");
+            }, 1000);
         }
 
         // 4. KITTY LOGIC
@@ -360,12 +354,33 @@
             } else { alert("Wrong! 🥺 Don't you know me?"); }
         }
 
-        // 7. MESSAGES
+        // 7. MESSAGES & TYPEWRITER
+        function typeWriter(text, i) {
+            const container = document.querySelector(".typewriter-text");
+            if (!container) return;
+            if (i < text.length) {
+                container.innerHTML += text.charAt(i);
+                typewriterTimeout = setTimeout(() => typeWriter(text, i + 1), 50);
+            }
+        }
+
         function openMessage(type) {
             let content = "";
+            clearTimeout(typewriterTimeout); 
+
             if(type === 'miss') content = `<h3>Missing Theshuuuuu?</h3><p>I am just a text away. I love you! ❤️</p>`;
             if(type === 'sad') content = `<h3>Don't be Sad! 🍦</h3><p>Here is a virtual Ice Cream for my Summer Girl.</p><div style="font-size:3rem">🍦</div>`;
-            if(type === 'note') content = `<h3>My Dear Ayushka...</h3><p>Every day with you is a blessing. Even though we are miles apart, you are the closest person to my heart. I love you more than words can say. ❤️</p>`;
+            
+            if(type === 'note') {
+                content = `<h3>My Dear Ayushka...</h3><div class="typewriter-text"></div>`;
+                showModal(content);
+                setTimeout(() => {
+                    document.querySelector(".typewriter-text").innerHTML = ""; 
+                    typeWriter("Every day with you is a blessing. Even though we are miles apart, you are the closest person to my heart. I love you more than words can say. ❤️", 0);
+                }, 100);
+                return;
+            }
+
             if(type === 'us') content = `<h3>Theshmil & Ayushka</h3><p>Pisces & Virgo.<br>Opposites Attract.<br>Forever. 🔒</p>`;
             showModal(content);
         }
@@ -374,7 +389,10 @@
             document.getElementById("modal-body").innerHTML = html;
             document.getElementById("message-modal").style.display = "flex";
         }
-        function closeModal() { document.getElementById("message-modal").style.display = "none"; }
+        function closeModal() { 
+            document.getElementById("message-modal").style.display = "none"; 
+            clearTimeout(typewriterTimeout); 
+        }
 
         // 8. EXPLOSION & KISS
         function sendKiss() { createEmoji("💋"); }
