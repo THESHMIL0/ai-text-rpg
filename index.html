@@ -57,6 +57,7 @@
             transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
             display: flex; flex-direction: column; align-items: center; text-align: center;
             border-left: 2px solid rgba(0,0,0,0.1);
+            backface-visibility: hidden; /* Fixes visual glitches */
         }
 
         /* COVER STYLE */
@@ -131,7 +132,7 @@
             <p style="opacity: 0.8; font-size: 0.9rem;">Chapter 1: The Beginning</p>
             <br>
             <p>🔒 Enter Password:</p>
-            <input type="text" id="pass" placeholder="hint: kitchu">
+            <input type="text" id="pass" placeholder="hint: kushu">
             <button class="btn" onclick="unlock()">Open Book 📖</button>
             <p id="err" style="color:red; display:none; font-size:0.8rem; margin-top:5px;">Wrong password!</p>
         </div>
@@ -204,14 +205,12 @@
         <div class="page" id="p4">
             <h2>For Ayushka...</h2>
             
-            <div style="text-align: left; font-size: 0.85rem; line-height: 1.6; font-family: monospace; background: rgba(0,0,0,0.03); padding: 10px; border-radius: 10px; height: 200px; overflow-y: auto;">
-                My Dearest Ayushka,<br><br>
-                Every day without you feels incomplete, but knowing I have you makes it all worth it. <br><br>
-                You are my gamer girl, my summer girl, and my forever love.<br><br>
-                Love,<br>Theshmil (Kitchu) ❤️
-            </div>
+            <div id="typewriter-container" style="text-align: left; font-size: 0.85rem; line-height: 1.6; font-family: monospace; background: rgba(0,0,0,0.03); padding: 10px; border-radius: 10px; height: 200px; overflow-y: auto;">
+                </div>
+            
+            <button class="btn" style="font-size:0.8rem; padding:5px 15px; margin-top:5px;" onclick="startLetter()">Read Letter 💌</button>
 
-            <div style="display:flex; align-items:center; gap:10px; margin-top:15px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
                 <div class="cat" onclick="petCat()">🐈‍⬛</div>
                 <div id="cat-say" style="font-size:0.8rem; opacity:0; transition:0.3s;">Meow!</div>
             </div>
@@ -226,13 +225,17 @@
 
     <script>
         // --- CONFIG ---
-        const password = "kitchu";
+        const password = "kushu"; // UPDATED PASSWORD
         let currentSim = { loc: '', food: '' };
+        let typewriterTimeout; // For fixing the alien text bug
         
         // --- BOOK LOGIC ---
         function unlock() {
-            if(document.getElementById('pass').value === password) {
+            // Trim spaces and convert to lowercase so "Kushu" and "kushu" both work
+            let input = document.getElementById('pass').value.trim().toLowerCase();
+            if(input === password) {
                 document.getElementById('cover-page').classList.add('flipped');
+                document.getElementById('err').style.display = 'none';
             } else {
                 document.getElementById('err').style.display = 'block';
             }
@@ -291,6 +294,26 @@
             else { alert("Wrong! 🥺"); }
         }
         loadQ(); // Init quiz
+
+        // --- FIXED TYPEWRITER ---
+        function startLetter() {
+            const text = "My Dearest Ayushka,\n\nEvery day without you feels incomplete, but knowing I have you makes it all worth it.\n\nYou are my gamer girl, my summer girl, and my forever love.\n\nLove,\nTheshmil (Kitchu) ❤️";
+            const container = document.getElementById("typewriter-container");
+            
+            // CLEAR EVERYTHING FIRST (Bug Fix)
+            container.innerText = "";
+            clearTimeout(typewriterTimeout);
+            
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    container.innerText += text.charAt(i);
+                    i++;
+                    typewriterTimeout = setTimeout(type, 50); // Speed of typing
+                }
+            }
+            type();
+        }
 
         // --- EXTRAS ---
         function petCat() {
