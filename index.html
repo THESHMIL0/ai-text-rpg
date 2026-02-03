@@ -121,6 +121,21 @@
         .float { position: fixed; pointer-events: none; animation: up 3s linear forwards; z-index: 100; }
         @keyframes up { to { transform: translateY(-100vh); opacity: 0; } }
 
+        /* FIXED TYPEWRITER STYLES */
+        #typewriter-container {
+            text-align: left;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            font-family: monospace;
+            background: rgba(0,0,0,0.05);
+            padding: 15px;
+            border-radius: 10px;
+            height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap; /* Keeps spaces & enters */
+            word-wrap: break-word; /* Prevents overflow */
+        }
+
     </style>
 </head>
 <body>
@@ -205,7 +220,7 @@
         <div class="page" id="p4">
             <h2>For Ayushka...</h2>
             
-            <div id="typewriter-container" style="text-align: left; font-size: 0.85rem; line-height: 1.6; font-family: monospace; background: rgba(0,0,0,0.03); padding: 10px; border-radius: 10px; height: 200px; overflow-y: auto;">
+            <div id="typewriter-container">
                 </div>
             
             <button class="btn" style="font-size:0.8rem; padding:5px 15px; margin-top:5px;" onclick="startLetter()">Read Letter 💌</button>
@@ -225,13 +240,13 @@
 
     <script>
         // --- CONFIG ---
-        const password = "kushu"; // UPDATED PASSWORD
+        const password = "kushu"; // PASSWORD IS FIXED
         let currentSim = { loc: '', food: '' };
-        let typewriterTimeout; // For fixing the alien text bug
+        let typewriterTimeout; // For fixing bugs
         
         // --- BOOK LOGIC ---
         function unlock() {
-            // Trim spaces and convert to lowercase so "Kushu" and "kushu" both work
+            // Smart Check: Works for "Kushu", "kushu", "KUSHU"
             let input = document.getElementById('pass').value.trim().toLowerCase();
             if(input === password) {
                 document.getElementById('cover-page').classList.add('flipped');
@@ -297,19 +312,23 @@
 
         // --- FIXED TYPEWRITER ---
         function startLetter() {
+            // Added spaces carefully to the string
             const text = "My Dearest Ayushka,\n\nEvery day without you feels incomplete, but knowing I have you makes it all worth it.\n\nYou are my gamer girl, my summer girl, and my forever love.\n\nLove,\nTheshmil (Kitchu) ❤️";
             const container = document.getElementById("typewriter-container");
             
-            // CLEAR EVERYTHING FIRST (Bug Fix)
-            container.innerText = "";
+            // 1. Clear previous text
+            container.textContent = "";
+            
+            // 2. Stop any running typing loops
             clearTimeout(typewriterTimeout);
             
             let i = 0;
             function type() {
                 if (i < text.length) {
-                    container.innerText += text.charAt(i);
+                    // 3. Use textContent to ensure spaces render correctly
+                    container.textContent += text.charAt(i);
                     i++;
-                    typewriterTimeout = setTimeout(type, 50); // Speed of typing
+                    typewriterTimeout = setTimeout(type, 50); 
                 }
             }
             type();
