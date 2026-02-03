@@ -5,24 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Story of Us ❤️</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;500;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;500;700&family=Cinzel:wght@700&family=Indie+Flower&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --primary: #ff6b81; 
-            --bg-color: #fce4ec;
-            --paper: #fff;
+            --bg-color: #2d3436; /* Dark desk background to make the book pop */
+            --paper: #fdfbf7; /* Slightly warm paper color */
             --text: #2d3436;
             --cover: linear-gradient(135deg, #ff9a9e, #fad0c4);
             --shadow: 0 4px 10px rgba(0,0,0,0.1);
+            --spine-shadow: linear-gradient(to right, rgba(0,0,0,0.2), transparent 15%);
         }
 
-        /* THESHU DARK MODE */
+        /* THESHU DARK MODE (Changes ink color, not paper) */
         body.dark-mode {
             --primary: #00d2d3;
-            --bg-color: #1e272e;
-            --paper: #2d3436;
-            --text: #dfe6e9;
+            --text: #000;
+            --paper: #dcdde1; /* Silver paper */
             --cover: linear-gradient(135deg, #000000, #485460);
         }
 
@@ -32,15 +32,16 @@
             margin: 0; padding: 0; min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
             background: var(--bg-color);
+            background-image: radial-gradient(#444 1px, transparent 1px);
+            background-size: 20px 20px;
             font-family: 'Poppins', sans-serif;
             overflow: hidden;
-            transition: background 0.5s;
         }
 
         /* BOOK CONTAINER */
         .book {
             position: relative;
-            width: 350px; height: 550px;
+            width: 360px; height: 580px;
             perspective: 1500px;
         }
 
@@ -48,93 +49,111 @@
         .page {
             position: absolute;
             width: 100%; height: 100%;
-            padding: 20px;
+            padding: 25px;
             background: var(--paper);
             color: var(--text);
             border-radius: 5px 15px 15px 5px;
-            box-shadow: inset 5px 0 10px rgba(0,0,0,0.05), 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: inset 10px 0 20px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.2);
             transform-origin: left center;
-            transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
             display: flex; flex-direction: column; align-items: center; text-align: center;
             border-left: 2px solid rgba(0,0,0,0.1);
-            backface-visibility: hidden; /* Fixes visual glitches */
+            backface-visibility: hidden;
+            /* Spine Shadow Effect */
+            background-image: var(--spine-shadow);
         }
 
         /* COVER STYLE */
         #cover-page {
             background: var(--cover);
             color: white;
-            z-index: 10;
+            z-index: 20;
             justify-content: center;
-            border-left: 5px solid rgba(0,0,0,0.2);
+            border-left: 8px solid rgba(0,0,0,0.2);
         }
         
         /* Z-INDEX STACKING */
-        #p1 { z-index: 9; }
-        #p2 { z-index: 8; }
-        #p3 { z-index: 7; }
-        #p4 { z-index: 6; }
+        #p1 { z-index: 10; }
+        #p2 { z-index: 9; }
+        #p3 { z-index: 8; }
+        #p4 { z-index: 7; }
+        #p5 { z-index: 6; }
+        #p6 { z-index: 5; }
 
         /* FLIP CLASSES */
         .flipped { transform: rotateY(-180deg); }
 
         /* CONTENT STYLES */
-        h1 { font-family: 'Dancing Script', cursive; font-size: 2.5rem; margin: 0; }
-        h2 { font-family: 'Cinzel', serif; margin-bottom: 5px; }
+        h1 { font-family: 'Dancing Script', cursive; font-size: 2.8rem; margin: 0; text-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
+        h2 { font-family: 'Cinzel', serif; margin-bottom: 10px; border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
         
         .btn {
             background: var(--primary); color: white; border: none;
-            padding: 10px 20px; border-radius: 50px; cursor: pointer;
+            padding: 10px 25px; border-radius: 50px; cursor: pointer;
             margin-top: 15px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
         }
+        .btn:active { transform: scale(0.95); }
 
         .nav-btns {
-            margin-top: auto; display: flex; gap: 10px; width: 100%; justify-content: space-between;
+            margin-top: auto; display: flex; gap: 10px; width: 100%; justify-content: space-between; align-items: center;
         }
-        .nav-btn { background: transparent; color: var(--text); border: 1px solid var(--text); padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; }
+        .nav-btn { background: transparent; color: var(--text); border: none; cursor: pointer; font-size: 1.5rem; transition: 0.2s; }
+        .nav-btn:hover { color: var(--primary); transform: scale(1.1); }
+        .page-num { font-size: 0.7rem; color: #888; }
 
         input {
-            padding: 10px; border-radius: 10px; border: none; 
+            padding: 12px; border-radius: 10px; border: none; 
             text-align: center; width: 80%; margin-top: 10px;
-            background: rgba(255,255,255,0.3); color: inherit;
+            background: rgba(255,255,255,0.3); color: inherit; font-weight: bold;
         }
+        input::placeholder { color: rgba(255,255,255,0.7); }
 
         /* THEME SWITCH */
         .theme-toggle {
-            position: absolute; top: 10px; right: 10px;
+            position: absolute; top: 15px; right: 15px;
             font-size: 1.2rem; cursor: pointer; opacity: 0.7;
         }
 
         /* PAGE 2: DATE SIM */
-        .sim-grid { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; margin: 10px 0; }
-        .sim-chip { padding: 5px 10px; border: 1px solid var(--primary); border-radius: 10px; font-size: 0.8rem; cursor: pointer; }
+        .sim-grid { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 10px 0; }
+        .sim-chip { padding: 6px 12px; border: 1px solid var(--primary); border-radius: 15px; font-size: 0.8rem; cursor: pointer; background: white; }
         .sim-chip.active { background: var(--primary); color: white; }
 
         /* PAGE 3: QUIZ */
-        .quiz-opt { width: 100%; background: rgba(0,0,0,0.05); margin: 5px 0; padding: 8px; border-radius: 8px; cursor: pointer; }
+        .quiz-opt { width: 100%; background: rgba(0,0,0,0.05); margin: 6px 0; padding: 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .quiz-opt:hover { background: var(--primary); color: white; }
 
-        /* KITTY */
-        .cat { font-size: 3rem; cursor: pointer; animation: bounce 2s infinite; }
+        /* PAGE 4: LETTER */
+        #typewriter-container {
+            text-align: left; font-size: 0.9rem; line-height: 1.6;
+            font-family: 'Indie Flower', cursive; /* Handwritten font */
+            background: repeating-linear-gradient(transparent, transparent 24px, #eee 25px);
+            padding: 15px; border-radius: 5px; height: 250px; overflow-y: auto;
+            white-space: pre-wrap; word-wrap: break-word; width: 100%;
+        }
+
+        /* PAGE 5: POLAROID GALLERY */
+        .polaroid-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .polaroid {
+            background: white; padding: 5px 5px 20px 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15); transform: rotate(-2deg);
+            transition: transform 0.3s; cursor: pointer;
+        }
+        .polaroid:nth-child(even) { transform: rotate(2deg); }
+        .polaroid:hover { transform: scale(1.1) rotate(0deg); z-index: 10; }
+        .polaroid-img { width: 100%; height: 80px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #ccc; }
+        
+        /* PAGE 6: CHECKLIST */
+        .bucket-list { text-align: left; width: 100%; margin-top: 20px; font-family: 'Indie Flower', cursive; font-size: 1.1rem; }
+        .bucket-item { margin: 10px 0; cursor: pointer; }
+        .bucket-item.checked { text-decoration: line-through; color: var(--primary); opacity: 0.7; }
+
+        /* EXTRAS */
+        .cat { font-size: 3rem; cursor: pointer; animation: bounce 2s infinite; margin-top: 10px; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-
-        /* FLOATING EMOJI */
         .float { position: fixed; pointer-events: none; animation: up 3s linear forwards; z-index: 100; }
         @keyframes up { to { transform: translateY(-100vh); opacity: 0; } }
-
-        /* FIXED TYPEWRITER STYLES */
-        #typewriter-container {
-            text-align: left;
-            font-size: 0.85rem;
-            line-height: 1.6;
-            font-family: monospace;
-            background: rgba(0,0,0,0.05);
-            padding: 15px;
-            border-radius: 10px;
-            height: 200px;
-            overflow-y: auto;
-            white-space: pre-wrap; /* Keeps spaces & enters */
-            word-wrap: break-word; /* Prevents overflow */
-        }
 
     </style>
 </head>
@@ -144,8 +163,8 @@
         
         <div class="page" id="cover-page">
             <h1 style="font-size: 3.5rem;">Theshu <br>&<br> Ayu</h1>
-            <p style="opacity: 0.8; font-size: 0.9rem;">Chapter 1: The Beginning</p>
-            <br>
+            <p style="opacity: 0.9; font-size: 1rem; letter-spacing: 2px;">VOL. 1</p>
+            <br><br>
             <p>🔒 Enter Password:</p>
             <input type="text" id="pass" placeholder="hint: kushu">
             <button class="btn" onclick="unlock()">Open Book 📖</button>
@@ -154,19 +173,21 @@
 
         <div class="page" id="p1">
             <div class="theme-toggle" onclick="toggleTheme()">🌗</div>
-            <h2>My Summer Girl</h2>
-            <div style="font-size: 3rem;">👸🏻❤️🤴🏻</div>
-            <p style="font-size:0.9rem;">"Distance means nothing when you mean everything."</p>
+            <h2>The Introduction</h2>
+            <div style="font-size: 4rem; margin: 20px 0;">👸🏻❤️🤴🏻</div>
+            <p style="font-size:1rem; font-style: italic;">"Distance gives us a reason to love harder."</p>
             
-            <div style="background: rgba(0,0,0,0.05); padding: 10px; border-radius: 10px; margin: 10px 0;">
-                <div>🎂 <b>Her B-Day:</b> <span id="bday">...</span></div>
-                <div>✨ <b>Match:</b> Pisces + Virgo</div>
+            <div style="background: rgba(0,0,0,0.05); padding: 15px; border-radius: 10px; margin: 20px 0; width: 100%;">
+                <div>🎂 <b>Her B-Day Countdown:</b></div>
+                <div id="bday" style="font-size: 1.5rem; color: var(--primary); font-weight: bold;">...</div>
             </div>
 
             <button class="btn" onclick="createEmoji('💋')">Send Kiss 💋</button>
 
             <div class="nav-btns">
-                <span></span> <button class="nav-btn" onclick="flip(1)">Next ➡️</button>
+                <span></span> 
+                <span class="page-num">1</span>
+                <button class="nav-btn" onclick="flip(1)">➡️</button>
             </div>
         </div>
 
@@ -174,65 +195,117 @@
             <h2>Date Simulator</h2>
             <p style="font-size:0.8rem;">Let's plan our future date 🎮</p>
 
-            <p style="margin: 5px 0; font-weight:bold;">1. Where?</p>
+            <p style="margin: 10px 0 5px 0; font-weight:bold;">1. Location:</p>
             <div class="sim-grid">
                 <div class="sim-chip" onclick="setSim('loc', 'Beach', this)">Beach 🏖️</div>
                 <div class="sim-chip" onclick="setSim('loc', 'Bed', this)">Bed 🛏️</div>
                 <div class="sim-chip" onclick="setSim('loc', 'Rooftop', this)">Rooftop 🌃</div>
             </div>
 
-            <p style="margin: 5px 0; font-weight:bold;">2. Food?</p>
+            <p style="margin: 10px 0 5px 0; font-weight:bold;">2. Food:</p>
             <div class="sim-grid">
                 <div class="sim-chip" onclick="setSim('food', 'Ice Cream', this)">Ice Cream 🍦</div>
                 <div class="sim-chip" onclick="setSim('food', 'Pizza', this)">Pizza 🍕</div>
                 <div class="sim-chip" onclick="setSim('food', 'Me', this)">You 😉</div>
             </div>
 
-            <button class="btn" style="font-size: 0.8rem; padding: 5px 15px;" onclick="runDate()">Simulate</button>
+            <button class="btn" style="font-size: 0.8rem; padding: 8px 20px;" onclick="runDate()">Simulate Date</button>
             <div id="sim-res" style="color:var(--primary); font-size:0.8rem; min-height:40px; margin-top:10px; font-weight:bold;"></div>
 
             <div class="nav-btns">
-                <button class="nav-btn" onclick="unflip(1)">⬅️ Back</button>
-                <button class="nav-btn" onclick="flip(2)">Next ➡️</button>
+                <button class="nav-btn" onclick="unflip(1)">⬅️</button>
+                <span class="page-num">2</span>
+                <button class="nav-btn" onclick="flip(2)">➡️</button>
             </div>
         </div>
 
         <div class="page" id="p3">
-            <h2>The Quiz</h2>
+            <h2>The Love Quiz</h2>
             
-            <div id="quiz-box" style="width: 100%;">
-                <p id="q-text" style="font-weight:bold;">Question 1</p>
+            <div id="quiz-box" style="width: 100%; margin-top: 20px;">
+                <p id="q-text" style="font-weight:bold; font-size: 1.1rem;">Question 1</p>
                 <div id="opts"></div>
             </div>
 
-            <div id="gift-box" style="display:none;">
-                <div style="font-size:4rem;">🍦</div>
-                <h3 style="color:var(--primary);">You Won!</h3>
-                <p>I owe you an Ice Cream!</p>
+            <div id="gift-box" style="display:none; margin-top: 40px;">
+                <div style="font-size:5rem;">🍦</div>
+                <h3 style="color:var(--primary);">Correct!</h3>
+                <p>I owe you a Mango Ice Cream!</p>
             </div>
 
             <div class="nav-btns">
-                <button class="nav-btn" onclick="unflip(2)">⬅️ Back</button>
-                <button class="nav-btn" onclick="flip(3)">Next ➡️</button>
+                <button class="nav-btn" onclick="unflip(2)">⬅️</button>
+                <span class="page-num">3</span>
+                <button class="nav-btn" onclick="flip(3)">➡️</button>
             </div>
         </div>
 
         <div class="page" id="p4">
-            <h2>For Ayushka...</h2>
+            <h2>Letter for Ayu</h2>
             
             <div id="typewriter-container">
                 </div>
             
-            <button class="btn" style="font-size:0.8rem; padding:5px 15px; margin-top:5px;" onclick="startLetter()">Read Letter 💌</button>
+            <button class="btn" style="font-size:0.8rem; padding:5px 15px; margin-top:10px;" onclick="startLetter()">Read Letter 💌</button>
 
-            <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="unflip(3)">⬅️</button>
+                <span class="page-num">4</span>
+                <button class="nav-btn" onclick="flip(4)">➡️</button>
+            </div>
+        </div>
+
+        <div class="page" id="p5">
+            <h2>Ayu's Gallery</h2>
+            <p style="font-size:0.8rem;">(I love watching your photos)</p>
+            
+            <div class="polaroid-grid">
+                <div class="polaroid" onclick="alert('You look beautiful here! ❤️')">
+                    <div class="polaroid-img">👩🏻</div>
+                    <div style="font-size:0.7rem; text-align:center;">My Cutie</div>
+                </div>
+                <div class="polaroid" onclick="alert('That smile! 😍')">
+                    <div class="polaroid-img">✨</div>
+                    <div style="font-size:0.7rem; text-align:center;">Best Smile</div>
+                </div>
+                <div class="polaroid" onclick="alert('Summer vibes ☀️')">
+                    <div class="polaroid-img">🏖️</div>
+                    <div style="font-size:0.7rem; text-align:center;">Summer Girl</div>
+                </div>
+                <div class="polaroid" onclick="alert('Us soon! 💑')">
+                    <div class="polaroid-img">💑</div>
+                    <div style="font-size:0.7rem; text-align:center;">Us Soon</div>
+                </div>
+            </div>
+
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="unflip(4)">⬅️</button>
+                <span class="page-num">5</span>
+                <button class="nav-btn" onclick="flip(5)">➡️</button>
+            </div>
+        </div>
+
+        <div class="page" id="p6">
+            <h2>Our Bucket List</h2>
+            <p style="font-size:0.8rem;">Tap to check off ✅</p>
+
+            <div class="bucket-list">
+                <div class="bucket-item" onclick="this.classList.toggle('checked')">⬜ Meet in person ✈️</div>
+                <div class="bucket-item" onclick="this.classList.toggle('checked')">⬜ Hug tightly 🫂</div>
+                <div class="bucket-item" onclick="this.classList.toggle('checked')">⬜ Late night drive 🚗</div>
+                <div class="bucket-item" onclick="this.classList.toggle('checked')">⬜ Eat Ice Cream 🍦</div>
+                <div class="bucket-item" onclick="this.classList.toggle('checked')">⬜ Get Married 💍</div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:10px; margin-top: auto;">
                 <div class="cat" onclick="petCat()">🐈‍⬛</div>
                 <div id="cat-say" style="font-size:0.8rem; opacity:0; transition:0.3s;">Meow!</div>
             </div>
 
             <div class="nav-btns">
-                <button class="nav-btn" onclick="unflip(3)">⬅️ Back</button>
-                <span>The End.</span>
+                <button class="nav-btn" onclick="unflip(5)">⬅️</button>
+                <span class="page-num">6</span>
+                <span>End.</span>
             </div>
         </div>
 
@@ -240,13 +313,12 @@
 
     <script>
         // --- CONFIG ---
-        const password = "kushu"; // PASSWORD IS FIXED
+        const password = "kushu";
         let currentSim = { loc: '', food: '' };
-        let typewriterTimeout; // For fixing bugs
+        let typewriterTimeout;
         
         // --- BOOK LOGIC ---
         function unlock() {
-            // Smart Check: Works for "Kushu", "kushu", "KUSHU"
             let input = document.getElementById('pass').value.trim().toLowerCase();
             if(input === password) {
                 document.getElementById('cover-page').classList.add('flipped');
@@ -312,20 +384,13 @@
 
         // --- FIXED TYPEWRITER ---
         function startLetter() {
-            // Added spaces carefully to the string
             const text = "My Dearest Ayushka,\n\nEvery day without you feels incomplete, but knowing I have you makes it all worth it.\n\nYou are my gamer girl, my summer girl, and my forever love.\n\nLove,\nTheshmil (Kitchu) ❤️";
             const container = document.getElementById("typewriter-container");
-            
-            // 1. Clear previous text
             container.textContent = "";
-            
-            // 2. Stop any running typing loops
             clearTimeout(typewriterTimeout);
-            
             let i = 0;
             function type() {
                 if (i < text.length) {
-                    // 3. Use textContent to ensure spaces render correctly
                     container.textContent += text.charAt(i);
                     i++;
                     typewriterTimeout = setTimeout(type, 50); 
