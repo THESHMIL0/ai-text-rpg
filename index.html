@@ -19,7 +19,6 @@
         body {
             margin: 0; padding: 0; min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
-            /* SUMMER LOVE GRADIENT */
             background: linear-gradient(-45deg, #ff9a9e, #fecfef, #f6e58d, #ffbe76);
             background-size: 400% 400%;
             animation: gradientBG 10s ease infinite;
@@ -131,10 +130,11 @@
         }
         @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* TYPEWRITER EFFECT */
+        /* TYPEWRITER TEXT */
         .typewriter-text {
             font-family: 'Courier New', Courier, monospace;
             text-align: left; line-height: 1.6; font-size: 0.95rem;
+            min-height: 100px; /* Prevents layout shift */
         }
 
         /* FLOATING EMOJIS */
@@ -187,7 +187,7 @@
             <div id="gift-lock-view">
                 <div style="font-size: 3rem;">🎁</div>
                 <h3>Surprise for Ayushka</h3>
-                <p style="font-size: 0.8rem; color: #888;">Answer 3 questions about Theshmil to unlock!</p>
+                <p style="font-size: 0.8rem; color: #888;">Answer 5 questions about Theshmil to unlock!</p>
                 <button class="btn" style="background: #2f3542;" onclick="startQuiz()">Start Quiz 🧠</button>
             </div>
             
@@ -228,13 +228,16 @@
     <script>
         const password = "Ayushka"; 
         
-        // --- QUIZ DATA ---
+        // --- NEW QUIZ DATA (5 QUESTIONS) ---
         const quizData = [
-            { q: "When is Theshmil's Birthday?", a: ["Sept 22", "March 14", "Dec 25"], correct: 1 }, 
-            { q: "What does he call you?", a: ["Babe", "Ayuuuuu", "Honey"], correct: 1 },
-            { q: "Who loves the other person more?", a: ["Theshuuuuu 🙋‍♂️", "Ayuuuuu 🤷‍♀️", "Both Equally ⚖️"], correct: 0 } 
+            { q: "What is my favorite color?", a: ["Red", "Black", "Pink"], correct: 1 }, 
+            { q: "What animal do I love?", a: ["Dog", "Cat", "Dinosaur"], correct: 1 },
+            { q: "What is my favorite hobby?", a: ["Gaming", "Watching your photos", "Both"], correct: 2 },
+            { q: "Who do I love the most?", a: ["Pizza", "Ayuuuu", "Sleep"], correct: 1 },
+            { q: "What do I like to eat? (Be careful 😉)", a: ["Ice Cream", "Ayuu 🦋✨", "Burger"], correct: 1 }
         ];
         let currentQuizIndex = 0;
+        let typewriterTimeout; // Variable to control typing speed
 
         // 1. LOCK SCREEN
         function checkPassword() {
@@ -254,7 +257,7 @@
         // 2. BIRTHDAY LOGIC
         function updateBirthday() {
             const now = new Date();
-            let bday = new Date(now.getFullYear(), 8, 22); // Month is 0-indexed (8 is Sept)
+            let bday = new Date(now.getFullYear(), 8, 22); // Month 8 = Sept
             if (now > bday) bday.setFullYear(now.getFullYear() + 1);
             const diff = Math.ceil((bday - now) / (1000 * 60 * 60 * 24));
             document.getElementById("bday-timer").innerText = `${diff} Days`;
@@ -283,32 +286,43 @@
                 currentQuizIndex++;
                 if (currentQuizIndex < quizData.length) showQuizQuestion(); 
                 else {
-                    closeModal(); createEmoji("🍦");
+                    closeModal(); createEmoji("🦋");
                     document.getElementById("gift-lock-view").style.display = "none";
                     document.getElementById("gift-unlocked-view").style.display = "block";
                 }
-            } else { alert("Wrong! 🥺 Try again!"); }
+            } else { alert("Wrong! 🥺 Don't you know Theshuuuuu?"); }
         }
 
-        // 5. TYPEWRITER EFFECT
-        function typeWriter(text, i, fn) {
+        // 5. FIXED TYPEWRITER EFFECT
+        function typeWriter(text, i) {
+            const container = document.querySelector(".typewriter-text");
+            if (!container) return; // Safety check
+            
             if (i < text.length) {
-                document.querySelector(".typewriter-text").innerHTML += text.charAt(i);
-                setTimeout(() => typeWriter(text, i + 1, fn), 50);
+                container.innerHTML += text.charAt(i);
+                typewriterTimeout = setTimeout(() => typeWriter(text, i + 1), 50);
             }
         }
 
         // 6. MESSAGES
         function openMessage(type) {
             let content = "";
+            clearTimeout(typewriterTimeout); // Stop any previous typing
+
             if(type === 'miss') content = `<h3>Missing Theshuuuuu?</h3><p>I am just a text away. I love you! ❤️</p>`;
             if(type === 'sad') content = `<h3>Don't be Sad! 🍦</h3><p>Here is a virtual Ice Cream for my Summer Girl.</p><div style="font-size:3rem">🍦</div>`;
+            
             if(type === 'note') {
                 content = `<h3>My Dear Ayushka...</h3><div class="typewriter-text"></div>`;
                 showModal(content);
-                setTimeout(() => typeWriter("Every day with you is a blessing. Even though we are miles apart, you are the closest person to my heart. I love you more than words can say. ❤️", 0), 500);
+                // Clear content first to fix the bug, then start typing
+                setTimeout(() => {
+                    document.querySelector(".typewriter-text").innerHTML = ""; 
+                    typeWriter("Every day with you is a blessing. Even though we are miles apart, you are the closest person to my heart. I love you more than words can say. ❤️", 0);
+                }, 100);
                 return;
             }
+
             if(type === 'us') content = `<h3>Theshmil & Ayushka</h3><p>Pisces & Virgo.<br>Opposites Attract.<br>Forever. 🔒</p>`;
             showModal(content);
         }
@@ -317,7 +331,10 @@
             document.getElementById("modal-body").innerHTML = html;
             document.getElementById("message-modal").style.display = "flex";
         }
-        function closeModal() { document.getElementById("message-modal").style.display = "none"; }
+        function closeModal() { 
+            document.getElementById("message-modal").style.display = "none"; 
+            clearTimeout(typewriterTimeout); // Stop typing when closed
+        }
 
         // 7. EXPLOSION & KISS
         function sendKiss() { createEmoji("💋"); }
