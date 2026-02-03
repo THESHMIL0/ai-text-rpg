@@ -256,4 +256,85 @@
         function checkAnswer(selectedIndex) {
             if (selectedIndex === quizData[currentQuizIndex].correct) {
                 currentQuizIndex++;
-                if (currentQuizIndex < quizData.length
+                if (currentQuizIndex < quizData.length) {
+                    showQuizQuestion(); // Next question
+                } else {
+                    closeModal();
+                    triggerConfetti();
+                    document.getElementById("gift-lock-view").style.display = "none";
+                    document.getElementById("gift-unlocked-view").style.display = "block";
+                }
+            } else {
+                alert("Wrong answer! 😱 Do you even know me? Try again!");
+            }
+        }
+
+        // 3. EXPLOSION FIX (LAG FREE)
+        let isExploding = false; // Flag to prevent multiple clicks
+        function triggerExplosion() {
+            if (isExploding) return; // Stop if already running
+            isExploding = true;
+            
+            const btn = document.getElementById("danger-btn");
+            btn.innerText = "I TOLD YOU! 💥";
+            btn.disabled = true;
+
+            let count = 0;
+            const interval = setInterval(() => {
+                createEmoji(["💣", "💥", "❤️"][Math.floor(Math.random()*3)]);
+                count++;
+                if (count > 30) { // Stop after 30 emojis
+                    clearInterval(interval);
+                    isExploding = false;
+                    btn.innerText = "🚫 DO NOT PRESS";
+                    btn.disabled = false;
+                }
+            }, 100);
+        }
+
+        // 4. OPEN WHEN MESSAGES
+        const messages = {
+            'miss': { emoji: "🌏", title: "Missing You", text: "Look at the moon. I'm looking at it too." },
+            'sad': { emoji: "🫂", title: "Don't be Sad", text: "I am sending you a massive virtual hug right now." },
+            'happy': { emoji: "✨", title: "Yay!", text: "Keep that smile on your face, it suits you." },
+            'us': { emoji: "🔒", title: "Our Future", text: "Worth every mile, worth every second." }
+        };
+
+        function openMessage(type) {
+            const data = messages[type];
+            showModal(`<div style="font-size:3rem">${data.emoji}</div><h3>${data.title}</h3><p>${data.text}</p>`);
+        }
+
+        // HELPER FUNCTIONS
+        function showModal(content) {
+            document.getElementById("modal-content-body").innerHTML = content;
+            document.getElementById("message-modal").style.display = "flex";
+        }
+        function closeModal() { document.getElementById("message-modal").style.display = "none"; }
+
+        function sendKiss() {
+            createEmoji("💋");
+        }
+
+        function createEmoji(char) {
+            const el = document.createElement("div");
+            el.innerText = char;
+            el.classList.add("floating-emoji");
+            el.style.left = Math.random() * 80 + 10 + "vw"; // Keep within screen width
+            el.style.top = "100vh";
+            el.style.fontSize = (Math.random() * 2 + 1.5) + "rem";
+            el.style.animation = "floatUp 3s linear forwards"; 
+            document.body.appendChild(el);
+            
+            // Auto remove after animation finishes to prevent lag
+            setTimeout(() => { el.remove(); }, 3000); 
+        }
+
+        function triggerConfetti() {
+            for(let i=0; i<30; i++) {
+                setTimeout(() => createEmoji("🎉"), i * 50);
+            }
+        }
+    </script>
+</body>
+</html>
