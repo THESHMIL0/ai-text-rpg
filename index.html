@@ -9,21 +9,24 @@
 
     <style>
         :root {
+            /* AYU MODE (Light) */
             --primary: #ff6b81; 
-            --bg-color: #2d3436; /* Dark desk background to make the book pop */
-            --paper: #fdfbf7; /* Slightly warm paper color */
+            --bg-color: #2d3436;
+            --paper: #fdfbf7;
             --text: #2d3436;
             --cover: linear-gradient(135deg, #ff9a9e, #fad0c4);
             --shadow: 0 4px 10px rgba(0,0,0,0.1);
             --spine-shadow: linear-gradient(to right, rgba(0,0,0,0.2), transparent 15%);
         }
 
-        /* THESHU DARK MODE (Changes ink color, not paper) */
+        /* THESHU MODE (Black & Pink) */
         body.dark-mode {
-            --primary: #00d2d3;
-            --text: #000;
-            --paper: #dcdde1; /* Silver paper */
-            --cover: linear-gradient(135deg, #000000, #485460);
+            --primary: #ff6b81; /* Hot Pink Accents */
+            --bg-color: #000000; /* Pure Black Background */
+            --paper: #1e1e1e; /* Dark Grey Paper */
+            --text: #ffc3cf; /* Light Pink Text */
+            --cover: linear-gradient(135deg, #1e1e1e, #000000);
+            --spine-shadow: linear-gradient(to right, rgba(0,0,0,0.8), transparent 20%);
         }
 
         * { box-sizing: border-box; }
@@ -32,10 +35,11 @@
             margin: 0; padding: 0; min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
             background: var(--bg-color);
-            background-image: radial-gradient(#444 1px, transparent 1px);
-            background-size: 20px 20px;
+            background-image: radial-gradient(var(--primary) 1px, transparent 1px);
+            background-size: 30px 30px;
             font-family: 'Poppins', sans-serif;
             overflow: hidden;
+            transition: background 0.5s;
         }
 
         /* BOOK CONTAINER */
@@ -59,7 +63,6 @@
             display: flex; flex-direction: column; align-items: center; text-align: center;
             border-left: 2px solid rgba(0,0,0,0.1);
             backface-visibility: hidden;
-            /* Spine Shadow Effect */
             background-image: var(--spine-shadow);
         }
 
@@ -90,7 +93,7 @@
         .btn {
             background: var(--primary); color: white; border: none;
             padding: 10px 25px; border-radius: 50px; cursor: pointer;
-            margin-top: 15px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-top: 15px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             transition: transform 0.2s;
         }
         .btn:active { transform: scale(0.95); }
@@ -100,14 +103,15 @@
         }
         .nav-btn { background: transparent; color: var(--text); border: none; cursor: pointer; font-size: 1.5rem; transition: 0.2s; }
         .nav-btn:hover { color: var(--primary); transform: scale(1.1); }
-        .page-num { font-size: 0.7rem; color: #888; }
+        .page-num { font-size: 0.7rem; opacity: 0.6; }
 
         input {
             padding: 12px; border-radius: 10px; border: none; 
             text-align: center; width: 80%; margin-top: 10px;
-            background: rgba(255,255,255,0.3); color: inherit; font-weight: bold;
+            background: rgba(255,255,255,0.2); color: white; font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.4);
         }
-        input::placeholder { color: rgba(255,255,255,0.7); }
+        input::placeholder { color: rgba(255,255,255,0.8); }
 
         /* THEME SWITCH */
         .theme-toggle {
@@ -117,20 +121,21 @@
 
         /* PAGE 2: DATE SIM */
         .sim-grid { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 10px 0; }
-        .sim-chip { padding: 6px 12px; border: 1px solid var(--primary); border-radius: 15px; font-size: 0.8rem; cursor: pointer; background: white; }
+        .sim-chip { padding: 6px 12px; border: 1px solid var(--primary); border-radius: 15px; font-size: 0.8rem; cursor: pointer; background: rgba(255,255,255,0.1); color: var(--text); }
         .sim-chip.active { background: var(--primary); color: white; }
 
         /* PAGE 3: QUIZ */
-        .quiz-opt { width: 100%; background: rgba(0,0,0,0.05); margin: 6px 0; padding: 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .quiz-opt { width: 100%; background: rgba(0,0,0,0.1); margin: 6px 0; padding: 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
         .quiz-opt:hover { background: var(--primary); color: white; }
 
         /* PAGE 4: LETTER */
         #typewriter-container {
             text-align: left; font-size: 0.9rem; line-height: 1.6;
             font-family: 'Indie Flower', cursive; /* Handwritten font */
-            background: repeating-linear-gradient(transparent, transparent 24px, #eee 25px);
+            background: repeating-linear-gradient(transparent, transparent 24px, rgba(0,0,0,0.05) 25px);
             padding: 15px; border-radius: 5px; height: 250px; overflow-y: auto;
             white-space: pre-wrap; word-wrap: break-word; width: 100%;
+            color: var(--text);
         }
 
         /* PAGE 5: POLAROID GALLERY */
@@ -138,7 +143,7 @@
         .polaroid {
             background: white; padding: 5px 5px 20px 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.15); transform: rotate(-2deg);
-            transition: transform 0.3s; cursor: pointer;
+            transition: transform 0.3s; cursor: pointer; color: #333;
         }
         .polaroid:nth-child(even) { transform: rotate(2deg); }
         .polaroid:hover { transform: scale(1.1) rotate(0deg); z-index: 10; }
@@ -168,7 +173,7 @@
             <p>🔒 Enter Password:</p>
             <input type="text" id="pass" placeholder="hint: kushu">
             <button class="btn" onclick="unlock()">Open Book 📖</button>
-            <p id="err" style="color:red; display:none; font-size:0.8rem; margin-top:5px;">Wrong password!</p>
+            <p id="err" style="color:#ff6b81; display:none; font-size:0.8rem; margin-top:5px; background:white; padding:2px 10px; border-radius:10px;">Wrong password!</p>
         </div>
 
         <div class="page" id="p1">
