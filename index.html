@@ -3,31 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For Ayushka ❤️</title>
+    <title>Ayushka & Me ❤️</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
         /* --- CSS VARIABLES & RESET --- */
         :root {
             --primary: #ff4757;
-            --glass: rgba(255, 255, 255, 0.7);
+            --secondary: #2f3542;
+            --bg-grad: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --glass: rgba(255, 255, 255, 0.85);
         }
         * { box-sizing: border-box; }
 
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             font-family: 'Poppins', sans-serif;
-            overflow-x: hidden;
-            color: #2f3542;
+            color: var(--secondary);
+            display: flex; justify-content: center;
         }
 
         @keyframes gradientBG {
@@ -36,304 +34,318 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* GLASS CARD */
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        /* --- MAIN APP FRAME --- */
+        .app-container {
+            width: 100%; max-width: 420px;
+            min-height: 100vh;
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 50px rgba(0,0,0,0.1);
+            position: relative;
+            overflow-x: hidden;
+            display: none; /* Hidden until unlock */
         }
+
+        /* HEADER SECTION */
+        .header {
+            padding: 40px 20px 20px;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent);
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+
+        .couple-avatars {
+            display: flex; justify-content: center; align-items: center; gap: 15px;
+            margin-bottom: 15px;
+        }
+        .avatar {
+            width: 80px; height: 80px; border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: #eee; overflow: hidden;
+        }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .heart-beat {
+            font-size: 2rem; color: var(--primary);
+            animation: beat 1s infinite alternate;
+        }
+        @keyframes beat { to { transform: scale(1.2); } }
+
+        .names { font-family: 'Dancing Script', cursive; font-size: 2rem; color: var(--primary); margin: 0; }
+        .status { font-size: 0.8rem; color: #666; background: white; padding: 5px 15px; border-radius: 20px; display: inline-block; margin-top: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+        /* SCROLLABLE CONTENT */
+        .content { padding: 20px; padding-bottom: 100px; }
+
+        /* WIDGET CARDS */
+        .card {
+            background: white; border-radius: 20px; padding: 20px;
+            margin-bottom: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-2px); }
+        .card-title { font-weight: 600; font-size: 0.9rem; color: #888; margin-bottom: 15px; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* TIMELINE WIDGET */
+        .timeline-item {
+            display: flex; gap: 15px; margin-bottom: 20px;
+            position: relative;
+        }
+        .timeline-item:before {
+            content: ''; position: absolute; left: 7px; top: 25px; bottom: -25px;
+            width: 2px; background: #eee;
+        }
+        .timeline-item:last-child:before { display: none; }
+        .dot {
+            width: 16px; height: 16px; background: var(--primary);
+            border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 2px #ffe6e6;
+            flex-shrink: 0; margin-top: 5px;
+        }
+        .time-content h4 { margin: 0; font-size: 1rem; }
+        .time-content p { margin: 5px 0 0; font-size: 0.85rem; color: #666; }
+
+        /* INTERACTIVE GRID */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .action-btn {
+            background: #f8f9fa; border: none; padding: 15px; border-radius: 15px;
+            cursor: pointer; transition: 0.2s; text-align: center;
+        }
+        .action-btn:hover { background: #ffe6e6; color: var(--primary); }
+        .btn-icon { font-size: 1.5rem; display: block; margin-bottom: 5px; }
+
+        /* DISTANCE BAR */
+        .dist-bar {
+            height: 6px; background: #eee; border-radius: 10px; position: relative; margin: 20px 10px;
+        }
+        .dist-fill {
+            width: 50%; height: 100%; background: var(--primary); border-radius: 10px;
+            position: absolute; animation: loadDist 2s ease-out forwards;
+        }
+        .plane-icon {
+            position: absolute; right: -10px; top: -12px; font-size: 1.2rem;
+            animation: fly 2s ease-out forwards;
+        }
+        @keyframes loadDist { from { width: 0; } to { width: 60%; } }
 
         /* LOCK SCREEN */
         #login-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 2000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(255,255,255,0.4);
-            backdrop-filter: blur(20px);
-            transition: opacity 0.6s ease-out;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.8); backdrop-filter: blur(10px);
+            z-index: 999; display: flex; align-items: center; justify-content: center;
+            flex-direction: column;
         }
-
-        /* MAIN APP */
-        .container {
-            padding: 2.5rem;
-            max-width: 90%;
-            width: 420px;
-            text-align: center;
-            display: none;
-            margin-bottom: 80px; /* Space for music player */
-            animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        input { padding: 12px; border: 2px solid #eee; border-radius: 10px; outline: none; text-align: center; margin-top: 15px; }
+        .unlock-btn {
+            background: var(--primary); color: white; border: none; padding: 10px 30px;
+            border-radius: 50px; margin-top: 15px; cursor: pointer; font-weight: 600;
         }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        h1 { font-family: 'Dancing Script', cursive; color: var(--primary); font-size: 3rem; margin: 0; }
-        
-        /* INPUTS & BUTTONS */
-        input {
-            width: 100%; padding: 15px; margin-top: 15px;
-            border: 2px solid white; background: rgba(255,255,255,0.5);
-            border-radius: 15px; outline: none; text-align: center; font-size: 1.1rem;
-        }
-        
-        .btn {
-            background: linear-gradient(135deg, #ff6b6b, #ff4757);
-            color: white; border: none; padding: 14px 25px;
-            border-radius: 50px; font-size: 1rem; font-weight: 600;
-            cursor: pointer; margin: 10px 0; width: 100%;
-            box-shadow: 0 10px 20px rgba(255, 71, 87, 0.3);
-            transition: transform 0.2s;
-        }
-        .btn:active { transform: scale(0.95); }
-        .btn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
-
-        /* MOOD GRID */
-        .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 25px 0; }
-        .mood-btn {
-            background: rgba(255,255,255,0.6); border: none; padding: 20px;
-            border-radius: 20px; cursor: pointer; transition: 0.3s;
-        }
-        .mood-btn:hover { background: white; transform: translateY(-3px); }
-
-        /* QUIZ MODAL */
-        .quiz-option {
-            background: #eee; padding: 10px; margin: 5px 0;
-            border-radius: 10px; cursor: pointer; transition: 0.2s;
-        }
-        .quiz-option:hover { background: #d63384; color: white; }
-
-        /* MUSIC PLAYER BAR */
-        .music-player {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 15px; border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            display: flex; align-items: center; justify-content: space-between;
-            z-index: 100;
-        }
-        .playing-icon {
-            width: 20px; height: 20px;
-            display: flex; gap: 3px; align-items: flex-end;
-        }
-        .bar {
-            width: 4px; background: var(--primary);
-            animation: dance 0.5s infinite alternate;
-        }
-        .bar:nth-child(2) { animation-delay: 0.1s; }
-        .bar:nth-child(3) { animation-delay: 0.2s; }
-        @keyframes dance { from { height: 5px; } to { height: 20px; } }
 
         /* MODAL */
-        #message-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4); backdrop-filter: blur(5px);
-            z-index: 3000; justify-content: center; align-items: center;
+        #modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1000; display: none;
+            align-items: center; justify-content: center;
         }
-        .modal-content {
-            background: white; padding: 30px; border-radius: 30px;
-            max-width: 85%; width: 350px; text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            animation: popIn 0.3s ease;
+        .modal-box {
+            background: white; width: 85%; max-width: 350px; padding: 30px;
+            border-radius: 25px; text-align: center; animation: popIn 0.3s;
         }
-        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes popIn { from { transform: scale(0.8); } to { transform: scale(1); } }
 
         /* FLOATING EMOJIS */
-        .floating-emoji { position: fixed; pointer-events: none; z-index: 9999; }
-        @keyframes floatUp { to { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
+        .emoji-float { position: fixed; pointer-events: none; animation: floatUp 3s linear forwards; z-index: 9999; }
+        @keyframes floatUp { to { transform: translateY(-100vh); opacity: 0; } }
 
     </style>
 </head>
 <body>
 
-    <div id="login-screen" class="glass-card">
-        <div style="padding: 2rem; width: 100%; max-width: 400px; text-align: center;">
-            <h1>Locked 🔒</h1>
-            <p>Access restricted to my favorite person.</p>
-            <input type="text" id="password-input" placeholder="Enter your name..." autocomplete="off">
-            <button class="btn" style="margin-top: 20px;" onclick="checkPassword()">Unlock Access</button>
-            <p id="error-msg" style="color:#ff4757; display:none; margin-top:10px;">Hint: Ayushka</p>
+    <div id="login-screen">
+        <div class="couple-avatars">
+            <div class="avatar"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ayushka&backgroundColor=ffdfbf" alt="Her"></div>
+            <div class="avatar"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=c0aede" alt="You"></div>
+        </div>
+        <h2 style="color: var(--secondary);">Ayushka & Me</h2>
+        <p style="font-size: 0.9rem; color: #888;">Enter password to enter our world</p>
+        <input type="text" id="password" placeholder="Name...">
+        <button class="unlock-btn" onclick="unlock()">Unlock ❤️</button>
+        <p id="error" style="color: red; display: none; font-size: 0.8rem; margin-top: 10px;">Hint: Ayushka</p>
+    </div>
+
+    <div class="app-container" id="app">
+        
+        <div class="header">
+            <div class="couple-avatars">
+                <div class="avatar"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ayushka&backgroundColor=ffdfbf"></div>
+                <div class="heart-beat">❤️</div>
+                <div class="avatar"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=c0aede"></div>
+            </div>
+            <h1 class="names">Ayushka & Me</h1>
+            <div class="status">✨ Long Distance • Strong Love ✨</div>
+        </div>
+
+        <div class="content">
+
+            <div class="card">
+                <div class="card-title" style="margin-bottom: 5px;">📍 Distance Status</div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #888;">
+                    <span>My Heart</span>
+                    <span>Your Heart</span>
+                </div>
+                <div class="dist-bar">
+                    <div class="dist-fill"><div class="plane-icon">✈️</div></div>
+                </div>
+                <div style="text-align: center; font-size: 0.85rem; color: var(--primary);">Connecting... Always.</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📜 Our Story So Far</div>
+                
+                <div class="timeline-item">
+                    <div class="dot"></div>
+                    <div class="time-content">
+                        <h4>The Beginning</h4>
+                        <p>When two strangers became friends.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="dot" style="background: #a29bfe;"></div>
+                    <div class="time-content">
+                        <h4>Fell in Love</h4>
+                        <p>The moment I knew you were the one.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="dot" style="background: #ff7675; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #ff7675;"></div>
+                    <div class="time-content">
+                        <h4 style="color: var(--primary);">Today</h4>
+                        <p>Missing you more than ever.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="dot" style="background: #dfe6e9;"></div>
+                    <div class="time-content">
+                        <h4>The Reunion</h4>
+                        <p>Future date: Just you & me.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">💌 Love Actions</div>
+                <div class="grid-2">
+                    <button class="action-btn" onclick="sendKiss()">
+                        <span class="btn-icon">💋</span>
+                        Send Kiss
+                    </button>
+                    <button class="action-btn" onclick="openGift()">
+                        <span class="btn-icon">🎁</span>
+                        Mystery Gift
+                    </button>
+                    <button class="action-btn" onclick="openModal('Quiz', 'Start the Love Quiz to prove you know me!', true)">
+                        <span class="btn-icon">🧠</span>
+                        Love Quiz
+                    </button>
+                    <button class="action-btn" style="background: #fff0f0; color: red;" onclick="explode()">
+                        <span class="btn-icon">🚫</span>
+                        Do Not Press
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📂 Open When...</div>
+                <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px;">
+                    <button class="action-btn" style="min-width: 100px;" onclick="openModal('Miss You', 'Look at the moon. We are under the same sky. 🌙')">Miss Me</button>
+                    <button class="action-btn" style="min-width: 100px;" onclick="openModal('Sad', 'I wish I could hug you right now. You are strong! 💪')">Sad</button>
+                    <button class="action-btn" style="min-width: 100px;" onclick="openModal('Happy', 'Your smile is my favorite thing in the world! ✨')">Happy</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <div class="container glass-card" id="main-content">
-        <h1>Hey Ayushka!</h1>
-        <p>I built this little corner of the internet just for you.</p>
-
-        <button class="btn" onclick="sendKiss()">💋 Send a Flying Kiss</button>
-
-        <div class="mood-grid">
-            <button class="mood-btn" onclick="openMessage('miss')">💌<br>Miss You</button>
-            <button class="mood-btn" onclick="openMessage('sad')">🧸<br>Sad</button>
-            <button class="mood-btn" onclick="openMessage('happy')">✨<br>Happy</button>
-            <button class="mood-btn" onclick="openMessage('us')">🔒<br>Future</button>
-        </div>
-
-        <div style="background: white; padding: 20px; border-radius: 20px; margin: 20px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
-            <div id="gift-lock-view">
-                <div style="font-size: 3rem;">🎁</div>
-                <h3>The Mystery Box</h3>
-                <p style="font-size: 0.8rem; color: #888;">Complete the Love Quiz to unlock!</p>
-                <button class="btn" style="background: #2f3542;" onclick="startQuiz()">Start Quiz 🧠</button>
-            </div>
-            
-            <div id="gift-unlocked-view" style="display:none; animation: popIn 0.5s;">
-                <div style="font-size: 3rem;">💍</div>
-                <h3 style="color: var(--primary);">It's a Promise Ring!</h3>
-                <small>One day, this will be real.</small>
-            </div>
-        </div>
-
-        <button class="btn" id="danger-btn" style="background: #ff4757; margin-top: 30px;" onclick="triggerExplosion()">🚫 DO NOT PRESS</button>
-
-    </div>
-
-    <div class="music-player" id="music-bar" style="display:none;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="background: #eee; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">🎵</div>
-            <div style="text-align: left;">
-                <div style="font-weight: bold; font-size: 0.9rem;">Our Song</div>
-                <div style="font-size: 0.7rem; color: #888;">Playing in your heart...</div>
-            </div>
-        </div>
-        <div class="playing-icon">
-            <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-        </div>
-    </div>
-
-    <div id="message-modal" onclick="closeModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <div id="modal-content-body"></div> <button class="btn" onclick="closeModal()" style="margin-top: 20px; width: auto;">Close</button>
+    <div id="modal" onclick="this.style.display='none'">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <h2 id="m-title" style="color: var(--primary); margin-top: 0;"></h2>
+            <p id="m-text" style="color: #666; line-height: 1.6;"></p>
+            <div id="quiz-area" style="display:none; text-align: left; margin-top: 20px;"></div>
+            <button class="unlock-btn" onclick="document.getElementById('modal').style.display='none'">Close</button>
         </div>
     </div>
 
     <script>
-        const password = "Ayushka"; 
+        // --- CONFIG ---
+        const password = "Ayushka";
         
-        // --- QUIZ DATA (CUSTOMIZE THESE!) ---
-        const quizData = [
-            { q: "What is my favorite color?", a: ["Red", "Black", "Blue"], correct: 1 }, // 0 is Red, 1 is Black, 2 is Blue
-            { q: "Where did we meet (in the future)?", a: ["Paris", "Airport", "Dreamland"], correct: 1 },
-            { q: "Who loves the other person more?", a: ["Me", "You", "Equal"], correct: 0 } 
-        ];
-        let currentQuizIndex = 0;
-
-        // 1. LOCK SCREEN
-        function checkPassword() {
-            const input = document.getElementById("password-input").value;
-            if (input.toLowerCase() === password.toLowerCase()) {
-                document.getElementById("login-screen").style.opacity = "0";
-                setTimeout(() => {
-                    document.getElementById("login-screen").style.display = "none";
-                    document.getElementById("main-content").style.display = "block";
-                    document.getElementById("music-bar").style.display = "flex"; // Show player
-                }, 600);
+        // --- LOCK SCREEN ---
+        function unlock() {
+            const val = document.getElementById('password').value;
+            if(val.toLowerCase() === password.toLowerCase()) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
             } else {
-                document.getElementById("error-msg").style.display = "block";
+                document.getElementById('error').style.display = 'block';
             }
         }
 
-        // 2. QUIZ LOGIC
-        function startQuiz() {
-            currentQuizIndex = 0;
-            showQuizQuestion();
-        }
-
-        function showQuizQuestion() {
-            const q = quizData[currentQuizIndex];
-            let html = `<h3 style="color:var(--primary)">Question ${currentQuizIndex + 1}</h3><p>${q.q}</p>`;
-            q.a.forEach((opt, index) => {
-                html += `<div class="quiz-option" onclick="checkAnswer(${index})">${opt}</div>`;
-            });
-            showModal(html);
-        }
-
-        function checkAnswer(selectedIndex) {
-            if (selectedIndex === quizData[currentQuizIndex].correct) {
-                currentQuizIndex++;
-                if (currentQuizIndex < quizData.length) {
-                    showQuizQuestion(); // Next question
-                } else {
-                    closeModal();
-                    triggerConfetti();
-                    document.getElementById("gift-lock-view").style.display = "none";
-                    document.getElementById("gift-unlocked-view").style.display = "block";
-                }
-            } else {
-                alert("Wrong answer! 😱 Do you even know me? Try again!");
-            }
-        }
-
-        // 3. EXPLOSION FIX (LAG FREE)
-        let isExploding = false; // Flag to prevent multiple clicks
-        function triggerExplosion() {
-            if (isExploding) return; // Stop if already running
-            isExploding = true;
+        // --- MODAL SYSTEM ---
+        function openModal(title, text, isQuiz = false) {
+            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('m-title').innerText = title;
+            document.getElementById('m-text').innerText = text;
+            const quizArea = document.getElementById('quiz-area');
             
-            const btn = document.getElementById("danger-btn");
-            btn.innerText = "I TOLD YOU! 💥";
-            btn.disabled = true;
+            if(isQuiz) {
+                quizArea.style.display = 'block';
+                quizArea.innerHTML = `
+                    <p><strong>Q: What is my favorite color?</strong></p>
+                    <button class="action-btn" style="width:100%; margin-bottom:5px;" onclick="alert('Correct! ❤️'); document.getElementById('modal').style.display='none'">Black</button>
+                    <button class="action-btn" style="width:100%;" onclick="alert('Wrong! 🥺')">Blue</button>
+                `;
+                document.getElementById('m-text').style.display = 'none';
+            } else {
+                quizArea.style.display = 'none';
+                document.getElementById('m-text').style.display = 'block';
+            }
+        }
 
+        // --- INTERACTIONS ---
+        function sendKiss() {
+            createFloat('💋'); createFloat('❤️');
+        }
+
+        function openGift() {
+            openModal("Surprise!", "💍 It's a virtual Promise Ring. One day it will be real.");
+            createFloat('💍');
+        }
+
+        let isExploding = false;
+        function explode() {
+            if(isExploding) return;
+            isExploding = true;
+            alert("I TOLD YOU NOT TO PRESS IT! 😱");
             let count = 0;
-            const interval = setInterval(() => {
-                createEmoji(["💣", "💥", "❤️"][Math.floor(Math.random()*3)]);
+            let i = setInterval(() => {
+                createFloat(['💣','💥','❤️'][Math.floor(Math.random()*3)]);
                 count++;
-                if (count > 30) { // Stop after 30 emojis
-                    clearInterval(interval);
-                    isExploding = false;
-                    btn.innerText = "🚫 DO NOT PRESS";
-                    btn.disabled = false;
-                }
+                if(count > 20) { clearInterval(i); isExploding = false; }
             }, 100);
         }
 
-        // 4. OPEN WHEN MESSAGES
-        const messages = {
-            'miss': { emoji: "🌏", title: "Missing You", text: "Look at the moon. I'm looking at it too." },
-            'sad': { emoji: "🫂", title: "Don't be Sad", text: "I am sending you a massive virtual hug right now." },
-            'happy': { emoji: "✨", title: "Yay!", text: "Keep that smile on your face, it suits you." },
-            'us': { emoji: "🔒", title: "Our Future", text: "Worth every mile, worth every second." }
-        };
-
-        function openMessage(type) {
-            const data = messages[type];
-            showModal(`<div style="font-size:3rem">${data.emoji}</div><h3>${data.title}</h3><p>${data.text}</p>`);
-        }
-
-        // HELPER FUNCTIONS
-        function showModal(content) {
-            document.getElementById("modal-content-body").innerHTML = content;
-            document.getElementById("message-modal").style.display = "flex";
-        }
-        function closeModal() { document.getElementById("message-modal").style.display = "none"; }
-
-        function sendKiss() {
-            createEmoji("💋");
-        }
-
-        function createEmoji(char) {
-            const el = document.createElement("div");
+        function createFloat(char) {
+            const el = document.createElement('div');
             el.innerText = char;
-            el.classList.add("floating-emoji");
-            el.style.left = Math.random() * 80 + 10 + "vw"; // Keep within screen width
-            el.style.top = "100vh";
-            el.style.fontSize = (Math.random() * 2 + 1.5) + "rem";
-            el.style.animation = "floatUp 3s linear forwards"; 
+            el.classList.add('emoji-float');
+            el.style.left = Math.random() * 80 + 10 + '%';
+            el.style.top = '100vh';
+            el.style.fontSize = Math.random() * 2 + 1 + 'rem';
             document.body.appendChild(el);
-            
-            // Auto remove after animation finishes to prevent lag
-            setTimeout(() => { el.remove(); }, 3000); 
-        }
-
-        function triggerConfetti() {
-            for(let i=0; i<30; i++) {
-                setTimeout(() => createEmoji("🎉"), i * 50);
-            }
+            setTimeout(() => el.remove(), 3000);
         }
     </script>
 </body>
