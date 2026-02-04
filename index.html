@@ -6,113 +6,105 @@
     <meta name="theme-color" content="#fff5f7">
     <title>Theshu ❤️ Ayuuu</title>
     <style>
-        /* --- MOBILE CORE --- */
+        /* --- CORE --- */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
         
         body { 
             margin: 0; padding: 0; width: 100vw; height: 100dvh;
             background: #fff5f7; color: #333; overflow: hidden;
+            transition: background 0.5s ease;
         }
 
+        /* --- DARK MODE VARIABLES --- */
+        body.dark-mode { background: #1a1a2e; color: white; }
+        body.dark-mode .card { background: #16213e; color: white; border: 1px solid #0f3460; box-shadow: none; }
+        body.dark-mode .nav-bar { background: #16213e; border-top: 1px solid #0f3460; }
+        body.dark-mode .nav-item { color: #666; }
+        body.dark-mode .nav-item.active { color: #e94560; }
+        body.dark-mode .hero h1 { color: #e94560; }
+        body.dark-mode .stat-num { color: #e94560; }
+        
         /* --- LOCK SCREEN --- */
         #lock {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #ff9a9e 0%, #ff6b81 100%);
-            z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center;
             color: white; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .heart-unlock {
-            font-size: 5rem; animation: beat 1.2s infinite; cursor: pointer;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
-        }
+        .heart-unlock { font-size: 5rem; animation: beat 1.2s infinite; cursor: pointer; }
 
         /* --- LAYOUT --- */
         .app-container { display: flex; flex-direction: column; height: 100%; }
-        
-        /* Content Area */
         .content { 
             flex: 1; overflow-y: auto; padding: 20px; display: none; 
-            padding-bottom: 100px; /* Space for FAB/Nav */
-            -webkit-overflow-scrolling: touch;
+            padding-bottom: 100px; -webkit-overflow-scrolling: touch;
         }
         .content.active { display: block; animation: fadeScale 0.3s ease-out; }
 
-        /* Headers */
-        .hero { margin-bottom: 20px; margin-top: 10px; }
-        .hero h1 { font-size: 2.2rem; color: #ff4757; margin: 0; font-weight: 800; }
-        .hero p { color: #ff8fa3; font-weight: 700; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; }
+        /* --- CALL SCREEN (NEW) --- */
+        #call-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('https://placehold.co/600x800/pink/white?text=Ayuuu');
+            background-size: cover; background-position: center;
+            z-index: 1500; display: none; flex-direction: column; align-items: center; justify-content: space-between;
+            padding: 60px 20px; color: white; backdrop-filter: blur(10px);
+        }
+        .caller-img { width: 120px; height: 120px; border-radius: 50%; background: #eee; border: 4px solid rgba(255,255,255,0.2); font-size: 3rem; display: flex; align-items: center; justify-content: center; }
+        .call-actions { display: flex; width: 100%; justify-content: space-around; }
+        .call-btn { width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; cursor: pointer; }
+        .btn-decline { background: #ff4757; animation: shake 2s infinite; }
+        .btn-accept { background: #2ed573; animation: bounce 2s infinite; }
 
-        /* --- CARDS & WIDGETS --- */
+        /* --- CARDS --- */
         .card {
             background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px;
             box-shadow: 0 8px 25px rgba(255, 71, 87, 0.08); text-align: center;
-            border: 1px solid rgba(255,255,255,0.8); position: relative; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.8);
         }
+        .hero { text-align: center; margin: 20px 0; }
+        .hero h1 { font-size: 2.2rem; color: #ff4757; margin: 0; }
+
+        /* --- GAMES TAB (NEW) --- */
+        .game-btn { 
+            background: white; padding: 20px; border-radius: 15px; margin-bottom: 15px; 
+            display: flex; align-items: center; gap: 15px; cursor: pointer; border: 2px solid #eee;
+        }
+        .game-icon { font-size: 2.5rem; }
         
-        /* Note Generator */
-        .note-card { background: linear-gradient(135deg, #ff9a9e, #ff6b81); color: white; cursor: pointer; }
-        .note-text { font-size: 1.1rem; font-weight: 600; line-height: 1.4; font-style: italic; }
-        .tap-hint { font-size: 0.7rem; opacity: 0.8; margin-top: 10px; text-transform: uppercase; }
-
-        /* Stats */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .stat-num { font-size: 3rem; font-weight: 800; color: #ff4757; line-height: 1; }
-        .stat-label { color: #aaa; font-weight: 600; font-size: 0.7rem; letter-spacing: 1px; }
-
-        /* --- MOOD TAB (NEW) --- */
-        .mood-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .mood-btn {
-            background: white; border-radius: 15px; padding: 15px 5px; text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; border: 2px solid transparent;
-        }
-        .mood-btn.selected { border-color: #ff4757; background: #fff0f3; }
-        .mood-emoji { font-size: 2.5rem; display: block; margin-bottom: 5px; }
-        .mood-name { font-size: 0.8rem; font-weight: 600; color: #555; }
-        .mood-response { 
-            margin-top: 20px; padding: 20px; background: white; border-radius: 15px; 
-            text-align: center; font-weight: 600; color: #ff4757; display: none;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-        }
-
-        /* --- CHAT TAB --- */
-        .chat-list { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
-        .msg { max-width: 80%; padding: 14px 18px; border-radius: 20px; font-size: 0.95rem; line-height: 1.4; }
-        .them { background: white; align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-        .me { background: #ff4757; color: white; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 4px 10px rgba(255, 71, 87, 0.2); }
-        .reply-btn { width: 100%; background: white; border: 2px solid #ff4757; color: #ff4757; padding: 14px; border-radius: 16px; font-weight: 700; font-size: 1rem; }
-
-        /* --- PHOTOS TAB --- */
-        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .photo-box { aspect-ratio: 1/1; background: #eee; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white; background-size: cover; background-position: center; }
-        .add-photo { border: 2px dashed #ccc; background: white; color: #ccc; cursor: pointer; }
-
-        /* --- COUPONS TAB --- */
-        .coupon { background: white; padding: 15px; border-radius: 15px; border: 2px dashed #ffb8c6; display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
-        .cp-icon { font-size: 2rem; background: #fff5f7; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
-
+        /* --- CHAT --- */
+        .chat-list { display: flex; flex-direction: column; gap: 15px; }
+        .msg { max-width: 80%; padding: 14px 18px; border-radius: 20px; font-size: 0.95rem; }
+        .them { background: white; align-self: flex-start; }
+        .me { background: #ff4757; color: white; align-self: flex-end; }
+        
         /* --- NAVIGATION --- */
         .nav-bar {
-            height: 75px; background: white; border-top: 1px solid #f0f0f0;
+            height: 75px; background: rgba(255,255,255,0.95); border-top: 1px solid #eee;
             display: flex; justify-content: space-around; align-items: center;
-            padding-bottom: env(safe-area-inset-bottom); flex-shrink: 0; z-index: 50;
+            padding-bottom: env(safe-area-inset-bottom); z-index: 50; backdrop-filter: blur(10px);
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #ccc; font-size: 0.7rem; font-weight: 600; transition: color 0.2s; }
-        .nav-item.active { color: #ff4757; transform: translateY(-2px); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #ccc; font-size: 0.7rem; font-weight: 600; }
+        .nav-item.active { color: #ff4757; }
         .nav-icon { font-size: 1.5rem; margin-bottom: 2px; }
 
-        /* --- FLOATING BUTTON (VIRTUAL HUG) --- */
+        /* --- FAB & TOGGLES --- */
         .fab {
             position: fixed; bottom: 100px; right: 20px;
-            width: 60px; height: 60px; background: #ff4757; border-radius: 50%;
+            width: 55px; height: 55px; background: #ff4757; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 1.8rem; box-shadow: 0 8px 20px rgba(255, 71, 87, 0.3);
+            color: white; font-size: 1.5rem; box-shadow: 0 5px 20px rgba(255, 71, 87, 0.3);
             cursor: pointer; z-index: 50; animation: float 3s ease-in-out infinite;
         }
+        
+        .mode-toggle {
+            position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer;
+        }
 
-        /* Animations */
+        /* Animation */
         @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        @keyframes fadeScale { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        @keyframes fadeScale { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes shake { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(10deg); } 75% { transform: rotate(-10deg); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         .floating-heart { position: fixed; right: 30px; font-size: 2rem; animation: floatUp 2s linear forwards; pointer-events: none; z-index: 99; }
         @keyframes floatUp { 0% { bottom: 90px; opacity: 1; } 100% { bottom: 70vh; opacity: 0; } }
 
@@ -122,8 +114,20 @@
 
     <div id="lock" onclick="unlock()">
         <div class="heart-unlock">❤️</div>
-        <h2 style="margin-top: 20px;">Hi Ayuuu</h2>
-        <p style="opacity: 0.9;">Tap to Unlock</p>
+        <h2 style="margin-top: 20px;">For Ayuuu</h2>
+        <p style="opacity: 0.8;">Tap to Unlock</p>
+    </div>
+
+    <div id="call-screen">
+        <div style="text-align:center; margin-top:50px;">
+            <div class="caller-img">👱🏻‍♂️</div>
+            <h2 style="margin-top:20px; font-size:2rem;">Theshuuuu ❤️</h2>
+            <p>Incoming Video Call...</p>
+        </div>
+        <div class="call-actions">
+            <div class="call-btn btn-decline" onclick="closeCall()">📞</div>
+            <div class="call-btn btn-accept" onclick="acceptCall()">📹</div>
+        </div>
     </div>
 
     <div class="fab" onclick="virtualHug()">🫂</div>
@@ -131,61 +135,47 @@
     <div class="app-container">
         
         <div id="tab-home" class="content active">
+            <div class="mode-toggle" onclick="toggleTheme()">🌓</div>
             <div class="hero">
                 <p>GOOD MORNING</p>
                 <h1>My Love ❤️</h1>
             </div>
 
-            <div class="card note-card" onclick="newNote()">
-                <div id="daily-note" class="note-text">"You are my favorite notification."</div>
-                <div class="tap-hint">Tap for another note ↻</div>
-            </div>
-
-            <div class="grid-2">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 <div class="card">
                     <div class="stat-num" id="days">0</div>
-                    <div class="stat-label">DAYS TOGETHER</div>
+                    <div style="font-size:0.7rem; color:#aaa; font-weight:700;">DAYS TOGETHER</div>
                 </div>
                 <div class="card">
-                    <div class="stat-num">🔋</div>
-                    <div class="stat-label">100% LOVE</div>
+                    <div class="stat-num">∞</div>
+                    <div style="font-size:0.7rem; color:#aaa; font-weight:700;">LOVE LEVEL</div>
                 </div>
             </div>
 
-            <div class="card" style="display:flex; align-items:center; justify-content:space-between; text-align:left;">
-                <div>
-                    <div style="font-weight:700; font-size:1.2rem;">March 14</div>
-                    <div style="color:#aaa; font-size:0.8rem; font-weight:600;">UPCOMING EVENT</div>
-                </div>
-                <div style="font-size:2rem;">🎂</div>
+            <div class="card" onclick="newNote()">
+                <div id="daily-note" style="font-size:1.1rem; font-weight:600; font-style:italic;">"You are my safe place."</div>
+                <div style="font-size:0.7rem; color:#aaa; margin-top:10px;">TAP FOR NEW NOTE</div>
             </div>
         </div>
 
-        <div id="tab-mood" class="content">
-            <div class="hero"><h1>How are you? 💭</h1><p>Tell me your mood</p></div>
+        <div id="tab-games" class="content">
+            <div class="hero"><h1>Games 🎮</h1><p>Let's Play</p></div>
             
-            <div class="mood-grid">
-                <div class="mood-btn" onclick="setMood(this, 'Happy', 'Yay! Seeing you happy makes me happy! 🥰')">
-                    <span class="mood-emoji">😄</span><div class="mood-name">Happy</div>
-                </div>
-                <div class="mood-btn" onclick="setMood(this, 'Sad', 'Oh no 🥺 I am sending you a huge hug right now! 🫂')">
-                    <span class="mood-emoji">😢</span><div class="mood-name">Sad</div>
-                </div>
-                <div class="mood-btn" onclick="setMood(this, 'Miss You', 'I miss you too! More than words can say. ❤️')">
-                    <span class="mood-emoji">🥺</span><div class="mood-name">Miss You</div>
-                </div>
-                <div class="mood-btn" onclick="setMood(this, 'Tired', 'You should rest baby. You work so hard. 😴')">
-                    <span class="mood-emoji">😴</span><div class="mood-name">Tired</div>
-                </div>
-                <div class="mood-btn" onclick="setMood(this, 'Angry', 'Take a deep breath. I love you! 🌹')">
-                    <span class="mood-emoji">😡</span><div class="mood-name">Angry</div>
-                </div>
-                <div class="mood-btn" onclick="setMood(this, 'Loved', 'You are the most loved girl in the world! 💖')">
-                    <span class="mood-emoji">🥰</span><div class="mood-name">Loved</div>
+            <div class="game-btn" onclick="startQuiz()">
+                <div class="game-icon">❓</div>
+                <div>
+                    <div style="font-weight:700;">Love Quiz</div>
+                    <div style="font-size:0.8rem; color:#888;">Do you know me?</div>
                 </div>
             </div>
 
-            <div id="mood-msg" class="mood-response"></div>
+            <div class="game-btn" onclick="spinWheel()">
+                <div class="game-icon">🎡</div>
+                <div>
+                    <div style="font-weight:700;">Spin the Wheel</div>
+                    <div style="font-size:0.8rem; color:#888;">Win a prize!</div>
+                </div>
+            </div>
         </div>
 
         <div id="tab-chat" class="content">
@@ -193,109 +183,74 @@
             <div class="chat-list" id="msgs">
                 <div class="msg them">Hey Ayuuu! ❤️</div>
             </div>
-            <div id="chat-controls">
-                <button class="reply-btn" onclick="nextChat()">Hey Theshu! 👋</button>
+            <div id="chat-controls" style="margin-top:20px;">
+                <button onclick="nextChat()" style="width:100%; padding:15px; background:#ff4757; color:white; border:none; border-radius:15px; font-weight:700;">Reply</button>
             </div>
         </div>
 
-        <div id="tab-photos" class="content">
-            <div class="hero"><h1>Memories 📸</h1></div>
-            <div class="photo-grid" id="gallery">
-                <div class="photo-box add-photo" onclick="document.getElementById('file').click()">+</div>
-            </div>
-            <input type="file" id="file" hidden accept="image/*" onchange="addPhoto(this)">
-        </div>
-
-        <div id="tab-coupons" class="content">
-            <div class="hero"><h1>Coupons 🎟️</h1></div>
-            <div class="coupon" onclick="alert('Redeemed: Massage! 💆‍♀️')">
-                <div class="cp-icon">💆‍♀️</div>
-                <div><div style="font-weight:700;">Head Massage</div><div style="font-size:0.8rem; color:#888;">Valid anytime</div></div>
-            </div>
-            <div class="coupon" onclick="alert('Redeemed: Movie Night! 🎬')">
-                <div class="cp-icon">🎬</div>
-                <div><div style="font-weight:700;">Movie Night</div><div style="font-size:0.8rem; color:#888;">Your choice of movie</div></div>
-            </div>
-            <div class="coupon" onclick="alert('Redeemed: Yes Day! 💍')">
-                <div class="cp-icon">💍</div>
-                <div><div style="font-weight:700;">Yes Day</div><div style="font-size:0.8rem; color:#888;">I say YES to everything</div></div>
+        <div id="tab-mood" class="content">
+            <div class="hero"><h1>Mood 💭</h1></div>
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;">
+                <div class="card" onclick="alert('Yay! Keep smiling! 😄')">😄<br><small>Happy</small></div>
+                <div class="card" onclick="alert('Sending hugs! 🫂')">😢<br><small>Sad</small></div>
+                <div class="card" onclick="alert('I miss you too! ❤️')">🥺<br><small>Miss U</small></div>
             </div>
         </div>
 
         <div class="nav-bar">
             <div class="nav-item active" onclick="switchTab('home', this)"><div class="nav-icon">🏠</div>Home</div>
-            <div class="nav-item" onclick="switchTab('mood', this)"><div class="nav-icon">💭</div>Mood</div>
+            <div class="nav-item" onclick="switchTab('games', this)"><div class="nav-icon">🎮</div>Play</div>
+            <div class="nav-item" onclick="openCall()"><div class="nav-icon" style="color:#2ed573;">📞</div>Call</div>
             <div class="nav-item" onclick="switchTab('chat', this)"><div class="nav-icon">💬</div>Chat</div>
-            <div class="nav-item" onclick="switchTab('photos', this)"><div class="nav-icon">📸</div>Pics</div>
-            <div class="nav-item" onclick="switchTab('coupons', this)"><div class="nav-icon">🎟️</div>Gifts</div>
+            <div class="nav-item" onclick="switchTab('mood', this)"><div class="nav-icon">💭</div>Mood</div>
         </div>
 
     </div>
 
     <script>
-        // --- LOCK SCREEN ---
-        function unlock() {
-            document.getElementById('lock').style.transform = 'translateY(-100%)';
-            try { navigator.vibrate(50); } catch(e){}
-        }
-
-        // --- NAVIGATION ---
+        // --- CORE ---
+        function unlock() { document.getElementById('lock').style.transform = 'translateY(-100%)'; }
+        
         function switchTab(id, el) {
             document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById('tab-' + id).classList.add('active');
-            el.classList.add('active');
+            if(el) el.classList.add('active');
         }
 
-        // --- FEATURES ---
-        
-        // 1. Virtual Hug (Vibration)
-        function virtualHug() {
-            alert("Sending a huge virtual hug... 🫂❤️");
-            if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
-            
-            // Animation
-            const h = document.createElement('div'); h.innerText = "🫂"; 
-            h.className = "floating-heart"; document.body.appendChild(h);
-            setTimeout(() => h.remove(), 2000);
+        function toggleTheme() { document.body.classList.toggle('dark-mode'); }
+
+        // --- CALL FEATURE ---
+        function openCall() { document.getElementById('call-screen').style.display = 'flex'; }
+        function closeCall() { document.getElementById('call-screen').style.display = 'none'; }
+        function acceptCall() { 
+            alert("Connecting... (Just kidding, call me for real! 😉)"); 
+            closeCall(); 
         }
 
-        // 2. Note Generator
-        const notes = [
-            "You are my favorite notification.",
-            "Distance means so little when you mean so much.",
-            "I look at your photos when I miss you.",
-            "You are the best thing that happened in 2026.",
-            "My heart beats only for you.",
-            "Can't wait to hold your hand."
-        ];
-        function newNote() {
-            const r = notes[Math.floor(Math.random() * notes.length)];
-            document.getElementById('daily-note').innerText = `"${r}"`;
+        // --- GAMES ---
+        function startQuiz() {
+            let ans = prompt("Where did we meet? (Type 'School', 'Online', or 'Dream')");
+            if(ans && ans.toLowerCase().includes('online')) alert("Correct! ❤️ You remembered!");
+            else alert("Nice try! But I still love you. 😘");
+        }
+        function spinWheel() {
+            const prizes = ["Big Hug 🫂", "Forehead Kiss 💋", "Date Night 🍷", "Massage 💆‍♀️"];
+            alert("You won: " + prizes[Math.floor(Math.random()*prizes.length)]);
         }
 
-        // 3. Mood Logic
-        function setMood(el, mood, response) {
-            // Reset others
-            document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
-            el.classList.add('selected');
-            
-            // Show message
-            const msgBox = document.getElementById('mood-msg');
-            msgBox.style.display = 'block';
-            msgBox.innerText = response;
-        }
-
-        // 4. Date Logic (Jan 18, 2026)
+        // --- DATE LOGIC (Jan 18, 2026) ---
         const start = new Date("2026-01-18");
         const diff = Math.floor((new Date() - start) / (1000 * 60 * 60 * 24));
         document.getElementById('days').innerText = diff > 0 ? diff : 0;
 
-        // 5. Chat Logic
+        // --- NOTE GENERATOR ---
+        const notes = ["You are my sunshine.", "Thinking of you 24/7.", "You + Me = ❤️", "Can't wait to see you."];
+        function newNote() { document.getElementById('daily-note').innerText = `"${notes[Math.floor(Math.random()*notes.length)]}"`; }
+
+        // --- CHAT ---
         let step = 0;
         const msgs = document.getElementById('msgs');
-        const opts = document.getElementById('chat-controls');
-        
         const script = [
             { me: "Hey Theshu! 👋", them: "I miss you so much. Thinking about Jan 18 makes me smile. ❤️" },
             { me: "Me too! 🥰", them: "Distance is hard, but you are worth it. I have a question..." },
@@ -306,25 +261,18 @@
         function nextChat() {
             if(step >= script.length) return;
             const m = document.createElement('div'); m.className = 'msg me'; m.innerHTML = script[step].me;
-            msgs.appendChild(m); opts.innerHTML = ''; 
-
+            msgs.appendChild(m);
             setTimeout(() => {
                 const t = document.createElement('div'); t.className = 'msg them'; t.innerHTML = script[step].them;
-                msgs.appendChild(t);
-                step++;
-                if(step < script.length) opts.innerHTML = `<button class="reply-btn" onclick="nextChat()">${script[step].me}</button>`;
-                else opts.innerHTML = `<div style="text-align:center; color:#ff4757; font-weight:bold;">❤️ Love You ❤️</div>`;
+                msgs.appendChild(t); step++;
             }, 800);
         }
 
-        // 6. Photo Logic
-        function addPhoto(input) {
-            if(input.files[0]) {
-                const div = document.createElement('div');
-                div.className = 'photo-box';
-                div.style.backgroundImage = `url(${URL.createObjectURL(input.files[0])})`;
-                document.getElementById('gallery').appendChild(div);
-            }
+        function virtualHug() {
+            if (navigator.vibrate) navigator.vibrate([100,50,100]);
+            const h = document.createElement('div'); h.innerText = "🫂"; 
+            h.className = "floating-heart"; document.body.appendChild(h);
+            setTimeout(() => h.remove(), 2000);
         }
     </script>
 </body>
