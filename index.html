@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>For Ayushka ❤️</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Dancing+Script:wght@700&family=Indie+Flower&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&family=Indie+Flower&display=swap" rel="stylesheet">
 
     <style>
         /* --- CORE THEME --- */
         :root {
             --bg-grad: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-            --text-color: #333;
-            --primary-color: #ff6b81;
-            --bubble-user: #007aff;
-            --bubble-them: #e5e5ea;
+            --text: #333;
+            --primary: #ff6b81;
+            --blue: #007aff;
+            --gray: #f2f2f7;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -23,403 +23,295 @@
             margin: 0; padding: 0; height: 100vh; width: 100vw;
             background: var(--bg-grad);
             font-family: 'Poppins', sans-serif;
-            overflow: hidden; 
-            color: var(--text-color);
+            overflow: hidden; color: var(--text);
         }
 
-        /* --- 1. VALENTINE SCREEN (The New Entry) --- */
-        #valentine-screen {
+        /* --- 1. INTRO SCREEN (Valentine) --- */
+        #intro-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 230, 235, 0.98); z-index: 10000;
+            background: #ffe6eb; z-index: 9999;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center; text-align: center;
-            padding: 20px;
         }
 
-        .val-title {
-            font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: #ff4757;
-            margin-bottom: 10px; animation: pulse 2s infinite;
+        .title { font-family: 'Dancing Script'; font-size: 3.5rem; color: #ff4757; margin-bottom: 20px; animation: pulse 2s infinite; }
+        
+        .btn-box { display: flex; gap: 20px; justify-content: center; width: 100%; }
+        
+        .big-btn {
+            padding: 15px 40px; border-radius: 50px; border: none; font-size: 1.2rem; font-weight: bold;
+            cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.2s;
         }
+        .yes { background: #ff4757; color: white; }
+        .no { background: white; color: #333; position: relative; }
+        .yes:active { transform: scale(0.9); }
 
-        .val-btn-container { display: flex; gap: 20px; margin-top: 30px; position: relative; width: 100%; justify-content: center; }
+        /* --- 2. OS SCREEN (Hidden) --- */
+        #main-os { display: none; width: 100%; height: 100%; animation: fade 1s; }
+        @keyframes fade { from{opacity:0} to{opacity:1} }
 
-        .val-btn {
-            padding: 15px 40px; border-radius: 50px; border: none;
-            font-size: 1.2rem; font-weight: bold; cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.3s;
-        }
+        .status-bar { height: 30px; padding: 5px 20px; display: flex; justify-content: space-between; color: white; font-weight: bold; font-size: 0.8rem; }
+        
+        .home-title { font-family: 'Indie Flower'; font-size: 2.8rem; color: white; text-align: center; margin-top: 40px; }
 
-        .yes-btn { background: #ff4757; color: white; }
-        .no-btn { background: white; color: #333; position: relative; }
-
-        /* --- 2. OS INTERFACE (Hidden Initially) --- */
-        #os-interface { display: none; width: 100%; height: 100%; animation: fadeIn 1s; }
-        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-
-        /* HOME SCREEN */
-        .status-bar {
-            height: 30px; padding: 5px 20px; display: flex; 
-            justify-content: space-between; color: white; font-weight: bold; font-size: 0.8rem;
-        }
-
-        .app-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); 
-            gap: 30px; padding: 40px; margin-top: 40px;
-        }
-
-        .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.1s; }
-        .app-icon:active { transform: scale(0.9); }
-
+        .app-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; padding: 40px; margin-top: 30px; }
+        
+        .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .app-icon:active { transform: scale(0.95); }
+        
         .icon-box {
-            width: 75px; height: 75px; border-radius: 20px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 2.2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            background: white; margin-bottom: 10px;
+            width: 70px; height: 70px; border-radius: 18px; background: white;
+            display: flex; align-items: center; justify-content: center; font-size: 2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 8px;
         }
-        .icon-label { font-size: 0.9rem; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); font-weight: 600; }
+        .icon-label { color: white; font-size: 0.9rem; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
 
-        /* APP WINDOWS */
-        .app-window {
+        /* --- APPS WINDOW --- */
+        .window {
             position: fixed; top: 100vh; left: 0; width: 100%; height: 100%;
-            background: #f2f2f7; z-index: 5000;
-            transition: top 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+            background: #f8f8f8; z-index: 5000; transition: top 0.3s ease-out;
             display: flex; flex-direction: column;
         }
-        .app-window.open { top: 0; }
-
-        .app-header {
-            height: 60px; background: white; border-bottom: 1px solid #c6c6c8;
-            display: flex; align-items: center; padding: 0 20px;
-            font-weight: 600; font-size: 1.1rem; justify-content: space-between;
-        }
-        .close-btn { color: var(--primary-color); font-weight: bold; font-size: 1rem; cursor: pointer; padding: 10px; }
-
-        .app-content { flex: 1; overflow-y: auto; padding: 20px; text-align: center; position: relative; }
-
-        /* --- SETTINGS --- */
-        .profile-card {
-            display: flex; align-items: center; gap: 15px; background: white;
-            padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: left;
-        }
-        .profile-pic {
-            width: 50px; height: 50px; background: #ddd; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
-        }
-        .settings-section { background: white; border-radius: 10px; margin-bottom: 20px; text-align: left; overflow: hidden; }
-        .settings-row {
-            padding: 15px; border-bottom: 1px solid #e5e5ea;
-            display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem;
-        }
-        .settings-key { color: #000; }
-        .settings-val { color: #8e8e93; }
-
-        /* --- CHAT APP --- */
-        #chat-container { display: flex; flex-direction: column; gap: 10px; padding-bottom: 100px; }
-        .msg-bubble {
-            max-width: 80%; padding: 12px 16px; border-radius: 20px;
-            font-size: 0.95rem; line-height: 1.4; text-align: left;
-            position: relative; animation: popIn 0.3s ease-out forwards; opacity: 0;
-        }
-        .msg-bubble.rcvd { background: var(--bubble-them); color: black; align-self: flex-start; border-bottom-left-radius: 5px; }
-        .msg-bubble.sent { background: var(--bubble-user); color: white; align-self: flex-end; border-bottom-right-radius: 5px; }
-        .msg-bubble.gift-container { background: #ffeaa7; color: black; align-self: center; text-align: center; width: 100%; }
+        .window.open { top: 0; }
         
-        .chat-options {
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
-            padding: 15px; display: flex; gap: 10px; border-top: 1px solid #ddd;
-            overflow-x: auto;
+        .header {
+            height: 55px; background: white; border-bottom: 1px solid #ddd; display: flex;
+            align-items: center; justify-content: space-between; padding: 0 20px; font-weight: 600;
         }
-        .option-btn {
-            flex: 1; background: var(--bubble-user); color: white; border: none; padding: 12px; 
-            border-radius: 25px; font-weight: 500; font-size: 0.9rem; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        @keyframes popIn { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .close { color: #ff4757; cursor: pointer; font-size: 1rem; }
+        
+        .content { flex: 1; overflow-y: auto; padding: 20px; }
 
-        /* --- GAME & UTILS --- */
-        #game-area {
-            position: relative; width: 100%; height: 400px; background: #2d3436;
-            border-radius: 15px; overflow: hidden; border: 2px solid #ff6b81; margin-top: 10px;
-        }
-        .falling-heart { position: absolute; top: -50px; font-size: 2.5rem; cursor: pointer; }
-        @keyframes fallDown { to { top: 450px; } }
+        /* --- CHAT --- */
+        #chat-box { display: flex; flex-direction: column; gap: 10px; padding-bottom: 80px; }
+        .bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; text-align: left; }
+        .rcvd { background: #e5e5ea; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .sent { background: #007aff; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .gift-bub { background: #ffeaa7; width: 100%; text-align: center; cursor: pointer; align-self: center; }
         
-        .chat-gift { font-size: 4rem; animation: bounce 1s infinite; cursor: pointer; margin: 10px 0; }
-        .gift-text { font-size: 1.1rem; color: #d63031; font-weight: bold; display: none; margin-bottom: 10px;}
+        .opts { position: absolute; bottom: 0; width: 100%; background: white; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #eee; }
+        .opt-btn { flex: 1; padding: 12px; border-radius: 20px; border: none; background: #007aff; color: white; font-weight: bold; }
+
+        /* --- GAME --- */
+        #game-board { width: 100%; height: 400px; background: #222; border-radius: 15px; position: relative; overflow: hidden; margin-top: 10px; }
+        .heart { position: absolute; font-size: 2.5rem; top: -50px; cursor: pointer; }
+        @keyframes fall { to { top: 450px; } }
+
+        /* --- SETTINGS (MINIMAL) --- */
+        .simple-list { background: white; border-radius: 10px; overflow: hidden; }
+        .list-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 0.95rem; }
+        .list-item:last-child { border-bottom: none; }
+        .val { color: #888; }
+
+        /* --- CAMERA --- */
+        .cam-view { width: 100%; height: 300px; background: black; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         
-        .camera-box { width: 100%; height: 350px; background: black; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 20px; }
-        #preview-img { width: 100%; height: 100%; object-fit: cover; display: none; }
-        
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        /* ANIMATIONS */
+        @keyframes pulse { 0% {transform:scale(1);} 50% {transform:scale(1.05);} 100% {transform:scale(1);} }
+        @keyframes bounce { 0%, 100% {transform:translateY(0);} 50% {transform:translateY(-10px);} }
+        .gift-icon { font-size: 3rem; animation: bounce 1s infinite; }
 
     </style>
 </head>
 <body>
 
-    <div id="valentine-screen">
-        <div style="font-size: 4rem;">🌹</div>
-        <h1 class="val-title">Ayushka,<br>Will you be my<br>Valentine?</h1>
-        
-        <div class="val-btn-container">
-            <button class="val-btn yes-btn" onclick="acceptValentine()">YES ❤️</button>
-            <button class="val-btn no-btn" id="noBtn" onmouseover="moveNo()" ontouchstart="moveNo()">NO 😤</button>
+    <div id="intro-screen">
+        <h1 class="title">Ayushka,<br>Will you be my<br>Valentine?</h1>
+        <div class="btn-box">
+            <button class="big-btn yes" onclick="enterOS()" ontouchstart="enterOS()">YES ❤️</button>
+            <button class="big-btn no" id="noBtn" onclick="moveNo()" onmouseover="moveNo()">NO 😤</button>
         </div>
     </div>
 
-    <div id="os-interface">
+    <div id="main-os">
         <div class="status-bar"><span>11:11</span><span>❤️ 5G</span><span>100%</span></div>
-        <div style="padding:20px; text-align:center; color:white; margin-top:40px;">
-            <h2 style="font-family:'Indie Flower'; font-size:2.8rem; margin:0;">Hey Ayuuu ❤️</h2>
-        </div>
+        <h2 class="home-title">Hey Ayuuu ❤️</h2>
 
         <div class="app-grid">
-            <div class="app-icon" onclick="openApp('msg')"><div class="icon-box" style="background:#4cd137; color:white;">💬</div><span class="icon-label">Chat</span></div>
-            <div class="app-icon" onclick="openApp('game')"><div class="icon-box" style="background:#ff9f43; color:white;">🎈</div><span class="icon-label">Game</span></div>
-            <div class="app-icon" onclick="openApp('camera')"><div class="icon-box" style="background:#333; color:white;">📸</div><span class="icon-label">Camera</span></div>
-            <div class="app-icon" onclick="openApp('settings')"><div class="icon-box" style="background:#8e8e93; color:white;">⚙️</div><span class="icon-label">Settings</span></div>
+            <div class="app-icon" onclick="openApp('chat')"><div class="icon-box" style="background:#4cd137;">💬</div><span class="icon-label">Chat</span></div>
+            <div class="app-icon" onclick="openApp('game')"><div class="icon-box" style="background:#ff9f43;">🎈</div><span class="icon-label">Game</span></div>
+            <div class="app-icon" onclick="openApp('cam')"><div class="icon-box" style="background:#333; color:white;">📸</div><span class="icon-label">Camera</span></div>
+            <div class="app-icon" onclick="openApp('set')"><div class="icon-box" style="background:#8e8e93; color:white;">⚙️</div><span class="icon-label">Settings</span></div>
         </div>
     </div>
 
-    <div class="app-window" id="app-msg">
-        <div class="app-header">Theshu ❤️ <span class="close-btn" onclick="closeApp('msg')">Done</span></div>
-        <div class="app-content" style="background:#fff; padding-bottom:80px;">
-            <div id="chat-container"></div>
+    <div id="app-chat" class="window">
+        <div class="header">Theshu ❤️ <span class="close" onclick="closeApp('chat')">Done</span></div>
+        <div class="content" style="background:white;">
+            <div id="chat-box"></div>
         </div>
-        <div class="chat-options" id="chat-options">
-            <button class="option-btn" onclick="startChat()">Tap to Start Chat 💌</button>
+        <div class="opts" id="chat-opts">
+            <button class="opt-btn" onclick="startChat()">Tap to Chat 💌</button>
         </div>
     </div>
 
-    <div class="app-window" id="app-game">
-        <div class="app-header">Heart Rain <span class="close-btn" onclick="closeApp('game')">Done</span></div>
-        <div class="app-content" style="background:#feca57;">
-            <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:10px;">
-                <span>Score: <span id="score">0</span></span>
-                <span id="lives">❤️❤️❤️</span>
+    <div id="app-game" class="window">
+        <div class="header">Heart Rain <span class="close" onclick="closeApp('game')">Done</span></div>
+        <div class="content" style="background:#feca57; text-align:center;">
+            <h3>Score: <span id="score">0</span> | <span id="lives">❤️❤️❤️</span></h3>
+            <p>High Score: <span id="hs">0</span></p>
+            <div id="game-board"></div>
+            <button class="big-btn yes" onclick="startGame()" id="start-btn" style="margin-top:20px;">Play ▶️</button>
+        </div>
+    </div>
+
+    <div id="app-cam" class="window">
+        <div class="header">Camera <span class="close" onclick="closeApp('cam')">Done</span></div>
+        <div class="content" style="background:black; text-align:center;">
+            <div class="cam-view"><img id="preview" src="" style="width:100%; height:100%; object-fit:cover; display:none;"><span id="cam-ph" style="font-size:3rem; color:white;">📷</span></div>
+            <label class="big-btn yes" style="margin-top:20px; display:inline-block; color:white;">Selfie <input type="file" accept="image/*" style="display:none;" onchange="loadPic(event)"></label>
+        </div>
+    </div>
+
+    <div id="app-set" class="window">
+        <div class="header">Settings <span class="close" onclick="closeApp('set')">Done</span></div>
+        <div class="content" style="background:#f2f2f7;">
+            <p style="margin-left:10px; font-size:0.8rem; color:#666;">INFO</p>
+            <div class="simple-list">
+                <div class="list-item"><span>Name</span> <span class="val">Ayushka</span></div>
+                <div class="list-item"><span>Version</span> <span class="val">Theshu OS 28.0</span></div>
             </div>
-            <div style="font-size:0.9rem; margin-bottom:5px;">🏆 High Score: <span id="high-score">0</span></div>
-            <div id="game-area"></div>
-            <button class="val-btn yes-btn" onclick="startGame()" id="start-btn" style="margin-top:10px;">Start Game ▶️</button>
-        </div>
-    </div>
-
-    <div class="app-window" id="app-camera">
-        <div class="app-header">Camera <span class="close-btn" onclick="closeApp('camera')">Done</span></div>
-        <div class="app-content" style="background:black;">
-            <div class="camera-box"><span style="font-size:3rem; color:white;">📷</span><img id="preview-img" src=""></div>
-            <label class="val-btn yes-btn" style="color:white;">Take Selfie<input type="file" accept="image/*" style="display:none;" onchange="showPic(event)"></label>
-        </div>
-    </div>
-
-    <div class="app-window" id="app-settings">
-        <div class="app-header">Settings <span class="close-btn" onclick="closeApp('settings')">Done</span></div>
-        <div class="app-content" style="text-align:left; background:#f2f2f7;">
-            <div class="profile-card">
-                <div class="profile-pic">👩🏻</div>
-                <div>
-                    <div style="font-weight:bold; font-size:1.1rem;">Ayushka</div>
-                    <div style="color:#888; font-size:0.8rem;">Apple ID, iCloud, Media</div>
-                </div>
-            </div>
-
-            <p style="margin-left:15px; font-size:0.8rem; color:#666;">DEVICE INFO</p>
-            <div class="settings-section">
-                <div class="settings-row"><span class="settings-key">Name</span> <span class="settings-val">Ayu's iPhone</span></div>
-                <div class="settings-row"><span class="settings-key">Software</span> <span class="settings-value">Theshu OS 27.0</span></div>
-                <div class="settings-row"><span class="settings-key">Model</span> <span class="settings-value">Heart Pro Max</span></div>
-            </div>
-            <p style="margin-left:15px; font-size:0.8rem; color:#666;">STATUS</p>
-            <div class="settings-section">
-                <div class="settings-row"><span class="settings-key">Battery</span> <span class="settings-value">100% Love</span></div>
-                <div class="settings-row"><span class="settings-key">Storage</span> <span class="settings-value">Full of Memories</span></div>
-                <div class="settings-row"><span class="settings-key">Pet</span> <span class="settings-value">Kitchu 🐈‍⬛</span></div>
+            <p style="margin-left:10px; font-size:0.8rem; color:#666; margin-top:20px;">STATUS</p>
+            <div class="simple-list">
+                <div class="list-item"><span>Battery</span> <span class="val">100% Love</span></div>
+                <div class="list-item"><span>Developer</span> <span class="val">Theshmil</span></div>
+                <div class="list-item"><span>Pet</span> <span class="val">Kitchu 🐈‍⬛</span></div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- VALENTINE LOGIC ---
-        function acceptValentine() {
-            // NUCLEAR DELETE of Valentine Screen
-            const screen = document.getElementById('valentine-screen');
-            screen.parentNode.removeChild(screen);
-            
-            // Show OS
-            document.getElementById('os-interface').style.display = "block";
-            
-            // Confetti
-            for(let i=0; i<50; i++) spawnConfetti();
-            
-            loadHighScore();
+        // --- 1. ENTRY LOGIC ---
+        function enterOS() {
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('main-os').style.display = 'block';
+            document.getElementById('hs').innerText = localStorage.getItem('hs') || 0;
         }
-
+        
         function moveNo() {
-            const btn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - 100);
-            const y = Math.random() * (window.innerHeight - 100);
-            btn.style.position = 'fixed';
-            btn.style.left = x + 'px';
-            btn.style.top = y + 'px';
+            const b = document.getElementById('noBtn');
+            b.style.position = 'absolute';
+            b.style.left = Math.random()*(window.innerWidth-100)+'px';
+            b.style.top = Math.random()*(window.innerHeight-100)+'px';
         }
 
-        // --- NAVIGATION ---
+        // --- 2. NAVIGATION ---
         function openApp(id) { document.getElementById('app-'+id).classList.add('open'); }
         function closeApp(id) { document.getElementById('app-'+id).classList.remove('open'); }
 
-        // --- CHAT SCRIPT ---
+        // --- 3. CHAT LOGIC ---
         const script = [
-            { 
-                txt: "Yooo Ayuuu! Guess what? 😸", 
-                opts: [{l:"What??", n:1}, {l:"Tell me! ✨", n:1}] 
-            },
-            { 
-                txt: "I coded this whole OS just for you! 📱 Took some time but you are worth it. 😉", 
-                opts: [{l:"Crazy boy 😂", n:2}, {l:"Aww thanks! ❤️", n:2}] 
-            },
-            { 
-                txt: "Crazy for you! 😜 Btw, Kitchu 🐈‍⬛ is judging me right now.", 
-                opts: [{l:"Show me Kitchu!", n:3}, {l:"Hehe meow!", n:3}] 
-            },
-            { 
-                txt: "He says meow. Listen, I just want you to know... I love you so much and I'm always here for you. ❤️", 
-                opts: [{l:"I love you too Theshu 🥺", n:4}] 
-            },
-            { 
-                txt: "I actually have something sweet for you... Tap the box below! 👇", 
-                opts: [] 
-            }
+            { t: "Yooo Ayuuu! 😸", o: [{l:"Hey! ❤️", n:1}] },
+            { t: "I coded this app just for you. Took forever! 📱", o: [{l:"Really? 🥺", n:2}] },
+            { t: "Yes! Also Kitchu says meow 🐈‍⬛. I love you so much.", o: [{l:"Love you too! ❤️", n:3}] },
+            { t: "I have a sweet surprise for you. Tap the box! 👇", o: [] }
         ];
 
         function startChat() {
-            document.getElementById('chat-options').innerHTML = '';
-            addMsg(script[0].txt, 'rcvd');
-            showOpts(script[0].opts);
+            document.getElementById('chat-opts').innerHTML = '';
+            addBub(script[0].t, 'rcvd');
+            showOpts(script[0].o);
         }
 
-        function reply(next, label) {
-            addMsg(label, 'sent');
-            document.getElementById('chat-options').innerHTML = '';
-            
-            if(next !== undefined) {
-                const typingBubble = document.createElement('div');
-                typingBubble.className = 'msg-bubble rcvd';
-                typingBubble.innerText = '...';
-                typingBubble.id = 'typing';
-                document.getElementById('chat-container').appendChild(typingBubble);
-
-                setTimeout(() => {
-                    document.getElementById('typing').remove();
-                    if(script[next].opts.length === 0) {
-                        addMsg(script[next].txt, 'rcvd');
-                        setTimeout(spawnGiftInChat, 800);
-                    } else {
-                        addMsg(script[next].txt, 'rcvd');
-                        showOpts(script[next].opts);
-                    }
-                }, 1000);
-            }
+        function reply(n, l) {
+            addBub(l, 'sent');
+            document.getElementById('chat-opts').innerHTML = '';
+            setTimeout(() => {
+                if(script[n].o.length === 0) {
+                    addBub(script[n].t, 'rcvd');
+                    setTimeout(spawnGift, 1000);
+                } else {
+                    addBub(script[n].t, 'rcvd');
+                    showOpts(script[n].o);
+                }
+            }, 800);
         }
 
-        // --- GIFT LOGIC ---
-        function spawnGiftInChat() {
-            const giftDiv = document.createElement('div');
-            giftDiv.className = 'msg-bubble gift-container';
-            giftDiv.innerHTML = `
-                <div class="chat-gift" onclick="revealGift(this)">🎁</div>
-                <div class="gift-text" id="gift-msg">Tap to Open!</div>
-            `;
-            document.getElementById('chat-container').appendChild(giftDiv);
-            const appContent = document.querySelector('#app-msg .app-content');
-            appContent.scrollTop = appContent.scrollHeight;
-        }
-
-        let giftState = 0;
-        function revealGift(el) {
-            const msg = el.parentElement.querySelector('.gift-text');
-            msg.style.display = 'block';
-            
-            if(giftState === 0) {
-                el.innerText = "🍦";
-                el.style.animation = "none";
-                msg.innerText = "Ice Cream for my sweet! 🍦\n(Tap one more time...)";
-                giftState++;
-            } else if(giftState === 1) {
-                el.innerText = "💍";
-                msg.innerText = "And a Ring! (Promise) ❤️";
-                spawnConfetti();
-                giftState++;
-            }
-        }
-
-        function addMsg(txt, type) {
+        function spawnGift() {
             const d = document.createElement('div');
-            d.className = 'msg-bubble ' + type;
-            d.innerText = txt;
-            document.getElementById('chat-container').appendChild(d);
-            const appContent = document.querySelector('#app-msg .app-content');
-            appContent.scrollTop = appContent.scrollHeight;
+            d.className = 'bubble gift-bub';
+            d.innerHTML = '<div class="gift-icon" onclick="tapGift(this)">🎁</div><div id="g-txt" style="display:none; font-weight:bold; padding:10px;">Tap!</div>';
+            document.getElementById('chat-box').appendChild(d);
         }
 
+        let gStep = 0;
+        function tapGift(el) {
+            const t = document.getElementById('g-txt');
+            t.style.display = 'block';
+            if(gStep === 0) {
+                el.innerText = "🍦";
+                t.innerText = "Ice Cream! 🍦 (Tap again)";
+                gStep++;
+            } else {
+                el.innerText = "💍";
+                t.innerText = "A Ring! 💍 (Promise)";
+                confetti();
+            }
+        }
+
+        function addBub(t, c) {
+            const d = document.createElement('div');
+            d.className = 'bubble ' + c;
+            d.innerText = t;
+            document.getElementById('chat-box').appendChild(d);
+        }
         function showOpts(opts) {
-            const c = document.getElementById('chat-options');
+            const c = document.getElementById('chat-opts');
             c.innerHTML = '';
             opts.forEach(o => {
                 const b = document.createElement('button');
-                b.className = 'option-btn';
-                b.innerText = o.l;
+                b.className = 'opt-btn'; b.innerText = o.l;
                 b.onclick = () => reply(o.n, o.l);
                 c.appendChild(b);
             });
         }
 
-        // --- GAME LOGIC ---
-        let score = 0; let lives = 3; let gameActive = false;
-        let spawnRate = 800; let fallSpeed = 3; let highScore = 0;
-
-        function loadHighScore() {
-            highScore = localStorage.getItem('theshu_hs') || 0;
-            document.getElementById('high-score').innerText = highScore;
-        }
-
+        // --- 4. GAME LOGIC ---
+        let score=0, lives=3, active=false;
         function startGame() {
-            if(gameActive) return;
-            gameActive = true; score = 0; lives = 3; spawnRate = 800; fallSpeed = 3;
-            document.getElementById('start-btn').style.display = 'none';
-            document.getElementById('score').innerText = 0;
-            document.getElementById('lives').innerText = "❤️❤️❤️";
-            document.getElementById('game-area').innerHTML = "";
-            spawnHeartLoop();
+            active=true; score=0; lives=3;
+            document.getElementById('start-btn').style.display='none';
+            document.getElementById('game-board').innerHTML='';
+            document.getElementById('lives').innerText='❤️❤️❤️';
+            document.getElementById('score').innerText='0';
+            loop();
         }
-
-        function spawnHeartLoop() {
-            if(!gameActive) return;
-            spawnHeart();
-            setTimeout(spawnHeartLoop, spawnRate);
-        }
-
-        function spawnHeart() {
-            const area = document.getElementById('game-area');
+        function loop() { if(active) { spawn(); setTimeout(loop, 800); } }
+        function spawn() {
             const h = document.createElement('div');
-            h.innerText = "❤️"; h.className = "falling-heart";
-            h.style.left = Math.random() * (area.offsetWidth - 40) + "px";
-            h.style.animation = `fallDown ${fallSpeed}s linear forwards`;
-
+            h.innerText='❤️'; h.className='heart';
+            h.style.left=Math.random()*250+'px';
+            h.style.animation='fall 3s linear forwards';
             h.onmousedown = function() {
-                if(!gameActive) return;
-                score++;
-                document.getElementById('score').innerText = score;
-                if(score % 5 === 0) { fallSpeed = Math.max(1, fallSpeed - 0.2); spawnRate = Math.max(400, spawnRate - 50); }
-                this.remove();
+                score++; document.getElementById('score').innerText=score; this.remove();
             };
-
             h.onanimationend = function() {
-                if(!gameActive) return;
-                this.remove();
-                lives--;
-                document.getElementById('lives').innerText = "❤️".repeat(lives);
-                if(lives <= 0) {
-                    gameActive = false;
-                    if(score > highScore) { highScore = score; localStorage.setItem('theshu_hs', highScore); }
-                    document.getElementById('high-score').innerText = highScore;
-                    alert("Game Over! Score: " + score);
+                this.remove(); lives--; 
+                document.getElementById('lives').innerText='❤️'.repeat(lives);
+                if(lives<=0) {
+                    active=false; alert("Score: "+score);
+                    const hs = Math.max(score, localStorage.getItem('hs')||0);
+                    localStorage.setItem('hs', hs);
+                    document.getElementById('hs').innerText=hs;
+                    document.getElementById('start-btn').style.display='inline-block';
+                }
+            };
+            document.getElementById('game-board').appendChild(h);
+        }
+
+        // --- 5. UTILS ---
+        function loadPic(e) {
+            document.getElementById('preview').src = URL.createObjectURL(e.target.files[0]);
+            document.getElementById('preview').style.display='block';
+            document.getElementById('cam-ph').style.display='none';
+        }
+        function confetti() {
+            const c = document.createElement('div');
+            c.style.position='fixed'; c.style.background='red'; c.style.width='10px'; c.style.height='10px';
+            c.style.top='0'; c.style.left=Math.random()*100+'vw'; c.style.zIndex='9999';
+            c.style.transition='top 2s'; document.body.appendChild(c);
+            setTimeout(()=>c.style.top='100vh',10);
+        }
+    </script>
+</body>
+</html>
