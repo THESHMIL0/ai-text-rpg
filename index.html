@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Theshu OS v12.0 ❤️</title>
+    <title>Theshu OS v13.0 🎮</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 
@@ -92,17 +92,24 @@
             text-align: center; position: relative;
         }
 
-        /* --- NEW GAME: FALLING HEARTS --- */
+        /* --- GAME: SURVIVAL MODE --- */
         #game-area {
             position: relative; width: 100%; height: 400px;
             background: #2d3436; border-radius: 15px; overflow: hidden;
             margin-top: 10px; border: 2px solid #ff6b81;
         }
         .falling-heart {
-            position: absolute; top: -50px; font-size: 2rem;
-            animation: fallDown 3s linear forwards; cursor: pointer;
+            position: absolute; top: -50px; font-size: 2.5rem;
+            cursor: pointer; user-select: none;
+            /* Animation is set in JS for dynamic speed */
         }
-        @keyframes fallDown { to { top: 450px; } }
+        @keyframes fallDown { to { top: 420px; } }
+
+        .game-stats {
+            display: flex; justify-content: space-between; margin-bottom: 10px;
+            font-weight: bold; color: #333; font-size: 1.1rem;
+        }
+        .lives { color: red; letter-spacing: 2px; }
 
         /* --- CHAT STYLES --- */
         #chat-container { display: flex; flex-direction: column; gap: 10px; padding-bottom: 80px; }
@@ -145,11 +152,10 @@
 
     <div id="lock-screen">
         <h1 style="font-family:'Dancing Script'; font-size:3rem; margin-bottom:10px;">Theshu & Ayu</h1>
-        <p>Vol. 12 (Bulletproof)</p>
+        <p>Vol. 13 (Survival Game)</p>
         <input type="password" id="pass" placeholder="hint: kushu">
         <button class="btn" style="background:white; color:#333;" onclick="unlock()">Unlock</button>
         <p id="err" style="display:none; color:#ff6b81; margin-top:10px; font-weight:bold;">Wrong Password!</p>
-        <div style="margin-top:20px; opacity:0.5; font-size:0.8rem;" onclick="document.getElementById('lock-screen').remove()">Tap here if stuck</div>
     </div>
 
     <div id="home-screen">
@@ -173,9 +179,15 @@
     <div class="app-window" id="app-game">
         <div class="app-header">Heart Rain <button class="close-btn" onclick="closeApp('game')">×</button></div>
         <div class="app-content" style="background:#feca57;">
-            <h2>Score: <span id="score">0</span></h2>
-            <p>Tap the hearts before they fall!</p>
+            
+            <div class="game-stats">
+                <span>Score: <span id="score">0</span></span>
+                <span>High: <span id="high-score">0</span></span>
+            </div>
+            <div class="lives" id="lives-display">❤️❤️❤️</div>
+
             <div id="game-area"></div>
+            
             <button class="btn" onclick="startGame()" id="start-btn" style="background:white; color:#333;">Start Game ▶️</button>
         </div>
     </div>
@@ -233,11 +245,11 @@
     </div>
 
     <script>
-        // --- UNLOCK (FAIL-SAFE) ---
+        // --- UNLOCK ---
         function unlock() {
             const val = document.getElementById('pass').value.trim().toLowerCase();
             if(val === "kushu") {
-                document.getElementById('lock-screen').remove(); // DELETE IT
+                document.getElementById('lock-screen').remove();
             } else {
                 document.getElementById('err').style.display = 'block';
             }
@@ -247,44 +259,107 @@
         function openApp(id) { document.getElementById('app-'+id).classList.add('open'); }
         function closeApp(id) { document.getElementById('app-'+id).classList.remove('open'); }
 
-        // --- GAME: FALLING HEARTS ---
+        // --- GAME LOGIC (SURVIVAL MODE) ---
         let score = 0;
-        let gameTimer;
+        let lives = 3;
+        let gameInterval;
+        let gameActive = false;
+        let spawnRate = 1000;
+        let fallSpeed = 3; // Seconds
+        let highScore = localStorage.getItem('theshu_hs') || 0;
+
+        document.getElementById('high-score').innerText = highScore;
 
         function startGame() {
-            document.getElementById('start-btn').style.display = 'none';
+            if(gameActive) return;
+            gameActive = true;
             score = 0;
-            document.getElementById('score').innerText = 0;
-            // Spawn hearts every 800ms
-            gameTimer = setInterval(spawnHeart, 800);
+            lives = 3;
+            spawnRate = 1000;
+            fallSpeed = 3;
+            
+            document.getElementById('start-btn').style.display = 'none';
+            updateUI();
+            
+            gameInterval = setTimeout(spawnHeart, spawnRate);
+        }
+
+        function updateUI() {
+            document.getElementById('score').innerText = score;
+            let hearts = "";
+            for(let i=0; i<lives; i++) hearts += "❤️";
+            document.getElementById('lives-display').innerText = hearts;
         }
 
         function spawnHeart() {
+            if(!gameActive) return;
+
             const area = document.getElementById('game-area');
             const heart = document.createElement('div');
             heart.innerText = "❤️";
             heart.className = "falling-heart";
-            // Random position
             heart.style.left = Math.random() * (area.offsetWidth - 40) + "px";
-            
-            heart.onclick = function() {
+            heart.style.animation = `fallDown ${fallSpeed}s linear forwards`;
+
+            // If clicked
+            heart.onmousedown = function() {
+                if(!gameActive) return;
                 score++;
-                document.getElementById('score').innerText = score;
+                // Increase Difficulty
+                if(score % 5 === 0) {
+                    fallSpeed = Math.max(1, fallSpeed - 0.2); // Faster fall
+                    spawnRate = Math.max(400, spawnRate - 50); // Faster spawn
+                }
+                
+                updateUI();
                 this.remove();
+                
+                // Clear and restart timeout to apply new spawn rate
+                clearTimeout(gameInterval);
+                gameInterval = setTimeout(spawnHeart, spawnRate);
+            };
+
+            // If missed (animation ends)
+            heart.onanimationend = function() {
+                if(!gameActive) return;
+                this.remove();
+                lives--;
+                updateUI();
+                if(lives <= 0) gameOver();
             };
 
             area.appendChild(heart);
+            
+            // Continue loop
+            clearTimeout(gameInterval);
+            gameInterval = setTimeout(spawnHeart, spawnRate);
+        }
 
-            // Cleanup
-            setTimeout(() => { if(heart.parentNode) heart.remove(); }, 3000);
+        function gameOver() {
+            gameActive = false;
+            clearTimeout(gameInterval);
+            
+            // Remove remaining hearts
+            const hearts = document.querySelectorAll('.falling-heart');
+            hearts.forEach(h => h.remove());
+
+            // Save High Score
+            if(score > highScore) {
+                highScore = score;
+                localStorage.setItem('theshu_hs', highScore);
+            }
+            document.getElementById('high-score').innerText = highScore;
+
+            alert("Game Over! 😢\nYour Score: " + score);
+            document.getElementById('start-btn').style.display = 'inline-block';
         }
 
         // --- CHAT LOGIC ---
         const script = [
             { txt: "Yooo Ayuuu! 😸", opts: [{l:"Hey! ❤️", n:1}, {l:"What's up?", n:1}] },
             { txt: "I made this for you! Kitchu 🐈‍⬛ says hi btw.", opts: [{l:"Aww hi Kitchu!", n:2}] },
-            { txt: "Listen, I know things get scary sometimes... but you are the best thing that happened to me. ✨", opts: [{l:"Really? 🥺", n:3}] },
-            { txt: "Yes! Stuck with me forever idiot! 🥸 Now go play the game!", opts: [{l:"Okay! ❤️", n:-1}] }
+            { txt: "Just wanted to remind you... you are the best thing that happened to me. ✨", opts: [{l:"Really? 🥺", n:3}] },
+            { txt: "Yes! Stuck with me forever idiot! 🥸 Now go beat the High Score!", opts: [{l:"Okay! ❤️", n:-1}] }
         ];
 
         function startChat() {
