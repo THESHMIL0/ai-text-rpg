@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Theshu OS v25.0 🚀</title>
+    <title>Theshu OS v26.0 🔓</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Dancing+Script:wght@700&family=Indie+Flower&display=swap" rel="stylesheet">
 
@@ -27,35 +27,29 @@
             color: var(--text-color);
         }
 
-        /* --- LOCK SCREEN (The Fix) --- */
+        /* --- LOCK SCREEN (Fixed) --- */
         #lock-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.98); z-index: 999999;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center; color: white;
-            transition: opacity 0.5s ease;
-        }
-        
-        /* Force Hide Class */
-        .unlock-success {
-            opacity: 0; pointer-events: none; display: none !important;
         }
 
         .lock-input {
             padding: 15px; border-radius: 30px; border: 2px solid white; 
             text-align: center; font-size: 1.2rem; width: 220px;
             background: rgba(255,255,255,0.2); color: white; margin-top: 20px;
+            outline: none;
         }
         .lock-btn {
             background: white; color: #333; border: none; padding: 12px 40px;
             border-radius: 30px; font-weight: bold; margin-top: 20px; font-size: 1rem;
-            cursor: pointer; transition: transform 0.1s;
+            cursor: pointer;
         }
-        .lock-btn:active { transform: scale(0.95); background: #eee; }
+        .lock-btn:active { background: #ccc; transform: scale(0.95); }
 
         /* --- OS INTERFACE --- */
-        #os-interface { display: none; width: 100%; height: 100%; animation: fadeIn 1s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        #os-interface { display: none; width: 100%; height: 100%; }
 
         /* HOME SCREEN */
         .status-bar {
@@ -159,11 +153,15 @@
 
     <div id="lock-screen">
         <h1 style="font-family:'Dancing Script'; font-size:3.5rem;" onclick="emergencyUnlock()">Theshu & Ayu</h1>
-        <p>Vol. 25 (Unstuckable)</p>
-        <input type="password" id="pass" class="lock-input" placeholder="hint: kushu">
-        <button class="lock-btn" onclick="unlock()" ontouchstart="unlock()">Unlock</button>
+        <p>Vol. 26 (Keyboard Fix)</p>
+        
+        <form onsubmit="event.preventDefault(); unlock();" style="display:flex; flex-direction:column; align-items:center;">
+            <input type="password" id="pass" class="lock-input" placeholder="hint: kushu" autocomplete="off">
+            <button type="submit" class="lock-btn">Unlock</button>
+        </form>
+
         <p id="err" style="display:none; color:#ff6b81; margin-top:10px; font-weight:bold;">Wrong Password!</p>
-        <div style="margin-top:30px; font-size:0.8rem; opacity:0.6;">(Tap Title 3 times if button fails)</div>
+        <div style="margin-top:30px; font-size:0.8rem; opacity:0.6;">(Tap Title 3 times if stuck)</div>
     </div>
 
     <div id="os-interface">
@@ -225,7 +223,7 @@
             <p style="margin-left:15px; font-size:0.8rem; color:#666;">DEVICE INFO</p>
             <div class="settings-section">
                 <div class="settings-row"><span class="settings-key">Name</span> <span class="settings-val">Ayu's iPhone</span></div>
-                <div class="settings-row"><span class="settings-key">Software</span> <span class="settings-value">Theshu OS 25.0</span></div>
+                <div class="settings-row"><span class="settings-key">Software</span> <span class="settings-value">Theshu OS 26.0</span></div>
                 <div class="settings-row"><span class="settings-key">Model</span> <span class="settings-value">Heart Pro Max</span></div>
             </div>
             <p style="margin-left:15px; font-size:0.8rem; color:#666;">STATUS</p>
@@ -238,11 +236,14 @@
     </div>
 
     <script>
-        // --- UNLOCK SYSTEM (ROBUST) ---
+        // --- UNLOCK SYSTEM (FORM SUBMIT FIX) ---
         function unlock() {
             const pass = document.getElementById('pass').value.trim().toLowerCase();
             if(pass === "kushu") {
-                forceUnlock();
+                // FORCE HIDE
+                document.getElementById('lock-screen').style.display = 'none';
+                document.getElementById('os-interface').style.display = 'block';
+                loadHighScore();
             } else {
                 document.getElementById('err').style.display = "block";
             }
@@ -252,16 +253,11 @@
         let taps = 0;
         function emergencyUnlock() {
             taps++;
-            if(taps >= 3) forceUnlock();
-        }
-
-        function forceUnlock() {
-            // 1. Add class to hide visual
-            document.getElementById('lock-screen').classList.add('unlock-success');
-            // 2. Display OS
-            document.getElementById('os-interface').style.display = "block";
-            // 3. Load Data
-            loadHighScore();
+            if(taps >= 3) {
+                document.getElementById('lock-screen').style.display = 'none';
+                document.getElementById('os-interface').style.display = 'block';
+                loadHighScore();
+            }
         }
 
         // --- NAVIGATION ---
@@ -418,11 +414,11 @@
                 if(!gameActive) return;
                 this.remove();
                 lives--;
-                let heartStr = "";
-                for(let i=0; i<lives; i++) heartStr += "❤️";
-                document.getElementById('lives').innerText = heartStr;
-
+                document.getElementById('lives').innerText = "❤️".repeat(lives);
                 if(lives <= 0) {
                     gameActive = false;
                     if(score > highScore) { highScore = score; localStorage.setItem('theshu_hs', highScore); }
-                    document.getElementById('high-score').inne
+                    document.getElementById('high-score').innerText = highScore;
+                    alert("Game Over! Score: " + score);
+                    document.getElementById('start-btn').style.display = 'inline-block';
+    
