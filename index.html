@@ -12,26 +12,31 @@
         body { 
             margin: 0; padding: 0; width: 100vw; height: 100dvh;
             background: #fff5f7; color: #333; overflow: hidden;
-            transition: background 0.5s ease;
         }
 
-        /* --- DARK MODE VARIABLES --- */
-        body.dark-mode { background: #1a1a2e; color: white; }
-        body.dark-mode .card { background: #16213e; color: white; border: 1px solid #0f3460; box-shadow: none; }
-        body.dark-mode .nav-bar { background: #16213e; border-top: 1px solid #0f3460; }
-        body.dark-mode .nav-item { color: #666; }
-        body.dark-mode .nav-item.active { color: #e94560; }
-        body.dark-mode .hero h1 { color: #e94560; }
-        body.dark-mode .stat-num { color: #e94560; }
-        
-        /* --- LOCK SCREEN --- */
+        /* --- LOCK SCREEN (FINGERPRINT) --- */
         #lock {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #ff9a9e 0%, #ff6b81 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #000000 100%); /* Dark Premium Look */
             z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: white; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            color: white; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .heart-unlock { font-size: 5rem; animation: beat 1.2s infinite; cursor: pointer; }
+        
+        .fingerprint-area {
+            width: 90px; height: 90px; border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            position: relative; margin-bottom: 20px; cursor: pointer;
+        }
+        .fingerprint-icon { font-size: 3.5rem; opacity: 0.5; transition: opacity 0.3s; }
+        
+        /* Scan Animation */
+        .scan-line {
+            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: #ff4757; box-shadow: 0 0 10px #ff4757;
+            display: none; animation: scan 1.5s infinite linear;
+        }
+        .scanning .scan-line { display: block; }
+        .scanning .fingerprint-icon { opacity: 1; color: #ff4757; }
 
         /* --- LAYOUT --- */
         .app-container { display: flex; flex-direction: column; height: 100%; }
@@ -41,140 +46,131 @@
         }
         .content.active { display: block; animation: fadeScale 0.3s ease-out; }
 
-        /* --- CALL SCREEN (NEW) --- */
-        #call-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('https://placehold.co/600x800/pink/white?text=Ayuuu');
-            background-size: cover; background-position: center;
-            z-index: 1500; display: none; flex-direction: column; align-items: center; justify-content: space-between;
-            padding: 60px 20px; color: white; backdrop-filter: blur(10px);
+        /* --- MUSIC PLAYER (VINYL) --- */
+        .music-player {
+            background: white; border-radius: 25px; padding: 25px; margin-top: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; overflow: hidden;
+            position: relative; border: 1px solid white;
         }
-        .caller-img { width: 120px; height: 120px; border-radius: 50%; background: #eee; border: 4px solid rgba(255,255,255,0.2); font-size: 3rem; display: flex; align-items: center; justify-content: center; }
-        .call-actions { display: flex; width: 100%; justify-content: space-around; }
-        .call-btn { width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; cursor: pointer; }
-        .btn-decline { background: #ff4757; animation: shake 2s infinite; }
-        .btn-accept { background: #2ed573; animation: bounce 2s infinite; }
-
-        /* --- CARDS --- */
-        .card {
-            background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px;
-            box-shadow: 0 8px 25px rgba(255, 71, 87, 0.08); text-align: center;
-            border: 1px solid rgba(255,255,255,0.8);
+        .vinyl {
+            width: 120px; height: 120px; background: #333; border-radius: 50%;
+            margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;
+            border: 4px solid #111; position: relative;
+            background: repeating-radial-gradient(#333, #333 5px, #444 6px);
         }
-        .hero { text-align: center; margin: 20px 0; }
-        .hero h1 { font-size: 2.2rem; color: #ff4757; margin: 0; }
-
-        /* --- GAMES TAB (NEW) --- */
-        .game-btn { 
-            background: white; padding: 20px; border-radius: 15px; margin-bottom: 15px; 
-            display: flex; align-items: center; gap: 15px; cursor: pointer; border: 2px solid #eee;
-        }
-        .game-icon { font-size: 2.5rem; }
+        /* Spinning Animation Class */
+        .vinyl.spinning { animation: spin 4s linear infinite; }
         
+        .vinyl-center { width: 40px; height: 40px; background: #ff4757; border-radius: 50%; border: 2px solid white; }
+        .play-controls { display: flex; justify-content: center; gap: 30px; font-size: 2rem; margin-top: 15px; cursor: pointer; }
+
+        /* --- SCRATCH COUPON (NEW) --- */
+        .scratch-card {
+            position: relative; width: 100%; height: 100px; background: white;
+            border-radius: 15px; overflow: hidden; margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer;
+        }
+        .scratch-content {
+            position: absolute; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; color: #ff4757; font-size: 1.2rem; z-index: 1;
+        }
+        .scratch-cover {
+            position: absolute; width: 100%; height: 100%; background: #ccc;
+            z-index: 2; display: flex; align-items: center; justify-content: center;
+            color: #666; font-weight: 600; transition: opacity 0.5s;
+        }
+        .scratch-cover.scratched { opacity: 0; pointer-events: none; }
+
         /* --- CHAT --- */
         .chat-list { display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 80%; padding: 14px 18px; border-radius: 20px; font-size: 0.95rem; }
-        .them { background: white; align-self: flex-start; }
-        .me { background: #ff4757; color: white; align-self: flex-end; }
-        
+        .msg { max-width: 80%; padding: 14px 18px; border-radius: 20px; font-size: 0.95rem; line-height: 1.4; }
+        .them { background: white; align-self: flex-start; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .me { background: #ff4757; color: white; align-self: flex-end; box-shadow: 0 4px 10px rgba(255, 71, 87, 0.2); }
+        .typing-dot { display: inline-block; width: 6px; height: 6px; background: #ccc; border-radius: 50%; margin: 0 2px; animation: dotBounce 1.4s infinite; }
+
         /* --- NAVIGATION --- */
         .nav-bar {
             height: 75px; background: rgba(255,255,255,0.95); border-top: 1px solid #eee;
             display: flex; justify-content: space-around; align-items: center;
             padding-bottom: env(safe-area-inset-bottom); z-index: 50; backdrop-filter: blur(10px);
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #ccc; font-size: 0.7rem; font-weight: 600; }
-        .nav-item.active { color: #ff4757; }
-        .nav-icon { font-size: 1.5rem; margin-bottom: 2px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #ccc; font-size: 0.7rem; font-weight: 600; transition: 0.2s; }
+        .nav-item.active { color: #ff4757; transform: translateY(-3px); }
+        .nav-icon { font-size: 1.6rem; margin-bottom: 3px; }
 
-        /* --- FAB & TOGGLES --- */
-        .fab {
-            position: fixed; bottom: 100px; right: 20px;
-            width: 55px; height: 55px; background: #ff4757; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 1.5rem; box-shadow: 0 5px 20px rgba(255, 71, 87, 0.3);
-            cursor: pointer; z-index: 50; animation: float 3s ease-in-out infinite;
-        }
+        /* --- UTILS --- */
+        .hero { margin: 20px 0; padding: 0 20px; }
+        .hero h1 { font-size: 2.2rem; color: #ff4757; margin: 0; }
+        .card { background: white; border-radius: 18px; padding: 20px; margin: 0 20px 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
         
-        .mode-toggle {
-            position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer;
-        }
-
-        /* Animation */
-        @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        @keyframes fadeScale { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        @keyframes shake { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(10deg); } 75% { transform: rotate(-10deg); } }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .floating-heart { position: fixed; right: 30px; font-size: 2rem; animation: floatUp 2s linear forwards; pointer-events: none; z-index: 99; }
-        @keyframes floatUp { 0% { bottom: 90px; opacity: 1; } 100% { bottom: 70vh; opacity: 0; } }
+        /* Animations */
+        @keyframes scan { 0% { top: 0; } 50% { top: 100%; } 100% { top: 0; } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes dotBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        @keyframes fadeScale { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
     </style>
 </head>
 <body>
 
-    <div id="lock" onclick="unlock()">
-        <div class="heart-unlock">❤️</div>
-        <h2 style="margin-top: 20px;">For Ayuuu</h2>
-        <p style="opacity: 0.8;">Tap to Unlock</p>
-    </div>
-
-    <div id="call-screen">
-        <div style="text-align:center; margin-top:50px;">
-            <div class="caller-img">👱🏻‍♂️</div>
-            <h2 style="margin-top:20px; font-size:2rem;">Theshuuuu ❤️</h2>
-            <p>Incoming Video Call...</p>
+    <div id="lock" onmousedown="startScan()" ontouchstart="startScan()" onmouseup="stopScan()" ontouchend="stopScan()">
+        <div class="fingerprint-area" id="fp-area">
+            <div class="fingerprint-icon">👆</div>
+            <div class="scan-line"></div>
         </div>
-        <div class="call-actions">
-            <div class="call-btn btn-decline" onclick="closeCall()">📞</div>
-            <div class="call-btn btn-accept" onclick="acceptCall()">📹</div>
-        </div>
+        <h3 style="margin: 0; font-weight: 500;">Touch & Hold</h3>
+        <p style="opacity: 0.6; font-size: 0.9rem; margin-top: 5px;">Secured by Love ID</p>
     </div>
-
-    <div class="fab" onclick="virtualHug()">🫂</div>
 
     <div class="app-container">
         
-        <div id="tab-home" class="content active">
-            <div class="mode-toggle" onclick="toggleTheme()">🌓</div>
+        <div id="tab-home" class="content active" style="padding:0;">
             <div class="hero">
-                <p>GOOD MORNING</p>
-                <h1>My Love ❤️</h1>
+                <p style="color:#ff8fa3; font-weight:700; letter-spacing:1px; font-size:0.8rem;">GOOD MORNING</p>
+                <h1>My Ayuuu ❤️</h1>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div class="card">
-                    <div class="stat-num" id="days">0</div>
+            <div class="card music-player">
+                <div class="vinyl" id="vinyl-record">
+                    <div class="vinyl-center"></div>
+                </div>
+                <div style="font-weight: 700; font-size: 1.1rem;">Your Voice</div>
+                <div style="font-size: 0.8rem; color: #888;">Theshu's Favorite Song</div>
+                
+                <div class="play-controls">
+                    <span onclick="toggleMusic(this)">▶️</span>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; padding: 0 20px;">
+                <div class="card" style="margin:0; text-align:center;">
+                    <div style="font-size:2.5rem; font-weight:800; color:#ff4757;" id="days">0</div>
                     <div style="font-size:0.7rem; color:#aaa; font-weight:700;">DAYS TOGETHER</div>
                 </div>
-                <div class="card">
-                    <div class="stat-num">∞</div>
-                    <div style="font-size:0.7rem; color:#aaa; font-weight:700;">LOVE LEVEL</div>
+                <div class="card" style="margin:0; text-align:center;">
+                    <div style="font-size:2.5rem;">🔋</div>
+                    <div style="font-size:0.7rem; color:#aaa; font-weight:700;">100% CHARGED</div>
                 </div>
-            </div>
-
-            <div class="card" onclick="newNote()">
-                <div id="daily-note" style="font-size:1.1rem; font-weight:600; font-style:italic;">"You are my safe place."</div>
-                <div style="font-size:0.7rem; color:#aaa; margin-top:10px;">TAP FOR NEW NOTE</div>
             </div>
         </div>
 
-        <div id="tab-games" class="content">
-            <div class="hero"><h1>Games 🎮</h1><p>Let's Play</p></div>
+        <div id="tab-coupons" class="content">
+            <div class="hero"><h1>Gifts 🎁</h1><p>Tap to Scratch</p></div>
             
-            <div class="game-btn" onclick="startQuiz()">
-                <div class="game-icon">❓</div>
-                <div>
-                    <div style="font-weight:700;">Love Quiz</div>
-                    <div style="font-size:0.8rem; color:#888;">Do you know me?</div>
-                </div>
+            <div class="scratch-card" onclick="scratch(this)">
+                <div class="scratch-content">💆‍♀️ 10m Massage</div>
+                <div class="scratch-cover">Scratch Here</div>
+            </div>
+            
+            <div class="scratch-card" onclick="scratch(this)">
+                <div class="scratch-content">🍫 Chocolate Bar</div>
+                <div class="scratch-cover">Scratch Here</div>
             </div>
 
-            <div class="game-btn" onclick="spinWheel()">
-                <div class="game-icon">🎡</div>
-                <div>
-                    <div style="font-weight:700;">Spin the Wheel</div>
-                    <div style="font-size:0.8rem; color:#888;">Win a prize!</div>
-                </div>
+            <div class="scratch-card" onclick="scratch(this)">
+                <div class="scratch-content">🎬 Movie Date</div>
+                <div class="scratch-cover">Scratch Here</div>
             </div>
         </div>
 
@@ -183,97 +179,113 @@
             <div class="chat-list" id="msgs">
                 <div class="msg them">Hey Ayuuu! ❤️</div>
             </div>
-            <div id="chat-controls" style="margin-top:20px;">
-                <button onclick="nextChat()" style="width:100%; padding:15px; background:#ff4757; color:white; border:none; border-radius:15px; font-weight:700;">Reply</button>
-            </div>
-        </div>
-
-        <div id="tab-mood" class="content">
-            <div class="hero"><h1>Mood 💭</h1></div>
-            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;">
-                <div class="card" onclick="alert('Yay! Keep smiling! 😄')">😄<br><small>Happy</small></div>
-                <div class="card" onclick="alert('Sending hugs! 🫂')">😢<br><small>Sad</small></div>
-                <div class="card" onclick="alert('I miss you too! ❤️')">🥺<br><small>Miss U</small></div>
+            <div style="margin-top: 20px;">
+                <button onclick="replyChat()" style="width:100%; padding:15px; background:#ff4757; color:white; border:none; border-radius:15px; font-weight:700; font-size:1rem;">Reply</button>
             </div>
         </div>
 
         <div class="nav-bar">
             <div class="nav-item active" onclick="switchTab('home', this)"><div class="nav-icon">🏠</div>Home</div>
-            <div class="nav-item" onclick="switchTab('games', this)"><div class="nav-icon">🎮</div>Play</div>
-            <div class="nav-item" onclick="openCall()"><div class="nav-icon" style="color:#2ed573;">📞</div>Call</div>
             <div class="nav-item" onclick="switchTab('chat', this)"><div class="nav-icon">💬</div>Chat</div>
-            <div class="nav-item" onclick="switchTab('mood', this)"><div class="nav-icon">💭</div>Mood</div>
+            <div class="nav-item" onclick="switchTab('coupons', this)"><div class="nav-icon">🎁</div>Gifts</div>
         </div>
 
     </div>
 
     <script>
-        // --- CORE ---
-        function unlock() { document.getElementById('lock').style.transform = 'translateY(-100%)'; }
-        
+        // --- FINGERPRINT LOCK LOGIC ---
+        let scanTimer;
+        const fpArea = document.getElementById('fp-area');
+        const lockScreen = document.getElementById('lock');
+
+        function startScan() {
+            fpArea.classList.add('scanning');
+            // Unlock after 1 second of holding
+            scanTimer = setTimeout(() => {
+                if(navigator.vibrate) navigator.vibrate(50);
+                lockScreen.style.transform = 'translateY(-100%)';
+            }, 1000); 
+        }
+
+        function stopScan() {
+            fpArea.classList.remove('scanning');
+            clearTimeout(scanTimer);
+        }
+
+        // --- NAVIGATION ---
         function switchTab(id, el) {
             document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById('tab-' + id).classList.add('active');
-            if(el) el.classList.add('active');
+            el.classList.add('active');
         }
 
-        function toggleTheme() { document.body.classList.toggle('dark-mode'); }
-
-        // --- CALL FEATURE ---
-        function openCall() { document.getElementById('call-screen').style.display = 'flex'; }
-        function closeCall() { document.getElementById('call-screen').style.display = 'none'; }
-        function acceptCall() { 
-            alert("Connecting... (Just kidding, call me for real! 😉)"); 
-            closeCall(); 
+        // --- MUSIC PLAYER ---
+        function toggleMusic(btn) {
+            const vinyl = document.getElementById('vinyl-record');
+            if (btn.innerText === "▶️") {
+                btn.innerText = "⏸️";
+                vinyl.classList.add('spinning');
+            } else {
+                btn.innerText = "▶️";
+                vinyl.classList.remove('spinning');
+            }
         }
 
-        // --- GAMES ---
-        function startQuiz() {
-            let ans = prompt("Where did we meet? (Type 'School', 'Online', or 'Dream')");
-            if(ans && ans.toLowerCase().includes('online')) alert("Correct! ❤️ You remembered!");
-            else alert("Nice try! But I still love you. 😘");
-        }
-        function spinWheel() {
-            const prizes = ["Big Hug 🫂", "Forehead Kiss 💋", "Date Night 🍷", "Massage 💆‍♀️"];
-            alert("You won: " + prizes[Math.floor(Math.random()*prizes.length)]);
+        // --- SCRATCH CARD ---
+        function scratch(el) {
+            const cover = el.querySelector('.scratch-cover');
+            if(cover) {
+                cover.classList.add('scratched');
+                if(navigator.vibrate) navigator.vibrate(20);
+            }
         }
 
-        // --- DATE LOGIC (Jan 18, 2026) ---
+        // --- REAL TYPING CHAT ---
+        const msgs = document.getElementById('msgs');
+        let chatStep = 0;
+        
+        function replyChat() {
+            const userMsg = "Hey Theshu! 👋"; // Static reply for demo
+            
+            // 1. User Message
+            const m = document.createElement('div'); m.className = 'msg me'; m.innerText = userMsg;
+            msgs.appendChild(m);
+
+            // 2. Typing Indicator
+            const typing = document.createElement('div'); 
+            typing.className = 'msg them';
+            typing.innerHTML = `<span class="typing-dot"></span><span class="typing-dot" style="animation-delay:0.2s"></span><span class="typing-dot" style="animation-delay:0.4s"></span>`;
+            msgs.appendChild(typing);
+            msgs.scrollTop = msgs.scrollHeight;
+
+            // 3. Theshu Replies (after delay)
+            setTimeout(() => {
+                typing.remove(); // Remove dots
+                const responses = ["I miss you! ❤️", "Distance sucks 🥺", "I love you so much! 💍"];
+                const replyText = responses[chatStep % responses.length];
+                
+                const t = document.createElement('div'); t.className = 'msg them';
+                msgs.appendChild(t);
+                
+                // Typewriter Effect
+                let i = 0;
+                const typeInterval = setInterval(() => {
+                    t.innerText += replyText.charAt(i);
+                    i++;
+                    msgs.scrollTop = msgs.scrollHeight;
+                    if (i > replyText.length - 1) clearInterval(typeInterval);
+                }, 50); // Speed of typing
+
+                chatStep++;
+            }, 1500);
+        }
+
+        // --- DATE LOGIC ---
         const start = new Date("2026-01-18");
         const diff = Math.floor((new Date() - start) / (1000 * 60 * 60 * 24));
         document.getElementById('days').innerText = diff > 0 ? diff : 0;
 
-        // --- NOTE GENERATOR ---
-        const notes = ["You are my sunshine.", "Thinking of you 24/7.", "You + Me = ❤️", "Can't wait to see you."];
-        function newNote() { document.getElementById('daily-note').innerText = `"${notes[Math.floor(Math.random()*notes.length)]}"`; }
-
-        // --- CHAT ---
-        let step = 0;
-        const msgs = document.getElementById('msgs');
-        const script = [
-            { me: "Hey Theshu! 👋", them: "I miss you so much. Thinking about Jan 18 makes me smile. ❤️" },
-            { me: "Me too! 🥰", them: "Distance is hard, but you are worth it. I have a question..." },
-            { me: "What is it? 😮", them: "<b>Will you be my Valentine?</b> Forever? 💍" },
-            { me: "YES! Of course! ❤️", them: "I knew it! ❤️ One day I'll put a real ring on your finger. 💍" }
-        ];
-
-        function nextChat() {
-            if(step >= script.length) return;
-            const m = document.createElement('div'); m.className = 'msg me'; m.innerHTML = script[step].me;
-            msgs.appendChild(m);
-            setTimeout(() => {
-                const t = document.createElement('div'); t.className = 'msg them'; t.innerHTML = script[step].them;
-                msgs.appendChild(t); step++;
-            }, 800);
-        }
-
-        function virtualHug() {
-            if (navigator.vibrate) navigator.vibrate([100,50,100]);
-            const h = document.createElement('div'); h.innerText = "🫂"; 
-            h.className = "floating-heart"; document.body.appendChild(h);
-            setTimeout(() => h.remove(), 2000);
-        }
     </script>
 </body>
 </html>
