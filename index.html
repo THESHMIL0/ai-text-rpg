@@ -7,7 +7,7 @@
     <title>Theshu ❤️ Ayuuu</title>
     <style>
         /* --- VARIABLES --- */
-        :root { --primary: #ff4757; --bg: #fff5f7; --text: #2f3542; --glass: rgba(255, 255, 255, 0.95); }
+        :root { --primary: #ff4757; --secondary: #2ed573; --bg: #fff5f7; --text: #2f3542; --glass: rgba(255, 255, 255, 0.95); }
 
         /* --- RESET --- */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; user-select: none; }
@@ -16,15 +16,13 @@
         /* --- BACKGROUND ANIMATIONS --- */
         .bg-hearts { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
         .heart-float { position: absolute; bottom: -20px; animation: floatUp 8s linear forwards; font-size: 20px; opacity: 0.6; }
-        .click-heart { position: absolute; pointer-events: none; animation: popOut 0.8s ease-out forwards; font-size: 1.5rem; z-index: 9999; }
 
-        /* --- MUSIC PLAYER (NEW) --- */
+        /* --- MUSIC PLAYER --- */
         .music-fab {
             position: fixed; top: 20px; right: 20px; z-index: 4000;
-            width: 50px; height: 50px; background: white; border-radius: 50%;
+            width: 45px; height: 45px; background: white; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; border: 2px solid #eee;
-            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; border: 2px solid #eee; transition: 0.3s;
         }
         .music-fab.playing { border-color: var(--primary); animation: spin 4s linear infinite; }
 
@@ -35,12 +33,11 @@
             z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center;
             color: white; transition: transform 0.6s cubic-bezier(0.7, 0, 0.3, 1);
         }
-        .scanner-container { position: relative; width: 100px; height: 100px; margin-bottom: 20px; }
         .scanner {
-            width: 100%; height: 100%; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;
+            width: 90px; height: 90px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; margin-bottom: 20px;
             display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);
         }
-        .fingerprint { font-size: 3.5rem; transition: 0.3s; }
+        .fingerprint { font-size: 3rem; transition: 0.3s; }
         .scanner.scanning .fingerprint { transform: scale(0.9); opacity: 0.8; }
 
         /* --- LAYOUT --- */
@@ -48,75 +45,60 @@
         .content { flex: 1; overflow-y: auto; padding: 25px; display: none; padding-bottom: 120px; scroll-behavior: smooth; }
         .content.active { display: block; animation: fadeIn 0.4s ease-out; }
 
-        /* --- CARDS --- */
-        .card { background: white; border-radius: 22px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(255, 71, 87, 0.08); }
+        /* --- CARDS & WIDGETS --- */
+        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(255, 71, 87, 0.08); }
         
-        /* Scratch Card (NEW) */
-        .scratch-container {
-            position: relative; width: 100%; height: 200px; border-radius: 20px; overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 20px;
+        /* LIVE TIMER (NEW) */
+        .timer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; text-align: center; margin-top: 10px; }
+        .time-box { background: rgba(255,255,255,0.2); padding: 8px 0; border-radius: 10px; }
+        .time-val { font-size: 1.2rem; font-weight: 800; }
+        .time-lbl { font-size: 0.6rem; text-transform: uppercase; opacity: 0.8; }
+
+        /* MEMORY GAME (NEW) */
+        .game-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; perspective: 1000px; }
+        .game-card {
+            height: 70px; background: white; border-radius: 10px; cursor: pointer; position: relative;
+            transform-style: preserve-3d; transition: transform 0.4s; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        .scratch-prize {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; color: white; padding: 20px; z-index: 1;
+        .game-card.flipped { transform: rotateY(180deg); }
+        .card-face {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            display: flex; align-items: center; justify-content: center; font-size: 1.8rem; border-radius: 10px;
         }
-        .scratch-canvas {
-            position: absolute; top:0; left:0; width:100%; height:100%; z-index: 2;
-            cursor: pointer; touch-action: none;
+        .card-front { background: linear-gradient(135deg, #ff9a9e, #ff6b81); color: white; font-size: 1.5rem; }
+        .card-back { background: white; transform: rotateY(180deg); border: 2px solid var(--primary); }
+
+        /* PHOTO REEL */
+        .photo-reel { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; margin: 0 -5px 15px -5px; }
+        .photo-item { 
+            min-width: 140px; height: 180px; background: #eee; border-radius: 15px; 
+            background-size: cover; background-position: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* Reasons Generator (NEW) */
-        .reason-box {
-            text-align: center; padding: 30px 10px; min-height: 150px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+        /* MODAL & TYPEWRITER */
+        #modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6);
+            z-index: 5000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px);
         }
-        .btn-primary {
-            background: var(--primary); color: white; border: none; padding: 12px 25px;
-            border-radius: 50px; font-weight: bold; font-size: 1rem; cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3); transition: transform 0.2s;
-        }
-        .btn-primary:active { transform: scale(0.95); }
+        .modal-content { background: white; width: 100%; max-width: 400px; padding: 30px; border-radius: 25px; min-height: 200px; animation: popUp 0.3s; }
+        .typing-cursor::after { content: '|'; animation: blink 1s infinite; }
 
-        /* Timeline */
-        .timeline { padding-left: 10px; border-left: 2px solid #ffccd5; margin-left: 10px; margin-top: 10px; }
-        .t-item { position: relative; padding-left: 20px; margin-bottom: 25px; }
-        .t-item::before { content: '❤️'; position: absolute; left: -11px; top: 0; background: #fff5f7; font-size: 1.2rem; }
-        .t-date { font-size: 0.75rem; color: #888; font-weight: 700; text-transform: uppercase; }
-
-        /* Quiz */
-        .quiz-opt { 
-            width: 100%; padding: 15px; margin-bottom: 10px; border: 2px solid #eee; 
-            border-radius: 15px; background: white; font-weight: 600; text-align: left; transition: 0.2s;
-        }
-        .quiz-opt.correct { background: #2ed573; color: white; border-color: #2ed573; }
-        .quiz-opt.wrong { background: #ff4757; color: white; border-color: #ff4757; }
-
-        /* Letters */
-        .letter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .envelope { background: #fff; padding: 20px; border-radius: 15px; text-align: center; border: 2px solid #f0f0f0; }
-
-        /* Chat */
-        .chat-list { display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; }
-        .them { background: white; align-self: flex-start; }
-        .me { background: var(--primary); color: white; align-self: flex-end; }
-
-        /* Nav Bar */
+        /* NAV BAR */
         .nav-bar {
-            height: 80px; background: var(--glass); position: fixed; bottom: 0; left: 0; width: 100%;
+            height: 75px; background: var(--glass); position: fixed; bottom: 0; left: 0; width: 100%;
             display: flex; justify-content: space-around; align-items: center; padding-bottom: 15px; 
-            border-radius: 30px 30px 0 0; box-shadow: 0 -5px 30px rgba(0,0,0,0.05); z-index: 100;
+            border-radius: 25px 25px 0 0; box-shadow: 0 -5px 30px rgba(0,0,0,0.05); z-index: 100;
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #d1ccc0; font-size: 0.7rem; font-weight: 700; transition: 0.3s; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #ccc; font-size: 0.7rem; font-weight: 700; transition: 0.3s; }
         .nav-item.active { color: var(--primary); transform: translateY(-5px); }
-        .nav-icon { font-size: 1.6rem; margin-bottom: 4px; }
+        .nav-icon { font-size: 1.5rem; margin-bottom: 4px; }
 
-        /* Animations */
+        /* ANIMATIONS */
         @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg); opacity: 0.8; } 100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes popOut { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; } 100% { transform: translate(-50%, -150%) scale(1.5); opacity: 0; } }
+        @keyframes blink { 50% { opacity: 0; } }
+        @keyframes popUp { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     </style>
 </head>
@@ -126,171 +108,190 @@
     
     <audio id="musicPlayer" loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-        </audio>
+    </audio>
     <div class="music-fab" onclick="toggleMusic()">🎵</div>
 
     <div id="lock" onmousedown="startUnlock()" onmouseup="stopUnlock()" ontouchstart="startUnlock()" ontouchend="stopUnlock()">
-        <div class="scanner-container"><div class="scanner" id="scanner"><div class="fingerprint">❤️</div></div></div>
-        <p style="opacity: 0.8; font-size: 0.9rem;">Touch & Hold to Unlock</p>
+        <div class="scanner" id="scanner"><div class="fingerprint">❤️</div></div>
+        <p style="opacity: 0.8; font-size: 0.9rem;">Touch & Hold ID</p>
     </div>
 
-    <div id="modal" onclick="closeModal()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:5000; align-items:center; justify-content:center; padding:20px;">
-        <div class="card" onclick="event.stopPropagation()" style="width:100%; max-width:350px; text-align:center;">
-            <h2 id="modalTitle" style="color:var(--primary);">Title</h2>
-            <p id="modalBody" style="line-height:1.6; color:#555;">Content...</p>
-            <button class="btn-primary" onclick="closeModal()">Close</button>
+    <div id="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h2 id="modalTitle" style="color:var(--primary); margin-top:0;">Message</h2>
+            <p id="modalBody" class="typing-cursor" style="line-height:1.6; color:#555; font-size:1.05rem;"></p>
+            <div style="text-align:center; margin-top:20px;">
+                <button onclick="closeModal()" style="padding:10px 30px; background:var(--primary); color:white; border:none; border-radius:50px; font-weight:bold;">Close</button>
+            </div>
         </div>
     </div>
 
     <div class="app-container">
         
         <div id="tab-home" class="content active">
-            <div style="margin: 10px 0 25px 0;">
-                <p style="color: #a4b0be; font-weight: 700; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;">Welcome Back</p>
-                <h1 style="font-size: 2.2rem; font-weight: 800;">My <span style="color:var(--primary);">Ayuuu</span> ❤️</h1>
+            <div style="margin: 10px 0 20px 0;">
+                <p style="color: #a4b0be; font-weight: 700; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;">Welcome</p>
+                <h1 style="font-size: 2.2rem; font-weight: 800; margin:0;">My <span style="color:var(--primary);">Ayuuu</span> ❤️</h1>
             </div>
 
-            <div class="card" style="display:flex; align-items:center; justify-content:space-between; background: linear-gradient(135deg, #ff4757, #ff6b81); color:white;">
-                <div>
-                    <div style="font-size:3rem; font-weight:800; line-height:1;" id="days">0</div>
-                    <div style="font-size:0.8rem; opacity:0.9; font-weight:600;">DAYS IN LOVE</div>
+            <div class="card" style="background: linear-gradient(135deg, #ff4757, #ff6b81); color:white;">
+                <div style="font-size:0.8rem; opacity:0.9; font-weight:700; text-align:center; margin-bottom:10px;">TIME SINCE WE MET</div>
+                <div class="timer-grid">
+                    <div class="time-box"><div class="time-val" id="t-days">0</div><div class="time-lbl">Days</div></div>
+                    <div class="time-box"><div class="time-val" id="t-hours">0</div><div class="time-lbl">Hrs</div></div>
+                    <div class="time-box"><div class="time-val" id="t-mins">0</div><div class="time-lbl">Mins</div></div>
+                    <div class="time-box"><div class="time-val" id="t-secs">0</div><div class="time-lbl">Secs</div></div>
                 </div>
-                <div style="font-size:3rem;">📅</div>
             </div>
 
-            <div class="card reason-box">
-                <h3 style="margin-top:0;">Why I Love You...</h3>
-                <p id="reasonText" style="font-size:1.1rem; font-style:italic; margin-bottom:20px; min-height:50px;">"Because you are you."</p>
-                <button class="btn-primary" onclick="newReason()">Tell Me Another 🔄</button>
-            </div>
-
-            <div class="card">
-                <h3>Our Future Goals 🚀</h3>
-                <div class="timeline">
-                    <div class="t-item"><div class="t-date">Jan 18, 2026</div><div>We fell in love ❤️</div></div>
-                    <div class="t-item"><div class="t-date">Soon</div><div>First Meeting 🫂</div></div>
-                    <div class="t-item"><div class="t-date">Forever</div><div>Growing Old Together 👵👴</div></div>
+            <div style="margin-bottom: 20px;">
+                <h3 style="margin-bottom:10px;">Our Memories 📸</h3>
+                <div class="photo-reel">
+                    <div class="photo-item" style="background-image: url('https://placehold.co/140x180/ffcccc/ff4757?text=Pic+1');"></div>
+                    <div class="photo-item" style="background-image: url('https://placehold.co/140x180/ffcccc/ff4757?text=Pic+2');"></div>
+                    <div class="photo-item" style="background-image: url('https://placehold.co/140x180/ffcccc/ff4757?text=Pic+3');"></div>
                 </div>
             </div>
         </div>
 
-        <div id="tab-play" class="content">
-            <h1 style="color:var(--primary);">Fun & Gifts 🎁</h1>
-            
-            <h3>Scratch for a Surprise! 👇</h3>
-            <div class="scratch-container">
-                <div class="scratch-prize">
-                    <h3>🎉 WINNER! 🎉</h3>
-                    <p>Coupon Valid For:</p>
-                    <h2 style="font-size:1.5rem;">One Infinite Hug 🫂</h2>
-                </div>
-                <canvas id="scratchCanvas" class="scratch-canvas"></canvas>
-            </div>
-
-            <h3>Love Quiz 🎮</h3>
-            <div class="card" id="quizCard">
-                <h3 id="qText">Question 1</h3>
-                <div id="qOptions" style="margin-top:15px;"></div>
-            </div>
+        <div id="tab-game" class="content">
+            <h1 style="color:var(--primary);">Love Match 🎮</h1>
+            <p>Find the matching pairs to win a prize!</p>
+            <div class="game-grid" id="gameGrid"></div>
+            <p id="gameStatus" style="text-align:center; font-weight:bold; margin-top:20px; color:var(--secondary);"></p>
         </div>
 
         <div id="tab-letters" class="content">
             <h1 style="color:var(--primary);">Open When... 💌</h1>
-            <div class="letter-grid">
-                <div class="envelope" onclick="openLetter('miss')"><h3>You Miss Me</h3></div>
-                <div class="envelope" onclick="openLetter('sad')"><h3>You Are Sad</h3></div>
-                <div class="envelope" onclick="openLetter('happy')"><h3>You Are Happy</h3></div>
-                <div class="envelope" onclick="openLetter('fight')"><h3>We Fight</h3></div>
-            </div>
-        </div>
-
-        <div id="tab-chat" class="content">
-            <h1 style="color:var(--primary);">Chat 💬</h1>
-            <div class="chat-list" id="msgs">
-                <div class="msg them">Hey Ayuuu! ❤️</div>
-            </div>
-            <div style="position:fixed; bottom:90px; left:0; width:100%; padding:0 25px;">
-                <button class="btn-primary" style="width:100%; border-radius:15px;" onclick="nextChat()">Reply</button>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                <div class="card" onclick="typeWriter('You Miss Me', 'Look up at the moon. I am looking at it too. Distance is just a test to see how far love can travel. I am always with you.')" style="text-align:center;"><h3>Miss Me 🌙</h3></div>
+                <div class="card" onclick="typeWriter('You Are Sad', 'Close your eyes. Take a deep breath. Imagine I am hugging you tight. You are strong, you are beautiful, and I love you.')" style="text-align:center;"><h3>Sad 😢</h3></div>
+                <div class="card" onclick="typeWriter('You Are Happy', 'Your smile is the most beautiful thing in the world! I wish I was there to see it. Keep shining my love!')" style="text-align:center;"><h3>Happy 😄</h3></div>
+                <div class="card" onclick="typeWriter('We Fight', 'I am sorry. Even when we fight, you are my favorite person. Let us fix this because I cannot sleep without you.')" style="text-align:center;"><h3>We Fight 💔</h3></div>
             </div>
         </div>
 
         <div class="nav-bar">
             <div class="nav-item active" onclick="switchTab('home', this)"><span class="nav-icon">🏠</span>Home</div>
-            <div class="nav-item" onclick="switchTab('play', this)"><span class="nav-icon">🎁</span>Gifts</div>
+            <div class="nav-item" onclick="switchTab('game', this)"><span class="nav-icon">🎮</span>Game</div>
             <div class="nav-item" onclick="switchTab('letters', this)"><span class="nav-icon">💌</span>Letters</div>
-            <div class="nav-item" onclick="switchTab('chat', this)"><span class="nav-icon">💬</span>Chat</div>
         </div>
 
     </div>
 
     <script>
-        // --- GLOBAL CLICK EFFECT ---
-        document.addEventListener('click', (e) => {
-            const h = document.createElement('div'); h.className = 'click-heart';
-            h.innerText = ['❤️','💖','🥰','🌸'][Math.floor(Math.random()*4)];
-            h.style.left = e.clientX + 'px'; h.style.top = e.clientY + 'px';
-            document.body.appendChild(h); setTimeout(() => h.remove(), 800);
-        });
+        // --- CONFIG ---
+        const START_DATE = new Date("2026-01-18T00:00:00"); 
 
-        // --- MUSIC PLAYER ---
+        // --- MUSIC ---
         const audio = document.getElementById('musicPlayer');
         function toggleMusic() {
             const btn = document.querySelector('.music-fab');
-            if(audio.paused) { audio.play(); btn.classList.add('playing'); }
+            if(audio.paused) { audio.play(); btn.classList.add('playing'); } 
             else { audio.pause(); btn.classList.remove('playing'); }
         }
 
-        // --- REASONS GENERATOR ---
-        const reasons = [
-            "Your smile lights up my world.", "You understand me like no one else.",
-            "Your laugh is my favorite sound.", "You make me a better person.",
-            "Even your silence is comforting.", "You are my best friend."
-        ];
-        function newReason() {
-            const r = reasons[Math.floor(Math.random() * reasons.length)];
-            document.getElementById('reasonText').innerText = '"' + r + '"';
+        // --- LIVE TIMER LOGIC ---
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - START_DATE;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / 1000 / 60) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+
+            document.getElementById('t-days').innerText = days;
+            document.getElementById('t-hours').innerText = hours;
+            document.getElementById('t-mins').innerText = minutes;
+            document.getElementById('t-secs').innerText = seconds;
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        // --- MEMORY GAME LOGIC ---
+        const emojis = ['❤️', '💍', '🍕', '✈️', '😽', '🎁', '🌹', '💌'];
+        const gameItems = [...emojis, ...emojis]; // Duplicate for pairs
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
+
+        function initGame() {
+            const grid = document.getElementById('gameGrid');
+            grid.innerHTML = '';
+            matchedPairs = 0;
+            document.getElementById('gameStatus').innerText = '';
+            
+            shuffle(gameItems).forEach(emoji => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.dataset.value = emoji;
+                card.innerHTML = `<div class="card-face card-front">?</div><div class="card-face card-back">${emoji}</div>`;
+                card.onclick = () => flipCard(card);
+                grid.appendChild(card);
+            });
         }
 
-        // --- SCRATCH CARD LOGIC ---
-        const sc = document.getElementById('scratchCanvas');
-        const sCtx = sc.getContext('2d');
-        
-        function initScratch() {
-            sc.width = sc.parentElement.offsetWidth;
-            sc.height = sc.parentElement.offsetHeight;
-            sCtx.fillStyle = "#ccc"; 
-            sCtx.fillRect(0, 0, sc.width, sc.height);
-            
-            // Add text to the scratch layer
-            sCtx.fillStyle = "#666";
-            sCtx.font = "20px Arial";
-            sCtx.fillText("Scratch Here! 👆", sc.width/2 - 70, sc.height/2);
-            
-            sCtx.globalCompositeOperation = 'destination-out';
+        function flipCard(card) {
+            if (flippedCards.length < 2 && !card.classList.contains('flipped')) {
+                card.classList.add('flipped');
+                flippedCards.push(card);
+                if (flippedCards.length === 2) checkMatch();
+            }
         }
-        
-        // Handle resizing (basic)
-        setTimeout(initScratch, 500); // Delay to ensure layout is ready
 
-        let isScratching = false;
-        const scratchMove = (e) => {
-            if(!isScratching) return;
-            e.preventDefault();
-            const rect = sc.getBoundingClientRect();
-            const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-            const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-            sCtx.beginPath();
-            sCtx.arc(x, y, 20, 0, Math.PI * 2);
-            sCtx.fill();
-        };
+        function checkMatch() {
+            const [c1, c2] = flippedCards;
+            if (c1.dataset.value === c2.dataset.value) {
+                matchedPairs++;
+                flippedCards = [];
+                if(matchedPairs === emojis.length) {
+                    document.getElementById('gameStatus').innerText = "YOU WON! My heart is yours! ❤️";
+                    createConfetti();
+                }
+            } else {
+                setTimeout(() => {
+                    c1.classList.remove('flipped');
+                    c2.classList.remove('flipped');
+                    flippedCards = [];
+                }, 1000);
+            }
+        }
+        initGame(); // Start game on load
 
-        sc.addEventListener('mousedown', () => isScratching = true);
-        sc.addEventListener('touchstart', () => isScratching = true);
-        window.addEventListener('mouseup', () => isScratching = false);
-        window.addEventListener('touchend', () => isScratching = false);
-        sc.addEventListener('mousemove', scratchMove);
-        sc.addEventListener('touchmove', scratchMove);
+        // --- TYPEWRITER EFFECT ---
+        let typeInterval;
+        function typeWriter(title, text) {
+            const body = document.getElementById('modalBody');
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modal').style.display = 'flex';
+            body.innerText = "";
+            
+            let i = 0;
+            clearInterval(typeInterval); // Stop any existing typing
+            typeInterval = setInterval(() => {
+                if (i < text.length) {
+                    body.innerText += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typeInterval);
+                }
+            }, 50); // Speed of typing
+        }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; clearInterval(typeInterval); }
 
+        // --- CONFETTI EFFECT ---
+        function createConfetti() {
+            for(let i=0; i<30; i++) {
+                const c = document.createElement('div');
+                c.className = 'heart-float';
+                c.innerText = '🎉';
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.animationDuration = Math.random() * 2 + 2 + 's';
+                document.body.appendChild(c);
+            }
+        }
 
         // --- LOCK SCREEN ---
         let holdTimer;
@@ -306,73 +307,19 @@
             clearTimeout(holdTimer);
         }
 
-        // --- NAVIGATION ---
         function switchTab(id, el) {
             document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById('tab-' + id).classList.add('active');
             el.classList.add('active');
-            if(id === 'play') initScratch(); // Re-init scratch if needed
         }
 
-        // --- DATES ---
-        const diff = Math.floor((new Date() - new Date("2026-01-18")) / (1000 * 60 * 60 * 24));
-        document.getElementById('days').innerText = diff > 0 ? diff : 0;
-
-        // --- QUIZ ---
-        const questions = [
-            { q: "What is my favorite food?", a: ["Pizza", "Sushi", "You 😉"], correct: 2 },
-            { q: "Where do I want to travel?", a: ["Paris", "Tokyo", "Space"], correct: 0 }
-        ];
-        let qIndex = 0;
-        function loadQuiz() {
-            if(qIndex >= questions.length) { document.getElementById('quizCard').innerHTML = "<h3>You know me perfectly! ❤️</h3>"; return; }
-            const q = questions[qIndex];
-            document.getElementById('qText').innerText = q.q;
-            const opts = document.getElementById('qOptions'); opts.innerHTML = "";
-            q.a.forEach((ans, i) => {
-                const btn = document.createElement('button'); btn.className = 'quiz-opt'; btn.innerText = ans;
-                btn.onclick = () => {
-                    if(i === q.correct) { btn.classList.add('correct'); setTimeout(() => { qIndex++; loadQuiz(); }, 1000); } 
-                    else { btn.classList.add('wrong'); }
-                };
-                opts.appendChild(btn);
-            });
-        }
-        loadQuiz();
-
-        // --- MODALS & LETTERS ---
-        const letters = {
-            'miss': { title: "When you miss me...", body: "Look at the moon. I'm looking at it too. 🌙" },
-            'sad': { title: "When you are sad...", body: "I am sending you a virtual hug. Squeeze your phone! 🤗" },
-            'happy': { title: "When you are happy...", body: "Your smile makes my day! Keep smiling baby. 😄" },
-            'fight': { title: "When we fight...", body: "Love is bigger than any fight. Let's fix this. ❤️" }
-        };
-        function openLetter(t) {
-            document.getElementById('modalTitle').innerText = letters[t].title;
-            document.getElementById('modalBody').innerText = letters[t].body;
-            document.getElementById('modal').style.display = 'flex';
-        }
-        function closeModal() { document.getElementById('modal').style.display = 'none'; }
-
-        // --- CHAT ---
-        let step = 0;
-        const script = [{ me: "Hey! 👋", them: "I miss you! ❤️" }, { me: "Me too! 🥰", them: "Be my Valentine?" }, { me: "YES!", them: "Yay! ❤️" }];
-        function nextChat() {
-            if(step >= script.length) return;
-            const msgs = document.getElementById('msgs');
-            const m = document.createElement('div'); m.className = 'msg me'; m.innerHTML = script[step].me; msgs.appendChild(m);
-            setTimeout(() => {
-                const t = document.createElement('div'); t.className = 'msg them'; t.innerHTML = script[step].them; msgs.appendChild(t); step++;
-            }, 800);
-        }
-
-        // --- BACKGROUND HEARTS ---
+        // --- BG HEARTS ---
         setInterval(() => {
-            const h = document.createElement('div'); h.className = 'heart-float'; h.innerText = Math.random()>0.5?'❤️':'💖'; 
+            const h = document.createElement('div'); h.className = 'heart-float'; h.innerText = Math.random()>0.5?'❤️':'💖';
             h.style.left=Math.random()*100+'vw'; h.style.animationDuration=Math.random()*3+4+'s';
             document.getElementById('bgHearts').appendChild(h); setTimeout(()=>h.remove(),8000);
-        }, 600);
+        }, 800);
 
     </script>
 </body>
