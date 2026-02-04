@@ -26,7 +26,7 @@
             overflow: hidden; color: var(--text);
         }
 
-        /* --- 1. VALENTINE ENTRY SCREEN --- */
+        /* --- 1. INTRO SCREEN (Valentine) --- */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #ffe6eb; z-index: 9999;
@@ -97,11 +97,15 @@
         .heart { position: absolute; font-size: 2.5rem; top: -50px; cursor: pointer; }
         @keyframes fall { to { top: 450px; } }
 
-        /* --- SETTINGS --- */
-        .simple-list { background: white; border-radius: 10px; overflow: hidden; }
-        .list-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 0.95rem; }
+        /* --- SETTINGS (FLIRTY) --- */
+        .profile-card { display: flex; align-items: center; gap: 15px; background: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+        .profile-pic { width: 50px; height: 50px; background: #ffdde1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .simple-list { background: white; border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+        .list-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 0.9rem; align-items: center; }
         .list-item:last-child { border-bottom: none; }
-        .val { color: #888; }
+        .section-title { font-size: 0.8rem; color: #888; margin-left: 10px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .val { color: #888; font-size: 0.85rem; }
+        .icon-s { margin-right: 10px; font-size: 1.1rem; }
 
         /* --- CAMERA --- */
         .cam-view { width: 100%; height: 300px; background: black; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -166,17 +170,34 @@
     <div id="app-set" class="window">
         <div class="header">Settings <span class="close" onclick="closeApp('set')">Done</span></div>
         <div class="content" style="background:#f2f2f7;">
-            <p style="margin-left:10px; font-size:0.8rem; color:#666;">INFO</p>
-            <div class="simple-list">
-                <div class="list-item"><span>Name</span> <span class="val">Ayushka</span></div>
-                <div class="list-item"><span>Version</span> <span class="val">Theshu OS 30.0</span></div>
+            
+            <div class="profile-card">
+                <div class="profile-pic">👩🏻</div>
+                <div style="text-align:left;">
+                    <h3 style="margin:0; font-size:1.1rem;">Ayushka</h3>
+                    <p style="margin:0; font-size:0.8rem; color:#888;">Apple ID, iCloud, My World 🌍</p>
+                </div>
             </div>
-            <p style="margin-left:10px; font-size:0.8rem; color:#666; margin-top:20px;">STATUS</p>
+
+            <p class="section-title">Connectivity</p>
             <div class="simple-list">
-                <div class="list-item"><span>Battery</span> <span class="val">100% Love</span></div>
-                <div class="list-item"><span>Developer</span> <span class="val">Theshmil</span></div>
-                <div class="list-item"><span>Pet</span> <span class="val">Kitchu 🐈‍⬛</span></div>
+                <div class="list-item"><span><span class="icon-s">❤️</span>Wi-Fi</span> <span class="val">Theshu's Heart</span></div>
+                <div class="list-item"><span><span class="icon-s">🦷</span>Bluetooth</span> <span class="val">Paired Forever</span></div>
             </div>
+
+            <p class="section-title">Display & Brightness</p>
+            <div class="simple-list">
+                <div class="list-item"><span><span class="icon-s">☀️</span>Brightness</span> <span class="val">Your Smile (Max)</span></div>
+                <div class="list-item"><span><span class="icon-s">🌙</span>Night Mode</span> <span class="val">Dreaming of You</span></div>
+                <div class="list-item"><span><span class="icon-s">🔒</span>Auto-Lock</span> <span class="val">Never (Stuck w/ me)</span></div>
+            </div>
+
+            <p class="section-title">Privacy</p>
+            <div class="simple-list">
+                <div class="list-item"><span><span class="icon-s">🔓</span>Face ID</span> <span class="val">Only You</span></div>
+                <div class="list-item"><span><span class="icon-s">📍</span>Location</span> <span class="val">In My Heart</span></div>
+            </div>
+
         </div>
     </div>
 
@@ -199,7 +220,7 @@
         function openApp(id) { document.getElementById('app-'+id).classList.add('open'); }
         function closeApp(id) { document.getElementById('app-'+id).classList.remove('open'); }
 
-        // --- 3. CHAT LOGIC (ROMANTIC & DEEP) ---
+        // --- 3. CHAT LOGIC (ROMANTIC) ---
         const script = [
             { 
                 t: "Hey Ayushka... ❤️", 
