@@ -6,272 +6,241 @@
     <meta name="theme-color" content="#fff0f5">
     <title>Theshu ❤️ Ayuuu</title>
     <style>
-        /* --- POLISHED CORE --- */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        /* --- STABLE CORE --- */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; touch-action: manipulation; }
         
         body { 
             margin: 0; padding: 0; width: 100vw; height: 100dvh;
             background: #fff0f5; color: #333; overflow: hidden; position: fixed;
         }
 
-        /* --- LAYOUT & TRANSITIONS --- */
+        /* --- LAYOUT --- */
         .full-screen { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             display: flex; flex-direction: column; background: #fff0f5;
-            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 10;
+            transition: transform 0.3s ease-out; z-index: 10;
         }
         .hidden { display: none !important; }
 
-        /* --- LOCK SCREEN --- */
+        /* --- LOCK SCREEN (Fixed Z-Index) --- */
         #lock { 
-            z-index: 50; 
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            z-index: 9999; /* Always on top */
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: white; text-align: center;
+            color: white; text-align: center; cursor: pointer;
         }
-        .clock { font-size: 5rem; font-weight: 100; margin-bottom: 5px; line-height: 1; }
-        .date { font-size: 1.1rem; font-weight: 500; margin-bottom: 30px; opacity: 0.9; }
+        .clock { font-size: 5rem; font-weight: 100; line-height: 1; }
+        .date { font-size: 1.2rem; margin-top: 5px; opacity: 0.9; margin-bottom: 40px; }
         
         .notif { 
-            background: rgba(255,255,255,0.92); color: #333; padding: 18px 20px; 
-            border-radius: 20px; width: 88%; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background: rgba(255,255,255,0.95); color: #333; padding: 20px; 
+            border-radius: 20px; width: 85%; box-shadow: 0 10px 40px rgba(0,0,0,0.15);
             text-align: left; animation: float 3s ease-in-out infinite;
         }
-        .unlock-hint { margin-top: auto; margin-bottom: 50px; font-size: 0.9rem; opacity: 0.8; font-weight: 500; }
+        .tap-hint { position: absolute; bottom: 50px; opacity: 0.8; animation: bounce 2s infinite; font-weight: 600; }
 
         /* --- HOME SCREEN --- */
         .home-content { 
-            padding: 20px; padding-top: max(20px, env(safe-area-inset-top));
-            flex: 1; display: flex; flex-direction: column; gap: 15px; overflow-y: auto;
+            flex: 1; overflow-y: auto; padding: 20px; 
+            padding-top: max(20px, env(safe-area-inset-top));
+            padding-bottom: 20px; display: flex; flex-direction: column; gap: 15px;
         }
         
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 0 5px; }
+        .header { display: flex; justify-content: space-between; align-items: center; }
         .header h1 { font-size: 2rem; color: #ff4757; margin: 0; font-weight: 800; }
-        .love-bat { background: #ffe0e6; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; color: #ff4757; font-weight: 700; }
+        .badge { background: #ffe0e6; color: #ff4757; padding: 5px 12px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
 
         /* Widgets */
-        .widget-row { display: flex; gap: 15px; }
         .card { 
             background: white; border-radius: 22px; padding: 20px; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.03); flex: 1;
-            display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03); 
+            display: flex; flex-direction: column; justify-content: center;
         }
-        
-        /* Together Widget */
         .big-card { 
             background: linear-gradient(135deg, #fff 0%, #fff5f7 100%);
-            flex-direction: row; align-items: center; 
+            flex-direction: row; justify-content: space-between; align-items: center;
         }
-        .days-num { font-size: 2.8rem; font-weight: 800; color: #ff4757; line-height: 1; }
-        .days-label { font-size: 0.8rem; color: #888; font-weight: 600; text-transform: uppercase; }
+        .days-num { font-size: 3rem; font-weight: 800; color: #ff4757; line-height: 1; }
+        .days-lbl { font-size: 0.8rem; color: #aaa; font-weight: 600; text-transform: uppercase; }
 
-        /* Music Widget */
-        .music-bars { display: flex; gap: 3px; align-items: flex-end; height: 20px; }
-        .bar { width: 4px; background: #ff4757; border-radius: 2px; animation: bounce 1s infinite; }
-        .bar:nth-child(2) { animation-delay: 0.2s; }
-        .bar:nth-child(3) { animation-delay: 0.4s; }
-
-        /* App Dock */
+        /* Dock */
         .dock { 
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            margin: 0 15px 20px 15px; border-radius: 30px; padding: 15px;
+            background: rgba(255,255,255,0.8); margin: 0 20px 20px 20px; 
+            border-radius: 35px; padding: 15px; 
             display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05); border: 1px solid white;
         }
-        .app-icon { 
+        .icon-box { 
             width: 55px; height: 55px; background: white; border-radius: 16px; 
             display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08); margin: 0 auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin: 0 auto;
         }
-        .app-icon:active { transform: scale(0.9); }
+        .icon-box:active { transform: scale(0.9); }
 
-        /* --- CHAT APP (Polished) --- */
-        .win-header { 
-            height: 60px; background: rgba(255,255,255,0.95); 
-            border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; 
-            padding: 0 15px; padding-top: env(safe-area-inset-top);
+        /* --- CHAT APP (FIXED) --- */
+        .win-head { 
+            height: 60px; background: white; border-bottom: 1px solid #eee; 
+            display: flex; align-items: center; padding: 0 15px; 
+            padding-top: env(safe-area-inset-top); flex-shrink: 0;
         }
-        .back-btn { color: #ff4757; font-weight: 600; font-size: 1rem; padding: 10px; }
-        .win-title { flex: 1; text-align: center; font-weight: 700; font-size: 1.1rem; margin-right: 40px; }
+        .back-btn { color: #ff4757; font-weight: 700; font-size: 1rem; padding: 10px; cursor: pointer; }
+        .win-title { flex: 1; text-align: center; font-weight: 700; color: #333; margin-right: 40px; }
 
         .chat-body { 
             flex: 1; overflow-y: auto; padding: 20px; 
-            display: flex; flex-direction: column; gap: 12px;
-            padding-bottom: 150px; background: #f9f9f9;
+            display: flex; flex-direction: column; gap: 10px;
+            padding-bottom: 180px; /* EXTRA SPACE FOR BUTTONS */
+            background: #f9f9f9;
         }
         
-        .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 1rem; line-height: 1.4; animation: slideUp 0.3s ease; }
-        .them { background: white; border-bottom-left-radius: 4px; border: 1px solid #eee; color: #333; align-self: flex-start; }
-        .me { background: #ff4757; border-bottom-right-radius: 4px; color: white; align-self: flex-end; box-shadow: 0 2px 8px rgba(255, 71, 87, 0.2); }
+        .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 1rem; line-height: 1.4; animation: slideUp 0.3s; }
+        .them { background: white; border-bottom-left-radius: 4px; color: #333; border: 1px solid #e0e0e0; }
+        .me { background: #ff4757; border-bottom-right-radius: 4px; color: white; align-self: flex-end; box-shadow: 0 2px 5px rgba(255, 71, 87, 0.3); }
 
-        /* Typing Dots */
-        .typing { 
-            background: white; border: 1px solid #eee; padding: 12px 15px; 
-            border-radius: 18px; border-bottom-left-radius: 4px; 
-            width: fit-content; display: none; align-items: center; gap: 4px;
-        }
-        .dot { width: 6px; height: 6px; background: #ccc; border-radius: 50%; animation: dotBounce 1.4s infinite ease-in-out; }
-        .dot:nth-child(1) { animation-delay: -0.32s; } .dot:nth-child(2) { animation-delay: -0.16s; }
-
-        /* Keyboard Area */
-        .keyboard-area {
+        /* Safe Area Fixed Buttons */
+        .opts-container {
             position: fixed; bottom: 0; left: 0; width: 100%;
             background: white; border-top: 1px solid #eee;
-            padding: 15px 15px max(25px, env(safe-area-inset-bottom)) 15px;
-            display: flex; flex-direction: column; gap: 10px; z-index: 30;
+            /* CRITICAL FIX: Safe Area Padding + 20px extra */
+            padding: 20px 20px max(30px, env(safe-area-inset-bottom)) 20px;
+            display: flex; flex-direction: column; gap: 10px; z-index: 100;
         }
-        .reply-btn {
-            width: 100%; padding: 15px; background: #ff4757; color: white; 
-            border: none; border-radius: 15px; font-size: 1rem; font-weight: 600;
-            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.15);
+        .opt-btn {
+            width: 100%; padding: 16px; background: #ff4757; color: white; 
+            border: none; border-radius: 16px; font-size: 1rem; font-weight: 600;
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.2); cursor: pointer;
         }
 
-        /* --- TICKET APP --- */
-        .ticket {
-            background: white; border-radius: 20px; overflow: hidden; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-top: 20px;
-        }
-        .ticket-top { background: #ff4757; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center; }
-        .ticket-body { padding: 30px; display: flex; justify-content: space-between; align-items: center; text-align: center; }
-
+        /* --- GIFT & ANIMATIONS --- */
+        .gift-box { text-align: center; margin-top: 20px; animation: popIn 0.5s; }
+        
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-        @keyframes bounce { 0%, 100% { height: 10px; } 50% { height: 20px; } }
-        @keyframes dotBounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popIn { from { transform: scale(0.8); } to { transform: scale(1); } }
 
     </style>
 </head>
 <body>
 
     <div id="lock" class="full-screen" onclick="unlock()">
-        <div class="clock">11:11</div>
-        <div class="date">Wednesday, Feb 4</div>
-        
-        <div class="notif">
-            <div style="font-size: 0.75rem; color: #666; margin-bottom: 5px; display:flex; justify-content:space-between;">
-                <span>MESSAGE</span><span>NOW</span>
-            </div>
-            <strong style="color: #ff4757; font-size:1.1rem;">Theshuuuu ❤️</strong>
-            <div style="margin-top:2px; font-size:0.95rem;">I have a question for you...</div>
+        <div style="margin-bottom: 20px;">
+            <div class="clock">11:11</div>
+            <div class="date">Wednesday, Feb 4</div>
         </div>
-        
-        <div class="unlock-hint">Tap to Unlock</div>
+        <div class="notif">
+            <div style="font-size: 0.75rem; color: #666; margin-bottom: 5px; font-weight: 600;">MESSAGES • NOW</div>
+            <strong style="color: #ff4757; font-size: 1.1rem;">Theshuuuu ❤️</strong>
+            <div style="margin-top:2px;">I have a question for you...</div>
+        </div>
+        <div class="tap-hint">Tap Anywhere to Open</div>
     </div>
 
     <div id="home" class="full-screen">
         <div class="home-content">
             <div class="header">
                 <div>
-                    <div style="font-size:0.8rem; font-weight:700; color:#ff8fa3; letter-spacing:1px;">GOOD MORNING</div>
+                    <div style="font-size:0.8rem; font-weight:700; color:#ff8fa3;">GOOD MORNING</div>
                     <h1>Ayuuuu ❤️</h1>
                 </div>
-                <div class="love-bat">100% ❤️</div>
+                <div class="badge">100% ❤️</div>
             </div>
 
             <div class="card big-card" onclick="openWin('chat')">
-                <div style="font-size:3rem; margin-right:15px;">💑</div>
                 <div>
-                    <div class="days-label">Together For</div>
-                    <div class="days-num" id="days">0</div>
-                    <div style="font-size:0.9rem; color:#888; margin-top:2px;">Days</div>
+                    <div class="days-lbl">Together For</div>
+                    <div style="display: flex; align-items: baseline; gap: 5px;">
+                        <span class="days-num" id="days">0</span>
+                        <span style="font-weight: 700; color: #ff8fa3;">DAYS</span>
+                    </div>
+                    <div style="font-size:0.8rem; color:#aaa;">Since Jan 18</div>
                 </div>
+                <div style="font-size:3.5rem;">💑</div>
             </div>
 
-            <div class="widget-row">
-                <div class="card">
-                    <div class="days-label" style="margin-bottom:10px;">Now Playing</div>
-                    <div style="font-weight:700; font-size:1.1rem;">Your Voice</div>
-                    <div style="font-size:0.8rem; color:#aaa;">My fav song</div>
-                    <div class="music-bars" style="margin-top:auto;">
-                        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="days-label" style="margin-bottom:10px;">Status</div>
+            <div style="display: flex; gap: 15px;">
+                <div class="card" style="flex:1;">
+                    <div class="days-lbl">Status</div>
                     <div style="font-weight:700; font-size:1.1rem; color:#4cd137;">Online</div>
                     <div style="font-size:0.8rem; color:#aaa;">Missing You</div>
-                    <div style="font-size:1.8rem; margin-top:auto; align-self:flex-end;">🥺</div>
+                </div>
+                <div class="card" style="flex:1;">
+                    <div class="days-lbl">Next Event</div>
+                    <div style="font-weight:700; font-size:1.1rem;">Mar 14</div>
+                    <div style="font-size:0.8rem; color:#aaa;">My Birthday</div>
                 </div>
             </div>
         </div>
 
         <div class="dock">
-            <div onclick="openWin('chat')"><div class="app-icon" style="color:#ff4757;">💬</div></div>
-            <div onclick="openWin('memories')"><div class="app-icon" style="color:#ff9f43;">📸</div></div>
-            <div onclick="openWin('ticket')"><div class="app-icon" style="color:#54a0ff;">✈️</div></div>
-            <div onclick="openWin('future')"><div class="app-icon" style="color:#4cd137;">📝</div></div>
+            <div onclick="openWin('chat')"><div class="icon-box" style="color:#ff4757;">💬</div></div>
+            <div onclick="openWin('memories')"><div class="icon-box" style="color:#ff9f43;">📸</div></div>
+            <div onclick="openWin('ticket')"><div class="icon-box" style="color:#54a0ff;">✈️</div></div>
+            <div onclick="openWin('future')"><div class="icon-box" style="color:#4cd137;">📝</div></div>
         </div>
     </div>
 
-    <div id="win-chat" class="full-screen win">
-        <div class="win-header">
+    <div id="win-chat" class="full-screen win" style="background:white;">
+        <div class="win-head">
             <div class="back-btn" onclick="closeWin('chat')">❮ Back</div>
             <div class="win-title">Theshuuuu ❤️</div>
         </div>
         
-        <div class="chat-body" id="feed">
-            <div class="typing" id="typing-indicator">
-                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-            </div>
-        </div>
+        <div class="chat-body" id="feed"></div>
         
-        <div id="opts" class="keyboard-area hidden"></div>
+        <div id="opts" class="opts-container hidden"></div>
     </div>
 
     <div id="win-ticket" class="full-screen win">
-        <div class="win-header"><div class="back-btn" onclick="closeWin('ticket')">❮ Back</div><div class="win-title">Boarding Pass</div></div>
-        <div class="home-content">
-            <div style="text-align:center; color:#888;">One day, no more distance.</div>
-            <div class="ticket">
-                <div class="ticket-top">
-                    <span style="font-weight:700; letter-spacing:1px;">LDR AIRLINES</span><span>✈️</span>
-                </div>
-                <div class="ticket-body">
+        <div class="win-head"><div class="back-btn" onclick="closeWin('ticket')">❮ Back</div><div class="win-title">Ticket</div></div>
+        <div class="home-content" style="text-align:center;">
+            <p style="color:#888;">One day soon...</p>
+            <div style="background:white; border-radius:20px; border:1px solid #eee; overflow:hidden;">
+                <div style="background:#ff4757; padding:15px; color:white; font-weight:bold;">LDR AIRLINES ✈️</div>
+                <div style="padding:25px; display:flex; justify-content:space-between; align-items:center;">
                     <div><div style="font-size:2rem; font-weight:800;">ME</div><small>Theshu</small></div>
-                    <div style="color:#ffccd5; font-size:1.5rem;">-----</div>
+                    <div style="color:#ddd;">-----</div>
                     <div><div style="font-size:2rem; font-weight:800;">YOU</div><small>Ayuuuu</small></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="win-memories" class="full-screen win">
-        <div class="win-header"><div class="back-btn" onclick="closeWin('memories')">❮ Back</div><div class="win-title">Memories</div></div>
+    <div id="win-future" class="full-screen win">
+        <div class="win-head"><div class="back-btn" onclick="closeWin('future')">❮ Back</div><div class="win-title">Future</div></div>
         <div class="home-content">
-            <div style="background:white; border-radius:15px; height:200px; display:flex; align-items:center; justify-content:center; color:#eee; font-size:4rem;">❤️</div>
-            <div style="text-align:center; color:#888;">Collecting moments since Jan 18.</div>
+            <div style="background:white; padding:15px; border-radius:15px; display:flex; align-items:center; gap:15px;">
+                <div style="width:24px; height:24px; border:2px solid #ddd; border-radius:50%;"></div><div>First Hug 🫂</div>
+            </div>
+            <div style="background:white; padding:15px; border-radius:15px; display:flex; align-items:center; gap:15px;">
+                <div style="width:24px; height:24px; border:2px solid #ddd; border-radius:50%;"></div><div>Cooking Together 🍝</div>
+            </div>
         </div>
     </div>
 
-    <div id="win-future" class="full-screen win">
-        <div class="win-header"><div class="back-btn" onclick="closeWin('future')">❮ Back</div><div class="win-title">Bucket List</div></div>
-        <div class="home-content">
-            <div style="background:white; padding:15px; border-radius:15px; display:flex; gap:15px; align-items:center;">
-                <div style="width:24px; height:24px; border:2px solid #ddd; border-radius:50%;"></div><div>First Hug 🫂</div>
-            </div>
-            <div style="background:white; padding:15px; border-radius:15px; display:flex; gap:15px; align-items:center;">
-                <div style="width:24px; height:24px; border:2px solid #ddd; border-radius:50%;"></div><div>Coffee Date ☕</div>
-            </div>
+    <div id="win-memories" class="full-screen win">
+        <div class="win-head"><div class="back-btn" onclick="closeWin('memories')">❮ Back</div><div class="win-title">Memories</div></div>
+        <div class="home-content" style="justify-content:center; text-align:center; color:#888;">
+            <div style="font-size:4rem; margin-bottom:10px;">📸</div>
+            <p>Waiting to fill this with our photos.</p>
         </div>
     </div>
 
     <script>
+        // NAVIGATION
         function unlock() { document.getElementById('lock').style.transform = 'translateY(-100%)'; }
         function openWin(id) { document.getElementById('win-'+id).classList.add('open'); }
         function closeWin(id) { document.getElementById('win-'+id).classList.remove('open'); }
 
-        // --- DATE LOGIC ---
-        // Met: Jan 18, 2026. Current: Feb 4, 2026.
+        // DATE LOGIC (Fixed for Jan 18, 2026)
         const start = new Date("2026-01-18");
         const now = new Date();
         const diff = Math.floor((now - start) / (1000 * 60 * 60 * 24));
         document.getElementById('days').innerText = diff > 0 ? diff : 0;
 
-        // --- CHAT ENGINE ---
+        // CHAT LOGIC
         const feed = document.getElementById('feed');
         const opts = document.getElementById('opts');
-        const typing = document.getElementById('typing-indicator');
 
         const script = {
             1: { msg: "Happy Valentine's Day Ayuuu! 🌹", btn: "Happy Valentine's Theshu! ❤️", next: 2 },
@@ -285,9 +254,8 @@
             const d = document.createElement('div');
             d.className = 'msg ' + type;
             d.innerHTML = text;
-            // Insert before typing indicator
-            feed.insertBefore(d, typing);
-            feed.scrollTop = feed.scrollHeight;
+            feed.appendChild(d);
+            feed.scrollTop = feed.scrollHeight; // Auto-scroll
         }
 
         function showBtn(text, nextStep) {
@@ -296,40 +264,36 @@
             
             opts.classList.remove('hidden');
             const b = document.createElement('button');
-            b.className = 'reply-btn';
+            b.className = 'opt-btn';
             b.innerText = text;
             b.onclick = () => {
                 addMsg(text, 'me');
                 opts.classList.add('hidden');
                 
-                // Show typing
-                typing.style.display = 'flex';
-                feed.scrollTop = feed.scrollHeight;
-
+                // Simulate typing delay
                 setTimeout(() => {
-                    typing.style.display = 'none';
                     const stepData = script[nextStep];
                     if(stepData) {
                         addMsg(stepData.msg, 'them');
                         if(stepData.action === 'gift') spawnGift();
                         else showBtn(stepData.btn, stepData.next);
                     }
-                }, 1500); // 1.5s typing delay
+                }, 1000);
             };
             opts.appendChild(b);
         }
 
         function spawnGift() {
             const div = document.createElement('div');
-            div.style.textAlign = 'center'; div.style.marginTop = '20px';
-            div.innerHTML = `<span style="font-size:5rem; display:block; animation:float 2s infinite;" onclick="this.innerText='💍'; this.nextElementSibling.innerText='One day... ❤️'">🎁</span><div style="color:#ff4757; font-weight:bold; margin-top:10px;">Tap to open</div>`;
-            feed.insertBefore(div, typing);
+            div.className = 'gift-box';
+            div.innerHTML = `<div style="font-size:5rem; animation:float 2s infinite;" onclick="this.innerHTML='💍'; this.style.animation='none'; this.nextElementSibling.innerText='One day... ❤️'">🎁</div><div style="color:#ff4757; font-weight:bold; margin-top:10px;">Tap to open</div>`;
+            feed.appendChild(div);
             feed.scrollTop = feed.scrollHeight;
         }
 
         // Init Chat
         setTimeout(() => {
-            if(feed.children.length === 1) { // Only typing indicator exists
+            if(feed.innerHTML === "") {
                 addMsg(script[1].msg, 'them');
                 showBtn(script[1].btn, script[1].next);
             }
