@@ -42,7 +42,7 @@
             overflow: hidden;
         }
 
-        /* BACKGROUND HEARTS ANIMATION */
+        /* BACKGROUND HEARTS */
         .bg-heart {
             position: absolute; bottom: -50px;
             font-size: 20px; opacity: 0.5;
@@ -141,6 +141,26 @@
             white-space: pre-wrap; word-wrap: break-word;
         }
 
+        /* OPEN WHEN ENVELOPES */
+        .envelope-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; margin-top: 20px; }
+        .envelope {
+            background: #e17055; color: white; padding: 20px;
+            border-radius: 10px; cursor: pointer; position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.2s;
+        }
+        .envelope:hover { transform: translateY(-5px); }
+        .envelope::after {
+            content: '💌'; position: absolute; top: -15px; right: -10px; font-size: 1.5rem;
+        }
+        
+        /* REASON CARD */
+        .reason-card {
+            background: rgba(0,0,0,0.03); padding: 20px; border-radius: 15px;
+            width: 100%; min-height: 150px; display: flex; align-items: center; justify-content: center;
+            font-family: 'Indie Flower', cursive; font-size: 1.3rem; margin: 20px 0;
+            border: 2px dashed var(--primary);
+        }
+
         /* ANIMATIONS */
         .confetti { position: absolute; width: 10px; height: 10px; background: #f00; animation: fall 3s linear forwards; z-index: 9999; }
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
@@ -159,14 +179,14 @@
 
         <div class="global-nav" id="main-nav" style="display:none;">
             <button class="nav-btn" onclick="changePage(-1)">⬅️</button>
-            <span class="page-indicator" id="page-num">1 / 8</span>
+            <span class="page-indicator" id="page-num">1 / 10</span>
             <button class="nav-btn" onclick="changePage(1)">➡️</button>
         </div>
 
         <div class="page active" id="cover-page" style="justify-content: center;">
             <div style="text-align: center;">
-                <h1 style="font-size: 4rem;">Theshu <br>&<br> Ayu</h1>
-                <p style="opacity: 0.9; letter-spacing: 2px; margin-top: 10px;">VOL. 1</p>
+                <h1 style="font-size: 4rem;" onclick="tapHeart()">Theshu <br>&<br> Ayu <span id="h-icon">❤️</span></h1>
+                <p style="opacity: 0.9; letter-spacing: 2px; margin-top: 10px;">VOL. 2</p>
                 <br><br>
                 <p>🔒 Enter Password:</p>
                 <input type="text" id="pass" placeholder="hint: kushu" onkeyup="if(event.key === 'Enter') unlock()">
@@ -263,15 +283,40 @@
             <div id="scan-res" style="font-weight:bold; height:30px; margin-top:10px;"></div>
         </div>
 
+        <div class="page" id="page-9">
+            <h2>Open When...</h2>
+            <p>Tap an envelope when you feel...</p>
+            
+            <div class="envelope-grid" id="env-grid">
+                <div class="envelope" style="background:#ff7675" onclick="openEnv('Miss You', 'Remember that we are under the same sky. Close your eyes, and I am there. 🌙')">Miss You</div>
+                <div class="envelope" style="background:#74b9ff" onclick="openEnv('Sad', 'I wish I could hold you right now. You are strong, my love. 💪')">Sad</div>
+                <div class="envelope" style="background:#fdcb6e" onclick="openEnv('Happy', 'Your happiness is my favorite thing! Keep smiling! ✨')">Happy</div>
+                <div class="envelope" style="background:#a29bfe" onclick="openEnv('Bored', 'Go look at my photos or message me now! 😜')">Bored</div>
+            </div>
+
+            <div id="env-content" style="display:none; margin-top:30px;">
+                <h3 id="env-title" style="color:var(--primary)"></h3>
+                <p id="env-body" style="font-family:'Indie Flower', cursive; font-size:1.3rem;"></p>
+                <button class="btn" style="margin-top:20px;" onclick="closeEnv()">Back</button>
+            </div>
+        </div>
+
+        <div class="page" id="page-10">
+            <h2>Why I Love You</h2>
+            <div class="reason-card" id="reason-text">Tap the button to find out...</div>
+            <button class="btn" onclick="nextReason()">Tell Me Why ❤️</button>
+        </div>
+
     </div>
 
     <script>
         const password = "kushu";
         let currentPage = 1;
-        const totalPages = 8;
+        const totalPages = 10; // UPDATED
         let qIdx = 0;
         let currentSim = { loc: '', food: '' };
         let typewriterTimeout;
+        let heartTaps = 0;
 
         // INIT FLOATING HEARTS
         function initHearts() {
@@ -355,49 +400,4 @@
                     typewriterTimeout = setTimeout(type, 50);
                 }
             }
-            type();
-        }
-
-        // MUSIC
-        function toggleMusic(el) {
-            if(el.style.animation) {
-                el.style.animation = "";
-                document.getElementById('music-status').innerText = "Paused";
-            } else {
-                el.style.animation = "spin 2s linear infinite";
-                document.getElementById('music-status').innerText = "Now Playing: Tum Hi Ho 🎵";
-                createEmoji('🎵');
-            }
-        }
-
-        // SCAN
-        function scan(el) {
-            el.style.background = "rgba(255,107,129,0.2)";
-            document.getElementById('scan-res').innerText = "Scanning...";
-            setTimeout(() => {
-                document.getElementById('scan-res').innerText = "100% MATCH! ❤️";
-                el.style.background = "transparent";
-                createEmoji('💖');
-            }, 2000);
-        }
-
-        // CONFETTI
-        function triggerConfetti() {
-            for(let i=0; i<50; i++) {
-                let c = document.createElement('div');
-                c.className='confetti';
-                c.style.left = Math.random()*100+'vw';
-                c.style.background = ['#f00','#0f0','#00f','#ff0'][Math.floor(Math.random()*4)];
-                c.style.animationDuration = Math.random()*2+2+'s';
-                document.body.appendChild(c);
-            }
-        }
-
-        function createEmoji(char) {
-            let el = document.createElement('div'); el.innerText=char; el.className='float';
-            el.style.left = Math.random()*80+10+'%'; el.style.top='100vh';
-            document.body.appendChild(el); setTimeout(()=>el.remove(),3000);
-        }
-    </script>
-</body>
-</html>
+            type()
