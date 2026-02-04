@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Theshu OS v2.0 ❤️</title>
+    <title>Theshu OS v3.0 ❤️</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&family=Indie+Flower&display=swap" rel="stylesheet">
 
@@ -13,6 +13,8 @@
             --bg-wallpaper: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
             --text: #333;
             --primary: #ff6b81;
+            --bubble-sent: #d1efff;
+            --bubble-rcvd: #ffffff;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -48,7 +50,6 @@
             padding: 5px 20px; font-size: 0.8rem; font-weight: bold; color: white;
         }
 
-        /* APP GRID */
         .app-grid {
             display: grid; grid-template-columns: repeat(4, 1fr); 
             gap: 20px 10px; padding: 20px; margin-top: 20px;
@@ -71,64 +72,66 @@
         /* --- APP WINDOWS --- */
         .app-window {
             position: fixed; top: 100vh; left: 0; width: 100%; height: 100%;
-            background: #f5f6fa; z-index: 1000;
+            background: #f0f2f5; z-index: 1000;
             transition: top 0.4s cubic-bezier(0.19, 1, 0.22, 1);
             display: flex; flex-direction: column;
         }
         .app-window.open { top: 0; }
 
-        /* HEADER */
         .app-header {
             height: 60px; background: white; 
             display: flex; align-items: center; padding: 0 20px;
             font-weight: bold; font-size: 1.2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            justify-content: space-between;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+            justify-content: space-between; z-index: 10;
         }
         .close-btn { 
             background: #ff4757; color: white; border: none; 
-            width: 32px; height: 32px; border-radius: 50%; font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px; border-radius: 50%; font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
 
-        /* CONTENT */
         .app-content {
             flex: 1; overflow-y: auto; padding: 20px;
             text-align: center;
         }
 
-        /* --- WIDGETS --- */
-        .btn {
-            background: var(--primary); color: white; border: none;
-            padding: 12px 30px; border-radius: 50px; font-weight: bold;
-            font-size: 1rem; margin-top: 15px; cursor: pointer;
-            box-shadow: 0 4px 10px rgba(255, 107, 129, 0.4);
+        /* --- CHAT INTERFACE --- */
+        #chat-container {
+            display: flex; flex-direction: column; gap: 10px; padding-bottom: 80px;
         }
-
-        /* MESSAGES */
         .msg-bubble {
-            background: white; padding: 15px; border-radius: 15px;
-            text-align: left; margin-bottom: 10px; position: relative;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-size: 0.95rem; line-height: 1.5;
+            max-width: 80%; padding: 12px 16px; border-radius: 18px;
+            font-size: 0.95rem; line-height: 1.4; position: relative;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            opacity: 0; animation: popIn 0.3s forwards;
         }
-        .msg-bubble.me { background: #d1efff; align-self: flex-end; }
-
-        /* PHONE CALL */
-        .caller-id {
-            width: 120px; height: 120px; background: #ddd; border-radius: 50%; margin: 50px auto 20px;
-            display: flex; align-items: center; justify-content: center; font-size: 3rem; border: 4px solid white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        .call-actions { display: flex; justify-content: center; gap: 40px; margin-top: 50px; }
-        .call-btn { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; }
-
-        /* WEATHER */
-        .weather-card {
-            background: linear-gradient(to bottom, #74b9ff, #0984e3); color: white;
-            padding: 30px; border-radius: 20px; margin-top: 20px;
-            box-shadow: 0 10px 20px rgba(9, 132, 227, 0.3);
+        .msg-bubble.rcvd { background: var(--bubble-rcvd); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .msg-bubble.sent { background: var(--bubble-sent); align-self: flex-end; border-bottom-right-radius: 4px; }
+        
+        .typing-indicator {
+            align-self: flex-start; background: var(--bubble-rcvd);
+            padding: 10px 15px; border-radius: 18px; display: none;
+            font-size: 0.8rem; color: #888;
         }
 
-        /* GIFT */
+        /* CHAT OPTIONS */
+        .chat-options {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: white; padding: 15px;
+            display: flex; gap: 10px; overflow-x: auto;
+            border-top: 1px solid #ddd;
+        }
+        .option-btn {
+            flex: 1; background: var(--primary); color: white; border: none;
+            padding: 12px; border-radius: 20px; font-size: 0.9rem; font-weight: bold;
+            cursor: pointer; white-space: nowrap; box-shadow: 0 4px 10px rgba(255, 107, 129, 0.3);
+        }
+
+        @keyframes popIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+
+        /* OTHER WIDGETS */
+        .btn { background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: bold; font-size: 1rem; margin-top: 15px; cursor: pointer; }
+        .caller-id { width: 120px; height: 120px; background: #ddd; border-radius: 50%; margin: 50px auto 20px; display: flex; align-items: center; justify-content: center; font-size: 3rem; border: 4px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .gift-box { font-size: 5rem; animation: bounce 1s infinite; cursor: pointer; margin-top: 50px; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
@@ -139,7 +142,7 @@
     <div id="lock-screen">
         <div style="font-size: 4rem;">🔒</div>
         <h1 style="font-family: 'Dancing Script'; margin: 10px 0;">Theshu & Ayu</h1>
-        <p>Vol. 2 (Updated)</p>
+        <p>Vol. 3 (Interactive)</p>
         <input type="password" id="pass" placeholder="hint: kushu" onkeyup="if(event.key==='Enter') unlock()">
         <button class="btn" style="background:white; color:#333; margin-top:20px;" onclick="unlock()">Unlock</button>
         <p id="err" style="display:none; color:#ff6b81; margin-top:10px; font-weight:bold;">Wrong Password!</p>
@@ -153,7 +156,7 @@
         </div>
 
         <div style="padding: 20px; text-align: center; color: white; margin-top: 30px;">
-            <h2 style="margin:0; font-size:2.5rem; font-weight:normal; font-family:'Indie Flower';">Good Morning<br>My Love</h2>
+            <h2 style="margin:0; font-size:2.5rem; font-weight:normal; font-family:'Indie Flower';">Hello<br>Summer Girl ☀️</h2>
         </div>
 
         <div class="app-grid">
@@ -169,14 +172,8 @@
             <div class="app-icon" onclick="openApp('music')">
                 <div class="icon-box" style="background:#ff6b81; color:white;">🎵</div><span class="icon-label">Music</span>
             </div>
-            <div class="app-icon" onclick="openApp('weather')">
-                <div class="icon-box" style="background:#0984e3; color:white;">☀️</div><span class="icon-label">Weather</span>
-            </div>
             <div class="app-icon" onclick="openApp('gift')">
                 <div class="icon-box" style="background:#e17055; color:white;">🎁</div><span class="icon-label">Gift</span>
-            </div>
-            <div class="app-icon" onclick="openApp('date')">
-                <div class="icon-box" style="background:#a55eea; color:white;">🎮</div><span class="icon-label">Sims</span>
             </div>
             <div class="app-icon" onclick="openApp('notes')">
                 <div class="icon-box" style="background:#f1c40f; color:white;">📝</div><span class="icon-label">Bucket List</span>
@@ -185,28 +182,18 @@
     </div>
 
     <div class="app-window" id="app-msg">
-        <div class="app-header">Messages <button class="close-btn" onclick="closeApp('msg')">×</button></div>
-        <div class="app-content" style="background:#eee; display:flex; flex-direction:column;">
-            <div class="msg-bubble">
-                <b>Kitchu ❤️:</b><br>
-                My Dearest Ayushka, I made this little world just for you. 🌍✨
-            </div>
-            <div class="msg-bubble">
-                <b>Kitchu ❤️:</b><br>
-                I know sometimes you get scared of losing the people you truly love. I understand that fear.
-            </div>
-            <div class="msg-bubble">
-                <b>Kitchu ❤️:</b><br>
-                But I want you to know something important: <b>I am not going anywhere.</b> Don't worry about it now, because I am here. 🥸
-            </div>
-            <div class="msg-bubble">
-                <b>Kitchu ❤️:</b><br>
-                You are my Summer Girl, my peace, and my home. Be yourself, because that is who I fell in love with. Explore your website, idiot! 😸 Hehehe.
-            </div>
-            <div class="msg-bubble me">
-                <b>You:</b><br>
-                I love you! ❤️
-            </div>
+        <div class="app-header">Theshu ❤️ <button class="close-btn" onclick="closeApp('msg')">×</button></div>
+        <div class="app-content" style="background:#e5ddd5; text-align:left; display:flex; flex-direction:column;">
+            
+            <div id="chat-container">
+                </div>
+            
+            <div id="typing" class="typing-indicator">Theshu is typing...</div>
+
+        </div>
+        
+        <div class="chat-options" id="chat-options">
+            <button class="option-btn" onclick="startChat()">Tap to Start Chat 💌</button>
         </div>
     </div>
 
@@ -214,11 +201,11 @@
         <div class="app-header" style="background:transparent; color:white; border:none;">Call <button class="close-btn" onclick="closeApp('call')">×</button></div>
         <div class="app-content">
             <div class="caller-id" style="background-image: url('https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'); background-size: cover;"></div>
-            <h2 style="margin-bottom:5px;">Kitchu ❤️</h2>
+            <h2 style="margin-bottom:5px;">Theshu ❤️</h2>
             <p>Incoming Call...</p>
-            <div class="call-actions">
-                <div class="call-btn" style="background:#ff4757;" onclick="closeApp('call')">✖️</div>
-                <div class="call-btn" style="background:#2ecc71;" onclick="alert('He is picking up... 📞 Hello my love!')">📞</div>
+            <div style="display:flex; justify-content:center; gap:40px; margin-top:50px;">
+                <div style="width:60px; height:60px; background:#ff4757; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem;" onclick="closeApp('call')">✖️</div>
+                <div style="width:60px; height:60px; background:#2ecc71; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.5rem;" onclick="alert('He is picking up... 📞 Hello my love!')">📞</div>
             </div>
         </div>
     </div>
@@ -232,19 +219,6 @@
         </div>
     </div>
 
-    <div class="app-window" id="app-weather">
-        <div class="app-header">Weather <button class="close-btn" onclick="closeApp('weather')">×</button></div>
-        <div class="app-content">
-            <div class="weather-card">
-                <div style="font-size:4rem;">☀️</div>
-                <h1>100% Love</h1>
-                <p>Kochi & Your Heart</p>
-                <br>
-                <p>Forecast: Showers of kisses expected later today. 😘</p>
-            </div>
-        </div>
-    </div>
-
     <div class="app-window" id="app-photos">
         <div class="app-header">Photos <button class="close-btn" onclick="closeApp('photos')">×</button></div>
         <div class="app-content">
@@ -252,7 +226,7 @@
                 <div style="background:white; padding:10px; border-radius:10px;">👩🏻<br><small>Cutie</small></div>
                 <div style="background:white; padding:10px; border-radius:10px;">✨<br><small>Smile</small></div>
                 <div style="background:white; padding:10px; border-radius:10px;">🏖️<br><small>Summer</small></div>
-                <div style="background:white; padding:10px; border-radius:10px;">💑<br><small>Us</small></div>
+                <div style="background:white; padding:10px; border-radius:10px;">🐈‍⬛<br><small>Kitchu</small></div>
             </div>
         </div>
     </div>
@@ -260,53 +234,114 @@
     <div class="app-window" id="app-music">
         <div class="app-header">Music <button class="close-btn" onclick="closeApp('music')">×</button></div>
         <div class="app-content">
-            <div style="width:200px; height:200px; background:#333; border-radius:50%; margin:20px auto; border:10px solid #222; display:flex; align-items:center; justify-content:center;">
-                <div style="width:80px; height:80px; background:#ff6b81; border-radius:50%;"></div>
-            </div>
+            <div style="width:200px; height:200px; background:#333; border-radius:10px; margin:20px auto; display:flex; align-items:center; justify-content:center; font-size:4rem; color:white;">🎵</div>
             <h2>Tum Hi Ho</h2>
             <button class="btn" onclick="alert('Playing music in your heart... 🎶')">▶ Play</button>
-        </div>
-    </div>
-
-    <div class="app-window" id="app-date">
-        <div class="app-header">Sims <button class="close-btn" onclick="closeApp('date')">×</button></div>
-        <div class="app-content">
-            <h3>Date Planner</h3>
-            <select style="width:100%; padding:10px; margin:10px 0;"><option>Beach</option><option>Bed</option></select>
-            <select style="width:100%; padding:10px; margin:10px 0;"><option>Pizza</option><option>Ice Cream</option></select>
-            <button class="btn" onclick="alert('Date Planned! ❤️')">Start</button>
         </div>
     </div>
 
     <div class="app-window" id="app-notes">
         <div class="app-header">Bucket List <button class="close-btn" onclick="closeApp('notes')">×</button></div>
         <div class="app-content" style="text-align:left; font-size:1.2rem;">
-            <p>✅ Meet in person</p><hr>
-            <p>✅ Hug tightly</p><hr>
-            <p>⬜ Get Married</p>
+            <p onclick="this.style.textDecoration='line-through'">⬜ Meet in person</p><hr>
+            <p onclick="this.style.textDecoration='line-through'">⬜ Hug tightly</p><hr>
+            <p onclick="this.style.textDecoration='line-through'">⬜ Get Married</p>
         </div>
     </div>
 
     <script>
-        // NUCLEAR UNLOCK (Guaranteed to work)
+        // --- CHAT SCRIPT ---
+        const script = [
+            {
+                text: "Hey my Summer Girl... I was just thinking about you. 💭",
+                options: [
+                    { label: "Aww, really? 🙈", next: 1 },
+                    { label: "What were you thinking? 🤔", next: 1 }
+                ]
+            },
+            {
+                text: "Always. I was thinking how lucky I am to have you. Even with the distance, you feel so close. ❤️",
+                options: [
+                    { label: "I miss you too Theshu 🥺", next: 2 },
+                    { label: "I wish you were here 🫂", next: 2 }
+                ]
+            },
+            {
+                text: "I know, baby. Trust me, I'm working hard so we can close this distance soon. I'm not going anywhere. You're stuck with me! 😉",
+                options: [
+                    { label: "Promise? 💍", next: 3 },
+                    { label: "Good! I love you ❤️", next: 3 }
+                ]
+            },
+            {
+                text: "I promise. Forever. Kitchu 🐈‍⬛ says meow and misses you too! Go explore your gift now. Hehehe.",
+                options: [
+                    { label: "Okay! Bye Theshu! 😘", next: -1 }
+                ]
+            }
+        ];
+
+        let currentStep = 0;
+
+        function startChat() {
+            document.getElementById('chat-options').innerHTML = '';
+            addMsg(script[0].text, 'rcvd');
+            showOptions(script[0].options);
+        }
+
+        function handleReply(nextIndex, replyText) {
+            // 1. Add User Reply
+            addMsg(replyText, 'sent');
+            document.getElementById('chat-options').innerHTML = ''; // Clear buttons
+
+            // 2. Simulate Typing
+            if(nextIndex !== -1) {
+                const typing = document.getElementById('typing');
+                typing.style.display = 'block';
+                setTimeout(() => {
+                    typing.style.display = 'none';
+                    addMsg(script[nextIndex].text, 'rcvd');
+                    showOptions(script[nextIndex].options);
+                }, 1500); // 1.5s delay
+            } else {
+                setTimeout(() => alert("End of chat! Go check the Gift App! 🎁"), 1000);
+            }
+        }
+
+        function addMsg(txt, type) {
+            const div = document.createElement('div');
+            div.className = 'msg-bubble ' + type;
+            div.innerText = txt;
+            document.getElementById('chat-container').appendChild(div);
+            // Scroll to bottom
+            const appContent = document.querySelector('#app-msg .app-content');
+            appContent.scrollTop = appContent.scrollHeight;
+        }
+
+        function showOptions(options) {
+            const container = document.getElementById('chat-options');
+            container.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt.label;
+                btn.onclick = () => handleReply(opt.next, opt.label);
+                container.appendChild(btn);
+            });
+        }
+
+        // --- SYSTEM FUNCTIONS ---
         function unlock() {
-            const pass = document.getElementById('pass').value.trim().toLowerCase();
-            if(pass === "kushu") {
-                document.getElementById('lock-screen').remove(); // DESTROY IT
+            if(document.getElementById('pass').value.trim().toLowerCase() === "kushu") {
+                document.getElementById('lock-screen').remove();
             } else {
                 document.getElementById('err').style.display = 'block';
             }
         }
 
-        // NAVIGATION
-        function openApp(id) {
-            document.getElementById('app-' + id).classList.add('open');
-        }
-        function closeApp(id) {
-            document.getElementById('app-' + id).classList.remove('open');
-        }
+        function openApp(id) { document.getElementById('app-' + id).classList.add('open'); }
+        function closeApp(id) { document.getElementById('app-' + id).classList.remove('open'); }
 
-        // GIFT LOGIC
         function openGift(el) {
             const gifts = ["🍫 Chocolate", "🌹 Red Rose", "💍 Ring", "🍦 Ice Cream"];
             const gift = gifts[Math.floor(Math.random()*gifts.length)];
