@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#ffccd5">
-    <title>Ayuuu LovePhone</title>
+    <title>Ayuuu Phone</title>
     <style>
         /* --- 1. THEME VARIABLES --- */
         :root {
@@ -144,10 +144,6 @@
                 <div class="icon" style="background:#ff9f43; color:white;">🧮</div>
                 <div class="app-name">LuvCalc</div>
             </div>
-            <div class="app" onclick="openApp('app-photos')">
-                <div class="icon" style="background:white;">📸</div>
-                <div class="app-name">Photos</div>
-            </div>
             <div class="app" onclick="openApp('app-notes')">
                 <div class="icon" style="background:#ffdd59; color:white;">📒</div>
                 <div class="app-name">Diary</div>
@@ -159,15 +155,13 @@
         </div>
 
         <div class="dock">
-            <div class="app"><div class="icon" style="background:#2ed573; color:white;">📞</div></div>
+            <div class="app" onclick="alert('Calling Theshu... ❤️')"><div class="icon" style="background:#2ed573; color:white;">📞</div></div>
             <div class="app" onclick="openApp('app-msg')"><div class="icon" style="background:#ff4757; color:white;">💬</div></div>
-            <div class="app" onclick="toggleMusic()"><div class="icon" style="background:#1e90ff; color:white;">🎵</div></div>
+            <div class="app" onclick="openApp('app-photos')"><div class="icon" style="background:white;">📸</div></div>
         </div>
         
         <div class="home-bar"></div>
     </div>
-
-    <audio id="bgMusic" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 
     <div class="app-window" id="app-msg">
         <div class="nav-bar">
@@ -250,7 +244,7 @@
         function openApp(id) { document.getElementById(id).classList.add('active'); }
         function closeApp(id) { document.getElementById(id).classList.remove('active'); }
 
-        // --- 3. CHAT LOGIC (The New Update!) ---
+        // --- 3. CHAT LOGIC ---
         const script = [
             { sender: 'me', text: "Hey Ayuuu! ❤️" },
             { sender: 'her', text: "Hey Theshu! Miss you! 🥰" },
@@ -317,14 +311,6 @@
             h.style.opacity = Math.random();
             document.querySelector('.falling-hearts').appendChild(h);
             setTimeout(() => h.remove(), 6000);
-        }
-
-        const audio = document.getElementById('bgMusic');
-        let playing = false;
-        function toggleMusic() {
-            if(!playing) { audio.play(); alert("Playing Music 🎵"); }
-            else { audio.pause(); }
-            playing = !playing;
         }
 
     </script>
