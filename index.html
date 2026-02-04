@@ -2,321 +2,198 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Theshu ❤️ Ayuuu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Indie+Flower&display=swap" rel="stylesheet">
-
     <style>
-        /* --- RESET & SMOOTHNESS --- */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; outline: none; }
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background: #fff0f3; font-family: 'Poppins', sans-serif; overflow: hidden; position: fixed; }
-
+        /* --- MINIMALIST CORE --- */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        body { margin: 0; padding: 0; height: 100vh; width: 100vw; background: #fff0f3; overflow: hidden; position: fixed; color: #333; }
+        
+        /* --- UTILS --- */
+        .full-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; transition: transform 0.4s ease; }
+        .center { display: flex; align-items: center; justify-content: center; text-align: center; }
+        .hidden { display: none !important; }
+        
         /* --- LOCK SCREEN --- */
-        #lock-screen {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-            z-index: 9999; display: flex; flex-direction: column; align-items: center; color: white;
-            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-            padding-top: 60px;
-        }
-        .lock-time { font-size: 5.5rem; font-weight: 200; line-height: 1; text-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .lock-date { font-size: 1.2rem; margin-top: 10px; font-weight: 500; opacity: 0.9; }
-        .swipe-text { margin-top: auto; margin-bottom: 40px; font-size: 0.9rem; opacity: 0.8; animation: bounce 2s infinite; }
+        #lock { background: linear-gradient(135deg, #ff9a9e, #fecfef); z-index: 50; color: white; padding-top: 60px; }
+        .clock { font-size: 5rem; font-weight: 100; line-height: 1; }
+        .notif { background: rgba(255,255,255,0.9); color: #333; width: 85%; padding: 15px; border-radius: 12px; margin-top: 40px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         
-        .notification {
-            background: rgba(255, 255, 255, 0.92); color: #333; width: 90%; padding: 18px; border-radius: 16px; margin-top: 50px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15); transform: scale(1); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
         /* --- HOME SCREEN --- */
-        #home-screen { width: 100%; height: 100%; display: flex; flex-direction: column; z-index: 10; background: #fff0f3; }
+        #home { z-index: 10; justify-content: space-between; padding-bottom: 30px; }
+        .bar { height: 40px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: #ff4757; font-size: 0.8rem; }
+        .hero h1 { font-size: 3rem; color: #ff4757; margin: 0; font-family: cursive; }
         
-        .status-bar { height: 44px; padding: 0 25px; display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; font-weight: 600; color: #ff4757; }
-        
-        .hero-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        .hero-title { font-family: 'Indie Flower'; font-size: 3rem; color: #ff4757; margin: 0; text-shadow: 2px 2px 0px rgba(255,255,255,0.5); }
-        
-        /* APP GRID */
-        .app-dock {
-            padding: 30px 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;
-            background: rgba(255,255,255,0.6); border-top-left-radius: 30px; border-top-right-radius: 30px;
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-        }
-        .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.1s; }
-        .app-icon:active { transform: scale(0.9); }
-        .icon-box { 
-            width: 60px; height: 60px; border-radius: 16px; background: white; 
-            display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
-            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.15); margin-bottom: 8px;
-        }
-        .icon-label { font-size: 0.75rem; font-weight: 500; color: #555; }
+        .dock { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; background: rgba(255,255,255,0.5); border-radius: 25px; margin: 15px; }
+        .icon { width: 55px; height: 55px; background: white; border-radius: 14px; font-size: 1.6rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin: 0 auto 5px; }
+        .app-lbl { font-size: 0.7rem; font-weight: 500; text-align: center; }
 
         /* --- WINDOWS --- */
-        .window {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #f8f8f8; z-index: 100; display: none; flex-direction: column;
-            animation: slideUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
+        .win { background: #f2f2f7; z-index: 100; transform: translateY(100%); }
+        .win.open { transform: translateY(0); }
+        .head { height: 50px; background: white; display: flex; align-items: center; padding: 0 15px; border-bottom: 1px solid #ddd; }
+        .back { color: #007aff; font-weight: 600; cursor: pointer; font-size: 1rem; }
+        .title { flex: 1; text-align: center; font-weight: 600; margin-right: 30px; }
+        .body { flex: 1; overflow-y: auto; padding: 20px; }
+
+        /* --- APP SPECIFIC --- */
+        .list-item { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; font-size: 0.9rem; }
         
-        .header { height: 56px; background: white; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; flex-shrink: 0; }
-        .back-btn { color: #007aff; font-size: 1rem; font-weight: 600; cursor: pointer; padding: 10px; }
-        .win-title { font-weight: 600; font-size: 1.1rem; color: black; }
-        .content { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
+        /* Chat */
+        .msg { max-width: 80%; padding: 10px 14px; border-radius: 16px; margin-bottom: 8px; font-size: 0.95rem; }
+        .them { background: white; border: 1px solid #ddd; align-self: flex-start; }
+        .me { background: #ff4757; color: white; align-self: flex-end; }
+        .chat-box { display: flex; flex-direction: column; padding-bottom: 80px; }
+        .chat-btn { position: fixed; bottom: 20px; left: 5%; width: 90%; padding: 12px; background: #ff4757; color: white; border: none; border-radius: 20px; font-weight: bold; box-shadow: 0 4px 10px rgba(255,71,87,0.3); }
 
-        /* --- SETTINGS APP STYLE --- */
-        .settings-group { background: white; border-radius: 12px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .settings-item { padding: 16px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; }
-        .settings-item:last-child { border-bottom: none; }
-        .s-label { display: flex; align-items: center; gap: 10px; }
-        .s-val { color: #8e8e93; font-size: 0.9rem; }
-
-        /* --- CHAT STYLE --- */
-        .chat-feed { display: flex; flex-direction: column; gap: 10px; padding-bottom: 80px; }
-        .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; line-height: 1.4; }
-        .them { background: white; border: 1px solid #e5e5ea; color: black; align-self: flex-start; border-bottom-left-radius: 4px; }
-        .me { background: #ff4757; color: white; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 2px 5px rgba(255, 71, 87, 0.2); }
-        .chat-bar { position: absolute; bottom: 0; width: 100%; padding: 15px; background: white; border-top: 1px solid #eee; }
-        .reply-btn { width: 100%; padding: 14px; background: #ff4757; color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 1rem; }
-
-        /* --- TICKET --- */
-        .ticket { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); margin-top: 10px; border: 1px solid #eee; }
-        .ticket-top { background: #ff4757; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center; }
-        .ticket-info { padding: 20px; display: flex; justify-content: space-between; text-align: center; }
-        .code { font-size: 2rem; font-weight: 700; color: #333; }
-        .label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
-
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        /* Timeline */
+        .event { border-left: 2px solid #ff4757; padding-left: 15px; margin-bottom: 25px; position: relative; }
+        .event::before { content: ''; position: absolute; left: -6px; top: 5px; width: 10px; height: 10px; background: #ff4757; border-radius: 50%; }
+        
+        /* Ticket */
+        .ticket { background: white; border-radius: 12px; border: 1px solid #eee; overflow: hidden; }
+        .t-head { background: #ff4757; padding: 15px; color: white; display:flex; justify-content: space-between; }
+        .t-body { padding: 20px; display: flex; justify-content: space-between; align-items: center; text-align: center; }
+        .code { font-size: 1.8rem; font-weight: 800; color: #333; }
     </style>
 </head>
 <body>
 
-    <div id="lock-screen" onclick="unlock()">
-        <div class="lock-time">11:11</div>
-        <div class="lock-date">Wednesday, February 14</div>
+    <div id="lock" class="full-screen center" onclick="this.style.transform='translateY(-100%)'">
+        <div style="margin-bottom: auto; margin-top: 50px;">
+            <div class="clock">11:11</div>
+            <div>Wednesday, February 14</div>
+        </div>
+        <div class="notif" style="text-align: left;">
+            <div style="font-size:0.7rem; color:#666; margin-bottom:5px;">MESSAGES • NOW</div>
+            <strong>Theshuuuu ❤️</strong>
+            <div style="font-size:0.9rem;">I checked the dates... tap to open.</div>
+        </div>
+        <div style="margin-top: auto; margin-bottom: 40px; opacity: 0.7; font-size: 0.9rem;">Tap to Unlock</div>
+    </div>
+
+    <div id="home" class="full-screen">
+        <div class="bar"><span>Theshu OS</span><span>100% ❤️</span></div>
+        <div class="hero center" style="flex-direction:column;">
+            <h1>Hi Ayuuu</h1>
+            <p>August 18 was just the beginning.</p>
+        </div>
         
-        <div class="notification">
-            <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:#666; margin-bottom:5px;">
-                <span>MESSAGE</span><span>NOW</span>
-            </div>
-            <div style="font-weight:600; font-size:1rem; margin-bottom:2px;">Theshuuuu ❤️</div>
-            <div style="font-size:0.9rem; color:#444;">I checked the dates. It's been so long...</div>
-        </div>
-
-        <div class="swipe-text">Tap to Unlock</div>
-    </div>
-
-    <div id="home-screen">
-        <div class="status-bar"><span>Theshu OS</span><span>❤️ 100%</span></div>
-        
-        <div class="hero-area">
-            <h1 class="hero-title">Hi Ayuuu</h1>
-            <p style="color:#ff8fa3;">Distance means so little<br>when you mean so much.</p>
-        </div>
-
-        <div class="app-dock">
-            <div class="app-icon" onclick="openApp('chat')"><div class="icon-box" style="background:#4cd137;">💬</div><span class="icon-label">Chat</span></div>
-            <div class="app-icon" onclick="openApp('journey')"><div class="icon-box" style="background:#ff9f43;">📅</div><span class="icon-label">Journey</span></div>
-            <div class="app-icon" onclick="openApp('ticket')"><div class="icon-box" style="background:#54a0ff;">✈️</div><span class="icon-label">Ticket</span></div>
-            <div class="app-icon" onclick="openApp('settings')"><div class="icon-box" style="background:#8e8e93; color:white;">⚙️</div><span class="icon-label">Settings</span></div>
-            
-            <div class="app-icon" onclick="openApp('gallery')"><div class="icon-box" style="background:white; color:#ff4757;">📸</div><span class="icon-label">Gallery</span></div>
-            <div class="app-icon" onclick="openApp('coupons')"><div class="icon-box" style="background:white; color:#ff9f0a;">🎟️</div><span class="icon-label">Coupons</span></div>
-            <div class="app-icon" onclick="openApp('diary')"><div class="icon-box" style="background:white; color:#5856d6;">📔</div><span class="icon-label">Diary</span></div>
-            <div class="app-icon" onclick="alert('Access Denied: You are too cute!')"><div class="icon-box" style="background:#333; color:white;">🔒</div><span class="icon-label">Locked</span></div>
+        <div class="dock">
+            <div onclick="openApp('chat')"><div class="icon center" style="color:#4cd137;">💬</div><div class="app-lbl">Chat</div></div>
+            <div onclick="openApp('journey')"><div class="icon center" style="color:#ff9f43;">📅</div><div class="app-lbl">Journey</div></div>
+            <div onclick="openApp('ticket')"><div class="icon center" style="color:#54a0ff;">✈️</div><div class="app-lbl">Ticket</div></div>
+            <div onclick="openApp('settings')"><div class="icon center" style="color:#8e8e93;">⚙️</div><div class="app-lbl">Settings</div></div>
         </div>
     </div>
 
-    <div id="win-chat" class="window">
-        <div class="header"><span class="back-btn" onclick="closeApp('chat')">Back</span><span class="win-title">Theshuuuu</span><span style="width:40px;"></span></div>
-        <div class="content">
-            <div class="chat-feed" id="chat-feed">
-                </div>
-        </div>
-        <div class="chat-bar" id="chat-opts"></div>
+    <div id="chat" class="full-screen win">
+        <div class="head"><span class="back" onclick="closeApp('chat')">Back</span><span class="title">Theshuuuu</span></div>
+        <div class="body chat-box" id="msgs"></div>
+        <button id="replyBtn" class="chat-btn hidden" onclick="nextChat()"></button>
     </div>
 
-    <div id="win-settings" class="window">
-        <div class="header"><span class="back-btn" onclick="closeApp('settings')">Back</span><span class="win-title">Settings</span><span style="width:40px;"></span></div>
-        <div class="content" style="background:#f2f2f7;">
-            <div style="padding:10px 0; text-align:center;">
-                <div style="width:80px; height:80px; background:#ffdde1; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:2rem;">💑</div>
-                <h2 style="margin:0; font-size:1.4rem;">Theshu & Ayuuu</h2>
-                <p style="color:#888; margin:5px 0 0 0;">Connected via Heart ❤️</p>
+    <div id="journey" class="full-screen win">
+        <div class="head"><span class="back" onclick="closeApp('journey')">Back</span><span class="title">Our Timeline</span></div>
+        <div class="body">
+            <div class="event">
+                <strong>August 18, 2026</strong><br>The Day We Met ❤️<br><small style="color:#666">Best day of my life.</small>
             </div>
-
-            <p style="margin:15px 0 5px 15px; font-size:0.8rem; color:#666; text-transform:uppercase;">Important Dates</p>
-            <div class="settings-group">
-                <div class="settings-item"><div class="s-label">🗓️ First Met</div><span class="s-val">August 18</span></div>
-                <div class="settings-item"><div class="s-label">🎂 Her Birthday</div><span class="s-val">September 22</span></div>
-                <div class="settings-item"><div class="s-label">🎂 My Birthday</div><span class="s-val">March 14</span></div>
+            <div class="event">
+                <strong>September 22</strong><br>Your Birthday 🎂<br><small style="color:#666">Queen's Day.</small>
             </div>
-
-            <p style="margin:15px 0 5px 15px; font-size:0.8rem; color:#666; text-transform:uppercase;">Status</p>
-            <div class="settings-group">
-                <div class="settings-item"><div class="s-label">📍 Distance</div><span class="s-val">Temporary</span></div>
-                <div class="settings-item"><div class="s-label">❤️ Love Level</div><span class="s-val">Infinity</span></div>
+            <div class="event">
+                <strong>March 14</strong><br>My Birthday 🥳<br><small style="color:#666">Celebrate together soon.</small>
+            </div>
+            <div class="event">
+                <strong>Future</strong><br>Closing the Distance ✈️
             </div>
         </div>
     </div>
 
-    <div id="win-journey" class="window">
-        <div class="header"><span class="back-btn" onclick="closeApp('journey')">Back</span><span class="win-title">Our Timeline</span><span style="width:40px;"></span></div>
-        <div class="content">
-            <div style="border-left:2px solid #ff4757; margin-left:10px; padding-left:20px;">
-                <div style="margin-bottom:30px; position:relative;">
-                    <div style="position:absolute; left:-29px; top:0; background:#ff4757; color:white; width:20px; height:20px; border-radius:50%; font-size:0.6rem; display:flex; align-items:center; justify-content:center;">★</div>
-                    <div style="font-weight:bold; color:#ff4757;">August 18</div>
-                    <div style="font-size:1.1rem; font-weight:600;">The Day We Met</div>
-                    <div style="color:#666; font-size:0.9rem;">Everything changed for the better.</div>
-                </div>
-                
-                <div style="margin-bottom:30px; position:relative;">
-                    <div style="position:absolute; left:-29px; top:0; background:white; border:2px solid #ff4757; width:20px; height:20px; border-radius:50%;"></div>
-                    <div style="font-weight:bold; color:#333;">September 22</div>
-                    <div style="font-size:1rem; font-weight:600;">Ayushka's Birthday 🎂</div>
-                    <div style="color:#666; font-size:0.9rem;">The day the world got brighter.</div>
-                </div>
-
-                <div style="margin-bottom:30px; position:relative;">
-                    <div style="position:absolute; left:-29px; top:0; background:white; border:2px solid #ff4757; width:20px; height:20px; border-radius:50%;"></div>
-                    <div style="font-weight:bold; color:#333;">March 14</div>
-                    <div style="font-size:1rem; font-weight:600;">Theshu's Birthday 🥳</div>
-                    <div style="color:#666; font-size:0.9rem;">Celebrating with you (one day).</div>
-                </div>
-
-                <div style="margin-bottom:30px; position:relative;">
-                    <div style="position:absolute; left:-29px; top:0; background:white; border:2px solid #ff4757; width:20px; height:20px; border-radius:50%;"></div>
-                    <div style="font-weight:bold; color:#333;">Future</div>
-                    <div style="font-size:1rem; font-weight:600;">Closing the Distance ✈️</div>
-                    <div style="color:#666; font-size:0.9rem;">No more goodbyes.</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="win-ticket" class="window">
-        <div class="header"><span class="back-btn" onclick="closeApp('ticket')">Back</span><span class="win-title">Boarding Pass</span><span style="width:40px;"></span></div>
-        <div class="content">
-            <div style="text-align:center; margin-bottom:20px; color:#888;">Keep this safe.</div>
+    <div id="ticket" class="full-screen win">
+        <div class="head"><span class="back" onclick="closeApp('ticket')">Back</span><span class="title">Boarding Pass</span></div>
+        <div class="body">
+            <p style="text-align:center; color:#888;">One day soon...</p>
             <div class="ticket">
-                <div class="ticket-top">
-                    <span style="font-weight:600; letter-spacing:1px;">LDR AIRLINES</span>
-                    <span>✈️</span>
-                </div>
-                <div class="ticket-info">
-                    <div>
-                        <div class="code">ME</div>
-                        <div class="label">Theshu</div>
-                    </div>
-                    <div style="display:flex; flex-direction:column; justify-content:center;">
-                        <span style="color:#ddd;">--------</span>
-                    </div>
-                    <div>
-                        <div class="code">YOU</div>
-                        <div class="label">Ayuuuu</div>
-                    </div>
-                </div>
-                <hr style="border:0; border-top:2px dashed #eee; margin:0;">
-                <div style="padding:20px; display:flex; justify-content:space-between; text-align:left;">
-                    <div><div class="label">Date</div><div style="font-weight:600;">Soon</div></div>
-                    <div><div class="label">Class</div><div style="font-weight:600;">Love</div></div>
-                    <div><div class="label">Seat</div><div style="font-weight:600;">14U</div></div>
+                <div class="t-head"><span>LDR AIRLINES</span><span>✈️</span></div>
+                <div class="t-body">
+                    <div><div class="code">ME</div><small>Theshu</small></div>
+                    <div style="color:#ddd;">--- To ---</div>
+                    <div><div class="code">YOU</div><small>Ayuuuu</small></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="win-diary" class="window">
-        <div class="header"><span class="back-btn" onclick="closeApp('diary')">Back</span><span class="win-title">Diary</span><span style="width:40px;"></span></div>
-        <div class="content">
-            <div style="background:#fff9c4; padding:20px; border-radius:4px; font-family:'Indie Flower'; font-size:1.3rem; line-height:1.6; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
-                August 18 was the best day of my life because that's when our story began.<br><br>
-                Even though we are miles apart right now, I know we are meant to be. I love your smile, your voice, and everything about you.<br><br>
-                Happy Valentine's Day, my love.<br>
-                - Theshu
+    <div id="settings" class="full-screen win">
+        <div class="head"><span class="back" onclick="closeApp('settings')">Back</span><span class="title">Settings</span></div>
+        <div class="body" style="background:#f9f9f9;">
+            <div class="center" style="flex-direction:column; margin-bottom:20px;">
+                <div style="font-size:3rem;">💑</div>
+                <h3>Theshu & Ayuuu</h3>
             </div>
-        </div>
-    </div>
-
-    <div id="win-coupons" class="window">
-        <div class="header"><span class="back-btn" onclick="closeApp('coupons')">Back</span><span class="win-title">Coupons</span><span style="width:40px;"></span></div>
-        <div class="content">
-            <div style="background:white; border:2px dashed #ff4757; padding:15px; border-radius:10px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
-                <b>🥺 Forgive Me</b>
-                <button onclick="this.innerText='Used'; this.style.background='#ccc';" style="background:#ff4757; color:white; border:none; padding:6px 12px; border-radius:6px;">Use</button>
-            </div>
-            <div style="background:white; border:2px dashed #ff4757; padding:15px; border-radius:10px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
-                <b>📞 Late Night Call</b>
-                <button onclick="this.innerText='Used'; this.style.background='#ccc';" style="background:#ff4757; color:white; border:none; padding:6px 12px; border-radius:6px;">Use</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="win-gallery" class="window">
-        <div class="header"><span class="back-btn" onclick="closeApp('gallery')">Back</span><span class="win-title">Memories</span><span style="width:40px;"></span></div>
-        <div class="content">
-            <div style="text-align:center; margin-top:50px; color:#888;">
-                <div style="font-size:4rem; margin-bottom:10px;">📸</div>
-                <p>Imagine our photos here...</p>
-                <p style="font-size:0.8rem;">(Waiting to meet you to fill this)</p>
-            </div>
+            <div class="list-item"><span>First Met</span><b>Aug 18</b></div>
+            <div class="list-item"><span>Her Bday</span><b>Sept 22</b></div>
+            <div class="list-item"><span>My Bday</span><b>Mar 14</b></div>
+            <div class="list-item"><span>Distance</span><b>Temporary</b></div>
         </div>
     </div>
 
     <script>
-        function unlock() { document.getElementById('lock-screen').style.transform = 'translateY(-100%)'; }
-        function openApp(id) { document.getElementById('win-' + id).style.display = 'flex'; }
-        function closeApp(id) { document.getElementById('win-' + id).style.display = 'none'; }
+        function openApp(id) { document.getElementById(id).classList.add('open'); }
+        function closeApp(id) { document.getElementById(id).classList.remove('open'); }
 
-        // --- CHAT LOGIC ---
-        const feed = document.getElementById('chat-feed');
-        const opts = document.getElementById('chat-opts');
-        
-        const script = {
-            1: { msg: "Happy Valentine's Day Ayuuu! 🌹", btn: "Happy Valentine's Theshu! ❤️", next: 2 },
-            2: { msg: "I was looking at the calendar... August 18 seems so long ago, but also like yesterday.", btn: "The best day ever 🥰", next: 3 },
-            3: { msg: "I miss you so much. But I have a question for you...", btn: "What is it? 😮", next: 4 },
-            4: { msg: "Will you be my Valentine? Now and forever? 💍", btn: "YES! Of course! ❤️", next: 5 },
-            5: { msg: "I love you Ayushka. Check the Ticket app, I'm coming for you one day. ✈️", btn: "I love you too! 😘", next: null }
-        };
+        // --- CONVERSATION LOGIC ---
+        const script = [
+            { r: "Happy Valentine's Day Ayuuu! 🌹", b: "Happy Valentine's Theshu! ❤️" },
+            { r: "I was looking at the calendar... August 18 seems so long ago, but also like yesterday.", b: "The best day ever 🥰" },
+            { r: "I miss you so much. But I have a question for you...", b: "What is it? 😮" },
+            { r: "Will you be my Valentine? Now and forever? 💍", b: "YES! Of course! ❤️" },
+            { r: "I love you Ayushka. Check the Ticket app, I'm coming for you one day. ✈️", b: null }
+        ];
 
-        let step = 1;
-
-        function initChat() {
-            if(feed.innerHTML === "") {
-                setTimeout(() => {
-                    addMsg("Hey beautiful...", 'them');
-                    showBtn(script[1].btn);
-                }, 800);
-            }
-        }
+        let step = 0;
+        const msgBox = document.getElementById('msgs');
+        const btn = document.getElementById('replyBtn');
 
         function addMsg(txt, type) {
             const d = document.createElement('div');
             d.className = 'msg ' + type;
             d.innerText = txt;
-            feed.appendChild(d);
-            feed.parentElement.scrollTop = feed.parentElement.scrollHeight; // Auto scroll
+            msgBox.appendChild(d);
+            msgBox.scrollTop = msgBox.scrollHeight;
         }
 
-        function showBtn(txt) {
-            opts.innerHTML = '';
-            if(!txt) return;
-            const b = document.createElement('button');
-            b.className = 'reply-btn';
-            b.innerText = txt;
-            b.onclick = nextStep;
-            opts.appendChild(b);
-        }
-
-        function nextStep() {
-            const curr = script[step];
-            addMsg(curr.btn, 'me');
-            opts.innerHTML = '';
+        function nextChat() {
+            if (step >= script.length) return;
             
-            setTimeout(() => {
-                const next = script[curr.next];
-                if(next) {
-                    addMsg(next.msg, 'th
+            // User Reply
+            addMsg(script[step].b, 'me');
+            btn.classList.add('hidden');
+            
+            step++;
+            
+            // Theshu Reply
+            if (step < script.length) {
+                setTimeout(() => {
+                    addMsg(script[step].r, 'them');
+                    if(script[step].b) {
+                        btn.innerText = script[step].b;
+                        btn.classList.remove('hidden');
+                    }
+                }, 1000);
+            }
+        }
+
+        // Start Chat
+        setTimeout(() => {
+            if(msgBox.innerHTML === "") {
+                addMsg(script[0].r, 'them');
+                btn.innerText = script[0].b;
+                btn.classList.remove('hidden');
+            }
+        }, 800);
+    </script>
+</body>
+</html>
