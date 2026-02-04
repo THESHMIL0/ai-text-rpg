@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Theshu OS v33.0 📞</title>
+    <title>Theshu OS v34.0 🔒</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&family=Indie+Flower&display=swap" rel="stylesheet">
 
@@ -26,15 +26,15 @@
             overflow: hidden; color: var(--text);
         }
 
-        /* --- 1. LOCK SCREEN --- */
+        /* --- 1. LOCK SCREEN (Fixed & Responsive) --- */
         #lock-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 10000;
+            background: rgba(0,0,0,0.98); z-index: 999999;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center; color: white;
         }
 
-        .title { font-family: 'Dancing Script'; font-size: 3.5rem; margin-bottom: 10px; }
+        .title { font-family: 'Dancing Script'; font-size: 3.5rem; margin-bottom: 10px; text-align: center; }
         
         .lock-input {
             padding: 15px; border-radius: 30px; border: 2px solid white; 
@@ -42,16 +42,17 @@
             background: rgba(255,255,255,0.2); color: white; margin-top: 20px;
             outline: none;
         }
+        ::placeholder { color: rgba(255,255,255,0.7); }
         
         .lock-btn {
             background: white; color: #333; border: none; padding: 12px 40px;
             border-radius: 30px; font-weight: bold; margin-top: 20px; font-size: 1rem;
-            cursor: pointer; transition: 0.2s;
+            cursor: pointer; transition: 0.1s;
         }
-        .lock-btn:active { transform: scale(0.95); }
+        .lock-btn:active { transform: scale(0.95); background: #ddd; }
 
         /* --- 2. MAIN OS --- */
-        #main-os { display: none; width: 100%; height: 100%; animation: fade 1s; }
+        #main-os { display: none; width: 100%; height: 100%; animation: fade 0.5s; }
         @keyframes fade { from{opacity:0} to{opacity:1} }
 
         .status-bar { height: 30px; padding: 5px 20px; display: flex; justify-content: space-between; color: white; font-weight: bold; font-size: 0.8rem; }
@@ -91,22 +92,19 @@
         .bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; text-align: left; }
         .rcvd { background: #e5e5ea; align-self: flex-start; border-bottom-left-radius: 4px; }
         .sent { background: #007aff; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
-        .gift-bub { background: #ffeaa7; width: 100%; text-align: center; cursor: pointer; align-self: center; }
+        .gift-bub { background: #ffeaa7; width: 100%; text-align: center; cursor: pointer; align-self: center; border-radius: 15px; }
         
-        .opts { position: absolute; bottom: 0; width: 100%; background: white; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #eee; }
-        .opt-btn { flex: 1; padding: 12px; border-radius: 20px; border: none; background: #007aff; color: white; font-weight: bold; }
+        .opts { position: absolute; bottom: 0; width: 100%; background: white; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #eee; overflow-x: auto; }
+        .opt-btn { flex: 1; padding: 12px; border-radius: 20px; border: none; background: #007aff; color: white; font-weight: bold; white-space: nowrap; }
 
-        /* --- CALL SCREEN --- */
-        #call-overlay {
+        /* --- CALL UI --- */
+        #call-ui {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(180deg, #2c3e50 0%, #000000 100%);
-            z-index: 9000; display: none; flex-direction: column;
-            align-items: center; padding-top: 80px; color: white;
+            background: linear-gradient(to bottom, #2c3e50, #000); z-index: 9000;
+            display: none; flex-direction: column; align-items: center; padding-top: 100px; color: white;
         }
-        .call-avatar { width: 120px; height: 120px; background: #ddd; border-radius: 50%; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
-        .call-name { font-size: 2rem; font-weight: bold; margin-bottom: 5px; }
-        .call-status { font-size: 1.1rem; opacity: 0.7; margin-bottom: 200px; }
-        .hangup-btn { width: 70px; height: 70px; background: #ff3b30; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 2rem; }
+        .call-pic { width: 120px; height: 120px; background: #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin-bottom: 20px; }
+        .end-call { width: 60px; height: 60px; background: #ff3b30; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin-top: auto; margin-bottom: 50px; cursor: pointer; }
 
         /* --- GAME --- */
         #game-board { width: 100%; height: 400px; background: #222; border-radius: 15px; position: relative; overflow: hidden; margin-top: 10px; }
@@ -135,10 +133,10 @@
 <body>
 
     <div id="lock-screen">
-        <h1 class="title" onclick="emergencyUnlock()">Theshu & Ayu</h1>
-        <p>Vol. 33 (Call Me)</p>
+        <h1 class="title" onclick="forceUnlock()">Theshu & Ayu</h1>
+        <p>Vol. 34 (Ayuuuu Edition)</p>
         
-        <form onsubmit="event.preventDefault(); unlock();" style="display:flex; flex-direction:column; align-items:center;">
+        <form onsubmit="event.preventDefault(); attemptUnlock();" style="display:flex; flex-direction:column; align-items:center;">
             <input type="password" id="pass" class="lock-input" placeholder="hint: kushu" autocomplete="off">
             <button type="submit" class="lock-btn">Unlock</button>
         </form>
@@ -149,7 +147,7 @@
 
     <div id="main-os">
         <div class="status-bar"><span>11:11</span><span>❤️ 5G</span><span>100%</span></div>
-        <h2 class="home-title">Hey Ayuuu ❤️</h2>
+        <h2 class="home-title">Hey Ayuuuu ❤️</h2>
 
         <div class="app-grid">
             <div class="app-icon" onclick="openApp('chat')"><div class="icon-box" style="background:#4cd137;">💬</div><span class="icon-label">Chat</span></div>
@@ -159,11 +157,11 @@
         </div>
     </div>
 
-    <div id="call-overlay">
-        <div class="call-avatar">👱🏻‍♂️</div>
-        <div class="call-name">Theshu ❤️</div>
-        <div class="call-status" id="call-status">calling...</div>
-        <div class="hangup-btn" onclick="endCall()">📞</div>
+    <div id="call-ui">
+        <div class="call-pic">👱🏻‍♂️</div>
+        <h2 style="margin:0;">Theshu ❤️</h2>
+        <p id="call-status" style="opacity:0.7;">calling...</p>
+        <div class="end-call" onclick="endCall()">📞</div>
     </div>
 
     <div id="app-chat" class="window">
@@ -201,7 +199,7 @@
             <div class="profile-card">
                 <div class="profile-pic">👩🏻</div>
                 <div style="text-align:left;">
-                    <h3 style="margin:0; font-size:1.1rem;">Ayushka</h3>
+                    <h3 style="margin:0; font-size:1.1rem;">Ayuuuu</h3>
                     <p style="margin:0; font-size:0.8rem; color:#888;">Apple ID, iCloud, My World 🌍</p>
                 </div>
             </div>
@@ -216,12 +214,11 @@
             <div class="simple-list">
                 <div class="list-item"><span><span class="icon-s">☀️</span>Brightness</span> <span class="val">Your Smile (Max)</span></div>
                 <div class="list-item"><span><span class="icon-s">🌙</span>Night Mode</span> <span class="val">Dreaming of You</span></div>
-                <div class="list-item"><span><span class="icon-s">🔒</span>Auto-Lock</span> <span class="val">Never (Stuck w/ me)</span></div>
             </div>
 
             <p class="section-title">Privacy</p>
             <div class="simple-list">
-                <div class="list-item"><span><span class="icon-s">🔓</span>Face ID</span> <span class="val">Only You</span></div>
+                <div class="list-item"><span><span class="icon-s">🔓</span>Face ID</span> <span class="val">Only Ayuuuu</span></div>
                 <div class="list-item"><span><span class="icon-s">📍</span>Location</span> <span class="val">In My Heart</span></div>
             </div>
 
@@ -229,10 +226,11 @@
     </div>
 
     <script>
-        // --- 1. UNLOCK LOGIC ---
-        function unlock() {
+        // --- 1. UNLOCK LOGIC (FIXED) ---
+        function attemptUnlock() {
             const pass = document.getElementById('pass').value.trim().toLowerCase();
             if(pass === "kushu") {
+                // FORCE HIDE
                 document.getElementById('lock-screen').style.display = 'none';
                 document.getElementById('main-os').style.display = 'block';
                 document.getElementById('hs').innerText = localStorage.getItem('hs') || 0;
@@ -242,7 +240,7 @@
         }
 
         let taps = 0;
-        function emergencyUnlock() {
+        function forceUnlock() {
             taps++;
             if(taps >= 5) {
                 document.getElementById('lock-screen').style.display = 'none';
@@ -254,38 +252,10 @@
         function openApp(id) { document.getElementById('app-'+id).classList.add('open'); }
         function closeApp(id) { document.getElementById('app-'+id).classList.remove('open'); }
 
-        // --- 3. CALL LOGIC ---
-        function startCallUI() {
-            const overlay = document.getElementById('call-overlay');
-            const status = document.getElementById('call-status');
-            overlay.style.display = 'flex';
-            status.innerText = "calling...";
-            
-            setTimeout(() => {
-                status.innerText = "Connected 00:01";
-                status.style.color = "#4cd137";
-            }, 2000);
-
-            setTimeout(() => {
-                status.innerText = "I LOVE YOU! ❤️";
-                status.style.color = "white";
-                status.style.fontSize = "1.5rem";
-                status.style.fontWeight = "bold";
-            }, 3000);
-
-            setTimeout(() => {
-                endCall();
-            }, 6000);
-        }
-
-        function endCall() {
-            document.getElementById('call-overlay').style.display = 'none';
-        }
-
-        // --- 4. CHAT LOGIC (ROMANTIC + CALL) ---
+        // --- 3. CHAT LOGIC (ROMANTIC + CALL) ---
         const script = [
             { 
-                t: "Hey Ayushka... ❤️", 
+                t: "Hey Ayuuuu... ❤️", 
                 o: [{l:"Hi Theshu! 🥰", n:1}, {l:"Hey love ✨", n:1}] 
             },
             { 
@@ -313,12 +283,21 @@
             document.getElementById('chat-opts').innerHTML = '';
             
             if(n === -2) {
-                // CALL TRIGGER
-                setTimeout(startCallUI, 1000);
+                // START CALL
                 setTimeout(() => {
-                    addBub("Now... I have a special gift for you. 👇", 'rcvd');
-                    spawnGift();
-                }, 7000);
+                    document.getElementById('call-ui').style.display = "flex";
+                    setTimeout(() => {
+                        document.getElementById('call-status').innerText = "Connected 00:01";
+                        document.getElementById('call-status').style.color = "#4cd137";
+                    }, 2000);
+                    setTimeout(() => {
+                        document.getElementById('call-status').innerText = "I LOVE YOU! ❤️";
+                        document.getElementById('call-status').style.color = "white";
+                        document.getElementById('call-status').style.fontSize = "1.5rem";
+                        document.getElementById('call-status').style.fontWeight = "bold";
+                    }, 3500);
+                    setTimeout(endCall, 6000);
+                }, 1000);
                 return;
             }
 
@@ -336,6 +315,12 @@
                     showOpts(script[n].o);
                 }
             }, 1000);
+        }
+
+        function endCall() {
+            document.getElementById('call-ui').style.display = "none";
+            addBub("Now... I have a special gift for you. 👇", 'rcvd');
+            spawnGift();
         }
 
         function spawnGift() {
@@ -379,7 +364,7 @@
             });
         }
 
-        // --- 5. GAME LOGIC ---
+        // --- 4. GAME LOGIC ---
         let score=0, lives=3, active=false;
         function startGame() {
             active=true; score=0; lives=3;
@@ -412,7 +397,10 @@
             document.getElementById('game-board').appendChild(h);
         }
 
-        // --- 6. UTILS ---
+        // --- 5. UTILS ---
         function loadPic(e) {
             document.getElementById('preview').src = URL.createObjectURL(e.target.files[0]);
-            document.ge
+            document.getElementById('preview').style.display='block';
+            document.getElementById('cam-ph').style.display='none';
+        }
+        function confett
