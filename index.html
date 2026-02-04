@@ -2,331 +2,321 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Theshu ❤️ Ayuuu</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Indie+Flower&display=swap" rel="stylesheet">
 
     <style>
-        /* --- CORE SETTINGS --- */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background: #ffe6eb; font-family: 'Poppins', sans-serif; overflow: hidden; color: #333; }
-        
-        /* --- FLOATING BACKGROUND HEARTS --- */
-        .bg-heart { position: absolute; color: rgba(255, 71, 87, 0.15); font-size: 2rem; animation: floatUp 10s linear infinite; z-index: 0; pointer-events: none; }
-        @keyframes floatUp { 0% { transform: translateY(100vh) scale(0.5); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-10vh) scale(1.2); opacity: 0; } }
+        /* --- RESET & SMOOTHNESS --- */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; outline: none; }
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background: #fff0f3; font-family: 'Poppins', sans-serif; overflow: hidden; position: fixed; }
 
         /* --- LOCK SCREEN --- */
         #lock-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-            z-index: 9999; display: flex; flex-direction: column; align-items: center;
-            padding-top: 60px; color: white; transition: transform 0.5s ease-in-out;
+            z-index: 9999; display: flex; flex-direction: column; align-items: center; color: white;
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            padding-top: 60px;
         }
-        .lock-time { font-size: 4.5rem; font-weight: 200; line-height: 1; }
-        .lock-date { font-size: 1.2rem; margin-top: 10px; font-weight: 500; }
+        .lock-time { font-size: 5.5rem; font-weight: 200; line-height: 1; text-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .lock-date { font-size: 1.2rem; margin-top: 10px; font-weight: 500; opacity: 0.9; }
+        .swipe-text { margin-top: auto; margin-bottom: 40px; font-size: 0.9rem; opacity: 0.8; animation: bounce 2s infinite; }
         
         .notification {
-            background: rgba(255, 255, 255, 0.9); color: #333;
-            width: 90%; padding: 15px; border-radius: 12px; margin-top: 40px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255, 255, 255, 0.92); color: #333; width: 90%; padding: 18px; border-radius: 16px; margin-top: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); transform: scale(1); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .notif-header { display: flex; justify-content: space-between; font-size: 0.75rem; color: #666; margin-bottom: 5px; text-transform: uppercase; }
-        .notif-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 2px; }
-        .notif-msg { font-size: 0.9rem; }
-        
-        .unlock-hint { margin-top: auto; margin-bottom: 30px; font-size: 0.9rem; opacity: 0.8; animation: pulse 2s infinite; }
 
         /* --- HOME SCREEN --- */
-        #home-screen { width: 100%; height: 100%; display: flex; flex-direction: column; z-index: 10; position: relative; }
+        #home-screen { width: 100%; height: 100%; display: flex; flex-direction: column; z-index: 10; background: #fff0f3; }
         
-        .status-bar { height: 44px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; font-weight: 600; color: #ff4757; background: rgba(255,255,255,0.4); backdrop-filter: blur(5px); z-index: 20; }
+        .status-bar { height: 44px; padding: 0 25px; display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; font-weight: 600; color: #ff4757; }
         
-        .hero-section { text-align: center; margin-top: 30px; z-index: 20; }
-        .hero-title { font-family: 'Indie Flower', cursive; font-size: 2.8rem; color: #ff4757; text-shadow: 0 2px 0 rgba(255,255,255,0.5); }
-
-        .app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 25px; margin-top: 10px; z-index: 20; }
-        .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.1s; -webkit-tap-highlight-color: transparent; }
+        .hero-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .hero-title { font-family: 'Indie Flower'; font-size: 3rem; color: #ff4757; margin: 0; text-shadow: 2px 2px 0px rgba(255,255,255,0.5); }
+        
+        /* APP GRID */
+        .app-dock {
+            padding: 30px 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;
+            background: rgba(255,255,255,0.6); border-top-left-radius: 30px; border-top-right-radius: 30px;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.1s; }
         .app-icon:active { transform: scale(0.9); }
-        
         .icon-box { 
-            width: 62px; height: 62px; border-radius: 16px; background: white; 
-            display: flex; align-items: center; justify-content: center; font-size: 1.8rem; 
-            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.15); margin-bottom: 8px; border: 1px solid #fff0f3;
+            width: 60px; height: 60px; border-radius: 16px; background: white; 
+            display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.15); margin-bottom: 8px;
         }
-        .icon-label { font-size: 0.75rem; font-weight: 600; color: #555; text-shadow: 0 1px 1px rgba(255,255,255,0.8); }
+        .icon-label { font-size: 0.75rem; font-weight: 500; color: #555; }
 
-        /* --- WINDOWS (Apps) --- */
-        .window { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #fdf2f4; z-index: 100; display: none; flex-direction: column;
-            animation: slideUp 0.3s ease-out;
+        /* --- WINDOWS --- */
+        .window {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #f8f8f8; z-index: 100; display: none; flex-direction: column;
+            animation: slideUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         
-        .header { height: 50px; background: white; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; flex-shrink: 0; }
-        .back-btn { color: #ff4757; font-weight: 600; font-size: 1rem; cursor: pointer; padding: 5px 10px; border-radius: 8px; background: #fff0f3; }
-        
+        .header { height: 56px; background: white; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; flex-shrink: 0; }
+        .back-btn { color: #007aff; font-size: 1rem; font-weight: 600; cursor: pointer; padding: 10px; }
+        .win-title { font-weight: 600; font-size: 1.1rem; color: black; }
         .content { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
 
-        /* --- CHAT STYLES --- */
-        #chat-container { display: flex; flex-direction: column; gap: 12px; padding-bottom: 90px; }
-        .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; line-height: 1.4; position: relative; animation: popIn 0.3s ease; }
-        .msg-them { background: white; border-bottom-left-radius: 4px; border: 1px solid #eee; color: #333; align-self: flex-start; }
-        .msg-me { background: #ff4757; color: white; border-bottom-right-radius: 4px; align-self: flex-end; box-shadow: 0 3px 10px rgba(255, 71, 87, 0.2); }
-        .typing { font-style: italic; opacity: 0.6; font-size: 0.8rem; }
-        
-        .chat-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px; border-top: 1px solid #eee; display: flex; flex-direction: column; gap: 10px; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
-        .choice-btn { background: #ff4757; color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 1rem; width: 100%; box-shadow: 0 4px 10px rgba(255, 71, 87, 0.2); cursor: pointer; transition: transform 0.1s; }
-        .choice-btn:active { transform: scale(0.98); }
+        /* --- SETTINGS APP STYLE --- */
+        .settings-group { background: white; border-radius: 12px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .settings-item { padding: 16px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; }
+        .settings-item:last-child { border-bottom: none; }
+        .s-label { display: flex; align-items: center; gap: 10px; }
+        .s-val { color: #8e8e93; font-size: 0.9rem; }
 
-        /* --- TIMELINE STYLES --- */
-        .timeline-item { border-left: 2px solid #ff4757; padding-left: 20px; margin-bottom: 25px; position: relative; }
-        .timeline-item::before { content: '❤️'; position: absolute; left: -11px; top: 0; background: #fdf2f4; }
-        .t-date { font-size: 0.8rem; color: #ff4757; font-weight: 600; }
-        .t-title { font-weight: bold; margin: 5px 0; }
-        .t-desc { font-size: 0.9rem; color: #666; }
+        /* --- CHAT STYLE --- */
+        .chat-feed { display: flex; flex-direction: column; gap: 10px; padding-bottom: 80px; }
+        .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; line-height: 1.4; }
+        .them { background: white; border: 1px solid #e5e5ea; color: black; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .me { background: #ff4757; color: white; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 2px 5px rgba(255, 71, 87, 0.2); }
+        .chat-bar { position: absolute; bottom: 0; width: 100%; padding: 15px; background: white; border-top: 1px solid #eee; }
+        .reply-btn { width: 100%; padding: 14px; background: #ff4757; color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 1rem; }
 
-        /* --- ANIMATIONS --- */
-        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+        /* --- TICKET --- */
+        .ticket { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); margin-top: 10px; border: 1px solid #eee; }
+        .ticket-top { background: #ff4757; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .ticket-info { padding: 20px; display: flex; justify-content: space-between; text-align: center; }
+        .code { font-size: 2rem; font-weight: 700; color: #333; }
+        .label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
 
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div id="bg-hearts-container"></div>
-
-    <div id="lock-screen" onclick="unlockPhone()">
+    <div id="lock-screen" onclick="unlock()">
         <div class="lock-time">11:11</div>
         <div class="lock-date">Wednesday, February 14</div>
         
         <div class="notification">
-            <div class="notif-header"><span>MESSAGES</span><span>NOW</span></div>
-            <div class="notif-title">Theshuuuu ❤️</div>
-            <div class="notif-msg">I made something special for you...</div>
+            <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:#666; margin-bottom:5px;">
+                <span>MESSAGE</span><span>NOW</span>
+            </div>
+            <div style="font-weight:600; font-size:1rem; margin-bottom:2px;">Theshuuuu ❤️</div>
+            <div style="font-size:0.9rem; color:#444;">I checked the dates. It's been so long...</div>
         </div>
 
-        <div class="unlock-hint">Tap to Unlock</div>
+        <div class="swipe-text">Tap to Unlock</div>
     </div>
 
     <div id="home-screen">
-        <div class="status-bar">
-            <span>Theshu ❤️</span>
-            <span>Ayuuuu</span>
-            <span>100%</span>
-        </div>
+        <div class="status-bar"><span>Theshu OS</span><span>❤️ 100%</span></div>
         
-        <div class="hero-section">
-            <h1 class="hero-title">Hello Love</h1>
+        <div class="hero-area">
+            <h1 class="hero-title">Hi Ayuuu</h1>
+            <p style="color:#ff8fa3;">Distance means so little<br>when you mean so much.</p>
         </div>
 
-        <div class="app-grid">
-            <div class="app-icon" onclick="openApp('chat')">
-                <div class="icon-box" style="background:white; color:#4cd137;">💬</div>
-                <span class="icon-label">Chat</span>
-            </div>
-            <div class="app-icon" onclick="openApp('timeline')">
-                <div class="icon-box" style="background:white; color:#ff9f43;">📅</div>
-                <span class="icon-label">Journey</span>
-            </div>
-            <div class="app-icon" onclick="openApp('gallery')">
-                <div class="icon-box" style="background:white; color:#54a0ff;">📸</div>
-                <span class="icon-label">Gallery</span>
-            </div>
-            <div class="app-icon" onclick="openApp('music')">
-                <div class="icon-box" style="background:white; color:#ff4757;">🎵</div>
-                <span class="icon-label">Music</span>
-            </div>
-            <div class="app-icon" onclick="openApp('coupons')">
-                <div class="icon-box" style="background:white; color:#ff9f0a;">🎟️</div>
-                <span class="icon-label">Coupons</span>
-            </div>
-            <div class="app-icon" onclick="openApp('diary')">
-                <div class="icon-box" style="background:white; color:#5856d6;">📔</div>
-                <span class="icon-label">Diary</span>
-            </div>
+        <div class="app-dock">
+            <div class="app-icon" onclick="openApp('chat')"><div class="icon-box" style="background:#4cd137;">💬</div><span class="icon-label">Chat</span></div>
+            <div class="app-icon" onclick="openApp('journey')"><div class="icon-box" style="background:#ff9f43;">📅</div><span class="icon-label">Journey</span></div>
+            <div class="app-icon" onclick="openApp('ticket')"><div class="icon-box" style="background:#54a0ff;">✈️</div><span class="icon-label">Ticket</span></div>
+            <div class="app-icon" onclick="openApp('settings')"><div class="icon-box" style="background:#8e8e93; color:white;">⚙️</div><span class="icon-label">Settings</span></div>
+            
+            <div class="app-icon" onclick="openApp('gallery')"><div class="icon-box" style="background:white; color:#ff4757;">📸</div><span class="icon-label">Gallery</span></div>
+            <div class="app-icon" onclick="openApp('coupons')"><div class="icon-box" style="background:white; color:#ff9f0a;">🎟️</div><span class="icon-label">Coupons</span></div>
+            <div class="app-icon" onclick="openApp('diary')"><div class="icon-box" style="background:white; color:#5856d6;">📔</div><span class="icon-label">Diary</span></div>
+            <div class="app-icon" onclick="alert('Access Denied: You are too cute!')"><div class="icon-box" style="background:#333; color:white;">🔒</div><span class="icon-label">Locked</span></div>
         </div>
     </div>
 
     <div id="win-chat" class="window">
-        <div class="header">
-            <span class="back-btn" onclick="closeApp('chat')">Back</span>
-            <span style="font-weight:600;">Theshuuuu ❤️</span>
-            <span style="width:50px;"></span>
-        </div>
-        <div class="content" id="chat-scroll">
-            <div id="chat-container"></div>
-            <div id="typing-indicator" class="msg msg-them typing" style="display:none;">Theshu is typing...</div>
-        </div>
-        <div class="chat-bar" id="chat-options"></div>
-    </div>
-
-    <div id="win-timeline" class="window">
-        <div class="header"><span class="back-btn" onclick="closeApp('timeline')">Back</span><span>Our Journey</span><span></span></div>
+        <div class="header"><span class="back-btn" onclick="closeApp('chat')">Back</span><span class="win-title">Theshuuuu</span><span style="width:40px;"></span></div>
         <div class="content">
-            <div class="timeline-item">
-                <div class="t-date">The Beginning</div>
-                <div class="t-title">We started talking</div>
-                <div class="t-desc">The day my life changed forever.</div>
+            <div class="chat-feed" id="chat-feed">
+                </div>
+        </div>
+        <div class="chat-bar" id="chat-opts"></div>
+    </div>
+
+    <div id="win-settings" class="window">
+        <div class="header"><span class="back-btn" onclick="closeApp('settings')">Back</span><span class="win-title">Settings</span><span style="width:40px;"></span></div>
+        <div class="content" style="background:#f2f2f7;">
+            <div style="padding:10px 0; text-align:center;">
+                <div style="width:80px; height:80px; background:#ffdde1; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:2rem;">💑</div>
+                <h2 style="margin:0; font-size:1.4rem;">Theshu & Ayuuu</h2>
+                <p style="color:#888; margin:5px 0 0 0;">Connected via Heart ❤️</p>
             </div>
-            <div class="timeline-item">
-                <div class="t-date">First Feeling</div>
-                <div class="t-title">Realizing I like you</div>
-                <div class="t-desc">I knew you were special instantly.</div>
+
+            <p style="margin:15px 0 5px 15px; font-size:0.8rem; color:#666; text-transform:uppercase;">Important Dates</p>
+            <div class="settings-group">
+                <div class="settings-item"><div class="s-label">🗓️ First Met</div><span class="s-val">August 18</span></div>
+                <div class="settings-item"><div class="s-label">🎂 Her Birthday</div><span class="s-val">September 22</span></div>
+                <div class="settings-item"><div class="s-label">🎂 My Birthday</div><span class="s-val">March 14</span></div>
             </div>
-            <div class="timeline-item">
-                <div class="t-date">Right Now</div>
-                <div class="t-title">Missing You</div>
-                <div class="t-desc">Distance is hard, but we are harder.</div>
-            </div>
-            <div class="timeline-item">
-                <div class="t-date">The Future</div>
-                <div class="t-title">Together</div>
-                <div class="t-desc">One day, no more goodbyes. Just goodnights.</div>
+
+            <p style="margin:15px 0 5px 15px; font-size:0.8rem; color:#666; text-transform:uppercase;">Status</p>
+            <div class="settings-group">
+                <div class="settings-item"><div class="s-label">📍 Distance</div><span class="s-val">Temporary</span></div>
+                <div class="settings-item"><div class="s-label">❤️ Love Level</div><span class="s-val">Infinity</span></div>
             </div>
         </div>
     </div>
 
-    <div id="win-gallery" class="window">
-        <div class="header"><span class="back-btn" onclick="closeApp('gallery')">Back</span><span>Us</span><span></span></div>
+    <div id="win-journey" class="window">
+        <div class="header"><span class="back-btn" onclick="closeApp('journey')">Back</span><span class="win-title">Our Timeline</span><span style="width:40px;"></span></div>
         <div class="content">
-            <div style="background:white; padding:15px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); text-align:center; margin-bottom:20px;">
-                <div style="font-size:4rem;">✈️ 📍</div>
-                <h3 style="margin:10px 0;">Miles Apart</h3>
-                <p style="color:#666; font-size:0.9rem;">But connected by heart.</p>
-            </div>
-            <div style="background:white; padding:15px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.05); text-align:center;">
-                <div style="font-size:4rem;">🐈‍⬛</div>
-                <h3 style="margin:10px 0;">Kitchu</h3>
-                <p style="color:#666; font-size:0.9rem;">(He approves of us)</p>
+            <div style="border-left:2px solid #ff4757; margin-left:10px; padding-left:20px;">
+                <div style="margin-bottom:30px; position:relative;">
+                    <div style="position:absolute; left:-29px; top:0; background:#ff4757; color:white; width:20px; height:20px; border-radius:50%; font-size:0.6rem; display:flex; align-items:center; justify-content:center;">★</div>
+                    <div style="font-weight:bold; color:#ff4757;">August 18</div>
+                    <div style="font-size:1.1rem; font-weight:600;">The Day We Met</div>
+                    <div style="color:#666; font-size:0.9rem;">Everything changed for the better.</div>
+                </div>
+                
+                <div style="margin-bottom:30px; position:relative;">
+                    <div style="position:absolute; left:-29px; top:0; background:white; border:2px solid #ff4757; width:20px; height:20px; border-radius:50%;"></div>
+                    <div style="font-weight:bold; color:#333;">September 22</div>
+                    <div style="font-size:1rem; font-weight:600;">Ayushka's Birthday 🎂</div>
+                    <div style="color:#666; font-size:0.9rem;">The day the world got brighter.</div>
+                </div>
+
+                <div style="margin-bottom:30px; position:relative;">
+                    <div style="position:absolute; left:-29px; top:0; background:white; border:2px solid #ff4757; width:20px; height:20px; border-radius:50%;"></div>
+                    <div style="font-weight:bold; color:#333;">March 14</div>
+                    <div style="font-size:1rem; font-weight:600;">Theshu's Birthday 🥳</div>
+                    <div style="color:#666; font-size:0.9rem;">Celebrating with you (one day).</div>
+                </div>
+
+                <div style="margin-bottom:30px; position:relative;">
+                    <div style="position:absolute; left:-29px; top:0; background:white; border:2px solid #ff4757; width:20px; height:20px; border-radius:50%;"></div>
+                    <div style="font-weight:bold; color:#333;">Future</div>
+                    <div style="font-size:1rem; font-weight:600;">Closing the Distance ✈️</div>
+                    <div style="color:#666; font-size:0.9rem;">No more goodbyes.</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="win-music" class="window">
-        <div class="header"><span class="back-btn" onclick="closeApp('music')">Back</span><span>Now Playing</span><span></span></div>
-        <div class="content" style="text-align:center; display:flex; flex-direction:column; justify-content:center; height:90%;">
-            <div style="width:200px; height:200px; background:#ff4757; border-radius:20px; margin:0 auto 30px; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(255, 71, 87, 0.4);">
-                <span style="font-size:4rem; color:white;">🎵</span>
-            </div>
-            <h2>Tum Hi Ho</h2>
-            <p style="color:#888; margin-bottom:30px;">Dedicated to Ayushka</p>
-            <div style="display:flex; justify-content:center; gap:20px; font-size:2.5rem;">
-                <span>⏮️</span><span>▶️</span><span>⏭️</span>
-            </div>
-        </div>
-    </div>
-
-    <div id="win-coupons" class="window">
-        <div class="header"><span class="back-btn" onclick="closeApp('coupons')">Back</span><span>Love Coupons</span><span></span></div>
+    <div id="win-ticket" class="window">
+        <div class="header"><span class="back-btn" onclick="closeApp('ticket')">Back</span><span class="win-title">Boarding Pass</span><span style="width:40px;"></span></div>
         <div class="content">
-            <div class="coupon-card" style="background:white; padding:15px; border-radius:10px; margin-bottom:15px; border:1px dashed #ff4757; display:flex; justify-content:space-between; align-items:center;">
-                <strong>🍕 Pizza Date</strong>
-                <button onclick="this.innerText='Used'; this.style.background='#ccc';" style="background:#ff4757; color:white; border:none; padding:8px 15px; border-radius:8px; font-weight:600;">Redeem</button>
-            </div>
-            <div class="coupon-card" style="background:white; padding:15px; border-radius:10px; margin-bottom:15px; border:1px dashed #ff4757; display:flex; justify-content:space-between; align-items:center;">
-                <strong>🎥 Movie Night</strong>
-                <button onclick="this.innerText='Used'; this.style.background='#ccc';" style="background:#ff4757; color:white; border:none; padding:8px 15px; border-radius:8px; font-weight:600;">Redeem</button>
+            <div style="text-align:center; margin-bottom:20px; color:#888;">Keep this safe.</div>
+            <div class="ticket">
+                <div class="ticket-top">
+                    <span style="font-weight:600; letter-spacing:1px;">LDR AIRLINES</span>
+                    <span>✈️</span>
+                </div>
+                <div class="ticket-info">
+                    <div>
+                        <div class="code">ME</div>
+                        <div class="label">Theshu</div>
+                    </div>
+                    <div style="display:flex; flex-direction:column; justify-content:center;">
+                        <span style="color:#ddd;">--------</span>
+                    </div>
+                    <div>
+                        <div class="code">YOU</div>
+                        <div class="label">Ayuuuu</div>
+                    </div>
+                </div>
+                <hr style="border:0; border-top:2px dashed #eee; margin:0;">
+                <div style="padding:20px; display:flex; justify-content:space-between; text-align:left;">
+                    <div><div class="label">Date</div><div style="font-weight:600;">Soon</div></div>
+                    <div><div class="label">Class</div><div style="font-weight:600;">Love</div></div>
+                    <div><div class="label">Seat</div><div style="font-weight:600;">14U</div></div>
+                </div>
             </div>
         </div>
     </div>
 
     <div id="win-diary" class="window">
-        <div class="header"><span class="back-btn" onclick="closeApp('diary')">Back</span><span>Diary</span><span></span></div>
+        <div class="header"><span class="back-btn" onclick="closeApp('diary')">Back</span><span class="win-title">Diary</span><span style="width:40px;"></span></div>
         <div class="content">
-            <div style="background:#fffbe6; padding:20px; font-family:'Indie Flower'; font-size:1.3rem; border-radius:5px; border-left:4px solid #ff4757; line-height:1.6;">
-                Dear Ayuuu,<br><br>
-                Every day I wake up and thank the universe that I met you. You are my best friend and my love. I can't wait for the day when I don't have to text you "Goodnight" but can just whisper it to you.<br><br>
-                Forever yours,<br>Theshuuuu
+            <div style="background:#fff9c4; padding:20px; border-radius:4px; font-family:'Indie Flower'; font-size:1.3rem; line-height:1.6; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+                August 18 was the best day of my life because that's when our story began.<br><br>
+                Even though we are miles apart right now, I know we are meant to be. I love your smile, your voice, and everything about you.<br><br>
+                Happy Valentine's Day, my love.<br>
+                - Theshu
+            </div>
+        </div>
+    </div>
+
+    <div id="win-coupons" class="window">
+        <div class="header"><span class="back-btn" onclick="closeApp('coupons')">Back</span><span class="win-title">Coupons</span><span style="width:40px;"></span></div>
+        <div class="content">
+            <div style="background:white; border:2px dashed #ff4757; padding:15px; border-radius:10px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
+                <b>🥺 Forgive Me</b>
+                <button onclick="this.innerText='Used'; this.style.background='#ccc';" style="background:#ff4757; color:white; border:none; padding:6px 12px; border-radius:6px;">Use</button>
+            </div>
+            <div style="background:white; border:2px dashed #ff4757; padding:15px; border-radius:10px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
+                <b>📞 Late Night Call</b>
+                <button onclick="this.innerText='Used'; this.style.background='#ccc';" style="background:#ff4757; color:white; border:none; padding:6px 12px; border-radius:6px;">Use</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="win-gallery" class="window">
+        <div class="header"><span class="back-btn" onclick="closeApp('gallery')">Back</span><span class="win-title">Memories</span><span style="width:40px;"></span></div>
+        <div class="content">
+            <div style="text-align:center; margin-top:50px; color:#888;">
+                <div style="font-size:4rem; margin-bottom:10px;">📸</div>
+                <p>Imagine our photos here...</p>
+                <p style="font-size:0.8rem;">(Waiting to meet you to fill this)</p>
             </div>
         </div>
     </div>
 
     <script>
-        // --- GENERATE FLOATING HEARTS ---
-        const heartContainer = document.getElementById('bg-hearts-container');
-        for(let i=0; i<15; i++) {
-            let h = document.createElement('div');
-            h.className = 'bg-heart';
-            h.innerText = '❤️';
-            h.style.left = Math.random() * 100 + 'vw';
-            h.style.animationDuration = (Math.random() * 5 + 5) + 's';
-            h.style.animationDelay = Math.random() * 5 + 's';
-            heartContainer.appendChild(h);
-        }
-
-        // --- LOCK SCREEN ---
-        function unlockPhone() {
-            document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
-        }
-
-        // --- APP NAVIGATION ---
+        function unlock() { document.getElementById('lock-screen').style.transform = 'translateY(-100%)'; }
         function openApp(id) { document.getElementById('win-' + id).style.display = 'flex'; }
         function closeApp(id) { document.getElementById('win-' + id).style.display = 'none'; }
 
-        // --- CHAT SYSTEM (WITH TYPING) ---
-        const chatBox = document.getElementById('chat-container');
-        const optBox = document.getElementById('chat-options');
-        const typingInd = document.getElementById('typing-indicator');
-
+        // --- CHAT LOGIC ---
+        const feed = document.getElementById('chat-feed');
+        const opts = document.getElementById('chat-opts');
+        
         const script = {
-            1: { msg: "Happy Valentine's Day Ayuuu! 🌹", opts: [{t: "Happy Valentine's! ❤️", n: 2}] },
-            2: { msg: "I wish I was there to hug you tight right now.", opts: [{t: "I miss you too 🥺", n: 3}, {t: "Soon! ❤️", n: 3}] },
-            3: { msg: "Distance sucks, but you are worth every single mile.", opts: [{t: "Awww Theshu 🥰", n: 4}] },
-            4: { msg: "I made this whole OS just to ask you one question...", opts: [{t: "What is it? 😮", n: 5}] },
-            5: { msg: "Will you be my Valentine? Forever?", opts: [{t: "YES! Of course! 💍", n: 6}, {t: "Definitely Yes! ❤️", n: 6}] },
-            6: { msg: "Yay! ❤️ Check the Coupons app, I got you some gifts! 😉", opts: [] }
+            1: { msg: "Happy Valentine's Day Ayuuu! 🌹", btn: "Happy Valentine's Theshu! ❤️", next: 2 },
+            2: { msg: "I was looking at the calendar... August 18 seems so long ago, but also like yesterday.", btn: "The best day ever 🥰", next: 3 },
+            3: { msg: "I miss you so much. But I have a question for you...", btn: "What is it? 😮", next: 4 },
+            4: { msg: "Will you be my Valentine? Now and forever? 💍", btn: "YES! Of course! ❤️", next: 5 },
+            5: { msg: "I love you Ayushka. Check the Ticket app, I'm coming for you one day. ✈️", btn: "I love you too! 😘", next: null }
         };
 
-        function addMsg(text, isMe) {
+        let step = 1;
+
+        function initChat() {
+            if(feed.innerHTML === "") {
+                setTimeout(() => {
+                    addMsg("Hey beautiful...", 'them');
+                    showBtn(script[1].btn);
+                }, 800);
+            }
+        }
+
+        function addMsg(txt, type) {
             const d = document.createElement('div');
-            d.className = isMe ? 'msg msg-me' : 'msg msg-them';
-            d.innerHTML = text;
-            chatBox.appendChild(d);
-            document.getElementById('chat-scroll').scrollTop = 10000;
+            d.className = 'msg ' + type;
+            d.innerText = txt;
+            feed.appendChild(d);
+            feed.parentElement.scrollTop = feed.parentElement.scrollHeight; // Auto scroll
         }
 
-        function showTyping() {
-            typingInd.style.display = 'block';
-            document.getElementById('chat-scroll').scrollTop = 10000;
+        function showBtn(txt) {
+            opts.innerHTML = '';
+            if(!txt) return;
+            const b = document.createElement('button');
+            b.className = 'reply-btn';
+            b.innerText = txt;
+            b.onclick = nextStep;
+            opts.appendChild(b);
         }
 
-        function hideTyping() { typingInd.style.display = 'none'; }
-
-        function handleOption(text, nextStep) {
-            addMsg(text, true); // User sent
-            optBox.innerHTML = ''; // Clear buttons
-            
-            showTyping();
+        function nextStep() {
+            const curr = script[step];
+            addMsg(curr.btn, 'me');
+            opts.innerHTML = '';
             
             setTimeout(() => {
-                hideTyping();
-                const reply = script[nextStep];
-                addMsg(reply.msg, false);
-                
-                if(reply.opts && reply.opts.length > 0) {
-                    reply.opts.forEach(o => {
-                        const btn = document.createElement('button');
-                        btn.className = 'choice-btn';
-                        btn.innerText = o.t;
-                        btn.onclick = () => handleOption(o.t, o.n);
-                        optBox.appendChild(btn);
-                    });
-                }
-            }, 1500); // 1.5s typing delay
-        }
-
-        // Start Chat
-        setTimeout(() => {
-            addMsg("Hey beautiful... ❤️", false);
-            const startBtn = document.createElement('button');
-            startBtn.className = 'choice-btn';
-            startBtn.innerText = "Hey Theshuuuu!";
-            startBtn.onclick = () => handleOption("Hey Theshuuuu!", 1);
-            optBox.appendChild(startBtn);
-        }, 1000);
-
-    </script>
-</body>
-</html>
+                const next = script[curr.next];
+                if(next) {
+                    addMsg(next.msg, 'th
