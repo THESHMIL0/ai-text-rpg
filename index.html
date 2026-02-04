@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Theshu OS v32.0 🔒</title>
+    <title>Theshu OS v33.0 📞</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&family=Indie+Flower&display=swap" rel="stylesheet">
 
@@ -26,7 +26,7 @@
             overflow: hidden; color: var(--text);
         }
 
-        /* --- 1. LOCK SCREEN (Back by Popular Demand) --- */
+        /* --- 1. LOCK SCREEN --- */
         #lock-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 10000;
@@ -96,6 +96,18 @@
         .opts { position: absolute; bottom: 0; width: 100%; background: white; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #eee; }
         .opt-btn { flex: 1; padding: 12px; border-radius: 20px; border: none; background: #007aff; color: white; font-weight: bold; }
 
+        /* --- CALL SCREEN --- */
+        #call-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, #2c3e50 0%, #000000 100%);
+            z-index: 9000; display: none; flex-direction: column;
+            align-items: center; padding-top: 80px; color: white;
+        }
+        .call-avatar { width: 120px; height: 120px; background: #ddd; border-radius: 50%; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+        .call-name { font-size: 2rem; font-weight: bold; margin-bottom: 5px; }
+        .call-status { font-size: 1.1rem; opacity: 0.7; margin-bottom: 200px; }
+        .hangup-btn { width: 70px; height: 70px; background: #ff3b30; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 2rem; }
+
         /* --- GAME --- */
         #game-board { width: 100%; height: 400px; background: #222; border-radius: 15px; position: relative; overflow: hidden; margin-top: 10px; }
         .heart { position: absolute; font-size: 2.5rem; top: -50px; cursor: pointer; }
@@ -124,7 +136,7 @@
 
     <div id="lock-screen">
         <h1 class="title" onclick="emergencyUnlock()">Theshu & Ayu</h1>
-        <p>Vol. 32 (Secure Romance)</p>
+        <p>Vol. 33 (Call Me)</p>
         
         <form onsubmit="event.preventDefault(); unlock();" style="display:flex; flex-direction:column; align-items:center;">
             <input type="password" id="pass" class="lock-input" placeholder="hint: kushu" autocomplete="off">
@@ -145,6 +157,13 @@
             <div class="app-icon" onclick="openApp('cam')"><div class="icon-box" style="background:#333; color:white;">📸</div><span class="icon-label">Camera</span></div>
             <div class="app-icon" onclick="openApp('set')"><div class="icon-box" style="background:#8e8e93; color:white;">⚙️</div><span class="icon-label">Settings</span></div>
         </div>
+    </div>
+
+    <div id="call-overlay">
+        <div class="call-avatar">👱🏻‍♂️</div>
+        <div class="call-name">Theshu ❤️</div>
+        <div class="call-status" id="call-status">calling...</div>
+        <div class="hangup-btn" onclick="endCall()">📞</div>
     </div>
 
     <div id="app-chat" class="window">
@@ -222,7 +241,6 @@
             }
         }
 
-        // Emergency Bypass (Tap Title 5 times)
         let taps = 0;
         function emergencyUnlock() {
             taps++;
@@ -236,7 +254,35 @@
         function openApp(id) { document.getElementById('app-'+id).classList.add('open'); }
         function closeApp(id) { document.getElementById('app-'+id).classList.remove('open'); }
 
-        // --- 3. CHAT LOGIC (ROMANTIC) ---
+        // --- 3. CALL LOGIC ---
+        function startCallUI() {
+            const overlay = document.getElementById('call-overlay');
+            const status = document.getElementById('call-status');
+            overlay.style.display = 'flex';
+            status.innerText = "calling...";
+            
+            setTimeout(() => {
+                status.innerText = "Connected 00:01";
+                status.style.color = "#4cd137";
+            }, 2000);
+
+            setTimeout(() => {
+                status.innerText = "I LOVE YOU! ❤️";
+                status.style.color = "white";
+                status.style.fontSize = "1.5rem";
+                status.style.fontWeight = "bold";
+            }, 3000);
+
+            setTimeout(() => {
+                endCall();
+            }, 6000);
+        }
+
+        function endCall() {
+            document.getElementById('call-overlay').style.display = 'none';
+        }
+
+        // --- 4. CHAT LOGIC (ROMANTIC + CALL) ---
         const script = [
             { 
                 t: "Hey Ayushka... ❤️", 
@@ -252,7 +298,7 @@
             },
             { 
                 t: "Yes! You are the best thing that ever happened to me. Stuck with me forever! 🔒", 
-                o: [{l:"Forever! ❤️", n:-1}, {l:"Stuck with you! 😜", n:-1}] 
+                o: [{l:"Call me! 📞", n:-2}, {l:"Forever! ❤️", n:-1}] 
             }
         ];
 
@@ -266,6 +312,16 @@
             addBub(l, 'sent');
             document.getElementById('chat-opts').innerHTML = '';
             
+            if(n === -2) {
+                // CALL TRIGGER
+                setTimeout(startCallUI, 1000);
+                setTimeout(() => {
+                    addBub("Now... I have a special gift for you. 👇", 'rcvd');
+                    spawnGift();
+                }, 7000);
+                return;
+            }
+
             const typing = document.createElement('div');
             typing.className = 'bubble rcvd'; typing.innerText = '...'; typing.id='typ';
             document.getElementById('chat-box').appendChild(typing);
@@ -323,7 +379,7 @@
             });
         }
 
-        // --- 4. GAME LOGIC ---
+        // --- 5. GAME LOGIC ---
         let score=0, lives=3, active=false;
         function startGame() {
             active=true; score=0; lives=3;
@@ -356,19 +412,7 @@
             document.getElementById('game-board').appendChild(h);
         }
 
-        // --- 5. UTILS ---
+        // --- 6. UTILS ---
         function loadPic(e) {
             document.getElementById('preview').src = URL.createObjectURL(e.target.files[0]);
-            document.getElementById('preview').style.display='block';
-            document.getElementById('cam-ph').style.display='none';
-        }
-        function confetti() {
-            const c = document.createElement('div');
-            c.style.position='fixed'; c.style.background='red'; c.style.width='10px'; c.style.height='10px';
-            c.style.top='0'; c.style.left=Math.random()*100+'vw'; c.style.zIndex='9999';
-            c.style.transition='top 2s'; document.body.appendChild(c);
-            setTimeout(()=>c.style.top='100vh',10);
-        }
-    </script>
-</body>
-</html>
+            document.ge
