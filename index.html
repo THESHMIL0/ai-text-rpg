@@ -14,29 +14,25 @@
             background: #fff5f7; color: #333; overflow: hidden;
         }
 
-        /* --- LOCK SCREEN (FINGERPRINT) --- */
+        /* --- LOCK SCREEN (Fingerprint) --- */
         #lock {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #2c3e50 0%, #000000 100%); /* Dark Premium Look */
+            background: linear-gradient(135deg, #ff9a9e 0%, #ff6b81 100%);
             z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: white; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            color: white; transition: transform 0.5s ease-in-out;
         }
         
-        .fingerprint-area {
-            width: 90px; height: 90px; border: 2px solid rgba(255,255,255,0.2);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            position: relative; margin-bottom: 20px; cursor: pointer;
+        .scanner {
+            width: 80px; height: 80px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; position: relative;
+            margin-bottom: 20px; cursor: pointer;
         }
-        .fingerprint-icon { font-size: 3.5rem; opacity: 0.5; transition: opacity 0.3s; }
-        
-        /* Scan Animation */
-        .scan-line {
-            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-            background: #ff4757; box-shadow: 0 0 10px #ff4757;
-            display: none; animation: scan 1.5s infinite linear;
+        .scanner::after {
+            content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%;
+            border: 2px solid white; animation: ripple 1.5s infinite; opacity: 0;
         }
-        .scanning .scan-line { display: block; }
-        .scanning .fingerprint-icon { opacity: 1; color: #ff4757; }
+        .scan-icon { font-size: 3rem; }
+        .scanning .scan-icon { color: #fff; text-shadow: 0 0 10px white; }
 
         /* --- LAYOUT --- */
         .app-container { display: flex; flex-direction: column; height: 100%; }
@@ -44,133 +40,132 @@
             flex: 1; overflow-y: auto; padding: 20px; display: none; 
             padding-bottom: 100px; -webkit-overflow-scrolling: touch;
         }
-        .content.active { display: block; animation: fadeScale 0.3s ease-out; }
+        .content.active { display: block; animation: fadeIn 0.3s; }
 
-        /* --- MUSIC PLAYER (VINYL) --- */
-        .music-player {
-            background: white; border-radius: 25px; padding: 25px; margin-top: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; overflow: hidden;
-            position: relative; border: 1px solid white;
+        /* --- MAP WIDGET (NEW) --- */
+        .map-card {
+            background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03); position: relative; overflow: hidden;
         }
-        .vinyl {
-            width: 120px; height: 120px; background: #333; border-radius: 50%;
-            margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;
-            border: 4px solid #111; position: relative;
-            background: repeating-radial-gradient(#333, #333 5px, #444 6px);
+        .map-line {
+            height: 2px; background: #eee; width: 80%; margin: 20px auto; position: relative;
+            border-top: 2px dashed #ff4757; background: transparent;
         }
-        /* Spinning Animation Class */
-        .vinyl.spinning { animation: spin 4s linear infinite; }
-        
-        .vinyl-center { width: 40px; height: 40px; background: #ff4757; border-radius: 50%; border: 2px solid white; }
-        .play-controls { display: flex; justify-content: center; gap: 30px; font-size: 2rem; margin-top: 15px; cursor: pointer; }
+        .plane {
+            position: absolute; top: -12px; left: 0; font-size: 1.5rem;
+            animation: fly 4s linear infinite;
+        }
+        .locations { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; color: #555; padding: 0 10px; }
 
-        /* --- SCRATCH COUPON (NEW) --- */
-        .scratch-card {
-            position: relative; width: 100%; height: 100px; background: white;
-            border-radius: 15px; overflow: hidden; margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer;
+        /* --- DRAWING CANVAS (NEW) --- */
+        .canvas-container {
+            background: white; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            height: 300px; position: relative; touch-action: none; border: 2px dashed #eee;
         }
-        .scratch-content {
-            position: absolute; width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 700; color: #ff4757; font-size: 1.2rem; z-index: 1;
+        canvas { width: 100%; height: 100%; border-radius: 20px; }
+        .tools { display: flex; gap: 10px; margin-top: 15px; justify-content: center; }
+        .tool-btn { padding: 10px 20px; border-radius: 20px; border: none; font-weight: 600; cursor: pointer; }
+        .btn-clear { background: #eee; color: #333; }
+        .btn-save { background: #ff4757; color: white; }
+
+        /* --- MUSIC PLAYER --- */
+        .music-card {
+            background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03);
         }
-        .scratch-cover {
-            position: absolute; width: 100%; height: 100%; background: #ccc;
-            z-index: 2; display: flex; align-items: center; justify-content: center;
-            color: #666; font-weight: 600; transition: opacity 0.5s;
+        .album-art { 
+            width: 50px; height: 50px; background: #333; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; color: white;
+            animation: spin 5s linear infinite; animation-play-state: paused;
         }
-        .scratch-cover.scratched { opacity: 0; pointer-events: none; }
+        .album-art.playing { animation-play-state: running; }
 
         /* --- CHAT --- */
         .chat-list { display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 80%; padding: 14px 18px; border-radius: 20px; font-size: 0.95rem; line-height: 1.4; }
-        .them { background: white; align-self: flex-start; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .me { background: #ff4757; color: white; align-self: flex-end; box-shadow: 0 4px 10px rgba(255, 71, 87, 0.2); }
-        .typing-dot { display: inline-block; width: 6px; height: 6px; background: #ccc; border-radius: 50%; margin: 0 2px; animation: dotBounce 1.4s infinite; }
+        .msg { max-width: 80%; padding: 14px 18px; border-radius: 20px; font-size: 0.95rem; }
+        .them { background: white; align-self: flex-start; }
+        .me { background: #ff4757; color: white; align-self: flex-end; }
 
-        /* --- NAVIGATION --- */
+        /* --- NAV BAR --- */
         .nav-bar {
-            height: 75px; background: rgba(255,255,255,0.95); border-top: 1px solid #eee;
+            height: 75px; background: rgba(255,255,255,0.95); border-top: 1px solid #f0f0f0;
             display: flex; justify-content: space-around; align-items: center;
-            padding-bottom: env(safe-area-inset-bottom); z-index: 50; backdrop-filter: blur(10px);
+            padding-bottom: env(safe-area-inset-bottom); z-index: 50;
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #ccc; font-size: 0.7rem; font-weight: 600; transition: 0.2s; }
-        .nav-item.active { color: #ff4757; transform: translateY(-3px); }
-        .nav-icon { font-size: 1.6rem; margin-bottom: 3px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #ccc; font-size: 0.7rem; font-weight: 600; }
+        .nav-item.active { color: #ff4757; }
+        .nav-icon { font-size: 1.5rem; margin-bottom: 3px; }
 
-        /* --- UTILS --- */
-        .hero { margin: 20px 0; padding: 0 20px; }
-        .hero h1 { font-size: 2.2rem; color: #ff4757; margin: 0; }
-        .card { background: white; border-radius: 18px; padding: 20px; margin: 0 20px 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
-        
+        /* --- HERO --- */
+        .hero { margin: 20px 0; text-align: left; padding: 0 10px; }
+        .hero h1 { font-size: 2rem; color: #ff4757; margin: 0; }
+        .hero p { color: #ff8fa3; font-weight: 700; font-size: 0.8rem; letter-spacing: 1px; }
+
         /* Animations */
-        @keyframes scan { 0% { top: 0; } 50% { top: 100%; } 100% { top: 0; } }
+        @keyframes ripple { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(1.5); opacity: 0; } }
+        @keyframes fly { 0% { left: 0%; transform: rotate(0deg); } 50% { top: -20px; } 100% { left: 90%; transform: rotate(10deg); } }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes dotBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-        @keyframes fadeScale { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     </style>
 </head>
 <body>
 
-    <div id="lock" onmousedown="startScan()" ontouchstart="startScan()" onmouseup="stopScan()" ontouchend="stopScan()">
-        <div class="fingerprint-area" id="fp-area">
-            <div class="fingerprint-icon">👆</div>
-            <div class="scan-line"></div>
+    <div id="lock" onmousedown="startUnlock()" onmouseup="stopUnlock()" ontouchstart="startUnlock()" ontouchend="stopUnlock()">
+        <div class="scanner" id="scanner">
+            <div class="scan-icon">👆</div>
         </div>
-        <h3 style="margin: 0; font-weight: 500;">Touch & Hold</h3>
-        <p style="opacity: 0.6; font-size: 0.9rem; margin-top: 5px;">Secured by Love ID</p>
+        <p style="font-weight: 600; margin-top: 10px;">Touch & Hold ID</p>
     </div>
 
     <div class="app-container">
         
-        <div id="tab-home" class="content active" style="padding:0;">
+        <div id="tab-home" class="content active">
             <div class="hero">
-                <p style="color:#ff8fa3; font-weight:700; letter-spacing:1px; font-size:0.8rem;">GOOD MORNING</p>
+                <p>GOOD MORNING</p>
                 <h1>My Ayuuu ❤️</h1>
             </div>
 
-            <div class="card music-player">
-                <div class="vinyl" id="vinyl-record">
-                    <div class="vinyl-center"></div>
+            <div class="music-card" onclick="toggleMusic()">
+                <div class="album-art" id="vinyl">🎵</div>
+                <div style="flex:1;">
+                    <div style="font-weight:700;">Your Voice</div>
+                    <div style="font-size:0.8rem; color:#888;">Tap to Play/Pause</div>
                 </div>
-                <div style="font-weight: 700; font-size: 1.1rem;">Your Voice</div>
-                <div style="font-size: 0.8rem; color: #888;">Theshu's Favorite Song</div>
-                
-                <div class="play-controls">
-                    <span onclick="toggleMusic(this)">▶️</span>
+                <div style="font-size:1.5rem;">▶️</div>
+            </div>
+
+            <div class="map-card">
+                <div style="font-size:0.8rem; font-weight:700; color:#aaa; margin-bottom:15px; text-transform:uppercase;">Distance is Temporary</div>
+                <div class="map-line">
+                    <div class="plane">✈️</div>
+                </div>
+                <div class="locations">
+                    <span>Theshu</span>
+                    <span>Ayuuuu</span>
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; padding: 0 20px;">
-                <div class="card" style="margin:0; text-align:center;">
-                    <div style="font-size:2.5rem; font-weight:800; color:#ff4757;" id="days">0</div>
-                    <div style="font-size:0.7rem; color:#aaa; font-weight:700;">DAYS TOGETHER</div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; text-align:center;">
+                <div style="background:white; padding:20px; border-radius:15px;">
+                    <div style="font-size:2rem; font-weight:800; color:#ff4757;" id="days">0</div>
+                    <div style="font-size:0.7rem; color:#aaa; font-weight:700;">DAYS</div>
                 </div>
-                <div class="card" style="margin:0; text-align:center;">
-                    <div style="font-size:2.5rem;">🔋</div>
-                    <div style="font-size:0.7rem; color:#aaa; font-weight:700;">100% CHARGED</div>
+                <div style="background:white; padding:20px; border-radius:15px;">
+                    <div style="font-size:2rem;">🔋</div>
+                    <div style="font-size:0.7rem; color:#aaa; font-weight:700;">100% LOVE</div>
                 </div>
             </div>
         </div>
 
-        <div id="tab-coupons" class="content">
-            <div class="hero"><h1>Gifts 🎁</h1><p>Tap to Scratch</p></div>
-            
-            <div class="scratch-card" onclick="scratch(this)">
-                <div class="scratch-content">💆‍♀️ 10m Massage</div>
-                <div class="scratch-cover">Scratch Here</div>
+        <div id="tab-draw" class="content">
+            <div class="hero"><h1>Draw a Heart 🎨</h1><p>For Me</p></div>
+            <div class="canvas-container">
+                <canvas id="drawArea"></canvas>
             </div>
-            
-            <div class="scratch-card" onclick="scratch(this)">
-                <div class="scratch-content">🍫 Chocolate Bar</div>
-                <div class="scratch-cover">Scratch Here</div>
-            </div>
-
-            <div class="scratch-card" onclick="scratch(this)">
-                <div class="scratch-content">🎬 Movie Date</div>
-                <div class="scratch-cover">Scratch Here</div>
+            <div class="tools">
+                <button class="tool-btn btn-clear" onclick="clearCanvas()">Clear</button>
+                <button class="tool-btn btn-save" onclick="alert('Saved to my heart! ❤️')">Send to Theshu</button>
             </div>
         </div>
 
@@ -179,37 +174,33 @@
             <div class="chat-list" id="msgs">
                 <div class="msg them">Hey Ayuuu! ❤️</div>
             </div>
-            <div style="margin-top: 20px;">
-                <button onclick="replyChat()" style="width:100%; padding:15px; background:#ff4757; color:white; border:none; border-radius:15px; font-weight:700; font-size:1rem;">Reply</button>
+            <div style="margin-top:20px;">
+                <button onclick="nextChat()" style="width:100%; padding:15px; background:#ff4757; color:white; border:none; border-radius:15px; font-weight:700;">Reply</button>
             </div>
         </div>
 
         <div class="nav-bar">
             <div class="nav-item active" onclick="switchTab('home', this)"><div class="nav-icon">🏠</div>Home</div>
+            <div class="nav-item" onclick="switchTab('draw', this)"><div class="nav-icon">🎨</div>Draw</div>
             <div class="nav-item" onclick="switchTab('chat', this)"><div class="nav-icon">💬</div>Chat</div>
-            <div class="nav-item" onclick="switchTab('coupons', this)"><div class="nav-icon">🎁</div>Gifts</div>
         </div>
 
     </div>
 
     <script>
-        // --- FINGERPRINT LOCK LOGIC ---
-        let scanTimer;
-        const fpArea = document.getElementById('fp-area');
-        const lockScreen = document.getElementById('lock');
-
-        function startScan() {
-            fpArea.classList.add('scanning');
-            // Unlock after 1 second of holding
-            scanTimer = setTimeout(() => {
+        // --- LOCK LOGIC ---
+        let holdTimer;
+        function startUnlock() {
+            document.getElementById('scanner').classList.add('scanning');
+            // Unlock after 0.8s
+            holdTimer = setTimeout(() => {
                 if(navigator.vibrate) navigator.vibrate(50);
-                lockScreen.style.transform = 'translateY(-100%)';
-            }, 1000); 
+                document.getElementById('lock').style.transform = 'translateY(-100%)';
+            }, 800);
         }
-
-        function stopScan() {
-            fpArea.classList.remove('scanning');
-            clearTimeout(scanTimer);
+        function stopUnlock() {
+            document.getElementById('scanner').classList.remove('scanning');
+            clearTimeout(holdTimer);
         }
 
         // --- NAVIGATION ---
@@ -220,65 +211,50 @@
             el.classList.add('active');
         }
 
-        // --- MUSIC PLAYER ---
-        function toggleMusic(btn) {
-            const vinyl = document.getElementById('vinyl-record');
-            if (btn.innerText === "▶️") {
-                btn.innerText = "⏸️";
-                vinyl.classList.add('spinning');
+        // --- MUSIC ---
+        function toggleMusic() {
+            const vinyl = document.getElementById('vinyl');
+            if (vinyl.classList.contains('playing')) {
+                vinyl.classList.remove('playing');
             } else {
-                btn.innerText = "▶️";
-                vinyl.classList.remove('spinning');
+                vinyl.classList.add('playing');
             }
         }
 
-        // --- SCRATCH CARD ---
-        function scratch(el) {
-            const cover = el.querySelector('.scratch-cover');
-            if(cover) {
-                cover.classList.add('scratched');
-                if(navigator.vibrate) navigator.vibrate(20);
-            }
-        }
+        // --- DRAWING CANVAS LOGIC ---
+        const canvas = document.getElementById('drawArea');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
 
-        // --- REAL TYPING CHAT ---
-        const msgs = document.getElementById('msgs');
-        let chatStep = 0;
+        // Resize canvas
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = canvas.parentElement.offsetHeight;
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#ff4757';
+        }
+        window.onload = resizeCanvas;
+
+        // Touch Events
+        canvas.addEventListener('touchstart', (e) => {
+            drawing = true;
+            ctx.beginPath();
+            const rect = canvas.getBoundingClientRect();
+            ctx.moveTo(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
+        });
         
-        function replyChat() {
-            const userMsg = "Hey Theshu! 👋"; // Static reply for demo
-            
-            // 1. User Message
-            const m = document.createElement('div'); m.className = 'msg me'; m.innerText = userMsg;
-            msgs.appendChild(m);
+        canvas.addEventListener('touchmove', (e) => {
+            if(!drawing) return;
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineTo(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
+            ctx.stroke();
+        });
 
-            // 2. Typing Indicator
-            const typing = document.createElement('div'); 
-            typing.className = 'msg them';
-            typing.innerHTML = `<span class="typing-dot"></span><span class="typing-dot" style="animation-delay:0.2s"></span><span class="typing-dot" style="animation-delay:0.4s"></span>`;
-            msgs.appendChild(typing);
-            msgs.scrollTop = msgs.scrollHeight;
+        canvas.addEventListener('touchend', () => drawing = false);
 
-            // 3. Theshu Replies (after delay)
-            setTimeout(() => {
-                typing.remove(); // Remove dots
-                const responses = ["I miss you! ❤️", "Distance sucks 🥺", "I love you so much! 💍"];
-                const replyText = responses[chatStep % responses.length];
-                
-                const t = document.createElement('div'); t.className = 'msg them';
-                msgs.appendChild(t);
-                
-                // Typewriter Effect
-                let i = 0;
-                const typeInterval = setInterval(() => {
-                    t.innerText += replyText.charAt(i);
-                    i++;
-                    msgs.scrollTop = msgs.scrollHeight;
-                    if (i > replyText.length - 1) clearInterval(typeInterval);
-                }, 50); // Speed of typing
-
-                chatStep++;
-            }, 1500);
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
         // --- DATE LOGIC ---
@@ -286,6 +262,25 @@
         const diff = Math.floor((new Date() - start) / (1000 * 60 * 60 * 24));
         document.getElementById('days').innerText = diff > 0 ? diff : 0;
 
+        // --- CHAT LOGIC ---
+        let step = 0;
+        const msgs = document.getElementById('msgs');
+        const script = [
+            { me: "Hey Theshu! 👋", them: "I miss you so much. Thinking about Jan 18 makes me smile. ❤️" },
+            { me: "Me too! 🥰", them: "Distance is hard, but you are worth it. I have a question..." },
+            { me: "What is it? 😮", them: "<b>Will you be my Valentine?</b> Forever? 💍" },
+            { me: "YES! Of course! ❤️", them: "I knew it! ❤️ One day I'll put a real ring on your finger. 💍" }
+        ];
+
+        function nextChat() {
+            if(step >= script.length) return;
+            const m = document.createElement('div'); m.className = 'msg me'; m.innerHTML = script[step].me;
+            msgs.appendChild(m);
+            setTimeout(() => {
+                const t = document.createElement('div'); t.className = 'msg them'; t.innerHTML = script[step].them;
+                msgs.appendChild(t); step++;
+            }, 800);
+        }
     </script>
 </body>
 </html>
