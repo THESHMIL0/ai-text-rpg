@@ -2,237 +2,301 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>For My Ayuuu ❤️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <title>Ayuuu OS Pro</title>
     <style>
-        /* --- THEME VARIABLES --- */
+        /* --- SYSTEM CONFIG --- */
         :root {
-            --bg: #fff0f3;
-            --text: #594a4e;
-            --card: #ffffff;
-            --primary: #ff4757;
-            --shadow: rgba(255, 71, 87, 0.15);
-            --border: #ffd1d6;
-        }
-        
-        /* Dark Mode Override */
-        body.dark {
-            --bg: #1e1e24;
-            --text: #f0f0f5;
-            --card: #2b2b36;
-            --primary: #ff6b81;
-            --shadow: rgba(0,0,0,0.3);
-            --border: #444;
+            --bg-wallpaper: url('https://images.unsplash.com/photo-1618588507085-c79565432917?q=80&w=1000&auto=format&fit=crop');
+            --dock-bg: rgba(255, 255, 255, 0.2);
+            --app-bg: #F2F2F7;
         }
 
         /* --- RESET --- */
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; padding: 0; background: var(--bg); color: var(--text); overflow-x: hidden; width: 100vw; }
-
-        /* --- CONTAINER --- */
-        .container { max-width: 500px; margin: 0 auto; padding: 20px; padding-bottom: 80px; }
-
-        /* --- HEADER & TOGGLE --- */
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .title { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
-        .theme-btn { 
-            background: var(--card); padding: 10px; border-radius: 50%; 
-            box-shadow: 0 4px 10px var(--shadow); cursor: pointer; font-size: 1.2rem;
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; user-select: none; }
+        body { 
+            margin: 0; padding: 0; width: 100vw; height: 100dvh; 
+            background: #000; overflow: hidden; position: fixed;
         }
 
-        /* --- SECTIONS --- */
-        .section-title { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: #888; margin: 30px 0 10px 0; font-weight: bold; }
+        /* --- WALLPAPER --- */
+        .wallpaper {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: var(--bg-wallpaper); background-size: cover; background-position: center;
+            transition: 0.5s; transform: scale(1);
+        }
+        body.app-open .wallpaper { transform: scale(0.9); filter: blur(10px) brightness(0.8); }
+
+        /* --- STATUS BAR --- */
+        .status-bar {
+            position: absolute; top: 0; left: 0; width: 100%; height: 50px; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 0 25px; padding-top: env(safe-area-inset-top);
+            color: white; font-weight: 600; font-size: 14px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* --- LOCK SCREEN --- */
+        #lock-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 500;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            padding-top: 100px; backdrop-filter: blur(0px); transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            background: rgba(0,0,0,0.01); /* Invisible touch target */
+        }
+        .clock-huge { font-size: 5.5rem; font-weight: 200; color: white; letter-spacing: -2px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); margin: 0; line-height: 1; }
+        .date { color: white; font-size: 1.3rem; font-weight: 500; margin-top: 10px; text-shadow: 0 1px 5px rgba(0,0,0,0.3); }
         
-        .card {
-            background: var(--card); border-radius: 20px; padding: 20px;
-            box-shadow: 0 8px 25px var(--shadow); border: 1px solid var(--border);
-            text-align: center; margin-bottom: 20px;
+        .swipe-hint {
+            position: absolute; bottom: 40px; left: 0; width: 100%; text-align: center;
+            color: white; opacity: 0.8; font-size: 1rem; animation: bounce 2s infinite;
+        }
+        .home-bar {
+            position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+            width: 140px; height: 5px; background: white; border-radius: 10px;
         }
 
-        /* --- MAGIC ENVELOPE (CSS 3D) --- */
-        .envelope-wrapper { position: relative; height: 180px; margin-top: 20px; perspective: 1000px; cursor: pointer; }
-        .envelope {
-            position: relative; width: 100%; height: 100%; background: var(--primary);
-            border-radius: 10px; transition: 0.6s; transform-style: preserve-3d;
-            display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;
+        /* --- HOME SCREEN --- */
+        #home-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;
+            padding: 80px 25px 120px 25px; display: grid; 
+            grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(5, min-content); 
+            gap: 25px 15px; opacity: 0; transition: 0.5s; transform: scale(1.1);
         }
-        .envelope.open { transform: rotateX(180deg); opacity: 0; }
+        body.unlocked #home-screen { opacity: 1; transform: scale(1); }
+
+        /* --- APP ICONS --- */
+        .app { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; transition: 0.2s; }
+        .app:active { filter: brightness(0.7); transform: scale(0.95); }
+        .icon {
+            width: 62px; height: 62px; border-radius: 15px; font-size: 30px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #333, #000); /* Default */
+        }
+        .app-name { color: white; font-size: 11px; font-weight: 500; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+
+        /* Custom Colors */
+        .ico-msg { background: #55EFC4; }
+        .ico-photo { background: linear-gradient(135deg, #A8E063, #56AB2F); }
+        .ico-note { background: linear-gradient(135deg, #FDCB6E, #E17055); }
+        .ico-love { background: linear-gradient(135deg, #FF7675, #D63031); }
+        .ico-set { background: #636e72; }
+
+        /* --- DOCK --- */
+        .dock {
+            position: absolute; bottom: 25px; left: 15px; right: 15px; height: 95px;
+            background: var(--dock-glass); border-radius: 35px; backdrop-filter: blur(25px);
+            display: flex; justify-content: space-around; align-items: center; z-index: 20;
+            background: rgba(255,255,255,0.2);
+            transform: translateY(150%); transition: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        body.unlocked .dock { transform: translateY(0); }
+
+        /* --- APP WINDOW (The Opened App) --- */
+        .app-window {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--app-bg); z-index: 2000;
+            transform: scale(0.8); opacity: 0; pointer-events: none;
+            transition: 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            overflow: hidden; border-radius: 40px;
+        }
+        .app-window.active { transform: scale(1); opacity: 1; pointer-events: auto; border-radius: 0; }
         
-        .letter {
-            position: absolute; top: 0; left: 0; width: 100%; min-height: 200px;
-            background: white; border-radius: 10px; padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: #333; text-align: left;
-            transform: scale(0); transition: 0.5s; z-index: 10;
+        .nav-header {
+            height: 90px; padding: 40px 20px 10px 20px; background: rgba(255,255,255,0.9);
+            border-bottom: 1px solid #ccc; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 1.1rem; position: relative;
         }
-        .letter.show { transform: scale(1); }
-        .close-letter { text-align: center; margin-top: 15px; color: var(--primary); font-weight: bold; cursor: pointer; }
+        .back-btn { position: absolute; left: 15px; color: #007AFF; font-size: 1rem; cursor: pointer; }
+        .app-body { height: calc(100% - 90px); overflow-y: auto; padding: 20px; padding-bottom: 50px; }
 
-        /* --- LOVE COUPONS (GRID) --- */
-        .coupon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .coupon {
-            background: var(--card); border: 2px dashed var(--border); border-radius: 15px;
-            padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px;
+        /* --- NOTIFICATION --- */
+        .notif {
+            position: absolute; top: -100px; left: 10px; right: 10px; height: 70px;
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
+            border-radius: 18px; display: flex; align-items: center; padding: 10px; gap: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2); z-index: 3000; transition: 0.5s;
         }
-        .coupon-icon { font-size: 2rem; }
-        .coupon-title { font-weight: bold; font-size: 0.9rem; }
-        .coupon-btn {
-            background: var(--bg); color: var(--primary); border: none;
-            padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; cursor: pointer;
-        }
-        .coupon.used { opacity: 0.5; filter: grayscale(1); }
-        .coupon.used .coupon-btn { background: #ccc; color: white; }
+        .notif.show { top: 50px; }
 
-        /* --- THE GAME (Running Button) --- */
-        .game-area { height: 250px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .btn-group { margin-top: 20px; display: flex; gap: 20px; width: 100%; justify-content: center; }
-        .btn { padding: 12px 30px; border-radius: 50px; border: none; font-weight: bold; font-size: 1rem; cursor: pointer; }
-        .btn-yes { background: var(--primary); color: white; box-shadow: 0 5px 15px var(--shadow); }
-        .btn-no { background: #ddd; color: #555; position: relative; }
+        /* --- ANIMATIONS --- */
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
     </style>
 </head>
-<body>
+<body onload="startTime()">
 
-    <div class="container">
-        
-        <div class="header">
-            <div class="title">My Ayuuu ❤️</div>
-            <div class="theme-btn" onclick="toggleTheme()" id="themeIcon">🌙</div>
+    <div class="wallpaper"></div>
+
+    <div class="status-bar">
+        <div id="sb-time">12:00</div>
+        <div>📶 🔋</div>
+    </div>
+
+    <div class="notif" id="notif-banner" onclick="openApp('app-msg')">
+        <div style="width:45px; height:45px; background:#55EFC4; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:24px;">💬</div>
+        <div>
+            <div style="font-weight:bold; font-size:0.9rem;">Messages</div>
+            <div style="font-size:0.8rem; color:#555;">Theshu: I have a question...</div>
         </div>
+    </div>
 
-        <div class="card" style="background: linear-gradient(135deg, #ff9a9e, #ff6b81); color: white;">
-            <div style="font-size:0.8rem; opacity:0.9;">COUNTING EVERY SECOND</div>
-            <div style="font-size:2.5rem; font-weight:800; margin: 5px 0;" id="days">0</div>
-            <div style="font-size:0.9rem;">Days since we fell in love</div>
+    <div id="lock-screen" onclick="unlock()">
+        <div style="font-size:2rem; margin-bottom:10px;">🔒</div>
+        <div class="clock-huge" id="clock">12:00</div>
+        <div class="date" id="date">Sunday, January 18</div>
+        <div class="swipe-hint">Swipe up to open</div>
+        <div class="home-bar"></div>
+    </div>
+
+    <div id="home-screen">
+        <div class="app" onclick="openApp('app-msg')">
+            <div class="icon ico-msg">💬</div>
+            <div class="app-name">Messages</div>
         </div>
+        <div class="app" onclick="openApp('app-photos')">
+            <div class="icon ico-photo">📸</div>
+            <div class="app-name">Photos</div>
+        </div>
+        <div class="app" onclick="openApp('app-notes')">
+            <div class="icon ico-note">📝</div>
+            <div class="app-name">Diary</div>
+        </div>
+        <div class="app" onclick="openApp('app-love')">
+            <div class="icon ico-love">❤️</div>
+            <div class="app-name">Love</div>
+        </div>
+    </div>
 
-        <div class="section-title">A Message For You</div>
-        <div class="envelope-wrapper" onclick="openLetter()">
-            <div class="envelope" id="env">
-                <div style="font-size:3rem;">💌</div>
-                <div style="position:absolute; bottom:20px; font-size:0.9rem;">Tap to Open</div>
+    <div class="dock">
+        <div class="app"><div class="icon" style="background:#4cd137;">📞</div></div>
+        <div class="app"><div class="icon" style="background:#48dbfb;">🧭</div></div>
+        <div class="app"><div class="icon" style="background:#feca57;">🎵</div></div>
+        <div class="app" onclick="location.reload()"><div class="icon" style="background:#576574;">↻</div></div>
+    </div>
+
+
+    <div class="app-window" id="app-msg">
+        <div class="nav-header">
+            <div class="back-btn" onclick="closeApp('app-msg')">‹ Back</div>
+            <div>Theshu ❤️</div>
+        </div>
+        <div class="app-body" style="background: white; display:flex; flex-direction:column; gap:15px;">
+            <div style="align-self: flex-start; background: #E5E5EA; padding: 10px 15px; border-radius: 18px; max-width: 80%;">
+                Hey Ayuuu! ❤️
             </div>
-            
-            <div class="letter" id="letterContent">
-                <h3 style="color:var(--primary); margin-top:0;">My Dearest Ayuuu,</h3>
-                <p style="line-height:1.6; font-size:0.95rem;">
-                    I wanted to make something special for you. You are the code to my heart and the CSS to my style. 
-                    <br><br>
-                    No matter how far apart we are, looking at this screen reminds me that we are connected.
-                </p>
-                <div class="close-letter" onclick="closeLetter(event)">Close Letter ✕</div>
+            <div style="align-self: flex-end; background: #007AFF; color: white; padding: 10px 15px; border-radius: 18px; max-width: 80%;">
+                Hey Theshu! What's up?
+            </div>
+            <div style="align-self: flex-start; background: #E5E5EA; padding: 10px 15px; border-radius: 18px; max-width: 80%;">
+                I have something important to ask you.
+            </div>
+            <div style="align-self: flex-start; background: #E5E5EA; padding: 10px 15px; border-radius: 18px; max-width: 80%; font-weight:bold; font-size:1.1rem;">
+                Will you be my Valentine? 🌹
+            </div>
+            <div style="margin-top:20px; display:flex; gap:10px; justify-content:center;">
+                <button onclick="replyYes()" style="padding:10px 30px; border-radius:50px; border:none; background:#007AFF; color:white; font-size:1rem;">YES! 😍</button>
+                <button onclick="alert('Button Broken! You must say Yes 😉')" style="padding:10px 30px; border-radius:50px; border:none; background:#ccc; color:#555;">No</button>
+            </div>
+            <div id="reply-area" style="align-self: flex-end; background: #007AFF; color: white; padding: 10px 15px; border-radius: 18px; max-width: 80%; display:none;">
+                YES! Of course! ❤️
             </div>
         </div>
+        <div class="home-bar" style="background:black; bottom:15px;" onclick="closeApp('app-msg')"></div>
+    </div>
 
-        <div class="section-title">Your Gift Vouchers</div>
-        <div class="coupon-grid">
-            <div class="coupon" id="c1">
-                <div class="coupon-icon">🍿</div>
-                <div class="coupon-title">Movie Night</div>
-                <button class="coupon-btn" onclick="redeem('c1')">Redeem</button>
-            </div>
-            <div class="coupon" id="c2">
-                <div class="coupon-icon">💆‍♀️</div>
-                <div class="coupon-title">Massage</div>
-                <button class="coupon-btn" onclick="redeem('c2')">Redeem</button>
-            </div>
-            <div class="coupon" id="c3">
-                <div class="coupon-icon">🍕</div>
-                <div class="coupon-title">Your Choice Food</div>
-                <button class="coupon-btn" onclick="redeem('c3')">Redeem</button>
-            </div>
-            <div class="coupon" id="c4">
-                <div class="coupon-icon">🫂</div>
-                <div class="coupon-title">Infinite Hugs</div>
-                <button class="coupon-btn" onclick="redeem('c4')">Redeem</button>
-            </div>
+
+    <div class="app-window" id="app-photos" style="background:black;">
+        <div class="nav-header" style="background:rgba(0,0,0,0.8); color:white; border:none;">
+            <div class="back-btn" onclick="closeApp('app-photos')">‹ Albums</div>
+            <div>Favorites</div>
         </div>
-
-        <div class="section-title">One Last Question...</div>
-        <div class="card game-area">
-            <h2 id="q-text">Will you be my Valentine? 🌹</h2>
-            <div class="btn-group">
-                <button class="btn btn-yes" onclick="success()">YES!</button>
-                <button class="btn btn-no" id="noBtn" onmouseover="runAway()" onclick="runAway()">NO</button>
-            </div>
+        <div class="app-body" style="display:grid; grid-template-columns: 1fr 1fr; gap:5px; padding:0;">
+            <img src="https://placehold.co/200x200/ffcccc/ff4757?text=Us" style="width:100%;">
+            <img src="https://placehold.co/200x200/ffcccc/ff4757?text=Love" style="width:100%;">
+            <img src="https://placehold.co/200x200/ffcccc/ff4757?text=Trip" style="width:100%;">
+            <img src="https://placehold.co/200x200/ffcccc/ff4757?text=Date" style="width:100%;">
+            <img src="https://placehold.co/200x200/ffcccc/ff4757?text=Smile" style="width:100%;">
+            <img src="https://placehold.co/200x200/ffcccc/ff4757?text=Cute" style="width:100%;">
         </div>
+        <div class="home-bar" style="bottom:15px;" onclick="closeApp('app-photos')"></div>
+    </div>
 
+    <div class="app-window" id="app-notes">
+        <div class="nav-header" style="background:#F9F9bd; border:none;">
+            <div class="back-btn" onclick="closeApp('app-notes')">‹ Back</div>
+            <div>My Diary</div>
+        </div>
+        <div class="app-body" style="background:#F9F9bd; padding:0;">
+            <textarea id="note-area" style="width:100%; height:100%; background:transparent; border:none; padding:20px; font-size:1.2rem; outline:none; font-family: cursive;" placeholder="Write your thoughts here..."></textarea>
+        </div>
+        <div class="home-bar" style="background:black; bottom:15px;" onclick="closeApp('app-notes')"></div>
     </div>
 
     <script>
-        // --- 1. DARK MODE TOGGLE ---
-        function toggleTheme() {
-            document.body.classList.toggle('dark');
-            const icon = document.getElementById('themeIcon');
-            icon.innerText = document.body.classList.contains('dark') ? '☀️' : '🌙';
-        }
-
-        // --- 2. COUNTDOWN ---
-        const start = new Date("2026-01-18");
-        const diff = Math.floor((new Date() - start) / (1000 * 60 * 60 * 24));
-        document.getElementById('days').innerText = diff > 0 ? diff : 0;
-
-        // --- 3. MAGIC ENVELOPE ---
-        function openLetter() {
-            document.getElementById('env').classList.add('open');
-            setTimeout(() => {
-                document.getElementById('letterContent').classList.add('show');
-            }, 300);
-        }
-        
-        function closeLetter(e) {
-            e.stopPropagation(); // Stop bubble click
-            document.getElementById('letterContent').classList.remove('show');
-            setTimeout(() => {
-                document.getElementById('env').classList.remove('open');
-            }, 500);
-        }
-
-        // --- 4. COUPONS LOGIC ---
-        function redeem(id) {
-            const el = document.getElementById(id);
-            if(el.classList.contains('used')) return;
+        // --- CLOCK LOGIC ---
+        function startTime() {
+            const today = new Date();
+            let h = today.getHours();
+            let m = today.getMinutes();
+            m = m < 10 ? "0" + m : m;
+            document.getElementById('clock').innerHTML = h + ":" + m;
+            document.getElementById('sb-time').innerHTML = h + ":" + m;
             
-            const btn = el.querySelector('.coupon-btn');
-            btn.innerText = "REDEEMED ✓";
-            el.classList.add('used');
+            // Date
+            const options = { weekday: 'long', month: 'long', day: 'numeric' };
+            document.getElementById('date').innerHTML = today.toLocaleDateString("en-US", options);
             
-            // Celebration effect
-            alert("Voucher Redeemed! Take a screenshot & send it to Theshu! 📸");
+            setTimeout(startTime, 1000);
         }
 
-        // --- 5. RUNNING BUTTON GAME ---
-        const noBtn = document.getElementById('noBtn');
-        function runAway() {
-            const x = Math.random() * (window.innerWidth - 120);
-            const y = Math.random() * (window.innerHeight - 120);
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
+        // --- UNLOCK LOGIC ---
+        function unlock() {
+            document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
+            document.getElementById('lock-screen').style.opacity = '0';
+            document.body.classList.add('unlocked');
+            
+            // Show Notification after 2 seconds
+            setTimeout(() => {
+                document.getElementById('notif-banner').classList.add('show');
+                // Haptic feedback (if supported)
+                if(navigator.vibrate) navigator.vibrate(50);
+            }, 2000);
+            
+            // Hide notification after 6 seconds
+            setTimeout(() => {
+                document.getElementById('notif-banner').classList.remove('show');
+            }, 6000);
         }
-        
-        function success() {
-            document.querySelector('.game-area').innerHTML = `
-                <div style="font-size:3rem;">💍</div>
-                <h2>I Knew It! ❤️</h2>
-                <p>You are officially mine.</p>
-            `;
-            // Confetti
-            for(let i=0; i<50; i++) {
-                const p = document.createElement('div');
-                p.innerText = '❤️';
-                p.style.position='fixed';
-                p.style.left=Math.random()*100+'vw';
-                p.style.top='-10px';
-                p.style.animation = `fall ${Math.random()*2+2}s linear`;
-                document.body.appendChild(p);
-            }
+
+        // --- APP OPENING LOGIC ---
+        function openApp(id) {
+            document.body.classList.add('app-open');
+            document.getElementById(id).classList.add('active');
         }
-        
-        // Add simple animation style for confetti
-        const style = document.createElement('style');
-        style.innerHTML = `@keyframes fall { to { transform: translateY(100vh); } }`;
-        document.head.appendChild(style);
+
+        function closeApp(id) {
+            document.body.classList.remove('app-open');
+            document.getElementById(id).classList.remove('active');
+        }
+
+        // --- MESSAGES LOGIC ---
+        function replyYes() {
+            document.getElementById('reply-area').style.display = 'block';
+            // Scroll to bottom
+            const body = document.querySelector('.app-body');
+            body.scrollTop = body.scrollHeight;
+            alert("She said YES! ❤️💍");
+        }
+
+        // --- DIARY SAVE LOGIC ---
+        const noteArea = document.getElementById('note-area');
+        if(localStorage.getItem('loveNote')) {
+            noteArea.value = localStorage.getItem('loveNote');
+        }
+        noteArea.addEventListener('input', () => {
+            localStorage.setItem('loveNote', noteArea.value);
+        });
 
     </script>
 </body>
