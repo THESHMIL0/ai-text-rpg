@@ -2,13 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Theshu OS v50.0 💎</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Dancing+Script:wght@700&family=Indie+Flower&display=swap" rel="stylesheet">
 
     <style>
-        /* --- UNIVERSAL NO-ANIMATION RULE --- */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; animation: none !important; transition: none !important; }
+        /* --- CORE MOBILE FIXES --- */
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            user-select: none; /* Prevents text selection while tapping icons */
+        }
 
         :root {
             --bg-grad: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
@@ -16,123 +20,123 @@
             --blue: #007aff;
             --gray: #f2f2f7;
             --card-bg: #ffffff;
+            --vh: 1vh; /* Fallback */
         }
 
-        body {
-            margin: 0; padding: 0; height: 100vh; width: 100vw;
+        body, html {
+            margin: 0; padding: 0; 
+            height: 100%; width: 100%;
             background: var(--bg-grad);
             font-family: 'Poppins', sans-serif;
-            overflow: hidden; color: var(--text);
-            font-size: 16px;
+            overflow: hidden; /* Prevents the whole "page" from bouncing */
+            color: var(--text);
+            position: fixed; /* Prevents rubber-banding on iOS */
         }
 
         /* --- HOME SCREEN --- */
-        #home-screen { width: 100%; height: 100%; display: block; overflow-y: auto; padding-bottom: 20px; }
+        #home-screen { 
+            width: 100%; 
+            height: calc(var(--vh, 1vh) * 100); 
+            display: flex; 
+            flex-direction: column;
+            overflow-y: auto; 
+            -webkit-overflow-scrolling: touch;
+        }
 
-        .status-bar { height: 44px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; color: white; font-weight: 600; font-size: 0.9rem; }
+        .status-bar { 
+            height: 44px; 
+            padding: 0 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            color: white; 
+            font-weight: 600; 
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
         
         .home-title { 
-            font-family: 'Indie Flower'; font-size: 2.5rem; color: white; 
-            text-align: center; margin-top: 10px; margin-bottom: 10px; text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-family: 'Indie Flower'; 
+            font-size: 2.5rem; 
+            color: white; 
+            text-align: center; 
+            margin: 10px 0; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* 3x4 Grid */
         .app-grid { 
-            display: grid; grid-template-columns: repeat(3, 1fr); 
-            gap: 20px; padding: 25px; 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            padding: 20px; 
+            flex: 1;
         }
         
-        .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .app-icon:active { opacity: 0.6; }
+        .app-icon { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+        .app-icon:active .icon-box { transform: scale(0.9); background: #eee; }
 
         .icon-box {
-            width: 64px; height: 64px; border-radius: 16px; background: white;
+            width: 65px; height: 65px; border-radius: 16px; background: white;
             display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
-            margin-bottom: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.5);
+            margin-bottom: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.1s ease;
         }
-        .icon-label { color: white; font-size: 0.75rem; font-weight: 500; text-shadow: 0 1px 2px rgba(0,0,0,0.2); letter-spacing: 0.3px; }
+        .icon-label { color: white; font-size: 0.75rem; font-weight: 500; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
         /* --- WINDOWS --- */
         .window {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; 
+            height: calc(var(--vh, 1vh) * 100);
             background: #f2f2f7; z-index: 5000; 
             display: none; flex-direction: column;
         }
         
         .header {
-            height: 50px; background: rgba(255,255,255,0.95); border-bottom: 1px solid #c6c6c8; display: flex;
-            align-items: center; justify-content: space-between; padding: 0 16px; font-weight: 600; font-size: 1.1rem;
-            flex-shrink: 0;
+            height: 60px; background: rgba(255,255,255,0.98); 
+            border-bottom: 1px solid #c6c6c8; display: flex;
+            align-items: center; justify-content: space-between; padding: 0 16px; 
+            font-weight: 600; flex-shrink: 0;
+            padding-top: env(safe-area-inset-top); /* Supports iPhone Notch */
         }
-        .close-btn { color: #007aff; font-size: 1rem; font-weight: 400; cursor: pointer; }
-        .header-title { flex: 1; text-align: center; }
-        .header-right { width: 40px; } /* Spacer */
+        .close-btn { color: #007aff; font-size: 1rem; cursor: pointer; padding: 10px; }
         
-        .content { flex: 1; overflow-y: auto; padding: 20px; }
-
-        /* --- APP SPECIFIC STYLES --- */
-        
-        /* General List Styles */
-        .list-group { background: white; border-radius: 12px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .list-item { 
-            padding: 16px; border-bottom: 1px solid #e5e5ea; display: flex; 
-            justify-content: space-between; align-items: center; font-size: 1rem;
+        .content { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 20px; 
+            -webkit-overflow-scrolling: touch; 
         }
-        .list-item:last-child { border-bottom: none; }
-        .list-val { color: #8e8e93; font-size: 0.95rem; }
-        .list-icon { margin-right: 12px; font-size: 1.2rem; width: 25px; text-align: center; }
 
-        /* Chat */
-        #chat-box { display: flex; flex-direction: column; gap: 12px; padding-bottom: 80px; }
-        .bubble { max-width: 75%; padding: 10px 16px; border-radius: 20px; font-size: 1rem; line-height: 1.4; }
-        .rcvd { background: #e5e5ea; color: black; align-self: flex-start; border-bottom-left-radius: 5px; }
-        .sent { background: #007aff; color: white; align-self: flex-end; border-bottom-right-radius: 5px; }
-        .timestamp { font-size: 0.65rem; color: #8e8e93; margin-top: 4px; text-align: right; display: block; }
-        .opts { position: absolute; bottom: 0; width: 100%; background: #f9f9f9; padding: 12px; display: flex; gap: 10px; border-top: 1px solid #ccc; }
-        .opt-btn { flex: 1; padding: 12px; border-radius: 25px; background: #007aff; color: white; border: none; font-weight: 600; font-size: 0.9rem; }
-
-        /* Gallery */
-        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .photo-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .photo-img { height: 120px; background: #ddd; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
-        .photo-meta { padding: 10px; display: flex; justify-content: space-between; font-size: 0.8rem; color: #555; }
-
-        /* Calculator */
-        #calc-screen { background: #1c1c1e; color: white; padding: 25px; text-align: right; font-size: 3.5rem; border-radius: 15px; margin-bottom: 15px; font-weight: 300; }
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-        .calc-btn { background: #e5e5ea; height: 65px; border-radius: 50%; border: none; font-size: 1.5rem; font-weight: 500; color: black; }
-        .calc-btn.orange { background: #ff9f0a; color: white; }
-        .calc-btn.wide { grid-column: span 2; border-radius: 40px; text-align: left; padding-left: 25px; }
-
-        /* Weather */
-        .weather-main { text-align: center; margin-bottom: 30px; }
-        .weather-temp { font-size: 4rem; font-weight: 200; }
-        .weather-cond { font-size: 1.2rem; color: #555; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* Notes */
-        .note-paper { background: #fdf6e3; padding: 20px; min-height: 100%; border-radius: 8px; font-family: 'Courier New', monospace; line-height: 1.6; border-left: 4px solid #ff6b81; }
-
-        /* Music */
-        .album-art { width: 220px; height: 220px; background: #222; margin: 20px auto; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 4rem; box-shadow: 0 10px 30px rgba(0,0,0,0.15); color: #ff6b81; }
-        .music-info { text-align: center; margin-bottom: 20px; }
-        .prog-bar { height: 4px; background: #ddd; border-radius: 2px; margin: 20px 0; overflow: hidden; }
-        .prog-fill { width: 35%; height: 100%; background: #555; }
-        .playlist { margin-top: 30px; }
-        
-        /* Coupons */
-        .coupon { 
-            background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; 
-            border: 2px dashed #ddd; display: flex; justify-content: space-between; align-items: center;
+        /* --- SPECIFIC APP FIXES --- */
+        .opts { 
+            padding: 15px; 
+            padding-bottom: calc(15px + env(safe-area-inset-bottom)); 
+            background: white; 
+            display: flex; 
+            gap: 10px; 
+            border-top: 1px solid #ddd;
         }
-        .coupon-btn { background: #ff6b81; color: white; border: none; padding: 6px 14px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; }
-        .coupon.redeemed { background: #f9f9f9; border-color: #eee; color: #aaa; }
-        .coupon.redeemed .coupon-btn { background: #ccc; }
+        
+        .opt-btn { 
+            flex: 1; border-radius: 25px; background: #007aff; color: white; 
+            border: none; font-weight: 600; padding: 12px; font-size: 0.9rem;
+        }
 
-        /* Game (Clicker) */
-        #game-area { height: 300px; background: #fafafa; border-radius: 15px; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; flex-direction: column; cursor: pointer; }
-        .big-heart { font-size: 6rem; user-select: none; }
-        .big-heart:active { transform: scale(0.9); }
+        /* Calculator Keys Fix */
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .calc-btn { height: 70px; width: 70px; border-radius: 50%; border: none; font-size: 1.5rem; }
+        .calc-btn.wide { width: 100%; border-radius: 40px; grid-column: span 2; }
 
+        #call-overlay { 
+            padding-top: env(safe-area-inset-top);
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -145,186 +149,132 @@
             <div class="app-icon" onclick="openWindow('chat')"><div class="icon-box" style="background:#4cd137;">💬</div><span class="icon-label">Chat</span></div>
             <div class="app-icon" onclick="openWindow('gallery')"><div class="icon-box" style="background:#ff9f43;">🖼️</div><span class="icon-label">Gallery</span></div>
             <div class="app-icon" onclick="openWindow('maps')"><div class="icon-box" style="background:#2ecc71;">🗺️</div><span class="icon-label">Maps</span></div>
-            
             <div class="app-icon" onclick="openWindow('weather')"><div class="icon-box" style="background:#54a0ff;">☀️</div><span class="icon-label">Weather</span></div>
             <div class="app-icon" onclick="openWindow('notes')"><div class="icon-box" style="background:#f1c40f;">📝</div><span class="icon-label">Notes</span></div>
             <div class="app-icon" onclick="openWindow('music')"><div class="icon-box" style="background:#ff2d55;">🎵</div><span class="icon-label">Music</span></div>
-            
             <div class="app-icon" onclick="openWindow('calc')"><div class="icon-box" style="background:#1c1c1e; color:white;">🧮</div><span class="icon-label">Calc</span></div>
             <div class="app-icon" onclick="openWindow('coupons')"><div class="icon-box" style="background:#ff9f0a;">🎟️</div><span class="icon-label">Coupons</span></div>
             <div class="app-icon" onclick="openWindow('game')"><div class="icon-box" style="background:#5856d6;">👾</div><span class="icon-label">Game</span></div>
-            
             <div class="app-icon" onclick="openWindow('diary')"><div class="icon-box" style="background:#5ac8fa;">📔</div><span class="icon-label">Diary</span></div>
             <div class="app-icon" onclick="openWindow('camera')"><div class="icon-box" style="background:#8e8e93; color:white;">📸</div><span class="icon-label">Camera</span></div>
             <div class="app-icon" onclick="openWindow('settings')"><div class="icon-box" style="background:#e5e5ea; color:black;">⚙️</div><span class="icon-label">Settings</span></div>
         </div>
     </div>
 
-    <div id="win-chat" class="window">
-        <div class="header"><span class="close-btn" onclick="closeWindow('chat')">Back</span><span class="header-title">Theshu ❤️</span><div class="header-right"></div></div>
-        <div class="content">
-            <div id="chat-box"></div>
-        </div>
-        <div class="opts" id="chat-opts">
-            <button class="opt-btn" onclick="startChat()">Start Chat</button>
-        </div>
-    </div>
+    <script>
+        // 1. DYNAMIC VH FIX (For Mobile Browsers)
+        function setVh() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        window.addEventListener('resize', setVh);
+        window.addEventListener('orientationchange', setVh);
+        setVh();
 
-    <div id="win-gallery" class="window">
-        <div class="header"><span class="close-btn" onclick="closeWindow('gallery')">Back</span><span class="header-title">Memories</span><div class="header-right"></div></div>
-        <div class="content">
-            <div class="gallery-grid">
-                <div class="photo-card"><div class="photo-img">✈️</div><div class="photo-meta"><span>The Flight</span><span>❤️ 240</span></div></div>
-                <div class="photo-card"><div class="photo-img">🥂</div><div class="photo-meta"><span>First Date</span><span>❤️ 500</span></div></div>
-                <div class="photo-card"><div class="photo-img">🐈‍⬛</div><div class="photo-meta"><span>Kitchu</span><span>❤️ 999</span></div></div>
-                <div class="photo-card"><div class="photo-img">💍</div><div class="photo-meta"><span>Future</span><span>❤️ ∞</span></div></div>
-            </div>
-        </div>
-    </div>
+        // 2. NAVIGATION
+        function openWindow(id) {
+            const win = document.getElementById('win-' + id);
+            if(win) win.style.display = 'flex';
+        }
+        function closeWindow(id) {
+            document.getElementById('win-' + id).style.display = 'none';
+        }
 
-    <div id="win-maps" class="window">
-        <div class="header"><span class="close-btn" onclick="closeWindow('maps')">Back</span><span class="header-title">Location</span><div class="header-right"></div></div>
-        <div class="content">
-            <div style="background:#fff; padding:20px; border-radius:12px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
-                <div style="font-size:3rem; margin-bottom:10px;">📍 • • • ✈️ • • • 📍</div>
-                <h3>Route Calculated</h3>
-                <p style="color:#888; margin-top:5px;">Destination: Theshu's Arms</p>
-                <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
-                <div style="display:flex; justify-content:space-around;">
-                    <div><strong>Distance</strong><br>0 km (Heart)</div>
-                    <div><strong>Time</strong><br>Forever</div>
-                </div>
-            </div>
-        </div>
-    </div>
+        // 3. CALCULATOR LOGIC
+        let calcVal = "";
+        function cIn(v) {
+            const screen = document.getElementById('calc-screen');
+            if(v === 'C') { calcVal = ""; screen.innerText = "0"; }
+            else if(v === '=') {
+                if(calcVal === "1+1") screen.innerText = "2 (Us)";
+                else { 
+                    try { 
+                        let res = eval(calcVal.replace('×', '*').replace('÷', '/'));
+                        screen.innerText = res; 
+                        calcVal = res.toString(); 
+                    } catch { screen.innerText = "Error"; } 
+                }
+            } else {
+                calcVal += v; screen.innerText = calcVal;
+            }
+        }
 
-    <div id="win-weather" class="window">
-        <div class="header"><span class="close-btn" onclick="closeWindow('weather')">Back</span><span class="header-title">Weather</span><div class="header-right"></div></div>
-        <div class="content">
-            <div class="weather-main">
-                <div class="weather-cond">Mostly Romantic</div>
-                <div class="weather-temp">100%</div>
-                <p>Chance of Love</p>
-            </div>
-            <div class="list-group">
-                <div class="list-item"><span>Today</span><span class="list-val">☀️ Lots of Kisses</span></div>
-                <div class="list-item"><span>Tomorrow</span><span class="list-val">🌥️ Missing You</span></div>
-                <div class="list-item"><span>Weekend</span><span class="list-val">🎥 Movie Date</span></div>
-            </div>
-        </div>
-    </div>
+        // 4. GAME LOGIC
+        let score = 0;
+        function clickHeart() {
+            score++;
+            document.getElementById('click-score').innerText = score;
+            // Haptic feedback simulation
+            if (window.navigator.vibrate) window.navigator.vibrate(10);
+        }
 
-    <div id="win-notes" class="window">
-        <div class="header"><span class="close-btn" onclick="closeWindow('notes')">Back</span><span class="header-title">Notes</span><div class="header-right"></div></div>
-        <div class="content">
-            <div class="note-paper">
-                <strong>Reasons I Love You:</strong><br><br>
-                1. Your smile lights up my world.<br>
-                2. You handle my weirdness.<br>
-                3. You are ambitious and strong.<br>
-                4. Kitchu likes you (mostly).<br>
-                5. You are simply Ayushka. ❤️
-            </div>
-            <button class="opt-btn" style="margin-top:20px; width:100%;" onclick="alert('Note Saved to Heart!')">Add New Note</button>
-        </div>
-    </div>
+        // 5. CHAT SYSTEM
+        const msgs = [
+            {t:"Hey Ayuuuu! ❤️", o:[{l:"Hi Theshu!", n:1}]},
+            {t:"I made this improved version for you!", o:[{l:"It's amazing!", n:2}]},
+            {t:"Just wanted to say I love you.", o:[{l:"Love you more!", n:3}]},
+            {t:"You are my everything.", o:[{l:"Call me! 📞", n:-2}, {l:"Gift?", n:-1}]}
+        ];
 
-    <div id="win-music" class="window">
-        <div class="header"><span class="close-btn" onclick="closeWindow('music')">Back</span><span class="header-title">Now Playing</span><div class="header-right"></div></div>
-        <div class="content">
-            <div class="album-art">🎵</div>
-            <div class="music-info">
-                <h2>Tum Hi Ho</h2>
-                <p style="color:#888;">Theshu's Playlist</p>
-            </div>
-            <div class="prog-bar"><div class="prog-fill"></div></div>
-            <div style="display:flex; justify-content:center; gap:30px; font-size:2.5rem; margin-bottom:30px;">
-                <span>⏮️</span><span>⏸️</span><span>⏭️</span>
-            </div>
-            <div class="list-group playlist">
-                <div class="list-item"><span>1. Perfect</span><span class="list-val">Ed Sheeran</span></div>
-                <div class="list-item"><span>2. All of Me</span><span class="list-val">John Legend</span></div>
-                <div class="list-item"><span>3. Raatan Lambiyan</span><span class="list-val">Jubin N.</span></div>
-            </div>
-        </div>
-    </div>
+        function startChat() {
+            document.getElementById('chat-opts').innerHTML = '';
+            addMsg(msgs[0].t, 'rcvd');
+            showOpts(msgs[0].o);
+        }
 
-    <div id="win-calc" class="window">
-        <div class="header"><span class="close-btn" onclick="closeWindow('calc')">Back</span><span class="header-title">Calculator</span><div class="header-right"></div></div>
-        <div class="content" style="background:black;">
-            <div id="calc-screen">0</div>
-            <div class="calc-grid">
-                <button class="calc-btn" onclick="cIn('C')">AC</button>
-                <button class="calc-btn" onclick="cIn('+/-')">+/-</button>
-                <button class="calc-btn" onclick="cIn('%')">%</button>
-                <button class="calc-btn orange" onclick="cIn('/')">÷</button>
-                
-                <button class="calc-btn" onclick="cIn('7')">7</button>
-                <button class="calc-btn" onclick="cIn('8')">8</button>
-                <button class="calc-btn" onclick="cIn('9')">9</button>
-                <button class="calc-btn orange" onclick="cIn('*')">×</button>
-                
-                <button class="calc-btn" onclick="cIn('4')">4</button>
-                <button class="calc-btn" onclick="cIn('5')">5</button>
-                <button class="calc-btn" onclick="cIn('6')">6</button>
-                <button class="calc-btn orange" onclick="cIn('-')">-</button>
-                
-                <button class="calc-btn" onclick="cIn('1')">1</button>
-                <button class="calc-btn" onclick="cIn('2')">2</button>
-                <button class="calc-btn" onclick="cIn('3')">3</button>
-                <button class="calc-btn orange" onclick="cIn('+')">+</button>
-                
-                <button class="calc-btn wide" onclick="cIn('0')">0</button>
-                <button class="calc-btn" onclick="cIn('.')">.</button>
-                <button class="calc-btn orange" onclick="cIn('=')">=</button>
-            </div>
-        </div>
-    </div>
+        function addMsg(txt, cls) {
+            const box = document.getElementById('chat-box');
+            const d = document.createElement('div');
+            d.className = 'bubble ' + cls;
+            d.innerHTML = txt + '<span class="timestamp">Just now</span>';
+            box.appendChild(d);
+            box.parentElement.scrollTop = box.parentElement.scrollHeight;
+        }
 
-    <div id="win-coupons" class="window">
-        <div class="header"><span class="close-btn" onclick="closeWindow('coupons')">Back</span><span class="header-title">Love Coupons</span><div class="header-right"></div></div>
-        <div class="content">
-            <div class="coupon"><span>🎥 Virtual Movie Date</span><button class="coupon-btn" onclick="redeem(this)">Redeem</button></div>
-            <div class="coupon"><span>🍕 Order Food for You</span><button class="coupon-btn" onclick="redeem(this)">Redeem</button></div>
-            <div class="coupon"><span>💆‍♀️ Head Massage (Future)</span><button class="coupon-btn" onclick="redeem(this)">Redeem</button></div>
-            <div class="coupon"><span>🥺 Forgive 1 Mistake</span><button class="coupon-btn" onclick="redeem(this)">Redeem</button></div>
-        </div>
-    </div>
+        function showOpts(opts) {
+            const c = document.getElementById('chat-opts');
+            c.innerHTML = '';
+            opts.forEach(o => {
+                const b = document.createElement('button');
+                b.className = 'opt-btn'; b.innerText = o.l;
+                b.onclick = () => reply(o.n, o.l);
+                c.appendChild(b);
+            });
+        }
 
-    <div id="win-game" class="window">
-        <div class="header"><span class="close-btn" onclick="closeWindow('game')">Back</span><span class="header-title">Love Clicker</span><div class="header-right"></div></div>
-        <div class="content">
-            <div style="text-align:center; margin-bottom:20px;">
-                <h2>Score: <span id="click-score">0</span></h2>
-                <p>Tap the heart!</p>
-            </div>
-            <div id="game-area" onclick="clickHeart()">
-                <div class="big-heart">❤️</div>
-            </div>
-        </div>
-    </div>
+        function reply(n, l) {
+            addMsg(l, 'sent');
+            document.getElementById('chat-opts').innerHTML = '';
+            if(n === -2) {
+                document.getElementById('call-overlay').style.display = 'flex';
+                setTimeout(()=> document.getElementById('call-status').innerText="Connected ❤️", 1500);
+            } else if(n === -1) {
+                setTimeout(spawnGift, 500);
+            } else {
+                setTimeout(() => {
+                    addMsg(msgs[n].t, 'rcvd');
+                    showOpts(msgs[n].o);
+                }, 800);
+            }
+        }
 
-    <div id="win-diary" class="window">
-        <div class="header"><span class="close-btn" onclick="closeWindow('diary')">Back</span><span class="header-title">Secret Diary</span><div class="header-right"></div></div>
-        <div class="content">
-            <div style="background:#fff; padding:20px; border-radius:12px; font-family:'Indie Flower'; font-size:1.3rem; line-height:1.6; border: 1px solid #eee;">
-                February 14, 2026<br><br>
-                Dear Diary,<br>
-                I made this OS for Ayushka. I hope she likes it. Sometimes I worry I'm not doing enough, but I just want her to know she is my entire world.<br><br>
-                Distance is hard, but she is worth every mile.<br><br>
-                - Theshu
-            </div>
-        </div>
-    </div>
+        function spawnGift() {
+            const box = document.getElementById('chat-box');
+            const d = document.createElement('div');
+            d.className = 'bubble rcvd'; 
+            d.style.background = "#ffeaa7"; d.style.textAlign = "center";
+            d.innerText = "🎁 Tap to Open";
+            d.onclick = function() { this.innerText = "💍 Marry Me? (One Day)"; };
+            box.appendChild(d);
+            box.parentElement.scrollTop = box.parentElement.scrollHeight;
+        }
 
-    <div id="win-camera" class="window">
-        <div class="header"><span class="close-btn" onclick="closeWindow('camera')">Back</span><span class="header-title">Camera</span><div class="header-right"></div></div>
-        <div class="content" style="background:black; display:flex; flex-direction:column; justify-content:center;">
-            <div style="width:100%; height:350px; background:#222; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:4rem; margin-bottom:30px;">📷</div>
-            <div style="display:flex; justify-content:center;">
-                <div style="width:70px; height:70px; background:white; border-radius:50%; border:5px solid #ccc; cursor:pointer;" onclick="alert('Beautiful! 😍')"></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="wi
+        function endCall() { document.getElementById('call-overlay').style.display = 'none'; }
+        function redeem(btn) {
+            btn.parentElement.classList.add('redeemed');
+            btn.innerText = "Used";
+            alert("Redeemed! ❤️");
+        }
+    </script>
+</body>
+</html>
