@@ -3,401 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Story of Us ❤️</title>
+    <title>Theshu OS ❤️</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;500;700&family=Cinzel:wght@700&family=Indie+Flower&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- PREMIUM THEME --- */
+        /* --- THESHU OS THEME --- */
         :root {
-            --primary: #ff6b81; 
-            --accent: #ff4757;
-            --bg: #f8efef;
-            --card: rgba(255, 255, 255, 0.8);
-            --text: #2d3436;
-            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-        }
-
-        body.dark-mode {
-            --primary: #00cec9;
-            --accent: #0984e3;
-            --bg: #1e1e2e;
-            --card: rgba(30, 30, 46, 0.8);
-            --text: #dfe6e9;
+            --bg-wallpaper: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            --app-bg: rgba(255, 255, 255, 0.2);
+            --text: #333;
+            --primary: #ff6b81;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            margin: 0; padding: 0; height: 100vh;
-            background: var(--bg); color: var(--text);
+            margin: 0; padding: 0; height: 100vh; width: 100vw;
+            background: var(--bg-wallpaper);
             font-family: 'Poppins', sans-serif;
-            overflow: hidden; 
-            transition: background 0.3s;
-            background-image: radial-gradient(var(--primary) 0.5px, transparent 0.5px);
-            background-size: 20px 20px;
+            overflow: hidden; /* No body scroll */
+            color: var(--text);
         }
 
-        /* LAYOUT */
-        .app-layout {
-            width: 100%; height: 100%; position: relative;
-            display: flex; flex-direction: column;
-        }
-
-        /* PAGES */
-        .page {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            padding: 80px 20px 100px 20px; /* Extra top padding for header */
-            display: flex; flex-direction: column; align-items: center; text-align: center;
-            opacity: 0; pointer-events: none; z-index: 0;
-            overflow-y: auto;
-            transition: opacity 0.4s ease, transform 0.4s ease;
-            transform: scale(0.95);
-        }
-
-        .page.active { opacity: 1; pointer-events: all; z-index: 10; transform: scale(1); }
-
-        /* GLASS CARDS */
-        .card {
-            background: var(--card);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 20px;
-            padding: 20px;
-            width: 100%;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            margin-bottom: 20px;
-        }
-
-        /* LOCK SCREEN */
+        /* --- LOCK SCREEN (Layer 1) --- */
         #lock-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-            z-index: 999999; 
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(15px);
+            z-index: 9999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; color: white;
+            text-align: center;
         }
 
-        /* NAVIGATION */
-        .nav-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            height: 75px; background: var(--card);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(0,0,0,0.05);
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 25px; z-index: 100;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-        }
-
-        /* BUTTONS */
-        .nav-btn {
-            background: transparent; border: 2px solid var(--text); color: var(--text);
-            width: 40px; height: 40px; border-radius: 50%;
-            font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-        }
-        
-        .btn {
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            color: white; border: none;
-            padding: 12px 30px; border-radius: 50px; font-weight: bold; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer;
-            transition: transform 0.2s; width: 100%;
-        }
-        .btn:active { transform: scale(0.95); }
-
-        /* INPUT */
         input {
-            padding: 15px; border-radius: 15px; border: none; 
-            text-align: center; width: 220px; margin-top: 20px; font-size: 1.1rem;
-            background: rgba(255,255,255,0.25); color: white; font-weight: bold;
-            border: 2px solid rgba(255,255,255,0.5);
+            padding: 15px; border-radius: 30px; border: none; 
+            text-align: center; font-size: 1.2rem; width: 200px;
+            background: rgba(255,255,255,0.2); color: white;
+            border: 2px solid rgba(255,255,255,0.5); margin-top: 20px;
         }
-        input::placeholder { color: rgba(255,255,255,0.8); }
+        ::placeholder { color: rgba(255,255,255,0.7); }
 
-        /* TEXT */
-        h1 { font-family: 'Dancing Script', cursive; font-size: 3.5rem; margin: 0; text-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
-        h2 { font-family: 'Cinzel', serif; color: var(--primary); margin-bottom: 15px; font-size: 1.8rem; }
-        .theme-btn { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; z-index: 999; }
+        /* --- HOME SCREEN (Layer 0) --- */
+        .status-bar {
+            height: 30px; display: flex; justify-content: space-between; 
+            padding: 5px 20px; font-size: 0.8rem; font-weight: bold; color: white;
+        }
 
-        /* --- FEATURE STYLES --- */
-        
-        /* TIMER */
-        .timer-box { display: flex; justify-content: space-around; font-weight: bold; color: var(--primary); font-size: 1.1rem; margin-top: 10px; }
-        
-        /* DATE SIM */
-        .option-card { border: 2px solid transparent; padding: 10px; border-radius: 15px; cursor: pointer; transition: 0.3s; background: rgba(0,0,0,0.03); margin-bottom: 5px; display: flex; align-items: center; gap: 10px; text-align: left; }
-        .option-card.selected { border-color: var(--primary); background: rgba(255,107,129,0.1); }
-        
-        /* GALLERY (CORKBOARD) */
-        .polaroid-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .polaroid { background: white; padding: 5px 5px 25px 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); transform: rotate(-2deg); position: relative; }
-        .polaroid:nth-child(even) { transform: rotate(2deg); margin-top: 20px; }
-        .polaroid::before { content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 20px; height: 20px; background: rgba(255,255,255,0.5); border-radius: 50%; box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
-        .polaroid img { width: 100%; height: 100px; object-fit: cover; background: #eee; }
+        .app-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); 
+            gap: 20px 10px; padding: 20px; margin-top: 20px;
+        }
 
-        /* BUCKET LIST */
-        .progress-container { width: 100%; background: #ddd; height: 10px; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
-        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.5s; }
-        .bucket-item { display: flex; align-items: center; gap: 10px; padding: 12px; border-bottom: 1px dashed #ccc; cursor: pointer; text-align: left; }
-        
-        /* ENVELOPES */
-        .env-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .env { background: #ff7675; color: white; padding: 20px; border-radius: 10px; font-weight: bold; cursor: pointer; position: relative; overflow: hidden; }
-        .env::after { content: '💌'; position: absolute; bottom: -5px; right: -5px; font-size: 2rem; opacity: 0.3; }
-        
-        /* MODAL */
-        #modal { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; display:none; justify-content:center; align-items:center; }
-        .modal-content { background:white; padding:30px; border-radius:20px; max-width:80%; text-align:center; animation: popIn 0.3s; color: #333; }
-        @keyframes popIn { from{transform:scale(0.5)} to{transform:scale(1)} }
+        .app-icon {
+            display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; transition: transform 0.1s;
+        }
+        .app-icon:active { transform: scale(0.9); }
 
-        /* VISUALIZER */
-        .bars { display: flex; justify-content: center; gap: 5px; height: 50px; align-items: flex-end; }
-        .bar { width: 8px; background: var(--primary); animation: bounce 0.5s infinite; animation-play-state: paused; }
-        .bar:nth-child(1) { height: 20px; animation-duration: 0.4s; }
-        .bar:nth-child(2) { height: 40px; animation-duration: 0.6s; }
-        .bar:nth-child(3) { height: 30px; animation-duration: 0.5s; }
-        .bar:nth-child(4) { height: 50px; animation-duration: 0.7s; }
-        .bar:nth-child(5) { height: 25px; animation-duration: 0.4s; }
-        @keyframes bounce { 0%, 100% { height: 10px; } 50% { height: 100%; } }
+        .icon-box {
+            width: 60px; height: 60px; border-radius: 15px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background: white; margin-bottom: 5px;
+        }
+        .icon-label { font-size: 0.75rem; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
 
-        /* EXTRAS */
-        .float { position: fixed; pointer-events: none; animation: up 3s linear forwards; z-index: 9999; font-size: 2rem; }
-        @keyframes up { to { transform: translateY(-100vh); opacity: 0; } }
+        /* --- APP WINDOWS (Layer 2 - Hidden by default) --- */
+        .app-window {
+            position: fixed; top: 100vh; left: 0; width: 100%; height: 100%;
+            background: #f5f6fa; z-index: 1000;
+            transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column;
+        }
+        .app-window.open { top: 0; }
+
+        /* APP HEADER */
+        .app-header {
+            height: 60px; background: white; 
+            display: flex; align-items: center; padding: 0 20px;
+            font-weight: bold; font-size: 1.2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            justify-content: space-between;
+        }
+        .close-btn { 
+            background: #ff4757; color: white; border: none; 
+            width: 30px; height: 30px; border-radius: 50%; font-weight: bold; 
+        }
+
+        /* APP CONTENT */
+        .app-content {
+            flex: 1; overflow-y: auto; padding: 20px;
+            text-align: center;
+        }
+
+        /* --- WIDGET STYLES --- */
+        .btn {
+            background: var(--primary); color: white; border: none;
+            padding: 12px 30px; border-radius: 50px; font-weight: bold;
+            font-size: 1rem; margin-top: 15px; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 107, 129, 0.4);
+        }
+
+        /* Gallery */
+        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .photo-card { background: white; padding: 5px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        
+        /* Messages */
+        .msg-bubble {
+            background: white; padding: 15px; border-radius: 15px;
+            text-align: left; margin-bottom: 10px; position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .msg-bubble.me { background: #d1efff; align-self: flex-end; }
+
+        /* Confetti */
+        .confetti { position: absolute; width: 10px; height: 10px; background: red; animation: fall 3s linear forwards; }
+        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
 
     </style>
 </head>
 <body>
 
     <div id="lock-screen">
-        <h1 style="color:white">Theshu <br>&<br> Ayu</h1>
-        <p style="color:white; font-size:1.1rem; margin-top:10px;">PREMIUM EDITION ✨</p>
-        <input type="text" id="pass" placeholder="hint: kushu">
-        <button class="btn" style="background:white; color:var(--primary); width:auto; margin-top:20px;" onclick="checkPass()">Unlock ❤️</button>
-        <p id="err" style="display:none; color:white; background:red; padding:5px 10px; border-radius:5px; margin-top:15px;">Wrong Password!</p>
+        <div style="font-size: 4rem;">🔒</div>
+        <h1 style="font-family: 'Dancing Script'; margin: 10px 0;">Theshu & Ayu</h1>
+        <p>Enter Passcode to Unlock</p>
+        <input type="password" id="pass" placeholder="hint: kushu" onkeyup="if(event.key==='Enter') unlock()">
+        <button class="btn" style="background:white; color:#333; margin-top:20px;" onclick="unlock()">Unlock</button>
+        <p id="err" style="display:none; color:#ff6b81; margin-top:10px; font-weight:bold;">Wrong Password!</p>
     </div>
 
-    <div class="app-layout">
-        
-        <div class="theme-btn" onclick="document.body.classList.toggle('dark-mode')">🌗</div>
-
-        <div class="page active" id="p1">
-            <h1 style="color:var(--primary);">Welcome Home</h1>
-            <div class="card">
-                <h3>👸🏻 & 🤴🏻</h3>
-                <p>"Distance gives us a reason to love harder."</p>
-            </div>
-            
-            <div class="card">
-                <h3>⏳ Together Since...</h3>
-                <div class="timer-box" id="timer">Loading...</div>
-            </div>
-
-            <div class="card">
-                <h3>🎂 Birthday Countdown</h3>
-                <div id="bday" style="font-size:2rem; font-weight:bold; color:var(--accent)">...</div>
-            </div>
-            
-            <button class="btn" onclick="spawn('💋')">Send a Kiss 💋</button>
+    <div id="home-screen">
+        <div class="status-bar">
+            <span>10:10</span>
+            <span>❤️ 4G</span>
+            <span>100% 🔋</span>
         </div>
 
-        <div class="page" id="p2">
-            <h2>Date Planner 🎮</h2>
-            <div class="card">
-                <p style="font-weight:bold; margin-bottom:10px;">1. Choose Location:</p>
-                <div class="option-card" onclick="selectSim('loc', 'Beach 🏖️', this)">🏖️ Beach Sunset</div>
-                <div class="option-card" onclick="selectSim('loc', 'Cozy Bed 🛏️', this)">🛏️ Cozy Bed Cuddles</div>
-                <div class="option-card" onclick="selectSim('loc', 'Rooftop 🌃', this)">🌃 Rooftop Stargazing</div>
-            </div>
-
-            <div class="card">
-                <p style="font-weight:bold; margin-bottom:10px;">2. Choose Food:</p>
-                <div class="option-card" onclick="selectSim('food', 'Ice Cream 🍦', this)">🍦 Ice Cream</div>
-                <div class="option-card" onclick="selectSim('food', 'Pizza 🍕', this)">🍕 Pizza Party</div>
-                <div class="option-card" onclick="selectSim('food', 'You 😉', this)">😈 Just You</div>
-            </div>
-
-            <button class="btn" onclick="runSim()">Start Date ❤️</button>
+        <div style="padding: 20px; text-align: center; color: white; margin-top: 20px;">
+            <h2 style="margin:0; font-size:2rem;">Wednesday</h2>
+            <p style="margin:0; opacity:0.8;">February 4</p>
         </div>
 
-        <div class="page" id="p3">
-            <h2>For Ayushka 💌</h2>
-            <div class="card" style="text-align:left; font-family:'Indie Flower', cursive; font-size:1.1rem; line-height:1.6;">
-                <p>yooo idiot I'm made this web for you 😸</p>
-                <p>took some time but it was worth it 😉</p>
-                <p>ik you have fear of loosing those people u truly love.</p>
-                <p>Don't worry about it now cause I'm here 🥸</p>
-                <p>aheem ahemmm so be your self.</p>
-                <p>Explore enjoy the web 😸 hehehe</p>
-                <br>
-                <p style="text-align:right;">- Theshmil (Kitchu) ❤️</p>
+        <div class="app-grid">
+            <div class="app-icon" onclick="openApp('msg')">
+                <div class="icon-box" style="background:#4cd137; color:white;">💬</div>
+                <span class="icon-label">Messages</span>
             </div>
-            <button class="btn" onclick="spawn('💖')">Love it!</button>
-        </div>
-
-        <div class="page" id="p4">
-            <h2>Our Memories 📸</h2>
-            <div class="polaroid-grid">
-                <div class="polaroid"><div style="height:100px; background:#ffd1dc; display:flex; align-items:center; justify-content:center; font-size:3rem;">👩🏻</div><small>My Cutie</small></div>
-                <div class="polaroid"><div style="height:100px; background:#d1efff; display:flex; align-items:center; justify-content:center; font-size:3rem;">✨</div><small>Best Smile</small></div>
-                <div class="polaroid"><div style="height:100px; background:#fff5ba; display:flex; align-items:center; justify-content:center; font-size:3rem;">🏖️</div><small>Summer Girl</small></div>
-                <div class="polaroid"><div style="height:100px; background:#e0d1ff; display:flex; align-items:center; justify-content:center; font-size:3rem;">💑</div><small>Us Soon</small></div>
+            <div class="app-icon" onclick="openApp('photos')">
+                <div class="icon-box" style="background:white;">📸</div>
+                <span class="icon-label">Photos</span>
             </div>
-        </div>
-
-        <div class="page" id="p5">
-            <h2>Open When... 💌</h2>
-            <p style="margin-bottom:20px;">Tap an envelope for a message.</p>
-            <div class="env-grid">
-                <div class="env" style="background:#ff7675" onclick="showModal('Miss You', 'Look at the moon. I am looking at it too. You are never alone. 🌙')">Miss You</div>
-                <div class="env" style="background:#74b9ff" onclick="showModal('Sad', 'Remember you are strong, beautiful, and loved by me! 💪')">Sad</div>
-                <div class="env" style="background:#fdcb6e; color:#333;" onclick="showModal('Happy', 'Your smile is the most precious thing in the world! ✨')">Happy</div>
-                <div class="env" style="background:#a29bfe" onclick="showModal('Bored', 'Go annoy me on WhatsApp right now! 😜')">Bored</div>
+            <div class="app-icon" onclick="openApp('music')">
+                <div class="icon-box" style="background:#ff6b81; color:white;">🎵</div>
+                <span class="icon-label">Music</span>
+            </div>
+            <div class="app-icon" onclick="openApp('date')">
+                <div class="icon-box" style="background:#a55eea; color:white;">🎮</div>
+                <span class="icon-label">Date Sim</span>
+            </div>
+            <div class="app-icon" onclick="openApp('notes')">
+                <div class="icon-box" style="background:#f7b731; color:white;">📝</div>
+                <span class="icon-label">Bucket List</span>
+            </div>
+            <div class="app-icon" onclick="openApp('scan')">
+                <div class="icon-box" style="background:#4b7bec; color:white;">🧬</div>
+                <span class="icon-label">Scanner</span>
             </div>
         </div>
-
-        <div class="page" id="p6">
-            <h2>Bucket List ✅</h2>
-            <div class="card">
-                <div style="margin-bottom:10px; font-weight:bold;">Progress: <span id="prog-text">0%</span></div>
-                <div class="progress-container"><div class="progress-bar" id="prog-bar"></div></div>
-                
-                <div class="bucket-item" onclick="checkItem(this)"><span>⬜</span> Meet in person ✈️</div>
-                <div class="bucket-item" onclick="checkItem(this)"><span>⬜</span> Hug tightly 🫂</div>
-                <div class="bucket-item" onclick="checkItem(this)"><span>⬜</span> Late night drive 🚗</div>
-                <div class="bucket-item" onclick="checkItem(this)"><span>⬜</span> Eat Ice Cream 🍦</div>
-                <div class="bucket-item" onclick="checkItem(this)"><span>⬜</span> Get Married 💍</div>
-            </div>
-        </div>
-
-        <div class="page" id="p7">
-            <h2>Our Song 🎵</h2>
-            <div class="card" style="display:flex; flex-direction:column; align-items:center;">
-                <div style="width:150px; height:150px; background:#222; border-radius:50%; border:5px solid #333; display:flex; align-items:center; justify-content:center; margin-bottom:20px; cursor:pointer;" onclick="toggleMusic(this)">
-                    <div style="width:60px; height:60px; background:var(--primary); border-radius:50%;"></div>
-                </div>
-                <h3>Tum Hi Ho</h3>
-                <div class="bars">
-                    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                </div>
-                <p id="music-status" style="margin-top:10px;">Tap record to play</p>
-            </div>
-        </div>
-
-        <div class="page" id="p8">
-            <h2>Love Scanner 🧬</h2>
-            <div class="card">
-                <p>Place thumb to verify love match</p>
-                <div style="width:100px; height:140px; border:3px solid var(--primary); margin:20px auto; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:3rem; position:relative; overflow:hidden;" onmousedown="scan(this)" ontouchstart="scan(this)">
-                    👆
-                    <div id="scan-bar" style="position:absolute; top:0; left:0; width:100%; height:5px; background:var(--primary); display:none; animation:scan 1s linear infinite;"></div>
-                </div>
-                <style>@keyframes scan{0%{top:0}100%{top:100%}}</style>
-                <div id="scan-res" style="font-weight:bold; height:30px;"></div>
-            </div>
-        </div>
-
-        <div class="page" id="p9">
-            <h2>Why I Love You</h2>
-            <div class="card" id="reason-card">
-                <p style="font-size:1.2rem; font-family:'Indie Flower';">Tap for a reason ❤️</p>
-            </div>
-            <button class="btn" onclick="nextReason()">Tell Me Why</button>
-        </div>
-
-        <div class="page" id="p10">
-            <h2>Couples Quiz 🧠</h2>
-            <div class="card" id="quiz-area">
-                <h3 id="q-text">Loading...</h3>
-                <div id="q-opts" style="margin-top:15px;"></div>
-            </div>
-        </div>
-
     </div>
 
-    <div class="nav-bar">
-        <div class="nav-btn" onclick="nav(-1)">⬅️</div>
-        <div style="font-weight:bold; opacity:0.7;" id="pg-ind">1 / 10</div>
-        <div class="nav-btn" onclick="nav(1)">➡️</div>
+    <div class="app-window" id="app-msg">
+        <div class="app-header">Messages <button class="close-btn" onclick="closeApp('msg')">×</button></div>
+        <div class="app-content" style="background:#eee; display:flex; flex-direction:column;">
+            <div class="msg-bubble">
+                <b>Theshmil:</b><br>
+                yooo idiot I'm made this web for you 😸<br>
+                took some time but it was worth it 😉
+            </div>
+            <div class="msg-bubble">
+                <b>Theshmil:</b><br>
+                ik you have fear of loosing those people u truly love.<br>
+                Don't worry about it now cause I'm here 🥸
+            </div>
+            <div class="msg-bubble">
+                <b>Theshmil:</b><br>
+                aheem ahemmm so be your self.<br>
+                Explore enjoy the web 😸 hehehe
+            </div>
+            <div class="msg-bubble me">
+                <b>You:</b><br>
+                Aww thank you! ❤️
+            </div>
+        </div>
     </div>
 
-    <div id="modal" onclick="this.style.display='none'">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <h2 id="m-title">Title</h2>
-            <p id="m-body">Body text</p>
-            <button class="btn" style="margin-top:20px;" onclick="document.getElementById('modal').style.display='none'">Close</button>
+    <div class="app-window" id="app-photos">
+        <div class="app-header">Photos <button class="close-btn" onclick="closeApp('photos')">×</button></div>
+        <div class="app-content">
+            <h3>Our Memories</h3>
+            <div class="photo-grid">
+                <div class="photo-card" style="height:150px; display:flex; align-items:center; justify-content:center; font-size:3rem; background:#ffeaa7;">👩🏻</div>
+                <div class="photo-card" style="height:150px; display:flex; align-items:center; justify-content:center; font-size:3rem; background:#fab1a0;">✨</div>
+                <div class="photo-card" style="height:150px; display:flex; align-items:center; justify-content:center; font-size:3rem; background:#81ecec;">🏖️</div>
+                <div class="photo-card" style="height:150px; display:flex; align-items:center; justify-content:center; font-size:3rem; background:#a29bfe;">💑</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-window" id="app-music">
+        <div class="app-header">Music <button class="close-btn" onclick="closeApp('music')">×</button></div>
+        <div class="app-content" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <div style="width:200px; height:200px; background:#333; border-radius:10px; margin-bottom:20px; display:flex; align-items:center; justify-content:center; font-size:4rem;">🎵</div>
+            <h2>Tum Hi Ho</h2>
+            <p>Arijit Singh</p>
+            <div style="width:80%; height:5px; background:#ddd; margin:20px 0; border-radius:5px;">
+                <div style="width:40%; height:100%; background:#ff6b81; border-radius:5px;"></div>
+            </div>
+            <button class="btn" onclick="alert('Imagine the music playing! 🎶')">▶ Play</button>
+        </div>
+    </div>
+
+    <div class="app-window" id="app-date">
+        <div class="app-header">Date Sim <button class="close-btn" onclick="closeApp('date')">×</button></div>
+        <div class="app-content">
+            <h3>Plan Our Date</h3>
+            <p>Pick a location:</p>
+            <select id="loc" style="width:100%; padding:10px; margin-bottom:10px;"><option>Beach</option><option>Bed</option></select>
+            <p>Pick a food:</p>
+            <select id="food" style="width:100%; padding:10px; margin-bottom:10px;"><option>Pizza</option><option>Ice Cream</option></select>
+            <button class="btn" onclick="alert('Date Planned! ❤️')">Simulate</button>
+        </div>
+    </div>
+
+    <div class="app-window" id="app-notes">
+        <div class="app-header">Bucket List <button class="close-btn" onclick="closeApp('notes')">×</button></div>
+        <div class="app-content" style="text-align:left;">
+            <div onclick="this.style.textDecoration='line-through'">⬜ Meet in person ✈️</div>
+            <hr>
+            <div onclick="this.style.textDecoration='line-through'">⬜ Hug tightly 🫂</div>
+            <hr>
+            <div onclick="this.style.textDecoration='line-through'">⬜ Get Married 💍</div>
+        </div>
+    </div>
+
+    <div class="app-window" id="app-scan">
+        <div class="app-header">Love Scanner <button class="close-btn" onclick="closeApp('scan')">×</button></div>
+        <div class="app-content" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <div style="width:120px; height:160px; border:4px solid #4b7bec; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:3rem; margin-bottom:20px;" onclick="alert('Scanning... 100% Match! ❤️')">👆</div>
+            <p>Tap fingerprint to scan</p>
         </div>
     </div>
 
     <script>
-        const pass = "kushu";
-        let curr = 1;
-        let simData = {loc:'', food:''};
-        
-        function checkPass() {
-            if(document.getElementById('pass').value.trim().toLowerCase() === pass) {
-                document.getElementById('lock-screen').remove(); // DELETE IT
-                for(let i=0; i<20; i++) spawn('❤️');
+        // NUCLEAR UNLOCK
+        function unlock() {
+            const pass = document.getElementById('pass').value.trim().toLowerCase();
+            if(pass === "kushu") {
+                document.getElementById('lock-screen').remove(); // DELETE LOCK SCREEN
             } else {
                 document.getElementById('err').style.display = 'block';
             }
         }
 
-        function nav(dir) {
-            let next = curr + dir;
-            if(next < 1 || next > 10) return;
-            document.querySelector('.page.active').classList.remove('active');
-            document.getElementById('p'+next).classList.add('active');
-            curr = next;
-            document.getElementById('pg-ind').innerText = curr + " / 10";
+        // APP NAVIGATION
+        function openApp(id) {
+            document.getElementById('app-' + id).classList.add('open');
         }
+        function closeApp(id) {
+            document.getElementById('app-' + id).classList.remove('open');
+        }
+    </script>
 
-        // TIMER
-        function updateTimer() {
-            // Set start date (Example: Jan 1, 2024)
-            const start = new Date("2024-01-01"); // CHANGE THIS DATE
-            const now = new Date();
-            const diff = now - start;
-            
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            
-            document.getElementById('timer').innerText = `${days} Days, ${hours} Hrs`;
-            
-            // Bday
-            let bday = new Date(now.getFullYear(), 8, 22); // Sept 22
-            if(now > bday) bday.setFullYear(now.getFullYear()+1);
-            document.getElementById('bday').innerText = Math.ceil((bday-now)/(1000*60*60*24)) + " Days";
-        }
-        setInterval(updateTimer, 1000);
-        updateTimer();
-
-        // SIM
-        function selectSim(type, val, el) {
-            simData[type] = val;
-            let parent = el.parentElement;
-            for(let child of parent.children) if(child.classList.contains('option-card')) child.classList.remove('selected');
-            el.classList.add('selected');
-        }
-        function runSim() {
-            if(!simData.loc || !simData.food) { alert("Choose both!"); return; }
-            alert(`Date Plan:\nLocation: ${simData.loc}\nFood: ${simData.food}\n\nStatus: Perfect! ❤️`);
-            spawn('💖');
-        }
-
-        // BUCKET
-        function checkItem(el) {
-            let span = el.querySelector('span');
-            if(span.innerText === "⬜") {
-                span.innerText = "✅";
-                el.style.textDecoration = "line-through";
-                el.style.color = "var(--primary)";
-                updateProg();
-            }
-        }
-        function updateProg() {
-            const total = 5;
-            const checked = document.querySelectorAll('.bucket-item span');
-            let count = 0;
-            checked.forEach(c => { if(c.innerText === "✅") count++; });
-            le
+</body>
+</html>
