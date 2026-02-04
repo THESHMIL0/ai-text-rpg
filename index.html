@@ -3,113 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#ff758c">
+    <meta name="theme-color" content="#ff9a9e">
     <title>Theshu ❤️ Ayuuu</title>
     <style>
-        /* --- MOBILE CORE --- */
+        /* --- CORE SETTINGS --- */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         
         body { 
-            margin: 0; padding: 0; width: 100vw; height: 100dvh;
-            /* Animated Living Gradient */
-            background: linear-gradient(-45deg, #ff9a9e, #ff758c, #ff7eb3, #fad0c4);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            margin: 0; padding: 0; width: 100vw; height: 100dvh; /* Dynamic Height for Mobile */
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #ffdde1 100%);
             overflow: hidden; position: fixed; color: #333; 
         }
 
-        /* --- ANIMATIONS --- */
-        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-
-        /* --- LAYOUT UTILS --- */
+        /* --- LAYOUT CONTAINERS --- */
         .full-screen { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             display: flex; flex-direction: column; 
             transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-            will-change: transform; background: transparent;
-        }
-        .hidden { display: none !important; }
-
-        /* --- LOCK SCREEN --- */
-        #lock { 
-            z-index: 50; color: white; padding-top: max(60px, env(safe-area-inset-top)); 
-            background: rgba(0,0,0,0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            display: flex; flex-direction: column; align-items: center; text-align: center;
-        }
-        .clock { font-size: 5.5rem; font-weight: 200; line-height: 1; text-shadow: 0 4px 15px rgba(0,0,0,0.15); }
-        .date { font-size: 1.2rem; margin-top: 10px; font-weight: 500; }
-        .notif { 
-            background: rgba(255,255,255,0.92); color: #333; width: 92%; padding: 18px; 
-            border-radius: 22px; margin-top: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            animation: float 4s ease-in-out infinite; text-align: left;
+            will-change: transform; background: transparent; z-index: 10;
         }
 
-        /* --- HOME SCREEN --- */
-        #home { z-index: 10; padding-top: max(10px, env(safe-area-inset-top)); padding-bottom: max(20px, env(safe-area-inset-bottom)); overflow-y: auto; }
+        /* Scrollable Area for Home */
+        .scroll-content {
+            flex: 1; /* Takes remaining space */
+            overflow-y: auto; /* Enables scrolling */
+            padding-top: max(10px, env(safe-area-inset-top));
+            padding-bottom: 20px;
+            display: flex; flex-direction: column; gap: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* --- HOME HEADER --- */
+        .header-section { padding: 0 25px; }
+        .status-bar { display: flex; justify-content: space-between; color: white; font-weight: 600; font-size: 0.85rem; opacity: 0.9; margin-bottom: 5px; }
+        .greet-sub { color: rgba(255,255,255,0.9); font-weight: 600; letter-spacing: 1px; font-size: 0.8rem; }
+        .greet-main { font-size: 2.2rem; font-weight: 800; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.1); margin: 0; }
+
+        /* --- WIDGETS --- */
+        .widget-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
         
-        /* Status Bar */
-        .status-bar { padding: 0 25px; display: flex; justify-content: space-between; font-weight: 600; color: white; font-size: 0.9rem; margin-bottom: 10px; opacity: 0.9; }
-
-        /* Greeting */
-        .greeting { padding: 0 25px; margin-bottom: 20px; }
-        .greet-text { font-size: 0.9rem; color: rgba(255,255,255,0.9); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-        .greet-name { font-size: 2.2rem; font-weight: 800; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.1); font-family: 'Segoe UI', cursive; }
-
-        /* WIDGET GRID */
-        .widget-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; 
-            padding: 0 20px; margin-bottom: 20px;
-        }
-
         .widget {
-            background: rgba(255,255,255,0.35); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 22px; padding: 15px; color: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.45); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 22px; padding: 18px; color: white;
+            border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             display: flex; flex-direction: column; justify-content: space-between;
-            position: relative; overflow: hidden;
         }
-        
-        /* Wide Widget (Together) */
-        .widget.wide { grid-column: span 2; height: 140px; background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.2)); }
-        
-        /* Square Widgets */
+        .widget.wide { grid-column: span 2; height: 130px; background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(255,255,255,0.3)); }
         .widget.square { aspect-ratio: 1/1; }
 
-        .w-title { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; opacity: 0.8; letter-spacing: 0.5px; }
-        .w-content { font-size: 2.5rem; font-weight: 800; text-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .w-sub { font-size: 0.9rem; font-weight: 500; opacity: 0.9; }
-        
-        /* Love Battery */
-        .battery-fill { 
-            position: absolute; bottom: 0; left: 0; height: 70%; width: 100%; 
-            background: linear-gradient(to top, #4cd137, rgba(76, 209, 55, 0)); 
-            opacity: 0.3; z-index: 0; 
-        }
+        .w-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: #555; font-weight: 700; }
+        .w-val { font-size: 2.2rem; font-weight: 800; color: #ff4757; line-height: 1.1; text-shadow: 0 2px 0 rgba(255,255,255,0.5); }
+        .w-sub { font-size: 0.85rem; color: #666; font-weight: 500; }
 
-        /* --- APP ICONS --- */
-        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 0 20px; margin-bottom: 20px; }
+        /* --- APP GRID --- */
+        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 0 20px; }
         .app-item { display: flex; flex-direction: column; align-items: center; }
         .icon { 
-            width: 62px; height: 62px; background: white; border-radius: 18px; 
+            width: 58px; height: 58px; background: white; border-radius: 16px; 
             font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
             display: flex; align-items: center; justify-content: center;
-            transition: transform 0.1s;
         }
-        .icon:active { transform: scale(0.9); filter: brightness(0.9); }
-        .app-label { font-size: 0.75rem; font-weight: 500; color: white; margin-top: 5px; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .icon:active { transform: scale(0.95); background: #eee; }
+        .app-label { font-size: 0.75rem; font-weight: 600; color: #fff; margin-top: 5px; text-shadow: 0 1px 3px rgba(0,0,0,0.2); }
 
-        /* --- DOCK --- */
-        .dock-container {
-            margin-top: auto; width: 92%; margin-left: 4%; margin-bottom: 15px;
-            background: rgba(255,255,255,0.3); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border-radius: 35px; padding: 18px; 
+        /* --- DOCK (Fixed Bottom) --- */
+        .dock-wrapper {
+            padding: 15px 20px max(15px, env(safe-area-inset-bottom)) 20px; /* Safe Area padding */
+            background: transparent;
+            flex-shrink: 0; /* Prevents shrinking */
+        }
+        .dock {
+            background: rgba(255, 255, 255, 0.4); 
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-radius: 30px; padding: 15px; 
             display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;
-            border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 5px 20px rgba(0,0,0,0.1);
         }
 
-        /* --- WINDOWS --- */
+        /* --- WINDOWS (APPS) --- */
         .win { background: #fff5f7; z-index: 100; transform: translateY(100%); display: flex; flex-direction: column; }
         .win.open { transform: translateY(0); }
         
@@ -120,105 +91,138 @@
         }
         .back { color: #ff4757; font-weight: 700; cursor: pointer; font-size: 1rem; padding: 10px; }
         .title { flex: 1; text-align: center; font-weight: 700; margin-right: 40px; font-size: 1.1rem; color: #ff4757; }
-        .body { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; padding-bottom: 100px; }
+        .body { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; padding-bottom: 120px; }
 
-        /* --- CHAT CSS --- */
-        .chat-box { display: flex; flex-direction: column; padding-bottom: 150px; }
-        .msg { max-width: 85%; padding: 12px 16px; border-radius: 18px; margin-bottom: 10px; font-size: 1rem; line-height: 1.4; animation: popIn 0.3s ease; }
-        .them { background: white; border: 1px solid #ffccd5; align-self: flex-start; border-bottom-left-radius: 4px; color: #444; }
+        /* --- CHAT STYLES --- */
+        .chat-box { display: flex; flex-direction: column; }
+        .msg { max-width: 85%; padding: 14px 18px; border-radius: 20px; margin-bottom: 12px; font-size: 1rem; line-height: 1.4; animation: popIn 0.3s ease; }
+        .them { background: white; border-bottom-left-radius: 4px; color: #333; border: 1px solid #ffccd5; }
         .me { background: #ff4757; color: white; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3); }
-        .opts-area { position: fixed; bottom: 0; left: 0; width: 100%; padding: 15px 15px max(20px, env(safe-area-inset-bottom)) 15px; background: rgba(255,255,255,0.96); border-top: 1px solid #ffccd5; display: flex; gap: 10px; flex-direction: column; z-index: 200; }
-        .opt-btn { width: 100%; padding: 14px; background: #ff4757; color: white; border: none; border-radius: 16px; font-weight: 700; font-size: 1rem; cursor: pointer; }
+        
+        /* Fixed Chat Options */
+        .opts-area { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            /* Huge padding at bottom to clear gestures */
+            padding: 20px 20px max(30px, env(safe-area-inset-bottom)) 20px;
+            background: rgba(255,255,255,0.96); border-top: 1px solid #ffccd5; 
+            display: flex; gap: 10px; flex-direction: column; z-index: 200;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+        }
+        .opt-btn { 
+            width: 100%; padding: 16px; background: #ff4757; color: white; border: none; 
+            border-radius: 16px; font-weight: 700; font-size: 1rem; cursor: pointer; 
+            box-shadow: 0 4px 12px rgba(255, 71, 87, 0.2);
+        }
 
-        /* Features */
-        .task { background: white; padding: 16px; border-radius: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-        .task-check { width: 24px; height: 24px; border: 2px solid #ddd; border-radius: 50%; }
-        .card { background: white; padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); cursor: pointer; }
+        /* --- EXTRA FEATURES --- */
+        .kiss-btn {
+            position: absolute; bottom: 120px; right: 20px;
+            width: 60px; height: 60px; background: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; box-shadow: 0 8px 20px rgba(0,0,0,0.15); z-index: 20;
+            animation: bounce 2s infinite; cursor: pointer;
+        }
 
-        .kiss { position: absolute; font-size: 3rem; animation: floatUp 2s ease-out forwards; pointer-events: none; z-index: 2000; }
-        @keyframes floatUp { 0% { bottom: 0; opacity: 1; transform: scale(1); } 100% { bottom: 100%; opacity: 0; transform: scale(1.5); } }
+        /* Lock Screen */
+        #lock { 
+            background: rgba(0,0,0,0.2); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            z-index: 200; display: flex; flex-direction: column; align-items: center; text-align: center;
+            padding-top: max(60px, env(safe-area-inset-top));
+        }
+        .clock { font-size: 5.5rem; color: white; font-weight: 200; line-height: 1; text-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .date { font-size: 1.2rem; color: white; margin-top: 10px; font-weight: 500; }
+        .notif { 
+            background: rgba(255,255,255,0.95); width: 90%; padding: 20px; border-radius: 22px; 
+            margin-top: 40px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
 
+        /* Gift Animation */
+        .gift-container { text-align: center; margin-top: 20px; }
+        .kiss { position: absolute; font-size: 3rem; animation: floatUp 2s linear forwards; pointer-events: none; z-index: 9999; }
+
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes floatUp { 0% { bottom: 0; opacity: 1; } 100% { bottom: 100%; opacity: 0; transform: translateY(-50px) rotate(20deg); } }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
     <div id="lock" class="full-screen" onclick="unlock()">
-        <div style="margin-bottom: auto; margin-top: 80px;">
+        <div style="margin-bottom: auto;">
             <div class="clock">11:11</div>
             <div class="date">Wednesday, February 14</div>
         </div>
         <div class="notif">
-            <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:#888; margin-bottom:5px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#888; margin-bottom:5px; font-weight:600;">
                 <span>iMESSAGE</span><span>NOW</span>
             </div>
-            <div style="font-weight:700; font-size:1rem; margin-bottom:3px; color:#ff4757;">Theshuuuu ❤️</div>
-            <div style="font-size:0.95rem; color:#555;">I have a question for you...</div>
+            <div style="font-weight:700; font-size:1.1rem; margin-bottom:3px; color:#ff4757;">Theshuuuu ❤️</div>
+            <div style="font-size:1rem; color:#444;">I have a question for you...</div>
         </div>
-        <div style="margin-top: auto; margin-bottom: 50px; opacity: 0.8; font-size: 1rem; font-weight: 600;">Swipe up to unlock</div>
+        <div style="margin-top: auto; margin-bottom: 50px; opacity: 0.9; font-size: 1rem; font-weight: 600; color: white;">Swipe up to unlock</div>
     </div>
 
     <div id="home" class="full-screen">
-        
-        <div class="status-bar"><span>Theshu OS</span><span>100% 🔋</span></div>
-        <div class="greeting">
-            <div class="greet-text" id="greet-time">GOOD MORNING</div>
-            <div class="greet-name">Ayuuuu ❤️</div>
-        </div>
+        <div class="scroll-content">
+            <div class="header-section">
+                <div class="status-bar"><span>Theshu OS</span><span>❤️ 100%</span></div>
+                <div class="greet-sub" id="greet-time">GOOD MORNING</div>
+                <h1 class="greet-main">Ayuuuu ❤️</h1>
+            </div>
 
-        <div class="widget-grid">
-            <div class="widget wide" onclick="openApp('together')">
-                <div class="w-title">Together For</div>
-                <div class="w-content" style="display:flex; align-items:baseline; gap:5px;">
-                    <span id="w-days">0</span><span style="font-size:1rem; font-weight:600;">DAYS</span>
+            <div class="widget-grid">
+                <div class="widget wide" onclick="openApp('together')">
+                    <div class="w-title">Together</div>
+                    <div style="display:flex; align-items:baseline; gap:5px;">
+                        <span class="w-val" id="days-count">0</span><span style="font-size:1rem; font-weight:700; color:#ff8fa3;">DAYS</span>
+                    </div>
+                    <div class="w-sub">Since August 18</div>
                 </div>
-                <div class="w-sub">Since August 18</div>
-                <div style="position:absolute; right:15px; bottom:15px; font-size:2.5rem; opacity:0.2;">💑</div>
-            </div>
-
-            <div class="widget square">
-                <div class="w-title">Love Level</div>
-                <div class="w-content" style="color:#4cd137;">100%</div>
-                <div class="battery-fill"></div>
-                <div style="font-size:1.5rem; z-index:2;">🔋</div>
-            </div>
-
-            <div class="widget square" style="background:rgba(0,0,0,0.1);">
-                <div class="w-title">Playing</div>
-                <div style="margin-top:auto;">
-                    <div style="font-weight:700;">Your Voice</div>
-                    <div style="font-size:0.8rem; opacity:0.8;">My favorite sound</div>
+                <div class="widget square">
+                    <div class="w-title">Love Level</div>
+                    <div class="w-val" style="color:#4cd137;">100%</div>
+                    <div style="font-size:2rem;">🔋</div>
                 </div>
-                <div style="position:absolute; right:10px; top:10px; font-size:1.2rem;">🎵</div>
+                <div class="widget square">
+                    <div class="w-title">Now Playing</div>
+                    <div class="w-val" style="font-size:1.4rem; color:#333;">Voice</div>
+                    <div class="w-sub">Your voice ❤️</div>
+                </div>
+            </div>
+
+            <div class="app-grid">
+                <div class="app-item" onclick="openApp('ticket')">
+                    <div class="icon" style="color:#54a0ff;">✈️</div><span class="app-label">Ticket</span>
+                </div>
+                <div class="app-item" onclick="openApp('events')">
+                    <div class="icon" style="color:#ff9f43;">🎂</div><span class="app-label">Events</span>
+                </div>
+                <div class="app-item" onclick="openApp('future')">
+                    <div class="icon" style="color:#4cd137;">📝</div><span class="app-label">Future</span>
+                </div>
+                <div class="app-item" onclick="openApp('reasons')">
+                    <div class="icon" style="color:#ff9f0a;">💌</div><span class="app-label">Notes</span>
+                </div>
             </div>
         </div>
 
-        <div class="app-grid">
-            <div class="app-item" onclick="openApp('ticket')">
-                <div class="icon" style="color:#54a0ff;">✈️</div><span class="app-label">Ticket</span>
-            </div>
-            <div class="app-item" onclick="openApp('events')">
-                <div class="icon" style="color:#ff9f43;">🎂</div><span class="app-label">Events</span>
-            </div>
-            <div class="app-item" onclick="openApp('future')">
-                <div class="icon" style="color:#4cd137;">📝</div><span class="app-label">Future</span>
-            </div>
-            <div class="app-item" onclick="openApp('reasons')">
-                <div class="icon" style="color:#ff9f0a;">💌</div><span class="app-label">Reasons</span>
-            </div>
-        </div>
+        <div class="kiss-btn" onclick="rainKisses()">💋</div>
 
-        <div class="dock-container">
-            <div class="app-item" onclick="alert('Calling Theshu... ❤️')">
-                <div class="icon" style="background:#4cd137; color:white;">📞</div>
-            </div>
-            <div class="app-item" onclick="openApp('chat')">
-                <div class="icon" style="background:#ff4757; color:white;">💬</div>
-            </div>
-            <div class="app-item" onclick="rainKisses()">
-                <div class="icon" style="background:white; color:#ff4757;">💋</div>
-            </div>
-            <div class="app-item" onclick="alert('Settings Locked 🔒')">
-                <div class="icon" style="background:#8e8e93; color:white;">⚙️</div>
+        <div class="dock-wrapper">
+            <div class="dock">
+                <div class="app-item" onclick="alert('Calling Theshu... 📞')">
+                    <div class="icon" style="background:#4cd137; color:white;">📞</div>
+                </div>
+                <div class="app-item" onclick="openApp('chat')">
+                    <div class="icon" style="background:#ff4757; color:white;">💬</div>
+                </div>
+                <div class="app-item" onclick="rainKisses()">
+                    <div class="icon" style="background:white; color:#ff4757;">💖</div>
+                </div>
+                <div class="app-item" onclick="alert('Settings Locked 🔒')">
+                    <div class="icon" style="background:#8e8e93; color:white;">⚙️</div>
+                </div>
             </div>
         </div>
     </div>
@@ -231,21 +235,11 @@
 
     <div id="together" class="full-screen win">
         <div class="head"><span class="back" onclick="closeApp('together')">❮ Back</span><span class="title">Love Timer</span></div>
-        <div class="body center" style="flex-direction:column;">
-            <div style="font-size:5rem; margin-bottom:20px;">🕰️</div>
-            <div style="font-size:1.2rem; color:#888;">We have been together</div>
-            <div id="detail-days" style="font-size:4rem; font-weight:800; color:#ff4757;">0</div>
-            <div style="font-weight:600; color:#ff4757;">DAYS</div>
-        </div>
-    </div>
-
-    <div id="reasons" class="full-screen win">
-        <div class="head"><span class="back" onclick="closeApp('reasons')">❮ Back</span><span class="title">Why I Love You</span></div>
-        <div class="body">
-            <div class="card" onclick="nextReason()">
-                <div style="font-size:3rem; margin-bottom:20px;">💖</div>
-                <div id="reason-txt" style="font-size:1.2rem; color:#444;">Tap for a reason...</div>
-            </div>
+        <div class="body" style="text-align:center;">
+            <div style="font-size:5rem; margin:30px 0;">🕰️</div>
+            <div style="color:#888;">We have been together</div>
+            <div style="font-size:4rem; font-weight:800; color:#ff4757;" id="detail-days">0</div>
+            <div style="font-weight:700; color:#333;">DAYS</div>
         </div>
     </div>
 
@@ -264,18 +258,18 @@
             </div>
         </div>
     </div>
-    
+
     <div id="events" class="full-screen win">
         <div class="head"><span class="back" onclick="closeApp('events')">❮ Back</span><span class="title">Events</span></div>
         <div class="body">
-            <div class="task" style="display:block; text-align:center;">
+            <div style="background:white; padding:20px; border-radius:18px; margin-bottom:15px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
                 <div style="font-size:0.8rem; color:#888;">MY BIRTHDAY</div>
-                <div style="font-size:2rem; font-weight:800; color:#ff4757;" id="cd-me">0</div>
+                <div style="font-size:2.5rem; font-weight:800; color:#ff4757;" id="cd-me">0</div>
                 <div>March 14</div>
             </div>
-            <div class="task" style="display:block; text-align:center;">
+            <div style="background:white; padding:20px; border-radius:18px; margin-bottom:15px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
                 <div style="font-size:0.8rem; color:#888;">QUEEN'S BIRTHDAY</div>
-                <div style="font-size:2rem; font-weight:800; color:#ff4757;" id="cd-her">0</div>
+                <div style="font-size:2.5rem; font-weight:800; color:#ff4757;" id="cd-her">0</div>
                 <div>September 22</div>
             </div>
         </div>
@@ -284,10 +278,24 @@
     <div id="future" class="full-screen win">
         <div class="head"><span class="back" onclick="closeApp('future')">❮ Back</span><span class="title">Bucket List</span></div>
         <div class="body">
-            <div class="task"><div class="task-check"></div><div>First Hug 🫂</div></div>
-            <div class="task"><div class="task-check"></div><div>Coffee Date ☕</div></div>
-            <div class="task"><div class="task-check"></div><div>Late Night Walk 🌙</div></div>
-            <div class="task"><div class="task-check"></div><div>Grow Old Together 👴👵</div></div>
+            <div style="background:white; padding:15px; border-radius:15px; margin-bottom:10px; display:flex; align-items:center; gap:15px;">
+                <div style="width:24px; height:24px; border:2px solid #ddd; border-radius:50%;"></div>
+                <div>First Hug 🫂</div>
+            </div>
+            <div style="background:white; padding:15px; border-radius:15px; margin-bottom:10px; display:flex; align-items:center; gap:15px;">
+                <div style="width:24px; height:24px; border:2px solid #ddd; border-radius:50%;"></div>
+                <div>Coffee Date ☕</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="reasons" class="full-screen win">
+        <div class="head"><span class="back" onclick="closeApp('reasons')">❮ Back</span><span class="title">Notes</span></div>
+        <div class="body">
+            <div style="background:white; padding:40px; border-radius:20px; text-align:center; cursor:pointer; box-shadow:0 10px 30px rgba(0,0,0,0.05);" onclick="nextReason()">
+                <div style="font-size:4rem; margin-bottom:20px;">💌</div>
+                <div id="reason-txt" style="font-size:1.2rem; color:#444;">Tap for a note...</div>
+            </div>
         </div>
     </div>
 
@@ -299,9 +307,33 @@
 
         // Time Greeting
         const hr = new Date().getHours();
-        const greet = hr < 12 ? "GOOD MORNING" : hr < 18 ? "GOOD AFTERNOON" : "GOOD EVENING";
-        document.getElementById('greet-time').innerText = greet;
+        document.getElementById('greet-time').innerText = hr < 12 ? "GOOD MORNING" : hr < 18 ? "GOOD AFTERNOON" : "GOOD EVENING";
 
+        // Together Logic (Handling 2026/2025)
+        // If today is 2026, and you met Aug 2026, it's future. 
+        // I will assume you meant 2025 so it shows a positive number for the screenshot.
+        const start = new Date("2025-08-18"); 
+        function updateDays() {
+            const now = new Date();
+            const diff = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+            // Ensure positive number or 0
+            const val = diff > 0 ? diff : 0;
+            document.getElementById('days-count').innerText = val;
+            document.getElementById('detail-days').innerText = val;
+        }
+        updateDays();
+
+        // Countdowns
+        function updateCd() {
+            const now = new Date(); const y = now.getFullYear();
+            let tNext = new Date(y, 2, 14); if(now > tNext) tNext.setFullYear(y + 1);
+            document.getElementById('cd-me').innerText = Math.ceil((tNext - now)/(1000*60*60*24));
+            let aNext = new Date(y, 8, 22); if(now > aNext) aNext.setFullYear(y + 1);
+            document.getElementById('cd-her').innerText = Math.ceil((aNext - now)/(1000*60*60*24));
+        }
+        updateCd();
+
+        // Kisses
         function rainKisses() {
             vibrate();
             for(let i=0; i<15; i++) {
@@ -311,49 +343,20 @@
             }
         }
 
-        // Together Logic
-        const start = new Date("2026-08-18");
-        function updateDays() {
-            const now = new Date();
-            const diff = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-            document.getElementById('w-days').innerText = diff;
-            document.getElementById('detail-days').innerText = diff;
-        }
-        updateDays();
-
         // Reasons
         const reasons = ["Your smile.", "You support me.", "My safe place.", "Your voice."];
         function nextReason() { document.getElementById('reason-txt').innerText = reasons[Math.floor(Math.random()*reasons.length)]; vibrate(); }
 
-        // Chat
+        // CHAT LOGIC
         const msgBox = document.getElementById('msgs');
         const optsBox = document.getElementById('opts');
         const chatFlow = {
             start: { msg: "Happy Valentine's Day Ayuuu! 🌹", opts: [{t:"Happy Valentine's Theshu! ❤️", n:'miss'}, {t:"I miss you! 🥺", n:'miss'}] },
-            miss: { msg: "I miss you too. Thinking about Aug 18 makes me smile.", opts: [{t:"Me too 🥰", n:'love'}, {t:"I love you ❤️", n:'love'}] },
-            love: { msg: "You are my home. I have a question...", opts: [{t:"What is it? 😮", n:'ask'}] },
-            ask: { msg: "<b>Will you be my Valentine?</b> Forever? 💍", opts: [{t:"YES! ❤️", n:'yes'}, {t:"Yes Yes! 💍", n:'yes'}] },
+            miss: { msg: "I miss you too. I was thinking about August 18. Best day ever.", opts: [{t:"Mine too... 🥰", n:'love'}, {t:"I love you ❤️", n:'love'}] },
+            love: { msg: "Distance is hard, but you are my home. I have a question...", opts: [{t:"What is it? 😮", n:'ask'}] },
+            ask: { msg: "<b>Will you be my Valentine?</b> Forever? 💍", opts: [{t:"YES! Of course! ❤️", n:'yes'}, {t:"Yes Yes! 💍", n:'yes'}] },
             yes: { msg: "I knew it! ❤️ Tap the gift box!", opts: [], action: 'gift' }
         };
+
         function addMsg(txt, type) {
-            const d = document.createElement('div'); d.className = 'msg ' + type; d.innerHTML = txt;
-            msgBox.appendChild(d); msgBox.scrollTop = msgBox.scrollHeight;
-        }
-        function showOpts(opts) {
-            optsBox.innerHTML = ''; if(!opts.length) { optsBox.classList.add('hidden'); return; }
-            optsBox.classList.remove('hidden');
-            opts.forEach(o => {
-                const b = document.createElement('button'); b.className = 'opt-btn'; b.innerText = o.t;
-                b.onclick = () => handleChoice(o.t, o.n); optsBox.appendChild(b);
-            });
-        }
-        function handleChoice(txt, key) {
-            vibrate(); addMsg(txt, 'me'); optsBox.classList.add('hidden');
-            setTimeout(() => {
-                const step = chatFlow[key]; addMsg(step.msg, 'them');
-                if(step.action === 'gift') spawnGift(); else showOpts(step.opts);
-            }, 1000);
-        }
-        function spawnGift() {
-            const d = document.createElement('div'); d.style.textAlign='center'; d.style.marginTop='20px';
-            d.innerHTML = `<div style="font-size:5rem; animation:bounce 1s 
+            const d = document.createElement('div'); d.className = 'msg ' + type; d
