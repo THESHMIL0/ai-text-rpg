@@ -3,101 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Theshu & Ayuuu</title>
+    <meta name="theme-color" content="#fff5f7">
+    <title>Theshu ❤️ Ayuuu</title>
     <style>
-        /* --- MINIMALIST CORE --- */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        /* --- SIMPLE & CLEAN CSS --- */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
         
         body { 
             margin: 0; padding: 0; width: 100vw; height: 100dvh;
             background: #fff5f7; color: #333; overflow: hidden;
         }
 
-        /* --- LOCK SCREEN (Simple) --- */
+        /* --- LOCK SCREEN --- */
         #lock {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #ff4757; z-index: 100;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #ff9a9e 0%, #ff6b81 100%);
+            z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center;
             color: white; transition: transform 0.4s ease;
         }
-        .heart-btn {
-            font-size: 4rem; animation: beat 1s infinite; cursor: pointer;
-            background: white; width: 100px; height: 100px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        .heart-unlock {
+            font-size: 5rem; animation: beat 1s infinite; cursor: pointer;
         }
 
-        /* --- APP LAYOUT --- */
-        .app-container {
-            display: flex; flex-direction: column; height: 100%;
+        /* --- MAIN LAYOUT --- */
+        .app-container { display: flex; flex-direction: column; height: 100%; }
+
+        /* Content Areas */
+        .content { 
+            flex: 1; overflow-y: auto; padding: 20px; display: none; 
+            padding-bottom: 100px; /* Space for FAB */
         }
+        .content.active { display: block; animation: fadeIn 0.3s; }
 
-        /* Content Area */
-        .content { flex: 1; overflow-y: auto; padding: 20px; display: none; animation: fadeIn 0.3s; }
-        .content.active { display: flex; flex-direction: column; }
+        /* Headers */
+        .hero { text-align: center; margin-bottom: 20px; margin-top: 10px; }
+        .hero h1 { font-size: 2.2rem; color: #ff4757; margin: 0; }
+        .hero p { color: #ff8fa3; font-weight: 600; font-size: 0.9rem; margin-top: 5px; }
 
-        /* Bottom Navigation */
-        .nav-bar {
-            height: 80px; background: white; border-top: 1px solid #eee;
-            display: flex; justify-content: space-around; align-items: center;
-            padding-bottom: 20px; flex-shrink: 0;
+        /* Cards */
+        .card {
+            background: white; border-radius: 18px; padding: 20px; margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: center;
+            border: 1px solid white;
         }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; 
-            color: #ccc; font-size: 0.8rem; font-weight: 600; cursor: pointer;
-        }
-        .nav-item.active { color: #ff4757; }
-        .nav-icon { font-size: 1.5rem; margin-bottom: 4px; }
-
-        /* --- TAB 1: HOME --- */
-        .hero { text-align: center; margin-top: 20px; }
-        .hero h1 { font-size: 2.5rem; color: #ff4757; margin: 0; }
-        .hero p { color: #888; margin-top: 5px; font-weight: 500; }
-
-        .big-card {
-            background: white; border-radius: 20px; padding: 30px; margin-top: 30px;
-            text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-        }
-        .days-count { font-size: 4rem; font-weight: 800; color: #ff4757; line-height: 1; }
-        .days-label { color: #aaa; font-weight: 600; letter-spacing: 1px; margin-top: 5px; }
-
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .small-card { background: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
-
-        /* --- TAB 2: CHAT --- */
-        .chat-list { flex: 1; display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; }
-        .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 1rem; line-height: 1.4; }
-        .them { background: white; border: 1px solid #eee; align-self: flex-start; }
-        .me { background: #ff4757; color: white; align-self: flex-end; }
         
-        .chat-controls { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
-        .reply-btn {
-            background: white; border: 1px solid #ff4757; color: #ff4757; 
-            padding: 12px; border-radius: 12px; font-weight: 600; font-size: 1rem;
+        /* Home Stats */
+        .big-num { font-size: 3.5rem; font-weight: 800; color: #ff4757; line-height: 1; }
+        .label { color: #aaa; font-weight: 600; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* Music Player Style */
+        .music-card { display: flex; align-items: center; gap: 15px; text-align: left; }
+        .album-art { width: 50px; height: 50px; background: #ff4757; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; }
+        .play-btn { margin-left: auto; font-size: 1.5rem; color: #ff4757; cursor: pointer; }
+
+        /* Coupons Grid */
+        .coupon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .coupon {
+            background: white; padding: 20px 10px; border-radius: 15px; text-align: center;
+            border: 2px dashed #ffd1dc; cursor: pointer; transition: transform 0.1s;
+        }
+        .coupon:active { transform: scale(0.95); background: #fff0f5; }
+        .cp-emoji { font-size: 2.5rem; margin-bottom: 5px; display: block; }
+        .cp-text { font-weight: 600; color: #555; font-size: 0.9rem; }
+
+        /* Chat */
+        .chat-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; }
+        .them { background: white; align-self: flex-start; border: 1px solid #eee; }
+        .me { background: #ff4757; color: white; align-self: flex-end; box-shadow: 0 2px 5px rgba(255, 71, 87, 0.2); }
+        .reply-box { display: flex; flex-direction: column; gap: 10px; }
+        .reply-btn { background: white; border: 1px solid #ff4757; color: #ff4757; padding: 12px; border-radius: 12px; font-weight: 600; }
+
+        /* Photos */
+        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .photo-box { aspect-ratio: 1/1; background: #eee; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white; background-size: cover; overflow: hidden; }
+        .add-photo { border: 2px dashed #ccc; background: white; color: #ccc; cursor: pointer; }
+
+        /* Navigation Bar */
+        .nav-bar {
+            height: 70px; background: white; border-top: 1px solid #f0f0f0;
+            display: flex; justify-content: space-around; align-items: center;
+            padding-bottom: env(safe-area-inset-bottom); flex-shrink: 0;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #ccc; font-size: 0.7rem; font-weight: 600; }
+        .nav-item.active { color: #ff4757; }
+        .nav-icon { font-size: 1.4rem; margin-bottom: 2px; }
+
+        /* Floating Button */
+        .fab {
+            position: fixed; bottom: 90px; right: 20px;
+            width: 55px; height: 55px; background: #ff4757; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.5rem; box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
+            cursor: pointer; z-index: 50; animation: bounce 2s infinite;
         }
 
-        /* --- TAB 3: MEMORIES --- */
-        .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .photo-box { 
-            aspect-ratio: 1/1; background: #ddd; border-radius: 12px; 
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-            background-size: cover; background-position: center;
-        }
-        .add-btn { border: 2px dashed #ccc; background: white; color: #ccc; font-size: 2rem; }
-
-        /* Animation */
+        /* Animations */
         @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .hidden { display: none; }
+        @keyframes floatUp { 0% { bottom: 90px; opacity: 1; } 100% { bottom: 80vh; opacity: 0; } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .floating-heart { position: fixed; right: 30px; font-size: 2rem; animation: floatUp 2s linear forwards; pointer-events: none; z-index: 99; }
 
     </style>
 </head>
 <body>
 
     <div id="lock" onclick="unlock()">
-        <div class="heart-btn">❤️</div>
-        <p style="margin-top: 20px; font-weight: 600;">Tap to Open</p>
+        <div class="heart-unlock">❤️</div>
+        <h2 style="margin-top: 20px;">For Ayuuu</h2>
+        <p style="opacity: 0.8;">Tap to Unlock</p>
     </div>
+
+    <div class="fab" onclick="sendHearts()">✨</div>
 
     <div class="app-container">
         
@@ -107,116 +125,130 @@
                 <h1>Ayuuuu ❤️</h1>
             </div>
 
-            <div class="big-card">
-                <div class="days-count" id="days">0</div>
-                <div class="days-label">DAYS TOGETHER</div>
-                <div style="margin-top:10px; color:#ccc; font-size:0.8rem;">Since Jan 18, 2026</div>
+            <div class="card">
+                <div class="label">WE HAVE BEEN TOGETHER</div>
+                <div class="big-num" id="days">0</div>
+                <div class="label" style="margin-top:5px;">DAYS</div>
+                <div style="font-size:0.8rem; color:#ccc; margin-top:10px;">Since Jan 18, 2026</div>
             </div>
 
-            <div class="grid">
-                <div class="small-card">
-                    <div style="font-size:2rem;">🔋</div>
-                    <div style="font-weight:700; margin-top:5px; color:#4cd137;">100%</div>
-                    <div style="font-size:0.8rem; color:#aaa;">Love</div>
+            <div class="card music-card">
+                <div class="album-art">🎵</div>
+                <div>
+                    <div style="font-weight:700;">Your Voice</div>
+                    <div style="font-size:0.8rem; color:#888;">Theshu's Favorite</div>
                 </div>
-                <div class="small-card">
-                    <div style="font-size:2rem;">🎂</div>
-                    <div style="font-weight:700; margin-top:5px; color:#ff9f43;">Mar 14</div>
-                    <div style="font-size:0.8rem; color:#aaa;">My Bday</div>
+                <div class="play-btn" onclick="this.innerText = this.innerText==='▶' ? '⏸' : '▶'">▶</div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="card">
+                    <div style="font-size:1.5rem;">🔋</div>
+                    <div style="font-weight:700; color:#4cd137;">100%</div>
+                    <div style="font-size:0.7rem; color:#aaa;">Love Level</div>
+                </div>
+                <div class="card">
+                    <div style="font-size:1.5rem;">✈️</div>
+                    <div style="font-weight:700; color:#54a0ff;">Soon</div>
+                    <div style="font-size:0.7rem; color:#aaa;">Meeting</div>
                 </div>
             </div>
         </div>
 
         <div id="tab-chat" class="content">
-            <div class="hero" style="margin-bottom:20px;">
-                <h1>Theshuuuu 💬</h1>
-            </div>
+            <div class="hero"><h1>Chat 💬</h1></div>
             <div class="chat-list" id="msgs">
                 <div class="msg them">Hey Ayuuu! ❤️</div>
             </div>
-            <div class="chat-controls" id="opts">
+            <div class="reply-box" id="opts">
                 <button class="reply-btn" onclick="nextChat()">Hey Theshu! 👋</button>
             </div>
         </div>
 
-        <div id="tab-memories" class="content">
-            <div class="hero" style="margin-bottom:20px;">
-                <h1>Our Photos 📸</h1>
+        <div id="tab-coupons" class="content">
+            <div class="hero"><h1>Coupons 🎟️</h1><p>Tap to Redeem</p></div>
+            <div class="coupon-grid">
+                <div class="coupon" onclick="redeem(this, '💆‍♀️ Massage')">
+                    <span class="cp-emoji">💆‍♀️</span>
+                    <div class="cp-text">10m Head Massage</div>
+                </div>
+                <div class="coupon" onclick="redeem(this, '🥺 Forgiveness')">
+                    <span class="cp-emoji">🥺</span>
+                    <div class="cp-text">Forgive 1 Mistake</div>
+                </div>
+                <div class="coupon" onclick="redeem(this, '🍕 Food')">
+                    <span class="cp-emoji">🍕</span>
+                    <div class="cp-text">Order Me Food</div>
+                </div>
+                <div class="coupon" onclick="redeem(this, '🎥 Movie')">
+                    <span class="cp-emoji">🎥</span>
+                    <div class="cp-text">Movie Night</div>
+                </div>
+                <div class="coupon" onclick="redeem(this, '💍 Yes Day')">
+                    <span class="cp-emoji">💍</span>
+                    <div class="cp-text">Yes To Anything</div>
+                </div>
+                <div class="coupon" onclick="redeem(this, '🤫 Secret')">
+                    <span class="cp-emoji">🤫</span>
+                    <div class="cp-text">Tell Me A Secret</div>
+                </div>
             </div>
-            <div class="gallery" id="gallery">
-                <div class="photo-box add-btn" onclick="document.getElementById('file').click()">+</div>
+        </div>
+
+        <div id="tab-photos" class="content">
+            <div class="hero"><h1>Memories 📸</h1></div>
+            <div class="photo-grid" id="gallery">
+                <div class="photo-box add-photo" onclick="document.getElementById('file').click()">+</div>
             </div>
             <input type="file" id="file" hidden accept="image/*" onchange="addPhoto(this)">
         </div>
 
         <div class="nav-bar">
             <div class="nav-item active" onclick="switchTab('home', this)">
-                <div class="nav-icon">🏠</div><div>Home</div>
+                <div class="nav-icon">🏠</div>Home
             </div>
             <div class="nav-item" onclick="switchTab('chat', this)">
-                <div class="nav-icon">💬</div><div>Chat</div>
+                <div class="nav-icon">💬</div>Chat
             </div>
-            <div class="nav-item" onclick="switchTab('memories', this)">
-                <div class="nav-icon">📸</div><div>Photos</div>
+            <div class="nav-item" onclick="switchTab('coupons', this)">
+                <div class="nav-icon">🎟️</div>Coupons
+            </div>
+            <div class="nav-item" onclick="switchTab('photos', this)">
+                <div class="nav-icon">📸</div>Photos
             </div>
         </div>
 
     </div>
 
     <script>
-        function unlock() {
-            document.getElementById('lock').style.transform = 'translateY(-100%)';
-        }
+        // --- CORE FUNCTIONS ---
+        function unlock() { document.getElementById('lock').style.transform = 'translateY(-100%)'; }
 
         function switchTab(id, el) {
-            // Hide all
             document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            // Show selected
             document.getElementById('tab-' + id).classList.add('active');
             el.classList.add('active');
         }
 
-        // --- DATE LOGIC ---
+        function sendHearts() {
+            const h = document.createElement('div'); h.innerText = "❤️"; 
+            h.className = "floating-heart"; document.body.appendChild(h);
+            setTimeout(() => h.remove(), 2000);
+        }
+
+        // --- DATE LOGIC (Jan 18, 2026) ---
         const start = new Date("2026-01-18");
         const diff = Math.floor((new Date() - start) / (1000 * 60 * 60 * 24));
         document.getElementById('days').innerText = diff > 0 ? diff : 0;
 
-        // --- CHAT LOGIC ---
-        let step = 0;
-        const msgs = document.getElementById('msgs');
-        const opts = document.getElementById('opts');
-        
-        const script = [
-            { me: "Hey Theshu! 👋", them: "I miss you so much. Thinking about Jan 18 makes me smile. ❤️" },
-            { me: "Me too! 🥰", them: "Distance is hard, but you are worth it. I have a question..." },
-            { me: "What is it? 😮", them: "<b>Will you be my Valentine?</b> Forever? 💍" },
-            { me: "YES! Of course! ❤️", them: "I knew it! ❤️ One day I'll put a real ring on your finger. 💍" }
-        ];
-
-        function nextChat() {
-            if(step >= script.length) return;
-            
-            // Me
-            const m = document.createElement('div'); m.className = 'msg me'; m.innerHTML = script[step].me;
-            msgs.appendChild(m);
-            opts.innerHTML = ''; // Hide buttons
-
-            // Them
-            setTimeout(() => {
-                const t = document.createElement('div'); t.className = 'msg them'; t.innerHTML = script[step].them;
-                msgs.appendChild(t);
-                msgs.scrollTop = msgs.scrollHeight;
-                step++;
-                
-                // Next Button
-                if(step < script.length) {
-                    opts.innerHTML = `<button class="reply-btn" onclick="nextChat()">${script[step].me}</button>`;
-                } else {
-                    opts.innerHTML = `<div style="text-align:center; color:#ff4757; font-weight:bold;">❤️ Love You ❤️</div>`;
-                }
-            }, 1000);
+        // --- COUPON LOGIC ---
+        function redeem(el, name) {
+            if(el.style.opacity === '0.5') return;
+            alert('Redeemed: ' + name + '! ❤️');
+            el.style.opacity = '0.5';
+            el.style.background = '#eee';
+            sendHearts();
         }
 
         // --- PHOTO LOGIC ---
@@ -227,6 +259,31 @@
                 div.style.backgroundImage = `url(${URL.createObjectURL(input.files[0])})`;
                 document.getElementById('gallery').appendChild(div);
             }
+        }
+
+        // --- CHAT LOGIC ---
+        let step = 0;
+        const msgs = document.getElementById('msgs');
+        const opts = document.getElementById('opts');
+        const script = [
+            { me: "Hey Theshu! 👋", them: "I miss you so much. Thinking about Jan 18 makes me smile. ❤️" },
+            { me: "Me too! 🥰", them: "Distance is hard, but you are worth it. I have a question..." },
+            { me: "What is it? 😮", them: "<b>Will you be my Valentine?</b> Forever? 💍" },
+            { me: "YES! Of course! ❤️", them: "I knew it! ❤️ One day I'll put a real ring on your finger. 💍" }
+        ];
+
+        function nextChat() {
+            if(step >= script.length) return;
+            const m = document.createElement('div'); m.className = 'msg me'; m.innerHTML = script[step].me;
+            msgs.appendChild(m); opts.innerHTML = ''; 
+
+            setTimeout(() => {
+                const t = document.createElement('div'); t.className = 'msg them'; t.innerHTML = script[step].them;
+                msgs.appendChild(t);
+                step++;
+                if(step < script.length) opts.innerHTML = `<button class="reply-btn" onclick="nextChat()">${script[step].me}</button>`;
+                else opts.innerHTML = `<div style="text-align:center; color:#ff4757; font-weight:bold;">❤️ Love You ❤️</div>`;
+            }, 800);
         }
     </script>
 </body>
