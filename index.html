@@ -33,10 +33,7 @@
             z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center;
             color: white; transition: transform 0.6s cubic-bezier(0.7, 0, 0.3, 1);
         }
-        .scanner {
-            width: 90px; height: 90px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; margin-bottom: 20px;
-            display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);
-        }
+        .scanner { width: 90px; height: 90px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
         .fingerprint { font-size: 3rem; transition: 0.3s; }
         .scanner.scanning .fingerprint { transform: scale(0.9); opacity: 0.8; }
 
@@ -44,46 +41,30 @@
         .app-container { display: flex; flex-direction: column; height: 100%; position: relative; z-index: 10; }
         .content { flex: 1; overflow-y: auto; padding: 25px; display: none; padding-bottom: 120px; scroll-behavior: smooth; }
         .content.active { display: block; animation: fadeIn 0.4s ease-out; }
-
-        /* --- CARDS & WIDGETS --- */
         .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(255, 71, 87, 0.08); }
+
+        /* --- SWIPE STACK (NEW) --- */
+        .stack-container { position: relative; width: 100%; height: 350px; margin-top: 20px; perspective: 1000px; }
+        .stack-card {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; border-radius: 20px; padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: transform 0.3s, opacity 0.3s; text-align: center; border: 1px solid #eee;
+        }
+        .stack-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 15px; pointer-events: none; }
         
-        /* LIVE TIMER (NEW) */
-        .timer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; text-align: center; margin-top: 10px; }
-        .time-box { background: rgba(255,255,255,0.2); padding: 8px 0; border-radius: 10px; }
-        .time-val { font-size: 1.2rem; font-weight: 800; }
-        .time-lbl { font-size: 0.6rem; text-transform: uppercase; opacity: 0.8; }
+        /* --- BUCKET LIST (NEW) --- */
+        .bucket-item { display: flex; align-items: center; margin-bottom: 15px; padding: 10px; background: #fafafa; border-radius: 12px; }
+        .bucket-item input { width: 20px; height: 20px; accent-color: var(--primary); margin-right: 15px; }
+        .bucket-item.checked span { text-decoration: line-through; color: #aaa; }
 
-        /* MEMORY GAME (NEW) */
-        .game-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; perspective: 1000px; }
-        .game-card {
-            height: 70px; background: white; border-radius: 10px; cursor: pointer; position: relative;
-            transform-style: preserve-3d; transition: transform 0.4s; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .game-card.flipped { transform: rotateY(180deg); }
-        .card-face {
-            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
-            display: flex; align-items: center; justify-content: center; font-size: 1.8rem; border-radius: 10px;
-        }
-        .card-front { background: linear-gradient(135deg, #ff9a9e, #ff6b81); color: white; font-size: 1.5rem; }
-        .card-back { background: white; transform: rotateY(180deg); border: 2px solid var(--primary); }
+        /* --- VAULT (NEW) --- */
+        .pin-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 250px; margin: 20px auto; }
+        .pin-btn { background: white; border: none; font-size: 1.2rem; padding: 15px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .pin-display { font-size: 2rem; letter-spacing: 10px; margin-bottom: 20px; height: 40px; }
 
-        /* PHOTO REEL */
-        .photo-reel { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; margin: 0 -5px 15px -5px; }
-        .photo-item { 
-            min-width: 140px; height: 180px; background: #eee; border-radius: 15px; 
-            background-size: cover; background-position: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        /* MODAL & TYPEWRITER */
-        #modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6);
-            z-index: 5000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px);
-        }
-        .modal-content { background: white; width: 100%; max-width: 400px; padding: 30px; border-radius: 25px; min-height: 200px; animation: popUp 0.3s; }
-        .typing-cursor::after { content: '|'; animation: blink 1s infinite; }
-
-        /* NAV BAR */
+        /* --- NAV BAR --- */
         .nav-bar {
             height: 75px; background: var(--glass); position: fixed; bottom: 0; left: 0; width: 100%;
             display: flex; justify-content: space-around; align-items: center; padding-bottom: 15px; 
@@ -93,11 +74,8 @@
         .nav-item.active { color: var(--primary); transform: translateY(-5px); }
         .nav-icon { font-size: 1.5rem; margin-bottom: 4px; }
 
-        /* ANIMATIONS */
         @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg); opacity: 0.8; } 100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes blink { 50% { opacity: 0; } }
-        @keyframes popUp { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     </style>
@@ -105,10 +83,7 @@
 <body>
 
     <div class="bg-hearts" id="bgHearts"></div>
-    
-    <audio id="musicPlayer" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="musicPlayer" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio>
     <div class="music-fab" onclick="toggleMusic()">🎵</div>
 
     <div id="lock" onmousedown="startUnlock()" onmouseup="stopUnlock()" ontouchstart="startUnlock()" ontouchend="stopUnlock()">
@@ -116,182 +91,73 @@
         <p style="opacity: 0.8; font-size: 0.9rem;">Touch & Hold ID</p>
     </div>
 
-    <div id="modal" onclick="closeModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <h2 id="modalTitle" style="color:var(--primary); margin-top:0;">Message</h2>
-            <p id="modalBody" class="typing-cursor" style="line-height:1.6; color:#555; font-size:1.05rem;"></p>
-            <div style="text-align:center; margin-top:20px;">
-                <button onclick="closeModal()" style="padding:10px 30px; background:var(--primary); color:white; border:none; border-radius:50px; font-weight:bold;">Close</button>
-            </div>
-        </div>
-    </div>
-
     <div class="app-container">
         
         <div id="tab-home" class="content active">
             <div style="margin: 10px 0 20px 0;">
-                <p style="color: #a4b0be; font-weight: 700; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;">Welcome</p>
+                <p style="color: #a4b0be; font-weight: 700; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;">Hello</p>
                 <h1 style="font-size: 2.2rem; font-weight: 800; margin:0;">My <span style="color:var(--primary);">Ayuuu</span> ❤️</h1>
             </div>
 
-            <div class="card" style="background: linear-gradient(135deg, #ff4757, #ff6b81); color:white;">
-                <div style="font-size:0.8rem; opacity:0.9; font-weight:700; text-align:center; margin-bottom:10px;">TIME SINCE WE MET</div>
-                <div class="timer-grid">
-                    <div class="time-box"><div class="time-val" id="t-days">0</div><div class="time-lbl">Days</div></div>
-                    <div class="time-box"><div class="time-val" id="t-hours">0</div><div class="time-lbl">Hrs</div></div>
-                    <div class="time-box"><div class="time-val" id="t-mins">0</div><div class="time-lbl">Mins</div></div>
-                    <div class="time-box"><div class="time-val" id="t-secs">0</div><div class="time-lbl">Secs</div></div>
-                </div>
+            <div class="card" style="background: linear-gradient(135deg, #ff4757, #ff6b81); color:white; text-align:center;">
+                <div style="font-size:0.8rem; opacity:0.9; font-weight:700;">TOGETHER FOR</div>
+                <div style="font-size:3rem; font-weight:800; line-height:1;" id="days">0</div>
+                <div style="font-size:0.8rem; opacity:0.9; font-weight:700;">DAYS</div>
             </div>
 
-            <div style="margin-bottom: 20px;">
-                <h3 style="margin-bottom:10px;">Our Memories 📸</h3>
-                <div class="photo-reel">
-                    <div class="photo-item" style="background-image: url('https://placehold.co/140x180/ffcccc/ff4757?text=Pic+1');"></div>
-                    <div class="photo-item" style="background-image: url('https://placehold.co/140x180/ffcccc/ff4757?text=Pic+2');"></div>
-                    <div class="photo-item" style="background-image: url('https://placehold.co/140x180/ffcccc/ff4757?text=Pic+3');"></div>
-                </div>
+            <div class="card">
+                <h3>Our Bucket List 📝</h3>
+                <p style="font-size:0.8rem; color:#888; margin-bottom:15px;">Check them off as we go!</p>
+                <div id="bucketList">
+                    </div>
             </div>
         </div>
 
-        <div id="tab-game" class="content">
-            <h1 style="color:var(--primary);">Love Match 🎮</h1>
-            <p>Find the matching pairs to win a prize!</p>
-            <div class="game-grid" id="gameGrid"></div>
-            <p id="gameStatus" style="text-align:center; font-weight:bold; margin-top:20px; color:var(--secondary);"></p>
+        <div id="tab-swipe" class="content">
+            <h1 style="color:var(--primary);">Moments 📸</h1>
+            <p style="color:#888;">Swipe the cards!</p>
+            <div class="stack-container" id="stack">
+                </div>
+            <div style="text-align:center; margin-top:20px; color:#aaa; font-size:0.8rem;">(Swipe Left or Right)</div>
         </div>
 
-        <div id="tab-letters" class="content">
-            <h1 style="color:var(--primary);">Open When... 💌</h1>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-                <div class="card" onclick="typeWriter('You Miss Me', 'Look up at the moon. I am looking at it too. Distance is just a test to see how far love can travel. I am always with you.')" style="text-align:center;"><h3>Miss Me 🌙</h3></div>
-                <div class="card" onclick="typeWriter('You Are Sad', 'Close your eyes. Take a deep breath. Imagine I am hugging you tight. You are strong, you are beautiful, and I love you.')" style="text-align:center;"><h3>Sad 😢</h3></div>
-                <div class="card" onclick="typeWriter('You Are Happy', 'Your smile is the most beautiful thing in the world! I wish I was there to see it. Keep shining my love!')" style="text-align:center;"><h3>Happy 😄</h3></div>
-                <div class="card" onclick="typeWriter('We Fight', 'I am sorry. Even when we fight, you are my favorite person. Let us fix this because I cannot sleep without you.')" style="text-align:center;"><h3>We Fight 💔</h3></div>
+        <div id="tab-vault" class="content">
+            <div id="vaultLock">
+                <h1 style="color:var(--primary);">Secret Vault 🔒</h1>
+                <p>Enter our special date (DDMM)</p>
+                <div class="pin-display" id="pinDisplay">----</div>
+                <div class="pin-pad">
+                    <button class="pin-btn" onclick="addPin(1)">1</button><button class="pin-btn" onclick="addPin(2)">2</button><button class="pin-btn" onclick="addPin(3)">3</button>
+                    <button class="pin-btn" onclick="addPin(4)">4</button><button class="pin-btn" onclick="addPin(5)">5</button><button class="pin-btn" onclick="addPin(6)">6</button>
+                    <button class="pin-btn" onclick="addPin(7)">7</button><button class="pin-btn" onclick="addPin(8)">8</button><button class="pin-btn" onclick="addPin(9)">9</button>
+                    <button class="pin-btn" style="background:none; box-shadow:none;"></button>
+                    <button class="pin-btn" onclick="addPin(0)">0</button>
+                    <button class="pin-btn" onclick="clearPin()">🔙</button>
+                </div>
+            </div>
+            
+            <div id="vaultContent" style="display:none; text-align:center;">
+                <h1 style="color:var(--secondary);">Unlocked! 🔓</h1>
+                <div class="card">
+                    <p style="font-size:1.1rem; line-height:1.6;">"My Secret Promise:<br><br>No matter how far we are, my heart is always right next to yours. I promise to always make you laugh and support you. You are my forever."</p>
+                    <h2 style="margin-top:20px;">I Love You ❤️</h2>
+                </div>
+                <button onclick="lockVault()" style="padding:10px 30px; background:#eee; border:none; border-radius:50px;">Lock Vault</button>
             </div>
         </div>
 
         <div class="nav-bar">
             <div class="nav-item active" onclick="switchTab('home', this)"><span class="nav-icon">🏠</span>Home</div>
-            <div class="nav-item" onclick="switchTab('game', this)"><span class="nav-icon">🎮</span>Game</div>
-            <div class="nav-item" onclick="switchTab('letters', this)"><span class="nav-icon">💌</span>Letters</div>
+            <div class="nav-item" onclick="switchTab('swipe', this)"><span class="nav-icon">✨</span>Moments</div>
+            <div class="nav-item" onclick="switchTab('vault', this)"><span class="nav-icon">🔒</span>Vault</div>
         </div>
 
     </div>
 
     <script>
         // --- CONFIG ---
-        const START_DATE = new Date("2026-01-18T00:00:00"); 
-
-        // --- MUSIC ---
-        const audio = document.getElementById('musicPlayer');
-        function toggleMusic() {
-            const btn = document.querySelector('.music-fab');
-            if(audio.paused) { audio.play(); btn.classList.add('playing'); } 
-            else { audio.pause(); btn.classList.remove('playing'); }
-        }
-
-        // --- LIVE TIMER LOGIC ---
-        function updateTimer() {
-            const now = new Date();
-            const diff = now - START_DATE;
-            
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const minutes = Math.floor((diff / 1000 / 60) % 60);
-            const seconds = Math.floor((diff / 1000) % 60);
-
-            document.getElementById('t-days').innerText = days;
-            document.getElementById('t-hours').innerText = hours;
-            document.getElementById('t-mins').innerText = minutes;
-            document.getElementById('t-secs').innerText = seconds;
-        }
-        setInterval(updateTimer, 1000);
-        updateTimer();
-
-        // --- MEMORY GAME LOGIC ---
-        const emojis = ['❤️', '💍', '🍕', '✈️', '😽', '🎁', '🌹', '💌'];
-        const gameItems = [...emojis, ...emojis]; // Duplicate for pairs
-        let flippedCards = [];
-        let matchedPairs = 0;
-
-        function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
-
-        function initGame() {
-            const grid = document.getElementById('gameGrid');
-            grid.innerHTML = '';
-            matchedPairs = 0;
-            document.getElementById('gameStatus').innerText = '';
-            
-            shuffle(gameItems).forEach(emoji => {
-                const card = document.createElement('div');
-                card.className = 'game-card';
-                card.dataset.value = emoji;
-                card.innerHTML = `<div class="card-face card-front">?</div><div class="card-face card-back">${emoji}</div>`;
-                card.onclick = () => flipCard(card);
-                grid.appendChild(card);
-            });
-        }
-
-        function flipCard(card) {
-            if (flippedCards.length < 2 && !card.classList.contains('flipped')) {
-                card.classList.add('flipped');
-                flippedCards.push(card);
-                if (flippedCards.length === 2) checkMatch();
-            }
-        }
-
-        function checkMatch() {
-            const [c1, c2] = flippedCards;
-            if (c1.dataset.value === c2.dataset.value) {
-                matchedPairs++;
-                flippedCards = [];
-                if(matchedPairs === emojis.length) {
-                    document.getElementById('gameStatus').innerText = "YOU WON! My heart is yours! ❤️";
-                    createConfetti();
-                }
-            } else {
-                setTimeout(() => {
-                    c1.classList.remove('flipped');
-                    c2.classList.remove('flipped');
-                    flippedCards = [];
-                }, 1000);
-            }
-        }
-        initGame(); // Start game on load
-
-        // --- TYPEWRITER EFFECT ---
-        let typeInterval;
-        function typeWriter(title, text) {
-            const body = document.getElementById('modalBody');
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modal').style.display = 'flex';
-            body.innerText = "";
-            
-            let i = 0;
-            clearInterval(typeInterval); // Stop any existing typing
-            typeInterval = setInterval(() => {
-                if (i < text.length) {
-                    body.innerText += text.charAt(i);
-                    i++;
-                } else {
-                    clearInterval(typeInterval);
-                }
-            }, 50); // Speed of typing
-        }
-        function closeModal() { document.getElementById('modal').style.display = 'none'; clearInterval(typeInterval); }
-
-        // --- CONFETTI EFFECT ---
-        function createConfetti() {
-            for(let i=0; i<30; i++) {
-                const c = document.createElement('div');
-                c.className = 'heart-float';
-                c.innerText = '🎉';
-                c.style.left = Math.random() * 100 + 'vw';
-                c.style.animationDuration = Math.random() * 2 + 2 + 's';
-                document.body.appendChild(c);
-            }
-        }
+        const START_DATE = new Date("2026-01-18"); 
+        const PASSCODE = "1801"; // Passcode for Vault (18th Jan)
 
         // --- LOCK SCREEN ---
         let holdTimer;
@@ -307,6 +173,7 @@
             clearTimeout(holdTimer);
         }
 
+        // --- NAVIGATION ---
         function switchTab(id, el) {
             document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -314,9 +181,115 @@
             el.classList.add('active');
         }
 
+        // --- DAYS COUNTER ---
+        const diff = Math.floor((new Date() - START_DATE) / (1000 * 60 * 60 * 24));
+        document.getElementById('days').innerText = diff > 0 ? diff : 0;
+
+        // --- MUSIC ---
+        const audio = document.getElementById('musicPlayer');
+        function toggleMusic() {
+            const btn = document.querySelector('.music-fab');
+            if(audio.paused) { audio.play(); btn.classList.add('playing'); } 
+            else { audio.pause(); btn.classList.remove('playing'); }
+        }
+
+        // --- BUCKET LIST (LOCALSTORAGE) ---
+        const defaultGoals = ["Go to Paris ✈️", "Cook Dinner Together 🍝", "Late Night Drive 🚗", "Watch Sunset 🌅", "Adopt a Pet 🐶"];
+        function loadBucket() {
+            const list = document.getElementById('bucketList');
+            list.innerHTML = "";
+            defaultGoals.forEach((goal, i) => {
+                const saved = localStorage.getItem('goal_' + i);
+                const div = document.createElement('div');
+                div.className = 'bucket-item ' + (saved === 'true' ? 'checked' : '');
+                div.innerHTML = `<input type="checkbox" onchange="toggleGoal(this, ${i})" ${saved === 'true' ? 'checked' : ''}><span>${goal}</span>`;
+                list.appendChild(div);
+            });
+        }
+        function toggleGoal(el, index) {
+            el.parentElement.classList.toggle('checked');
+            localStorage.setItem('goal_' + index, el.checked);
+        }
+        loadBucket();
+
+        // --- VAULT LOGIC ---
+        let currentPin = "";
+        function addPin(num) {
+            if(currentPin.length < 4) {
+                currentPin += num;
+                updatePinDisplay();
+                if(currentPin.length === 4) checkPin();
+            }
+        }
+        function clearPin() { currentPin = ""; updatePinDisplay(); }
+        function updatePinDisplay() {
+            document.getElementById('pinDisplay').innerText = "*".repeat(currentPin.length) + "-".repeat(4 - currentPin.length);
+        }
+        function checkPin() {
+            if(currentPin === PASSCODE) {
+                document.getElementById('vaultLock').style.display = 'none';
+                document.getElementById('vaultContent').style.display = 'block';
+            } else {
+                document.getElementById('pinDisplay').style.color = 'red';
+                setTimeout(() => { currentPin = ""; updatePinDisplay(); document.getElementById('pinDisplay').style.color = 'black'; }, 500);
+            }
+        }
+        function lockVault() {
+            currentPin = ""; updatePinDisplay();
+            document.getElementById('vaultLock').style.display = 'block';
+            document.getElementById('vaultContent').style.display = 'none';
+        }
+
+        // --- SWIPE CARDS LOGIC ---
+        const cardsData = [
+            { txt: "The day we met ❤️", img: "https://placehold.co/300x200/ffcccc/ff4757?text=First+Day" },
+            { txt: "You are my world 🌍", img: "https://placehold.co/300x200/ffcccc/ff4757?text=World" },
+            { txt: "Can't wait to see you ✈️", img: "https://placehold.co/300x200/ffcccc/ff4757?text=Travel" }
+        ];
+        
+        function initStack() {
+            const container = document.getElementById('stack');
+            container.innerHTML = "";
+            cardsData.forEach((data, i) => {
+                const card = document.createElement('div');
+                card.className = 'stack-card';
+                card.style.zIndex = cardsData.length - i;
+                card.style.transform = `scale(${1 - i * 0.05}) translateY(${i * 10}px)`;
+                card.innerHTML = `<img src="${data.img}"><h3>${data.txt}</h3>`;
+                
+                // Touch Logic
+                if(i === 0) makeSwipable(card);
+                container.appendChild(card);
+            });
+        }
+
+        function makeSwipable(card) {
+            let startX = 0, currentX = 0;
+            card.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+            card.addEventListener('touchmove', e => {
+                currentX = e.touches[0].clientX;
+                let moveX = currentX - startX;
+                card.style.transform = `translateX(${moveX}px) rotate(${moveX/10}deg)`;
+            });
+            card.addEventListener('touchend', () => {
+                let moveX = currentX - startX;
+                if(Math.abs(moveX) > 100) {
+                    card.style.transition = "0.5s";
+                    card.style.transform = `translateX(${moveX > 0 ? 500 : -500}px) rotate(${moveX/5}deg)`;
+                    setTimeout(() => {
+                        cardsData.push(cardsData.shift()); // Cycle data
+                        initStack(); // Re-render
+                    }, 300);
+                } else {
+                    card.style.transform = "translateX(0) rotate(0)";
+                }
+            });
+        }
+        initStack();
+
         // --- BG HEARTS ---
         setInterval(() => {
-            const h = document.createElement('div'); h.className = 'heart-float'; h.innerText = Math.random()>0.5?'❤️':'💖';
+            const h = document.createElement('div'); h.className = 'heart-float'; h.innerText = Math.random()>0.5?'❤️':'💖'; 
             h.style.left=Math.random()*100+'vw'; h.style.animationDuration=Math.random()*3+4+'s';
             document.getElementById('bgHearts').appendChild(h); setTimeout(()=>h.remove(),8000);
         }, 800);
