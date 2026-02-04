@@ -90,7 +90,7 @@
         .gift-bub { background: #ffeaa7; width: 100%; text-align: center; cursor: pointer; align-self: center; }
         
         .opts { position: absolute; bottom: 0; width: 100%; background: white; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #eee; }
-        .opt-btn { flex: 1; padding: 12px; border-radius: 20px; border: none; background: #007aff; color: white; font-weight: bold; }
+        .opt-btn { flex: 1; padding: 12px; border-radius: 20px; border: none; background: #007aff; color: white; font-weight: bold; font-size: 0.9rem; white-space: nowrap; }
 
         /* --- GAME --- */
         #game-board { width: 100%; height: 400px; background: #222; border-radius: 15px; position: relative; overflow: hidden; margin-top: 10px; }
@@ -128,8 +128,8 @@
         <h2 class="home-title">Hey Ayuuu ❤️</h2>
 
         <div class="app-grid">
-            <div class="app-icon" onclick="openApp('chat')"><div class="icon-box" style="background:#4cd137;">💬</div><span class="icon-label">Chat</span></div>
-            <div class="app-icon" onclick="openApp('game')"><div class="icon-box" style="background:#ff9f43;">🎈</div><span class="icon-label">Game</span></div>
+            <div class="app-icon" onclick="openApp('chat')"><div class="icon-box" style="background:#4cd137; color:white;">💬</div><span class="icon-label">Chat</span></div>
+            <div class="app-icon" onclick="openApp('game')"><div class="icon-box" style="background:#ff9f43; color:white;">🎈</div><span class="icon-label">Game</span></div>
             <div class="app-icon" onclick="openApp('cam')"><div class="icon-box" style="background:#333; color:white;">📸</div><span class="icon-label">Camera</span></div>
             <div class="app-icon" onclick="openApp('set')"><div class="icon-box" style="background:#8e8e93; color:white;">⚙️</div><span class="icon-label">Settings</span></div>
         </div>
@@ -199,12 +199,24 @@
         function openApp(id) { document.getElementById('app-'+id).classList.add('open'); }
         function closeApp(id) { document.getElementById('app-'+id).classList.remove('open'); }
 
-        // --- 3. CHAT LOGIC ---
+        // --- 3. CHAT LOGIC (IMPROVED) ---
         const script = [
-            { t: "Yooo Ayuuu! 😸", o: [{l:"Hey! ❤️", n:1}] },
-            { t: "I coded this app just for you. Took forever! 📱", o: [{l:"Really? 🥺", n:2}] },
-            { t: "Yes! Also Kitchu says meow 🐈‍⬛. I love you so much.", o: [{l:"Love you too! ❤️", n:3}] },
-            { t: "I have a sweet surprise for you. Tap the box! 👇", o: [] }
+            { 
+                t: "Hii Ayuuu! ❤️ Finally you opened this!", 
+                o: [{l:"Took you long enough! 😤", n:1}, {l:"Hi my love! 🥰", n:1}] 
+            },
+            { 
+                t: "I know, I know! 😅 But I coded this whole thing myself! Kitchu was literally biting my toes the whole time.", 
+                o: [{l:"Aww poor Kitchu! 🐈‍⬛", n:2}, {l:"You did great! 👏", n:2}] 
+            },
+            { 
+                t: "He says meow. But seriously, I made this because I want to keep making you smile. You're stuck with me, okay? 🔒", 
+                o: [{l:"Forever stuck! 😜", n:3}, {l:"I love being stuck! ❤️", n:3}] 
+            },
+            { 
+                t: "Good. Now... I hid a special surprise for you here. Are you ready? 🎁", 
+                o: [{l:"Born ready! 😎", n:-1}, {l:"Give it to me! 😽", n:-1}] 
+            }
         ];
 
         function startChat() {
@@ -216,15 +228,23 @@
         function reply(n, l) {
             addBub(l, 'sent');
             document.getElementById('chat-opts').innerHTML = '';
+            
+            // Typing indicator
+            const typing = document.createElement('div');
+            typing.className = 'bubble rcvd'; typing.innerText = '...'; typing.id='typ';
+            document.getElementById('chat-box').appendChild(typing);
+
             setTimeout(() => {
-                if(script[n].o.length === 0) {
-                    addBub(script[n].t, 'rcvd');
-                    setTimeout(spawnGift, 1000);
+                document.getElementById('typ').remove();
+                if(n === -1) {
+                    // Trigger Gift
+                    addBub("Here it is! 👇", 'rcvd');
+                    spawnGift();
                 } else {
                     addBub(script[n].t, 'rcvd');
                     showOpts(script[n].o);
                 }
-            }, 800);
+            }, 1000);
         }
 
         function spawnGift() {
@@ -232,6 +252,7 @@
             d.className = 'bubble gift-bub';
             d.innerHTML = '<div class="gift-icon" onclick="tapGift(this)">🎁</div><div id="g-txt" style="display:none; font-weight:bold; padding:10px;">Tap!</div>';
             document.getElementById('chat-box').appendChild(d);
+            document.getElementById('app-chat').querySelector('.content').scrollTop = 9999;
         }
 
         let gStep = 0;
@@ -254,6 +275,7 @@
             d.className = 'bubble ' + c;
             d.innerText = t;
             document.getElementById('chat-box').appendChild(d);
+            document.getElementById('app-chat').querySelector('.content').scrollTop = 9999;
         }
         function showOpts(opts) {
             const c = document.getElementById('chat-opts');
