@@ -3,88 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>For My Love</title>
+    <title>Ayuuu Phone Ultra</title>
     <style>
-        /* --- 1. PHONE BASE --- */
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
+        /* --- 1. CORE OS --- */
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; overflow: hidden; color: #333; }
 
         /* Wallpaper */
         #phone {
             width: 100%; height: 100%; position: relative;
-            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
             overflow: hidden;
         }
 
         /* Status Bar */
         .status-bar {
-            position: absolute; top: 0; left: 0; width: 100%; height: 40px;
-            display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
-            font-size: 14px; font-weight: bold; color: white; z-index: 100;
+            position: absolute; top: 0; left: 0; width: 100%; height: 44px; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center; padding: 0 25px;
+            font-size: 14px; font-weight: 600; color: black;
         }
 
         /* --- 2. SCREENS --- */
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            padding-top: 50px; display: none; flex-direction: column;
-            animation: fade 0.3s; background: rgba(255,255,255,0.95);
+            display: none; flex-direction: column; background: white;
+            animation: slideIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .screen.active { display: flex; }
-        .screen#home { background: transparent; justify-content: flex-start; padding-top: 80px; }
+        .screen#home { background: transparent; justify-content: flex-start; padding-top: 80px; animation: fade 0.3s; }
 
         @keyframes fade { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
         /* --- 3. HOME SCREEN --- */
-        .app-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px 10px; padding: 20px;
-        }
-        .app { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; margin-top: 20px; }
+        .app { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; transition: 0.2s; }
+        .app:active { transform: scale(0.9); filter: brightness(0.8); }
         .icon {
-            width: 65px; height: 65px; border-radius: 18px; font-size: 30px;
+            width: 60px; height: 60px; border-radius: 14px; font-size: 28px;
             display: flex; align-items: center; justify-content: center;
-            background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.2s;
+            background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        .icon:active { transform: scale(0.9); }
-        .label { color: white; font-size: 12px; font-weight: 500; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .label { color: #333; font-size: 11px; font-weight: 500; }
 
-        /* --- 4. MESSAGE APP --- */
-        .nav-bar {
-            height: 60px; border-bottom: 1px solid #ddd; display: flex; align-items: center; padding: 0 15px;
-            background: #f8f8f8; font-weight: bold; justify-content: space-between;
+        .dock {
+            position: absolute; bottom: 25px; width: 90%; height: 90px; left: 5%;
+            background: rgba(255,255,255,0.4); border-radius: 35px; backdrop-filter: blur(20px);
+            display: flex; justify-content: space-around; align-items: center;
         }
-        .back { color: #007aff; font-size: 1.2rem; cursor: pointer; }
+
+        /* --- 4. IMPROVED MESSAGES APP --- */
+        .chat-nav {
+            height: 90px; background: rgba(245, 245, 245, 0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e5e5e5; display: flex; align-items: flex-end; padding: 0 15px 12px 15px;
+            position: relative; z-index: 10;
+        }
+        .nav-items { display: flex; align-items: center; width: 100%; justify-content: space-between; }
+        .back-btn { color: #007aff; font-size: 1.1rem; display: flex; align-items: center; gap: 5px; cursor: pointer; }
         
-        .chat-body { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: white; }
-        .msg { max-width: 75%; padding: 10px 15px; border-radius: 20px; font-size: 0.95rem; }
-        .them { background: #e5e5ea; align-self: flex-start; border-bottom-left-radius: 5px; }
-        .me { background: #007aff; color: white; align-self: flex-end; border-bottom-right-radius: 5px; }
+        .profile-header { display: flex; flex-direction: column; align-items: center; }
+        .p-avatar { width: 35px; height: 35px; background: #999; border-radius: 50%; margin-bottom: 2px; background-size: cover; background-position: center; }
+        .p-name { font-size: 0.8rem; font-weight: 600; }
+        .video-icon { font-size: 1.5rem; color: #007aff; }
+
+        .chat-area {
+            flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: white;
+            padding-bottom: 20px;
+        }
         
-        .chat-footer {
-            height: 60px; border-top: 1px solid #ddd; background: #f0f0f0; display: flex; align-items: center; padding: 0 10px; gap: 10px;
+        /* Bubbles */
+        .bubble { max-width: 75%; padding: 10px 16px; border-radius: 18px; font-size: 1rem; line-height: 1.4; position: relative; animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .them { background: #e9e9eb; align-self: flex-start; color: black; border-bottom-left-radius: 4px; }
+        .me { background: #007aff; align-self: flex-end; color: white; border-bottom-right-radius: 4px; }
+        .status-text { align-self: flex-end; font-size: 0.7rem; color: #999; margin-top: -5px; display: none; }
+        .show-status { display: block; }
+
+        /* Typing Dots */
+        .typing-bubble {
+            background: #e9e9eb; align-self: flex-start; padding: 12px 15px; border-radius: 18px;
+            border-bottom-left-radius: 4px; display: none; width: 60px;
         }
-        .input { flex: 1; height: 35px; background: white; border-radius: 20px; border: 1px solid #ccc; display: flex; align-items: center; padding-left: 15px; color: #aaa; font-size: 0.9rem; }
-        .btn-send { width: 35px; height: 35px; background: #007aff; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
+        .dots { display: flex; gap: 4px; }
+        .dot { width: 6px; height: 6px; background: #aaa; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
 
-        /* Proposal Buttons */
-        .options { display: flex; gap: 10px; margin-top: 10px; width: 100%; }
-        .opt-btn { flex: 1; padding: 10px; border-radius: 20px; border: none; font-weight: bold; color: white; cursor: pointer; }
-        .yes { background: #ff2d55; }
-        .no { background: #333; }
+        /* Image Message */
+        .img-msg { max-width: 60%; border-radius: 15px; margin-top: 5px; animation: pop 0.3s; display: block; }
 
-        /* --- 5. NOTE APP --- */
-        textarea { width: 100%; height: 100%; border: none; padding: 20px; font-size: 1.1rem; background: #fffdf0; outline: none; resize: none; font-family: cursive; }
-
-        /* --- 6. SETTINGS APP (Long Distance Theme) --- */
-        .settings-list { padding: 20px; background: #f2f2f7; height: 100%; }
-        .group { background: white; border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
-        .row {
-            padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;
+        /* Footer */
+        .chat-input {
+            height: 60px; background: #f0f0f0; display: flex; align-items: center; padding: 0 15px; gap: 10px;
+            padding-bottom: env(safe-area-inset-bottom);
         }
-        .row:last-child { border-bottom: none; }
-        .val { color: #8e8e93; }
+        .camera-btn { color: #999; font-size: 1.5rem; }
+        .text-field { 
+            flex: 1; height: 36px; background: white; border-radius: 18px; border: 1px solid #ddd;
+            display: flex; align-items: center; padding-left: 15px; color: #aaa; font-size: 1rem;
+        }
+        .send-arrow {
+            width: 32px; height: 32px; background: #007aff; border-radius: 50%; color: white;
+            display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        .send-arrow:active { transform: scale(0.9); }
 
-        /* Utils */
-        .home-bar { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; background: rgba(255,255,255,0.5); border-radius: 10px; z-index: 200; }
+        /* Proposal UI */
+        .proposal-ui { margin-top: 15px; display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%; }
+        .btn-prop { 
+            width: 100%; padding: 14px; border-radius: 15px; border: none; font-weight: bold; font-size: 1rem; color: white; cursor: pointer; 
+        }
+        .btn-yes { background: linear-gradient(135deg, #ff4757, #ff6b81); box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4); }
+        .btn-no { background: #333; position: relative; }
+
+        /* --- 5. UTILS --- */
+        @keyframes pop { from { opacity: 0; transform: translateY(10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; background: rgba(0,0,0,0.2); border-radius: 10px; z-index: 999; }
 
     </style>
 </head>
@@ -94,74 +128,66 @@
         
         <div class="status-bar">
             <div id="clock">12:00</div>
-            <div>❤️ 100%</div>
+            <div>LTE 🔋</div>
         </div>
 
         <div class="screen active" id="home">
-            <div style="text-align: center; color: white; margin-bottom: 40px;">
+            <div style="text-align: center; color: #333; margin-bottom: 40px; margin-top: 40px;">
                 <div style="font-size: 4rem; font-weight: 200;" id="big-clock">12:00</div>
                 <div id="date">Sunday, 14 Feb</div>
             </div>
 
             <div class="app-grid">
-                <div class="app" onclick="showScreen('messages')">
-                    <div class="icon" style="background: #4cd964; color: white;">💬</div>
+                <div class="app" onclick="openApp('messages')">
+                    <div class="icon" style="background:#4cd964; color:white;">💬</div>
                     <div class="label">Messages</div>
                 </div>
-                <div class="app" onclick="showScreen('notes')">
-                    <div class="icon" style="background: #f1c40f; color: white;">📝</div>
-                    <div class="label">Our Diary</div>
+                <div class="app" onclick="alert('Photos Empty! Take some with me 😉')">
+                    <div class="icon" style="background:white;">📸</div>
+                    <div class="label">Photos</div>
                 </div>
-                <div class="app" onclick="showScreen('settings')">
-                    <div class="icon" style="background: #8e8e93; color: white;">⚙️</div>
+                <div class="app" onclick="alert('Notes Locked 🔒')">
+                    <div class="icon" style="background:#f1c40f; color:white;">📝</div>
+                    <div class="label">Notes</div>
+                </div>
+                <div class="app" onclick="alert('Love Settings: 100%')">
+                    <div class="icon" style="background:#8e8e93; color:white;">⚙️</div>
                     <div class="label">Settings</div>
                 </div>
+            </div>
+
+            <div class="dock">
+                <div class="app"><div class="icon" style="background:#4cd137; color:white;">📞</div></div>
+                <div class="app"><div class="icon" style="background:#48dbfb; color:white;">🧭</div></div>
+                <div class="app"><div class="icon" style="background:#feca57; color:white;">🎵</div></div>
+                <div class="app" onclick="openApp('messages')"><div class="icon" style="background:white; color:black;">❤️</div></div>
             </div>
         </div>
 
         <div class="screen" id="messages">
-            <div class="nav-bar">
-                <div class="back" onclick="showScreen('home')">‹ Back</div>
-                <div>Ayuuu ❤️</div>
-                <div style="width:20px;"></div>
-            </div>
-            <div class="chat-body" id="chat-box">
-                <div class="msg them">Hey! Miss you ❤️</div>
-            </div>
-            <div class="chat-footer">
-                <div class="input" id="input-text">Tap arrow to chat...</div>
-                <div class="btn-send" onclick="nextChat()">↑</div>
-            </div>
-        </div>
-
-        <div class="screen" id="notes">
-            <div class="nav-bar" style="background: #f9eeb3;">
-                <div class="back" onclick="showScreen('home')">‹ Home</div>
-                <div>Distance Diary ✈️</div>
-                <div style="width:20px;"></div>
-            </div>
-            <textarea placeholder="Write something here... It saves automatically!"></textarea>
-        </div>
-
-        <div class="screen" id="settings">
-            <div class="nav-bar">
-                <div class="back" onclick="showScreen('home')">‹ Home</div>
-                <div>Love Settings</div>
-                <div style="width:20px;"></div>
-            </div>
-            <div class="settings-list">
-                <div style="margin-left: 15px; color:#666; font-size:0.8rem; margin-bottom:5px;">CONNECTION STATUS</div>
-                <div class="group">
-                    <div class="row"><span>Wifi</span> <span class="val">Connected to Heart ❤️</span></div>
-                    <div class="row"><span>Bluetooth</span> <span class="val">Paired with Theshu</span></div>
-                    <div class="row"><span>Distance</span> <span class="val">Far, but Close ✈️</span></div>
+            <div class="chat-nav">
+                <div class="nav-items">
+                    <div class="back-btn" onclick="goHome()">‹ <span style="font-size:1rem;">42</span></div>
+                    <div class="profile-header">
+                        <div class="p-avatar" style="background-image: url('https://placehold.co/100x100/ff9a9e/ffffff?text=A');"></div>
+                        <div class="p-name">Ayuuu ❤️</div>
+                    </div>
+                    <div class="video-icon">📹</div>
                 </div>
+            </div>
 
-                <div style="margin-left: 15px; color:#666; font-size:0.8rem; margin-bottom:5px;">DEVICE INFO</div>
-                <div class="group">
-                    <div class="row"><span>Love Storage</span> <span class="val">Full</span></div>
-                    <div class="row"><span>Battery</span> <span class="val">Powered by You</span></div>
+            <div class="chat-area" id="chat-box">
+                <div style="text-align:center; color:#8e8e93; font-size:0.7rem; margin-bottom:10px;">iMessage • Today 12:00 PM</div>
+                
+                <div class="typing-bubble" id="typing">
+                    <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
                 </div>
+            </div>
+
+            <div class="chat-input">
+                <div class="camera-btn">📷</div>
+                <div class="text-field" id="input-bar">Tap arrow to start...</div>
+                <div class="send-arrow" onclick="userReply()">↑</div>
             </div>
         </div>
 
@@ -169,89 +195,148 @@
     </div>
 
     <script>
-        // 1. CLOCK
+        // --- CONFIG ---
+        const script = [
+            { type: 'me', text: "Hey Ayuuu! Happy Valentine's Day! 🌹" },
+            { type: 'her', text: "Heyyy Theshu! Miss you! 🥰" },
+            { type: 'me', text: "I miss you more. Distance sucks." },
+            { type: 'her', text: "I know... but we are strong! 💪❤️" },
+            { type: 'me', text: "Sending you a virtual gift..." },
+            { type: 'her', text: "Omg really? What is it? 😮" },
+            { type: 'img', src: "https://placehold.co/300x200/ff4757/ffffff?text=Our+Future+Home" },
+            { type: 'her', text: "Omg I love it! 😂❤️" },
+            { type: 'me', text: "Okay, serious question now." },
+            { type: 'her', text: "I'm listening..." },
+            { type: 'me', text: "<b>Will you be my Valentine?</b> 💍" }
+        ];
+
+        let step = 0;
+        const chatBox = document.getElementById('chat-box');
+        const typing = document.getElementById('typing');
+        const inputBar = document.getElementById('input-bar');
+
+        // --- FUNCTIONS ---
+
+        function userReply() {
+            if (step >= script.length) return;
+
+            const msg = script[step];
+
+            // 1. My Message
+            if (msg.type === 'me') {
+                addBubble('me', msg.text);
+                step++;
+                inputBar.innerText = "Delivered";
+                
+                // Trigger Her Reply if next exists
+                if (step < script.length) {
+                    setTimeout(showTyping, 800);
+                }
+            }
+        }
+
+        function showTyping() {
+            // Move typing bubble to bottom
+            chatBox.appendChild(typing);
+            typing.style.display = 'block';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            setTimeout(() => {
+                typing.style.display = 'none';
+                
+                // Process Her Message
+                const reply = script[step];
+                
+                if (reply.type === 'img') {
+                    const img = document.createElement('img');
+                    img.src = reply.src;
+                    img.className = 'img-msg';
+                    chatBox.appendChild(img);
+                } else {
+                    addBubble('them', reply.text);
+                }
+                
+                step++;
+                
+                // Setup next interaction
+                if (step < script.length && script[step].type === 'me') {
+                    inputBar.innerText = "Tap arrow to reply...";
+                    inputBar.style.color = "#333";
+                } else if (step >= script.length) {
+                    // END OF SCRIPT -> SHOW BUTTONS
+                    showProposalUI();
+                } else {
+                    // She talks twice in a row
+                    setTimeout(showTyping, 1000);
+                }
+                
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+            }, 1500); // 1.5s typing time
+        }
+
+        function addBubble(type, text) {
+            const div = document.createElement('div');
+            div.className = `bubble ${type}`;
+            div.innerHTML = text;
+            chatBox.insertBefore(div, typing); // Insert before hidden typing bubble
+            
+            if (type === 'me') {
+                const status = document.createElement('div');
+                status.className = 'status-text show-status';
+                status.innerText = "Delivered";
+                chatBox.insertBefore(status, typing);
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function showProposalUI() {
+            const div = document.createElement('div');
+            div.className = 'proposal-ui';
+            div.innerHTML = `
+                <button class="btn-prop btn-yes" onclick="sheSaidYes()">YES! 😍</button>
+                <button class="btn-prop btn-no" id="noBtn" onmouseover="runAway()" ontouchstart="runAway()">No</button>
+            `;
+            chatBox.appendChild(div);
+            inputBar.innerText = "Waiting for answer...";
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function runAway() {
+            const btn = document.getElementById('noBtn');
+            const x = Math.random() * 200 - 100; // Move relative
+            const y = Math.random() * 200 - 100;
+            btn.style.transform = `translate(${x}px, ${y}px)`;
+        }
+
+        function sheSaidYes() {
+            alert("YAY! Happy Valentine's Day! ❤️❤️❤️");
+            // Confetti
+            for(let i=0; i<50; i++) {
+                let h = document.createElement('div');
+                h.innerText = '❤️';
+                h.style.position='fixed'; 
+                h.style.left=Math.random()*100+'vw'; 
+                h.style.top='-10px';
+                h.style.fontSize='20px';
+                h.style.animation=`fade 2s linear forwards`; 
+                // Add keyframes dynamically if needed, but alert usually stops animation
+                document.body.appendChild(h);
+            }
+        }
+
+        // --- SYSTEM ---
         function startTime() {
             const d = new Date();
             let h = d.getHours().toString().padStart(2,'0');
             let m = d.getMinutes().toString().padStart(2,'0');
             document.getElementById('clock').innerText = h + ":" + m;
             document.getElementById('big-clock').innerText = h + ":" + m;
-            document.getElementById('date').innerText = d.toLocaleDateString('en-US', {weekday:'short', day:'numeric', month:'short'});
             setTimeout(startTime, 1000);
         }
 
-        // 2. NAVIGATION
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-
-        // 3. CHAT LOGIC
-        const script = [
-            { s: 'me', t: "I was looking at the calendar..." },
-            { s: 'her', t: "Oh yeah? What about it? 👀" },
-            { s: 'me', t: "Feb 14 is coming up." },
-            { s: 'her', t: "I know... I wish we were together 🥺" },
-            { s: 'me', t: "Me too. But I have a question." },
-            { s: 'me', t: "Will you be my Valentine? 🌹" }
-        ];
-        let step = 0;
-
-        function nextChat() {
-            if(step >= script.length) return;
-            const chat = document.getElementById('chat-box');
-            const msg = script[step];
-            
-            // Add Message
-            const div = document.createElement('div');
-            div.className = `msg ${msg.s === 'me' ? 'me' : 'them'}`;
-            div.innerHTML = msg.t;
-            chat.appendChild(div);
-            
-            // Auto scroll
-            chat.scrollTop = chat.scrollHeight;
-            step++;
-
-            // If it's HER turn, simulate delay
-            if(step < script.length && script[step].s === 'her') {
-                document.getElementById('input-text').innerText = "Typing...";
-                setTimeout(() => {
-                    nextChat();
-                    document.getElementById('input-text').innerText = "Tap arrow to reply...";
-                }, 1000);
-            }
-
-            // FINAL STEP: PROPOSAL
-            if(step === script.length) {
-                const optDiv = document.createElement('div');
-                optDiv.className = 'options';
-                optDiv.innerHTML = `
-                    <button class="opt-btn yes" onclick="accepted()">YES!</button>
-                    <button class="opt-btn no" id="noBtn" onmouseover="moveNo()" onclick="moveNo()">NO</button>
-                `;
-                chat.appendChild(optDiv);
-                chat.scrollTop = chat.scrollHeight;
-            }
-        }
-
-        function moveNo() {
-            const btn = document.getElementById('noBtn');
-            btn.style.position = 'fixed';
-            btn.style.left = Math.random() * 60 + '%';
-            btn.style.top = Math.random() * 60 + '%';
-        }
-
-        function accepted() {
-            alert("YAY! Distance can't stop us! ❤️✈️");
-            // Confetti
-            for(let i=0; i<50; i++) {
-                let h = document.createElement('div');
-                h.innerText = '❤️';
-                h.style.position='fixed'; h.style.left=Math.random()*100+'%'; h.style.top='0';
-                h.style.animation = `fade 2s linear`;
-                document.body.appendChild(h);
-            }
-        }
+        function openApp(id) { document.getElementById(id).classList.add('active'); }
+        function goHome() { document.querySelectorAll('.screen.active:not(#home)').forEach(s => s.classList.remove('active')); }
 
     </script>
 </body>
