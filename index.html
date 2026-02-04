@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Theshu ❤️ Ayuuu</title>
     <style>
-        /* --- PINK THEME CORE --- */
+        /* --- PINK PARADISE THEME --- */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         
         body { 
             margin: 0; padding: 0; height: 100vh; width: 100vw; 
-            /* Richer Pink Gradient so it's not "too white" */
-            background: linear-gradient(135deg, #ff9a9e 0%, #ff6b81 100%);
+            /* DEEP PINK WALLPAPER - Text will pop against this! */
+            background: linear-gradient(160deg, #ff758c 0%, #ff7eb3 100%);
             overflow: hidden; position: fixed; color: #333; 
         }
 
@@ -22,47 +22,48 @@
         
         /* --- LOCK SCREEN --- */
         #lock { 
-            backdrop-filter: blur(15px); z-index: 50; color: white; padding-top: 60px; 
-            background: rgba(255, 105, 180, 0.3); /* Pink Tint */
+            /* Glassy effect on top of pink wallpaper */
+            backdrop-filter: blur(10px); z-index: 50; color: white; padding-top: 60px; 
+            background: rgba(0,0,0,0.1); 
         }
-        .clock { font-size: 5.5rem; font-weight: 100; line-height: 1; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .date { font-size: 1.2rem; margin-top: 5px; font-weight: 500; }
-        .notif { background: rgba(255,255,255,0.95); color: #333; width: 88%; padding: 18px; border-radius: 18px; margin-top: 50px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .clock { font-size: 5.5rem; font-weight: 100; line-height: 1; text-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .date { font-size: 1.2rem; margin-top: 5px; font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .notif { background: rgba(255,255,255,0.95); color: #333; width: 88%; padding: 20px; border-radius: 20px; margin-top: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         
         /* --- HOME SCREEN --- */
         #home { z-index: 10; justify-content: space-between; padding-bottom: 30px; }
-        .bar { height: 44px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: white; font-size: 0.9rem; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .bar { height: 44px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: white; font-size: 0.9rem; text-shadow: 0 1px 3px rgba(0,0,0,0.2); }
         
-        /* Fixed Hero Text Visibility */
-        .hero { flex-direction: column; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .hero h1 { font-size: 3.8rem; margin: 0; font-family: 'Segoe UI', cursive; line-height: 1.1; }
-        .hero p { font-size: 1rem; opacity: 0.95; font-weight: 500; margin-top: 5px; background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; }
+        /* Hero Text - Now clearly visible against pink */
+        .hero { flex-direction: column; color: white; text-shadow: 0 3px 10px rgba(0,0,0,0.25); }
+        .hero h1 { font-size: 4rem; margin: 0; font-family: 'Segoe UI', cursive; line-height: 1.1; }
+        .hero p { font-size: 1.1rem; opacity: 0.9; font-weight: 500; margin-top: 5px; }
         
-        /* Pink Glass Dock */
+        /* Glass Dock */
         .dock { 
             display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; 
-            background: rgba(255, 255, 255, 0.35); /* More visible dock */
+            background: rgba(255, 255, 255, 0.25); 
             border-radius: 35px; margin: 20px; 
-            backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.5); 
+            backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.4); 
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-        .icon { width: 58px; height: 58px; background: white; border-radius: 16px; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin: 0 auto 6px; }
-        .app-lbl { font-size: 0.75rem; font-weight: 600; text-align: center; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .icon { width: 58px; height: 58px; background: white; border-radius: 16px; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15); margin: 0 auto 6px; }
+        .app-lbl { font-size: 0.75rem; font-weight: 600; text-align: center; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
 
         /* --- WINDOWS (APPS) --- */
         .win { 
-            background: #fff0f5; /* Lavender Blush (Pale Pink) Background */
+            background: #fff5f7; /* Very light pink app bg */
             z-index: 100; transform: translateY(100%); 
         }
         .win.open { transform: translateY(0); }
         
         .head { 
-            height: 56px; background: rgba(255,255,255,0.9); 
+            height: 56px; background: rgba(255,255,255,0.95); 
             display: flex; align-items: center; padding: 0 15px; 
-            border-bottom: 1px solid #ffccd5; /* Pink Border */
+            border-bottom: 1px solid #ffccd5;
         }
         .back { color: #ff4757; font-weight: 600; cursor: pointer; font-size: 1rem; display: flex; align-items: center; }
-        .title { flex: 1; text-align: center; font-weight: 600; margin-right: 30px; font-size: 1.1rem; color: #d63031; }
+        .title { flex: 1; text-align: center; font-weight: 600; margin-right: 30px; font-size: 1.1rem; color: #ff4757; }
         .body { flex: 1; overflow-y: auto; padding: 20px; }
 
         /* --- CHAT APP --- */
