@@ -3,231 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Theshu OS v7.0 🎮</title>
+    <title>Theshu OS v8.0 ⚡</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&family=Indie+Flower&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg-wallpaper: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            --bg: #f8f9fa;
             --text: #333;
             --primary: #ff6b81;
-            --bubble-sent: #d1efff;
-            --bubble-rcvd: #ffffff;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             margin: 0; padding: 0; height: 100vh; width: 100vw;
-            background: var(--bg-wallpaper);
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
             font-family: 'Poppins', sans-serif;
-            overflow: hidden; 
-            color: var(--text);
+            overflow: hidden; color: var(--text);
         }
 
-        /* --- LOCK SCREEN --- */
+        /* --- LOCK SCREEN (Layer 999) --- */
         #lock-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(15px);
-            z-index: 10000; display: flex; flex-direction: column;
+            background: rgba(0,0,0,0.9); z-index: 9999;
+            display: flex; flex-direction: column;
             justify-content: center; align-items: center; color: white;
-            text-align: center;
         }
 
         input {
-            padding: 15px; border-radius: 30px; border: none; 
-            text-align: center; font-size: 1.2rem; width: 220px;
-            background: rgba(255,255,255,0.2); color: white;
-            border: 2px solid rgba(255,255,255,0.5); margin-top: 20px;
+            padding: 10px; border-radius: 5px; border: none; 
+            text-align: center; font-size: 1.2rem; margin-top: 20px;
+            width: 200px;
         }
-        ::placeholder { color: rgba(255,255,255,0.7); }
 
         /* --- HOME SCREEN --- */
-        .status-bar {
-            height: 30px; display: flex; justify-content: space-between; 
-            padding: 5px 20px; font-size: 0.8rem; font-weight: bold; color: white;
-        }
-
+        .status-bar { padding: 10px 20px; display: flex; justify-content: space-between; color: white; font-weight: bold; font-size: 0.8rem; }
+        
         .app-grid {
             display: grid; grid-template-columns: repeat(4, 1fr); 
-            gap: 20px 10px; padding: 20px; margin-top: 20px;
+            gap: 15px 5px; padding: 20px; margin-top: 20px;
         }
 
-        .app-icon {
-            display: flex; flex-direction: column; align-items: center;
-            cursor: pointer; transition: transform 0.1s;
-        }
+        .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
         .app-icon:active { transform: scale(0.9); }
 
         .icon-box {
-            width: 58px; height: 58px; border-radius: 14px;
+            width: 55px; height: 55px; border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            background: white; margin-bottom: 5px;
+            font-size: 1.5rem; background: white; margin-bottom: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .icon-label { font-size: 0.7rem; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); font-weight: 600; }
+        .icon-label { font-size: 0.7rem; color: white; font-weight: 600; text-shadow: 0 1px 1px rgba(0,0,0,0.2); }
 
         /* --- APP WINDOWS --- */
         .app-window {
             position: fixed; top: 100vh; left: 0; width: 100%; height: 100%;
-            background: #f0f2f5; z-index: 5000;
-            transition: top 0.3s ease-in-out;
-            display: flex; flex-direction: column;
+            background: #f5f5f5; z-index: 1000;
+            transition: top 0.3s; display: flex; flex-direction: column;
         }
         .app-window.open { top: 0; }
 
         .app-header {
-            height: 60px; background: white; 
-            display: flex; align-items: center; padding: 0 20px;
-            font-weight: bold; font-size: 1.2rem;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
-            justify-content: space-between; z-index: 10;
+            height: 50px; background: white; border-bottom: 1px solid #ddd;
+            display: flex; align-items: center; padding: 0 15px;
+            font-weight: bold; justify-content: space-between;
         }
         .close-btn { 
-            background: #ff4757; color: white; border: none; 
-            width: 32px; height: 32px; border-radius: 50%; font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
+            background: #ff4757; color: white; border: none; width: 25px; height: 25px; border-radius: 50%; 
         }
 
-        .app-content {
-            flex: 1; overflow-y: auto; padding: 20px;
-            text-align: center;
+        .app-content { flex: 1; overflow-y: auto; padding: 20px; text-align: center; }
+
+        /* --- WIDGETS --- */
+        .btn { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; margin-top: 15px; }
+        
+        .msg-bubble {
+            background: white; padding: 10px 15px; border-radius: 15px;
+            text-align: left; margin-bottom: 10px; font-size: 0.9rem;
+        }
+        .msg-bubble.me { background: #d1efff; align-self: flex-end; }
+        #chat-container { display: flex; flex-direction: column; }
+
+        .chat-options {
+            position: absolute; bottom: 0; left: 0; width: 100%; background: white;
+            padding: 10px; display: flex; gap: 5px; border-top: 1px solid #ddd;
+        }
+        .opt-btn {
+            flex: 1; background: var(--primary); color: white; border: none; padding: 10px; border-radius: 5px;
         }
 
-        /* --- SETTINGS STYLES --- */
-        .settings-list {
-            background: white; border-radius: 10px; text-align: left;
-            overflow: hidden; margin-bottom: 20px;
-        }
-        .settings-item {
-            padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;
-        }
-        .settings-item:last-child { border-bottom: none; }
-        .settings-value { color: #888; font-size: 0.9rem; }
-
-        /* --- CAMERA STYLES (CLEAN) --- */
         .camera-view {
-            width: 100%; height: 350px; background: #000; border-radius: 20px;
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden; margin-bottom: 20px; border: 5px solid #333; position: relative;
+            width: 100%; height: 300px; background: black; margin-bottom: 20px;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
         #preview-img { width: 100%; height: 100%; object-fit: cover; display: none; }
-        .camera-placeholder { color: #555; font-size: 3rem; }
 
-        /* --- CHAT STYLES --- */
-        #chat-container { display: flex; flex-direction: column; gap: 10px; padding-bottom: 80px; }
-        .msg-bubble {
-            max-width: 80%; padding: 12px 16px; border-radius: 18px;
-            font-size: 0.95rem; line-height: 1.4; position: relative;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            opacity: 0; animation: popIn 0.3s forwards;
-        }
-        .msg-bubble.rcvd { background: var(--bubble-rcvd); align-self: flex-start; border-bottom-left-radius: 4px; }
-        .msg-bubble.sent { background: var(--bubble-sent); align-self: flex-end; border-bottom-right-radius: 4px; }
-        .chat-options {
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            background: white; padding: 15px; display: flex; gap: 10px; overflow-x: auto;
-            border-top: 1px solid #ddd;
-        }
-        .option-btn {
-            flex: 1; background: var(--primary); color: white; border: none;
-            padding: 12px; border-radius: 20px; font-size: 0.9rem; font-weight: bold;
-            cursor: pointer; white-space: nowrap; box-shadow: 0 4px 10px rgba(255, 107, 129, 0.3);
-        }
-        @keyframes popIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
-
-        /* --- GAME STYLES (WHACK-A-HEART) --- */
-        .game-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-            margin-top: 20px;
-        }
-        .hole {
-            height: 80px; background: #ddd; border-radius: 50%;
-            position: relative; overflow: hidden; box-shadow: inset 0 5px 10px rgba(0,0,0,0.2);
-        }
-        .heart-mole {
-            width: 100%; height: 100%; position: absolute; top: 100%;
-            display: flex; align-items: center; justify-content: center; font-size: 3rem;
-            transition: top 0.2s; cursor: pointer;
-        }
-        .hole.up .heart-mole { top: 0; }
-
-        /* UTILS */
-        .btn { background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: bold; font-size: 1rem; margin-top: 15px; cursor: pointer; }
-        .confetti { position: absolute; width: 10px; height: 10px; background: red; animation: fall 3s linear forwards; z-index: 20000; pointer-events: none;}
-        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
-
-        /* GIFT & BUCKET */
-        .gift-box { font-size: 5rem; animation: bounce 1s infinite; cursor: pointer; margin-top: 50px; }
+        .gift-box { font-size: 5rem; cursor: pointer; animation: bounce 1s infinite; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .bucket-item { text-align: left; background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-size: 1rem; }
-        .bucket-item.checked { text-decoration: line-through; opacity: 0.6; }
 
     </style>
 </head>
 <body>
 
     <div id="lock-screen">
-        <div style="font-size: 4rem;">🔒</div>
-        <h1 style="font-family: 'Dancing Script'; margin: 10px 0;">Theshu & Ayu</h1>
-        <p>Vol. 7 (Gaming Edition)</p>
-        <input type="password" id="pass" placeholder="hint: kushu" onkeyup="if(event.key==='Enter') unlock()">
-        <button class="btn" style="background:white; color:#333; margin-top:20px;" onclick="unlock()">Unlock</button>
-        <p id="err" style="display:none; color:#ff6b81; margin-top:10px; font-weight:bold;">Wrong Password!</p>
+        <h1 style="font-family:'Dancing Script'; font-size:3rem;" onclick="emergencyUnlock()">Theshu & Ayu</h1>
+        <p>Vol. 8 (Lite)</p>
+        <input type="password" id="pass" placeholder="hint: kushu">
+        <button class="btn" style="background:white; color:black;" onclick="unlock()">Unlock</button>
+        <p id="err" style="display:none; color:red; margin-top:10px;">Wrong Password!</p>
+        <small style="margin-top:20px; opacity:0.5;">(Tap name 5 times if stuck)</small>
     </div>
 
     <div id="home-screen">
-        <div class="status-bar">
-            <span>11:11</span>
-            <span>❤️ 5G</span>
-            <span>100% 🔋</span>
-        </div>
-
-        <div style="padding: 20px; text-align: center; color: white; margin-top: 30px;">
-            <h2 style="margin:0; font-size:2.5rem; font-weight:normal; font-family:'Indie Flower';">Hey Ayuuu ❤️</h2>
-        </div>
+        <div class="status-bar"><span>11:11</span><span>❤️</span><span>100%</span></div>
+        <h2 style="text-align:center; color:white; font-family:'Indie Flower'; margin-top:30px; font-size:2rem;">Hey Ayuuu ❤️</h2>
 
         <div class="app-grid">
-            <div class="app-icon" onclick="openApp('msg')">
-                <div class="icon-box" style="background:#4cd137; color:white;">💬</div><span class="icon-label">Chat</span>
-            </div>
-            <div class="app-icon" onclick="openApp('camera')">
-                <div class="icon-box" style="background:#333; color:white;">📸</div><span class="icon-label">Camera</span>
-            </div>
-            <div class="app-icon" onclick="openApp('game')">
-                <div class="icon-box" style="background:#ff9f43; color:white;">🎮</div><span class="icon-label">Game</span>
-            </div>
-            <div class="app-icon" onclick="openApp('settings')">
-                <div class="icon-box" style="background:#bdc3c7; color:white;">⚙️</div><span class="icon-label">Settings</span>
-            </div>
-            <div class="app-icon" onclick="openApp('gift')">
-                <div class="icon-box" style="background:#e17055; color:white;">🎁</div><span class="icon-label">Gift</span>
-            </div>
-            <div class="app-icon" onclick="openApp('notes')">
-                <div class="icon-box" style="background:#f1c40f; color:white;">📝</div><span class="icon-label">Bucket List</span>
-            </div>
+            <div class="app-icon" onclick="openApp('msg')"><div class="icon-box" style="background:#4cd137; color:white;">💬</div><span class="icon-label">Chat</span></div>
+            <div class="app-icon" onclick="openApp('camera')"><div class="icon-box" style="background:#333; color:white;">📸</div><span class="icon-label">Camera</span></div>
+            <div class="app-icon" onclick="openApp('gift')"><div class="icon-box" style="background:#e17055; color:white;">🎁</div><span class="icon-label">Gift</span></div>
+            <div class="app-icon" onclick="openApp('settings')"><div class="icon-box" style="background:#95a5a6; color:white;">⚙️</div><span class="icon-label">Settings</span></div>
         </div>
     </div>
 
-    <div class="app-window" id="app-game">
-        <div class="app-header">Heart Whack <button class="close-btn" onclick="closeApp('game')">×</button></div>
-        <div class="app-content" style="background:#feca57;">
-            <h2>Score: <span id="score">0</span></h2>
-            <p>Tap the hearts! ❤️</p>
-            
-            <div class="game-grid">
-                <div class="hole" id="h1"><div class="heart-mole" onclick="bonk(event)">❤️</div></div>
-                <div class="hole" id="h2"><div class="heart-mole" onclick="bonk(event)">❤️</div></div>
-                <div class="hole" id="h3"><div class="heart-mole" onclick="bonk(event)">❤️</div></div>
-                <div class="hole" id="h4"><div class="heart-mole" onclick="bonk(event)">❤️</div></div>
-                <div class="hole" id="h5"><div class="heart-mole" onclick="bonk(event)">❤️</div></div>
-                <div class="hole" id="h6"><div class="heart-mole" onclick="bonk(event)">❤️</div></div>
-                <div class="hole" id="h7"><div class="heart-mole" onclick="bonk(event)">❤️</div></div>
-                <div class="hole" id="h8"><div class="heart-mole" onclick="bonk(event)">❤️</div></div>
-                <div class="hole" id="h9"><div class="heart-mole" onclick="bonk(event)">❤️</div></div>
-            </div>
-
-            <button class="btn" onclick="startGame()" style="background:white; color:#333; margin-top:20px;">Start Game ▶️</button>
+    <div class="app-window" id="app-msg">
+        <div class="app-header">Theshu ❤️ <button class="close-btn" onclick="closeApp('msg')">×</button></div>
+        <div class="app-content" style="background:#eee; padding-bottom:70px;">
+            <div id="chat-container"></div>
+        </div>
+        <div class="chat-options" id="chat-opts">
+            <button class="opt-btn" onclick="startChat()">Start Chat</button>
         </div>
     </div>
 
@@ -235,176 +141,39 @@
         <div class="app-header">Camera <button class="close-btn" onclick="closeApp('camera')">×</button></div>
         <div class="app-content" style="background:black; color:white;">
             <div class="camera-view">
-                <span class="camera-placeholder" id="cam-icon">📷</span>
+                <span id="cam-icon" style="font-size:3rem;">📷</span>
                 <img id="preview-img" src="">
             </div>
-            
             <label class="btn" style="background:white; color:black; display:inline-block;">
-                📸 Take / Upload Photo
+                Take Photo
                 <input type="file" accept="image/*" style="display:none;" onchange="showPic(event)">
             </label>
-        </div>
-    </div>
-
-    <div class="app-window" id="app-msg">
-        <div class="app-header">Theshu ❤️ <button class="close-btn" onclick="closeApp('msg')">×</button></div>
-        <div class="app-content" style="background:#e5ddd5; text-align:left; display:flex; flex-direction:column; padding-bottom:80px;">
-            <div id="chat-container"></div>
-        </div>
-        <div class="chat-options" id="chat-options">
-            <button class="option-btn" onclick="startChat()">Start Chat 💌</button>
-        </div>
-    </div>
-
-    <div class="app-window" id="app-settings">
-        <div class="app-header">Settings <button class="close-btn" onclick="closeApp('settings')">×</button></div>
-        <div class="app-content" style="background:#f0f2f5;">
-            <p style="text-align:left; color:#666; margin-left:10px; font-size:0.9rem;">ABOUT</p>
-            <div class="settings-list">
-                <div class="settings-item"><span>Name</span> <span class="settings-value">Theshu OS</span></div>
-                <div class="settings-item"><span>Version</span> <span class="settings-value">7.0 (Gaming)</span></div>
-                <div class="settings-item"><span>Developer</span> <span class="settings-value">Theshmil</span></div>
-                <div class="settings-item"><span>For</span> <span class="settings-value">My Summer Girl ☀️</span></div>
-            </div>
-            <button class="btn" style="background:#ff4757; width:100%; margin-top:20px;" onclick="location.reload()">Re-Lock Phone 🔒</button>
         </div>
     </div>
 
     <div class="app-window" id="app-gift">
         <div class="app-header">Gift <button class="close-btn" onclick="closeApp('gift')">×</button></div>
         <div class="app-content">
-            <h2>For You 💝</h2>
-            <p>Tap to unwrap!</p>
-            <div class="gift-box" onclick="unwrapGift(this)">🎁</div>
-            <h3 id="gift-text" style="opacity:0; transition:1s; margin-top:20px;">???</h3>
+            <h2>Tap the Box!</h2>
+            <div class="gift-box" onclick="openGift(this)">🎁</div>
+            <h3 id="gift-res" style="margin-top:20px;"></h3>
         </div>
     </div>
 
-    <div class="app-window" id="app-notes">
-        <div class="app-header">Our Goals <button class="close-btn" onclick="closeApp('notes')">×</button></div>
+    <div class="app-window" id="app-settings">
+        <div class="app-header">Settings <button class="close-btn" onclick="closeApp('settings')">×</button></div>
         <div class="app-content" style="text-align:left;">
-            <div class="bucket-item" onclick="toggleCheck(this)"><span>⬜</span> Meet in person ✈️</div>
-            <div class="bucket-item" onclick="toggleCheck(this)"><span>⬜</span> Late night drive 🚗</div>
-            <div class="bucket-item" onclick="toggleCheck(this)"><span>⬜</span> Cook together 🍝</div>
-            <div class="bucket-item" onclick="toggleCheck(this)"><span>⬜</span> Wear matching hoodies 👕</div>
-            <div class="bucket-item" onclick="toggleCheck(this)"><span>⬜</span> Get Married 💍</div>
+            <p><b>Version:</b> 8.0 (Lite)</p>
+            <p><b>Developer:</b> Theshmil</p>
+            <p><b>For:</b> My Summer Girl ☀️</p>
+            <hr>
+            <p><b>Note:</b> I removed the game to make this faster for you! ❤️</p>
+            <button class="btn" style="width:100%; background:red;" onclick="location.reload()">Re-Lock</button>
         </div>
     </div>
 
     <script>
-        // --- CHAT SCRIPT (NEW) ---
-        const script = [
-            { text: "Yooo Ayuuu! Guess what? 😸", options: [{label: "What??", next: 1}, {label: "Tell me!", next: 1}] },
-            { text: "I made this OS for you. Took some time but worth it 😉", options: [{label: "Crazy boy 😂", next: 2}, {label: "Aww thanks! ❤️", next: 2}] },
-            { text: "Crazy for you! 😜 Kitchu 🐈‍⬛ is saying Meow right now.", options: [{label: "Hehe show Kitchu!", next: 3}] },
-            { text: "Just wanted to remind you... I'm always here for you. ❤️", options: [{label: "I know 🥰", next: 4}] },
-            { text: "You are my favorite notification. Always be yourself because that's who I love. 🥸", options: [{label: "Love you Theshu ❤️", next: 5}] },
-            { text: "Love you too Ayuuu! Now go play the Game! I bet you can't beat 10 points! 🎮", options: [{label: "Challenge accepted! 😎", next: -1}] }
-        ];
-
-        function startChat() {
-            document.getElementById('chat-options').innerHTML = '';
-            addMsg(script[0].text, 'rcvd');
-            showOptions(script[0].options);
-        }
-
-        function handleReply(nextIndex, label) {
-            addMsg(label, 'sent');
-            document.getElementById('chat-options').innerHTML = '';
-            if(nextIndex !== -1) {
-                setTimeout(() => {
-                    addMsg(script[nextIndex].text, 'rcvd');
-                    showOptions(script[nextIndex].options);
-                }, 1000);
-            } else {
-                setTimeout(() => alert("Go play the Game! 🎮"), 1000);
-            }
-        }
-
-        function addMsg(txt, type) {
-            const div = document.createElement('div');
-            div.className = 'msg-bubble ' + type;
-            div.innerText = txt;
-            document.getElementById('chat-container').appendChild(div);
-        }
-
-        function showOptions(opts) {
-            const c = document.getElementById('chat-options');
-            c.innerHTML = '';
-            opts.forEach(o => {
-                const b = document.createElement('button');
-                b.className = 'option-btn';
-                b.innerText = o.label;
-                b.onclick = () => handleReply(o.next, o.label);
-                c.appendChild(b);
-            });
-        }
-
-        // --- GAME LOGIC (WHACK-A-HEART) ---
-        let score = 0;
-        let lastHole;
-        let timeUp = false;
-
-        function randomTime(min, max) { return Math.round(Math.random() * (max - min) + min); }
-        function randomHole(holes) {
-            const idx = Math.floor(Math.random() * holes.length);
-            const hole = holes[idx];
-            if (hole === lastHole) return randomHole(holes);
-            lastHole = hole;
-            return hole;
-        }
-
-        function peep() {
-            const time = randomTime(500, 1000);
-            const holes = document.querySelectorAll('.hole');
-            const hole = randomHole(holes);
-            hole.classList.add('up');
-            setTimeout(() => {
-                hole.classList.remove('up');
-                if (!timeUp) peep();
-            }, time);
-        }
-
-        function startGame() {
-            score = 0;
-            document.getElementById('score').innerText = 0;
-            timeUp = false;
-            peep();
-            setTimeout(() => timeUp = true, 15000); // 15 seconds
-        }
-
-        function bonk(e) {
-            if(!e.isTrusted) return;
-            score++;
-            this.parentNode.classList.remove('up');
-            document.getElementById('score').innerText = score;
-            spawnConfetti();
-        }
-
-        // --- CAMERA LOGIC (SIMPLE) ---
-        function showPic(event) {
-            const file = event.target.files[0];
-            if(file) {
-                const url = URL.createObjectURL(file);
-                document.getElementById('preview-img').src = url;
-                document.getElementById('preview-img').style.display = 'block';
-                document.getElementById('cam-icon').style.display = 'none';
-            }
-        }
-
-        // --- GIFT ---
-        function unwrapGift(el) {
-            el.classList.add('open');
-            const gifts = ["💍 Ring", "🍫 Chocolate", "🌹 Rose"];
-            const gift = gifts[Math.floor(Math.random()*gifts.length)];
-            el.innerText = gift.split(" ")[0];
-            el.style.animation = "none";
-            document.getElementById('gift-text').innerText = "It's a " + gift + "!";
-            document.getElementById('gift-text').style.opacity = 1;
-            for(let i=0; i<30; i++) spawnConfetti();
-        }
-
-        // --- SYSTEM ---
+        // --- UNLOCK SYSTEM ---
         function unlock() {
             if(document.getElementById('pass').value.trim().toLowerCase() === "kushu") {
                 document.getElementById('lock-screen').style.display = 'none';
@@ -412,8 +181,80 @@
                 document.getElementById('err').style.display = 'block';
             }
         }
-        function openApp(id) { document.getElementById('app-' + id).classList.add('open'); }
-        function closeApp(id) { document.getElementById('app-' + id).classList.remove('open'); }
-        
-        function toggleCheck(el) {
-            el.classLi
+
+        // FAIL-SAFE: Tap title 5 times to unlock if button breaks
+        let taps = 0;
+        function emergencyUnlock() {
+            taps++;
+            if(taps === 5) document.getElementById('lock-screen').style.display = 'none';
+        }
+
+        // --- NAVIGATION ---
+        function openApp(id) { document.getElementById('app-'+id).classList.add('open'); }
+        function closeApp(id) { document.getElementById('app-'+id).classList.remove('open'); }
+
+        // --- CHAT LOGIC ---
+        const script = [
+            { txt: "Yooo Ayuuu! 😸", opts: [{l:"Hey! ❤️", n:1}, {l:"What's up?", n:1}] },
+            { txt: "Just proving I'm not a robot! 😜 Kitchu says meow 🐈‍⬛", opts: [{l:"Show Kitchu!", n:2}] },
+            { txt: "He's sleeping. Listen, don't worry about anything. I'm right here. 🥸", opts: [{l:"Really? 🥺", n:3}] },
+            { txt: "Yes idiot! Stuck with you forever. Be yourself. ❤️", opts: [{l:"Love you Theshu", n:-1}] }
+        ];
+
+        function startChat() {
+            document.getElementById('chat-opts').innerHTML = '';
+            addMsg(script[0].txt, 'rcvd');
+            showOpts(script[0].opts);
+        }
+
+        function reply(next, label) {
+            addMsg(label, 'sent');
+            document.getElementById('chat-opts').innerHTML = '';
+            if(next !== -1) {
+                setTimeout(() => {
+                    addMsg(script[next].txt, 'rcvd');
+                    showOpts(script[next].opts);
+                }, 1000);
+            } else {
+                setTimeout(() => alert("Go check the Gift! 🎁"), 1000);
+            }
+        }
+
+        function addMsg(txt, type) {
+            const d = document.createElement('div');
+            d.className = 'msg-bubble ' + type;
+            d.innerText = txt;
+            document.getElementById('chat-container').appendChild(d);
+        }
+
+        function showOpts(opts) {
+            const c = document.getElementById('chat-opts');
+            c.innerHTML = '';
+            opts.forEach(o => {
+                const b = document.createElement('button');
+                b.className = 'opt-btn';
+                b.innerText = o.l;
+                b.onclick = () => reply(o.n, o.l);
+                c.appendChild(b);
+            });
+        }
+
+        // --- CAMERA ---
+        function showPic(e) {
+            const f = e.target.files[0];
+            if(f) {
+                document.getElementById('preview-img').src = URL.createObjectURL(f);
+                document.getElementById('preview-img').style.display = 'block';
+                document.getElementById('cam-icon').style.display = 'none';
+            }
+        }
+
+        // --- GIFT ---
+        function openGift(el) {
+            el.innerText = "💍";
+            el.style.animation = "none";
+            document.getElementById('gift-res').innerText = "It's a Ring! (Promise) ❤️";
+        }
+    </script>
+</body>
+</html>
