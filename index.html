@@ -2,230 +2,223 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#ffccd5">
-    <title>Ayuuu's Phone</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chat with Theshu</title>
     <style>
-        /* --- 1. SETTINGS --- */
+        /* --- 1. SETUP --- */
         :root {
-            --bg: #ffccd5;
-            --app-bg: #ffffff;
-            --primary: #ff4757;
-            --text: #333;
+            --bg: #fff;
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --me-bubble: #ff4757;
+            --her-bubble: #e5e5ea;
+            --text-me: #fff;
+            --text-her: #000;
         }
 
-        /* --- 2. RESET --- */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
-        body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: black; overflow: hidden; position: fixed; }
-
-        /* --- 3. WALLPAPER --- */
-        .wallpaper {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(180deg, #ffdde1 0%, #ee9ca7 100%);
-            z-index: 0;
-        }
-
-        /* --- 4. SCREENS --- */
-        .screen {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-            display: flex; flex-direction: column;
-        }
-
-        /* Lock Screen */
-        #lock-screen {
-            z-index: 100; background: rgba(0,0,0,0.2); backdrop-filter: blur(10px);
-            align-items: center; justify-content: flex-start; padding-top: 100px; color: white;
-        }
-        #lock-screen.unlocked { transform: translateY(-100%); }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         
-        /* Home Screen */
-        #home-screen { z-index: 10; padding: 20px; padding-top: 60px; }
+        body { 
+            margin: 0; padding: 0; width: 100vw; height: 100dvh; 
+            background: var(--bg); display: flex; flex-direction: column; overflow: hidden;
+        }
+
+        /* --- 2. HEADER --- */
+        .chat-header {
+            height: 60px; padding: 0 15px; display: flex; align-items: center; gap: 10px;
+            background: var(--header-bg); border-bottom: 1px solid #f0f0f0;
+            position: fixed; top: 0; width: 100%; z-index: 100; backdrop-filter: blur(10px);
+        }
+        .avatar {
+            width: 40px; height: 40px; border-radius: 50%; background: #ccc;
+            background-image: url('https://placehold.co/100x100/ff9a9e/ffffff?text=A'); 
+            background-size: cover;
+        }
+        .info { flex: 1; }
+        .name { font-weight: bold; font-size: 1rem; }
+        .status { font-size: 0.75rem; color: #2ecc71; } /* Green for Online */
         
-        /* --- 5. ELEMENTS --- */
-        .clock { font-size: 5rem; font-weight: 200; line-height: 1; }
-        .date { font-size: 1.2rem; margin-top: 10px; }
-        .hint { position: absolute; bottom: 50px; animation: bounce 2s infinite; }
+        .video-icon { font-size: 1.5rem; color: #ff4757; cursor: pointer; }
 
-        /* Icons Grid */
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
-        .app-icon { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; }
-        .icon-box {
-            width: 60px; height: 60px; border-radius: 15px; background: white;
-            display: flex; align-items: center; justify-content: center; font-size: 28px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        /* --- 3. CHAT AREA --- */
+        .chat-area {
+            flex: 1; padding: 80px 15px 80px 15px; overflow-y: auto; scroll-behavior: smooth;
+            display: flex; flex-direction: column; gap: 10px;
         }
-        .icon-label { color: white; font-size: 12px; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
-
-        /* Dock */
-        .dock {
-            position: absolute; bottom: 20px; left: 15px; right: 15px; height: 90px;
-            background: rgba(255,255,255,0.3); border-radius: 30px;
-            display: flex; justify-content: space-around; align-items: center; backdrop-filter: blur(10px);
-        }
-
-        /* --- 6. APP WINDOWS (Popups) --- */
-        .app-window {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--app-bg); z-index: 200; transform: scale(0.8); opacity: 0; pointer-events: none;
-            transition: 0.3s;
-        }
-        .app-window.active { transform: scale(1); opacity: 1; pointer-events: auto; }
-
-        .app-nav {
-            height: 80px; background: #f8f8f8; border-bottom: 1px solid #ddd;
-            display: flex; align-items: flex-end; justify-content: center; padding-bottom: 15px;
-            font-weight: bold; font-size: 1.1rem; position: relative;
-        }
-        .back-btn { position: absolute; left: 15px; color: #007aff; cursor: pointer; font-size: 1rem; }
-        .app-content { padding: 20px; height: calc(100% - 80px); overflow-y: auto; }
-
-        /* --- 7. UTILS --- */
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; background: black; border-radius: 10px; opacity: 0.2; }
-
-        /* Specific App Styles */
-        .msg-bubble { background: #e5e5ea; padding: 10px 15px; border-radius: 18px; margin-bottom: 10px; max-width: 80%; }
-        .msg-bubble.me { background: var(--primary); color: white; align-self: flex-end; margin-left: auto; }
         
-        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .photo { height: 150px; background: #eee; border-radius: 10px; background-size: cover; background-position: center; }
+        /* Bubbles */
+        .msg {
+            max-width: 75%; padding: 10px 16px; border-radius: 20px; font-size: 0.95rem; line-height: 1.4;
+            position: relative; opacity: 0; transform: translateY(20px); animation: popIn 0.3s forwards;
+        }
+        
+        .me {
+            align-self: flex-end; background: var(--me-bubble); color: var(--text-me);
+            border-bottom-right-radius: 5px;
+        }
+        
+        .her {
+            align-self: flex-start; background: var(--her-bubble); color: var(--text-her);
+            border-bottom-left-radius: 5px;
+        }
+
+        .typing-indicator {
+            align-self: flex-start; background: #e5e5ea; padding: 10px 15px; border-radius: 20px;
+            border-bottom-left-radius: 5px; width: fit-content; display: none; margin-bottom: 10px;
+        }
+        .dot {
+            display: inline-block; width: 6px; height: 6px; background: #999; border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both; margin: 0 2px;
+        }
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+
+        /* --- 4. FOOTER (INPUT) --- */
+        .chat-footer {
+            height: 70px; padding: 10px 15px; background: #f9f9f9; border-top: 1px solid #eee;
+            position: fixed; bottom: 0; width: 100%; display: flex; align-items: center; gap: 10px;
+            padding-bottom: max(10px, env(safe-area-inset-bottom));
+        }
+        .fake-input {
+            flex: 1; height: 40px; background: white; border-radius: 20px; border: 1px solid #ddd;
+            padding: 0 15px; display: flex; align-items: center; color: #aaa; font-size: 0.9rem;
+        }
+        .send-btn {
+            width: 40px; height: 40px; background: var(--me-bubble); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;
+            cursor: pointer; transition: 0.2s;
+        }
+        .send-btn:active { transform: scale(0.9); }
+
+        /* --- ANIMATIONS --- */
+        @keyframes popIn { to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        @keyframes fall { to { transform: translateY(100vh) rotate(360deg); } }
 
     </style>
 </head>
-<body onload="startTime()">
+<body>
 
-    <div class="wallpaper"></div>
-
-    <div class="screen" id="lock-screen" onclick="unlock()">
-        <div style="font-size: 2rem; margin-bottom: 10px;">🔒</div>
-        <div class="clock" id="clock">12:00</div>
-        <div class="date">Sunday, 14 February</div>
-        <div class="hint">Tap to Open ❤️</div>
+    <div class="chat-header">
+        <div class="back-btn" style="color:#ff4757; font-size:1.5rem;">‹</div>
+        <div class="avatar"></div>
+        <div class="info">
+            <div class="name">Ayuuu ❤️</div>
+            <div class="status">Online</div>
+        </div>
+        <div class="video-icon">📹</div>
     </div>
 
-    <div class="screen" id="home-screen">
-        <div class="grid">
-            <div class="app-icon" onclick="openApp('app-msg')">
-                <div class="icon-box" style="background:#4cd137; color:white;">💬</div>
-                <span class="icon-label">Messages</span>
-            </div>
-            <div class="app-icon" onclick="openApp('app-photos')">
-                <div class="icon-box">📸</div>
-                <span class="icon-label">Photos</span>
-            </div>
-            <div class="app-icon" onclick="openApp('app-notes')">
-                <div class="icon-box" style="background:#feca57; color:white;">📝</div>
-                <span class="icon-label">Note</span>
-            </div>
-        </div>
+    <div class="chat-area" id="chat">
+        <div style="text-align:center; font-size:0.75rem; color:#aaa; margin-bottom:15px;">Today 12:00 PM</div>
 
-        <div class="dock">
-            <div class="app-icon" onclick="alert('Calling Theshu...')"><div class="icon-box" style="background:#4cd137; color:white;">📞</div></div>
-            <div class="app-icon" onclick="toggleMusic()"><div class="icon-box" style="background:#ff4757; color:white;">🎵</div></div>
-            <div class="app-icon" onclick="location.reload()"><div class="icon-box" style="background:#576574; color:white;">↺</div></div>
+        <div class="typing-indicator" id="typing">
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
         </div>
     </div>
 
-    <audio id="music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
-
-    <div class="app-window" id="app-msg">
-        <div class="app-nav">
-            <div class="back-btn" onclick="closeApp('app-msg')">‹ Back</div>
-            Theshu ❤️
-        </div>
-        <div class="app-content">
-            <div class="msg-bubble">Hey Ayuuu! Happy Valentine's! 🌹</div>
-            <div class="msg-bubble">I have a question...</div>
-            <div class="msg-bubble" style="font-weight:bold; color:var(--primary); border: 2px solid var(--primary); background:white;">Will you be my Valentine? 💍</div>
-            
-            <div style="margin-top:30px; display:flex; gap:10px;">
-                <button onclick="sayYes()" style="flex:1; padding:15px; border-radius:20px; border:none; background:var(--primary); color:white; font-weight:bold;">YES 😍</button>
-                <button id="noBtn" onmouseover="moveNo()" style="flex:1; padding:15px; border-radius:20px; border:none; background:#ddd; color:#555; font-weight:bold;">No</button>
-            </div>
-        </div>
-        <div class="home-bar" onclick="closeApp('app-msg')"></div>
-    </div>
-
-    <div class="app-window" id="app-photos">
-        <div class="app-nav"><div class="back-btn" onclick="closeApp('app-photos')">‹ Home</div>Gallery</div>
-        <div class="app-content">
-            <div class="photo-grid">
-                <div class="photo" style="background-image:url('https://placehold.co/200x200/ff9a9e/fff?text=Us');"></div>
-                <div class="photo" style="background-image:url('https://placehold.co/200x200/ff9a9e/fff?text=Love');"></div>
-                <div class="photo" style="background-image:url('https://placehold.co/200x200/ff9a9e/fff?text=Cute');"></div>
-                <div class="photo" style="background-image:url('https://placehold.co/200x200/ff9a9e/fff?text=Date');"></div>
-            </div>
-        </div>
-        <div class="home-bar" onclick="closeApp('app-photos')"></div>
-    </div>
-
-    <div class="app-window" id="app-notes">
-        <div class="app-nav"><div class="back-btn" onclick="closeApp('app-notes')">‹ Home</div>Love Note</div>
-        <div class="app-content">
-            <div style="background:#fff9c4; padding:20px; border-radius:10px; min-height:300px; font-family:'Courier New', monospace; line-height:1.5;">
-                Dear Ayuuu,<br><br>
-                Just a little reminder that you are my favorite person.<br><br>
-                Even on a coded phone, my love for you is real.<br><br>
-                Forever yours,<br>Theshu ❤️
-            </div>
-        </div>
-        <div class="home-bar" onclick="closeApp('app-notes')"></div>
+    <div class="chat-footer">
+        <div class="fake-input" id="input-text">Tap arrow to reply...</div>
+        <div class="send-btn" onclick="nextMessage()">➤</div>
     </div>
 
     <script>
-        // 1. CLOCK
-        function startTime() {
-            const date = new Date();
-            const h = date.getHours().toString().padStart(2, '0');
-            const m = date.getMinutes().toString().padStart(2, '0');
-            document.getElementById('clock').innerText = `${h}:${m}`;
-            setTimeout(startTime, 1000);
+        // --- THE SCRIPT (Customize this!) ---
+        // 'me' = Theshu (Pink bubble, right)
+        // 'her' = Ayuuu (Gray bubble, left)
+        const conversation = [
+            { side: 'me', text: "Hey Ayuuu! ❤️" },
+            { side: 'her', text: "Hey Theshu! Miss you! 🥰" },
+            { side: 'me', text: "I miss you more! I was thinking about us..." },
+            { side: 'her', text: "Aww, what about us? 🙈" },
+            { side: 'me', text: "Just how happy you make me. You are my favorite person." },
+            { side: 'her', text: "You are gonna make me cry! 🥺❤️" },
+            { side: 'me', text: "I have a serious question though..." },
+            { side: 'her', text: "Omg what is it?? 😮" },
+            { side: 'me', text: "<b>Will you be my Valentine?</b> 🌹💍" },
+            { side: 'her', text: "YES!! 1000 times YES! 😍❤️" }
+        ];
+
+        let step = 0;
+        const chatBox = document.getElementById('chat');
+        const typingIndicator = document.getElementById('typing');
+        const inputText = document.getElementById('input-text');
+
+        function nextMessage() {
+            if (step >= conversation.length) return;
+
+            const currentMsg = conversation[step];
+            
+            // If it's MY turn to speak
+            if (currentMsg.side === 'me') {
+                addBubble('me', currentMsg.text);
+                step++;
+                // Check if next is HER turn, then simulate typing
+                if (step < conversation.length && conversation[step].side === 'her') {
+                    showTyping();
+                }
+            } 
+            // If it's HER turn (Wait for typing)
+            else if (currentMsg.side === 'her') {
+                // This logic is handled by showTyping's timeout, but if user clicks fast:
+                // We prevent clicking while she is "typing" (Optional, but realistic)
+            }
+            
+            updateScroll();
         }
 
-        // 2. UNLOCK
-        function unlock() {
-            document.getElementById('lock-screen').classList.add('unlocked');
-        }
-
-        // 3. APPS
-        function openApp(id) {
-            document.getElementById(id).classList.add('active');
-        }
-        function closeApp(id) {
-            document.getElementById(id).classList.remove('active');
-        }
-
-        // 4. PROPOSAL
-        function sayYes() {
-            alert("YAY! I knew it! Love you! ❤️");
-            // Confetti effect
-            for(let i=0; i<30; i++) {
-                let p = document.createElement('div');
-                p.innerText = '❤️';
-                p.style.position='fixed'; 
-                p.style.left=Math.random()*100+'vw'; 
-                p.style.top='-10px';
-                document.body.appendChild(p);
-                // Simple fall animation via JS interval not needed for lite version
+        function addBubble(side, text) {
+            const div = document.createElement('div');
+            div.className = `msg ${side}`;
+            div.innerHTML = text;
+            
+            // Insert before typing indicator
+            chatBox.insertBefore(div, typingIndicator);
+            
+            // Special effect for final YES
+            if(text.includes("YES")) {
+                celebrate();
             }
         }
-        
-        function moveNo() {
-            const btn = document.getElementById('noBtn');
-            btn.style.position = 'absolute';
-            btn.style.left = Math.random() * 60 + '%';
-            btn.style.top = Math.random() * 60 + '%';
+
+        function showTyping() {
+            inputText.innerText = "Ayuuu is typing...";
+            typingIndicator.style.display = 'block';
+            updateScroll();
+
+            // Simulate delay (1.5 seconds)
+            setTimeout(() => {
+                typingIndicator.style.display = 'none';
+                addBubble('her', conversation[step].text);
+                inputText.innerText = "Tap arrow to reply...";
+                step++;
+                updateScroll();
+            }, 1500);
         }
 
-        // 5. MUSIC
-        const audio = document.getElementById('music');
-        let playing = false;
-        function toggleMusic() {
-            if(!playing) { audio.play(); alert("Playing Music 🎵"); }
-            else { audio.pause(); }
-            playing = !playing;
+        function updateScroll() {
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
+
+        function celebrate() {
+            // Confetti Explosion
+            for(let i=0; i<50; i++) {
+                const c = document.createElement('div');
+                c.innerHTML = Math.random() > 0.5 ? '❤️' : '🌹';
+                c.style.position = 'fixed';
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.top = '-20px';
+                c.style.fontSize = Math.random() * 20 + 10 + 'px';
+                c.style.animation = `fall ${Math.random() * 2 + 2}s linear forwards`;
+                document.body.appendChild(c);
+            }
+            // Auto Style Injection
+            const style = document.createElement('style');
+            style.innerHTML = `@keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }`;
+            document.head.appendChild(style);
+        }
+        
+        // Auto-start the conversation (Optional)
+        // setTimeout(nextMessage, 1000); 
 
     </script>
 </body>
