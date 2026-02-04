@@ -10,7 +10,7 @@
         
         body { 
             margin: 0; padding: 0; height: 100vh; width: 100vw; 
-            /* DEEP PINK WALLPAPER - Text will pop against this! */
+            /* DEEP PINK WALLPAPER */
             background: linear-gradient(160deg, #ff758c 0%, #ff7eb3 100%);
             overflow: hidden; position: fixed; color: #333; 
         }
@@ -22,7 +22,6 @@
         
         /* --- LOCK SCREEN --- */
         #lock { 
-            /* Glassy effect on top of pink wallpaper */
             backdrop-filter: blur(10px); z-index: 50; color: white; padding-top: 60px; 
             background: rgba(0,0,0,0.1); 
         }
@@ -34,12 +33,10 @@
         #home { z-index: 10; justify-content: space-between; padding-bottom: 30px; }
         .bar { height: 44px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: white; font-size: 0.9rem; text-shadow: 0 1px 3px rgba(0,0,0,0.2); }
         
-        /* Hero Text - Now clearly visible against pink */
         .hero { flex-direction: column; color: white; text-shadow: 0 3px 10px rgba(0,0,0,0.25); }
         .hero h1 { font-size: 4rem; margin: 0; font-family: 'Segoe UI', cursive; line-height: 1.1; }
         .hero p { font-size: 1.1rem; opacity: 0.9; font-weight: 500; margin-top: 5px; }
         
-        /* Glass Dock */
         .dock { 
             display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; 
             background: rgba(255, 255, 255, 0.25); 
@@ -50,11 +47,8 @@
         .icon { width: 58px; height: 58px; background: white; border-radius: 16px; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15); margin: 0 auto 6px; }
         .app-lbl { font-size: 0.75rem; font-weight: 600; text-align: center; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
 
-        /* --- WINDOWS (APPS) --- */
-        .win { 
-            background: #fff5f7; /* Very light pink app bg */
-            z-index: 100; transform: translateY(100%); 
-        }
+        /* --- WINDOWS --- */
+        .win { background: #fff5f7; z-index: 100; transform: translateY(100%); }
         .win.open { transform: translateY(0); }
         
         .head { 
@@ -67,7 +61,7 @@
         .body { flex: 1; overflow-y: auto; padding: 20px; }
 
         /* --- CHAT APP --- */
-        .chat-box { display: flex; flex-direction: column; padding-bottom: 100px; }
+        .chat-box { display: flex; flex-direction: column; padding-bottom: 120px; }
         .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; margin-bottom: 10px; font-size: 0.95rem; line-height: 1.4; animation: popIn 0.3s ease; }
         .them { background: white; border: 1px solid #ffccd5; align-self: flex-start; border-bottom-left-radius: 4px; color: #444; }
         .me { background: #ff4757; color: white; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3); }
@@ -75,6 +69,25 @@
         .opts-area { position: fixed; bottom: 0; left: 0; width: 100%; padding: 15px; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-top: 1px solid #ffccd5; display: flex; gap: 10px; flex-direction: column; }
         .opt-btn { width: 100%; padding: 14px; background: #ff4757; color: white; border: none; border-radius: 16px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: transform 0.1s; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.2); }
         .opt-btn:active { transform: scale(0.98); }
+
+        /* --- THE GIFT BOX ANIMATION --- */
+        .gift-container {
+            width: 100%; text-align: center; margin-top: 20px;
+            animation: popIn 0.5s ease;
+        }
+        .gift-emoji {
+            font-size: 5rem; cursor: pointer;
+            animation: bounce 1s infinite alternate;
+            display: inline-block;
+        }
+        .ring-emoji {
+            font-size: 5rem; display: none;
+            animation: spin 1s ease-out;
+        }
+        .gift-text {
+            margin-top: 10px; font-weight: 600; color: #ff4757; opacity: 0;
+            transition: opacity 0.5s;
+        }
 
         /* --- COUNTDOWN CARDS --- */
         .countdown-card { background: white; padding: 20px; border-radius: 18px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.08); text-align: center; border: 1px solid #fff0f3; }
@@ -85,6 +98,8 @@
 
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
         @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+        @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-10px); } }
+        @keyframes spin { 0% { transform: rotateY(0) scale(0.5); } 100% { transform: rotateY(360deg) scale(1); } }
     </style>
 </head>
 <body>
@@ -212,7 +227,7 @@
         }
         updateCountdowns();
 
-        // --- CHAT LOGIC ---
+        // --- ROMANTIC CHAT LOGIC ---
         const msgBox = document.getElementById('msgs');
         const optsBox = document.getElementById('opts');
 
@@ -220,40 +235,49 @@
             start: {
                 msg: "Happy Valentine's Day Ayuuu! 🌹",
                 options: [
-                    { txt: "Happy Valentine's! ❤️", next: 'miss_u' },
-                    { txt: "I miss you Theshu 🥺", next: 'miss_u' }
+                    { txt: "Happy Valentine's Theshu! ❤️", next: 'nostalgia' },
+                    { txt: "I miss you! 🥺", next: 'nostalgia' }
                 ]
             },
-            miss_u: {
-                msg: "I miss you too. I was just looking at our photos from August 18. Do you remember?",
+            nostalgia: {
+                msg: "I miss you too. I was just sitting here thinking about August 18. That day changed my whole life.",
                 options: [
-                    { txt: "The day we met! 🥰", next: 'met' },
-                    { txt: "How could I forget? ❤️", next: 'met' }
+                    { txt: "Mine too... 🥰", next: 'love' },
+                    { txt: "It was the best day ❤️", next: 'love' }
                 ]
             },
-            met: {
-                msg: "Best day of my life. Distance is hard, but I know we can make it. I have a question...",
+            love: {
+                msg: "Even though there are miles between us, you are the first thing I think of when I wake up. You are my home, Ayuuu.",
                 options: [
-                    { txt: "What is it? 😮", next: 'ask' }
+                    { txt: "Awww Theshu... 😭❤️", next: 'ask' },
+                    { txt: "I love you so much ❤️", next: 'ask' }
                 ]
             },
             ask: {
-                msg: "Will you be my Valentine? Now and forever? 💍",
+                msg: "I want to ask you something very special... something I want to promise you forever.",
                 options: [
-                    { txt: "YES! Of course! ❤️", next: 'yes' },
-                    { txt: "Definitely Yes! 💖", next: 'yes' }
+                    { txt: "What is it? 😮", next: 'proposal' },
+                    { txt: "Tell me! 💓", next: 'proposal' }
+                ]
+            },
+            proposal: {
+                msg: "<b>Will you be my Valentine?</b> Not just for today, but for every single day after this? 💍",
+                options: [
+                    { txt: "YES! A thousand times YES! 💍", next: 'yes' },
+                    { txt: "Of course, Yes! ❤️", next: 'yes' }
                 ]
             },
             yes: {
-                msg: "I knew you'd say yes! 😘 I love you Ayushka. Check the 'Events' app to see our countdowns!",
-                options: [] 
+                msg: "I knew it! ❤️ I have a small surprise for you... tap the gift box below!",
+                options: [], // No buttons, triggers gift
+                action: 'showGift'
             }
         };
 
         function addMsg(txt, type) {
             const d = document.createElement('div');
             d.className = 'msg ' + type;
-            d.innerText = txt;
+            d.innerHTML = txt; // Allow HTML for bold text
             msgBox.appendChild(d);
             msgBox.scrollTop = msgBox.scrollHeight;
         }
@@ -277,15 +301,42 @@
         function handleChoice(userText, nextStepKey) {
             addMsg(userText, 'me');
             optsBox.classList.add('hidden');
+            
             setTimeout(() => {
                 const nextStep = chatFlow[nextStepKey];
                 if (nextStep) {
                     addMsg(nextStep.msg, 'them');
-                    showOptions(nextStep.options);
+                    if (nextStep.action === 'showGift') {
+                        spawnGift();
+                    } else {
+                        showOptions(nextStep.options);
+                    }
                 }
-            }, 800);
+            }, 1000);
         }
 
+        // --- GIFT LOGIC ---
+        function spawnGift() {
+            const container = document.createElement('div');
+            container.className = 'gift-container';
+            container.innerHTML = `
+                <div id="gift-box" class="gift-emoji" onclick="openGift()">🎁</div>
+                <div id="ring-box" class="ring-emoji">💍</div>
+                <div id="gift-text" class="gift-text">Tap to open</div>
+            `;
+            msgBox.appendChild(container);
+            msgBox.scrollTop = msgBox.scrollHeight;
+        }
+
+        function openGift() {
+            document.getElementById('gift-box').style.display = 'none';
+            document.getElementById('ring-box').style.display = 'inline-block';
+            const txt = document.getElementById('gift-text');
+            txt.innerText = "One day, this will be real. ❤️";
+            txt.style.opacity = '1';
+        }
+
+        // Start Chat
         setTimeout(() => {
             if(msgBox.innerHTML === "") {
                 addMsg(chatFlow.start.msg, 'them');
