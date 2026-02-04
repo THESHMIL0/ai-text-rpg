@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Theshu OS v43.0 ❤️</title>
+    <title>Theshu OS v44.0 ✨</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&family=Indie+Flower&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Dancing+Script:wght@700&family=Indie+Flower&display=swap" rel="stylesheet">
 
     <style>
         /* --- CORE THEME --- */
@@ -26,78 +26,127 @@
             overflow: hidden; color: var(--text);
         }
 
-        /* --- MAIN OS --- */
-        #main-os { width: 100%; height: 100%; display: block; }
+        /* --- HOME SCREEN ANIMATIONS --- */
+        #main-os { 
+            width: 100%; height: 100%; 
+            animation: zoomIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
         .status-bar { height: 30px; padding: 5px 20px; display: flex; justify-content: space-between; color: white; font-weight: bold; font-size: 0.8rem; }
         
-        .home-title { font-family: 'Indie Flower'; font-size: 2.8rem; color: white; text-align: center; margin-top: 40px; }
+        .home-title { 
+            font-family: 'Indie Flower'; font-size: 2.8rem; color: white; text-align: center; margin-top: 40px; 
+            text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
         .app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 30px; margin-top: 20px; }
         
         /* APP ICONS */
-        .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .app-icon { 
+            display: flex; flex-direction: column; align-items: center; cursor: pointer; 
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .app-icon:active { transform: scale(0.85); }
+        
         .icon-box {
             width: 65px; height: 65px; border-radius: 16px; background: white;
             display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
-            margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 8px;
         }
         .icon-label { color: white; font-size: 0.8rem; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
 
-        /* --- WINDOWS (STATIC & INSTANT) --- */
+        /* --- WINDOWS (SLIDE UP ANIMATION) --- */
         .window {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #f2f2f7; z-index: 5000; 
-            display: none; /* HIDDEN BY DEFAULT */
-            flex-direction: column;
+            display: flex; flex-direction: column;
+            transform: translateY(100%); /* Hidden by default (pushed down) */
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* iOS slide effect */
         }
+        .window.open { transform: translateY(0); } /* Slide up to show */
         
         .header {
             height: 60px; background: white; border-bottom: 1px solid #ddd; display: flex;
             align-items: center; justify-content: space-between; padding: 0 20px; font-weight: 600; font-size: 1.1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10;
         }
         .close { color: #ff4757; cursor: pointer; font-size: 1rem; padding: 10px; font-weight: bold; }
         
-        .content { flex: 1; overflow-y: auto; padding: 20px; }
+        .content { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
 
-        /* --- FEATURES --- */
-        #chat-box { display: flex; flex-direction: column; gap: 10px; padding-bottom: 80px; }
-        .bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; text-align: left; }
+        /* --- CHAT BUBBLES (POP IN) --- */
+        #chat-box { display: flex; flex-direction: column; gap: 12px; padding-bottom: 90px; }
+        .bubble { 
+            max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; text-align: left; 
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; opacity: 0; transform: scale(0.8) translateY(10px);
+        }
+        @keyframes popIn { to { opacity: 1; transform: scale(1) translateY(0); } }
+
         .rcvd { background: #e5e5ea; align-self: flex-start; border-bottom-left-radius: 4px; color: black; }
         .sent { background: #007aff; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
         .gift-bub { background: #ffeaa7; width: 100%; text-align: center; cursor: pointer; align-self: center; border-radius: 15px; color: black; font-weight: bold; padding: 20px; }
-        .opts { position: absolute; bottom: 0; width: 100%; background: white; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #eee; overflow-x: auto; }
-        .opt-btn { flex: 1; padding: 12px; border-radius: 20px; border: none; background: #007aff; color: white; font-weight: bold; white-space: nowrap; }
+        
+        /* TYPING DOTS */
+        .typing { display: flex; gap: 5px; padding: 15px 20px; align-self: flex-start; background: #e5e5ea; border-radius: 18px; border-bottom-left-radius: 4px; width: fit-content; }
+        .dot { width: 8px; height: 8px; background: #999; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
-        /* CALL UI */
+        .opts { position: absolute; bottom: 0; width: 100%; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); padding: 15px; display: flex; gap: 10px; border-top: 1px solid #eee; overflow-x: auto; }
+        .opt-btn { flex: 1; padding: 12px; border-radius: 25px; border: none; background: #007aff; color: white; font-weight: 600; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,122,255,0.3); transition: 0.2s; }
+        .opt-btn:active { transform: scale(0.95); }
+
+        /* --- FEATURES & LISTS --- */
+        .coupon, .todo-item, .settings-item {
+            background: white; border-radius: 15px; padding: 18px; margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03); display: flex; justify-content: space-between; align-items: center;
+            transition: transform 0.2s;
+        }
+        .coupon:active, .todo-item:active { transform: scale(0.98); }
+        
+        .coupon-btn { background: #ff6b81; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; cursor: pointer; }
+        .coupon.redeemed { opacity: 0.5; filter: grayscale(1); }
+        .todo-item.done span { text-decoration: line-through; color: #aaa; }
+        .checkbox { width: 24px; height: 24px; border: 2px solid #ddd; border-radius: 50%; margin-right: 15px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .todo-item.done .checkbox { background: #4cd137; border-color: #4cd137; }
+        .todo-item.done .checkbox::after { content: '✓'; color: white; font-size: 14px; }
+
+        /* --- CALL UI --- */
         #call-ui {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #222; z-index: 9000;
-            display: none; flex-direction: column; align-items: center; padding-top: 100px; color: white;
+            background: linear-gradient(180deg, #2c3e50 0%, #000 100%); z-index: 9000;
+            display: none; flex-direction: column; align-items: center; padding-top: 120px; color: white;
+            animation: fadeIn 0.5s;
         }
-        .call-pic { width: 120px; height: 120px; background: #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin-bottom: 20px; }
-        .end-call { width: 60px; height: 60px; background: #ff3b30; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin-top: auto; margin-bottom: 50px; cursor: pointer; }
-
-        /* SETTINGS LISTS */
-        .settings-group { background: white; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
-        .settings-item { 
-            padding: 15px; border-bottom: 1px solid #eee; display: flex; 
-            justify-content: space-between; align-items: center; font-size: 0.95rem;
+        .call-pic { 
+            width: 120px; height: 120px; background: #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin-bottom: 20px; 
+            animation: pulseRing 2s infinite;
         }
-        .settings-item:last-child { border-bottom: none; }
-        .s-icon { margin-right: 10px; font-size: 1.1rem; }
-        .s-val { color: #8e8e93; font-size: 0.9rem; }
+        @keyframes pulseRing { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
         
-        .profile-card { display: flex; align-items: center; gap: 15px; background: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
-        .profile-pic { width: 50px; height: 50px; background: #ffdde1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .end-call { width: 70px; height: 70px; background: #ff3b30; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin-top: auto; margin-bottom: 60px; cursor: pointer; transition: 0.2s; }
+        .end-call:active { transform: scale(0.9); }
 
-        /* OTHER APPS */
-        .coupon, .todo-item { background: white; border-radius: 10px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .coupon-btn { background: #ff6b81; color: white; border: none; padding: 5px 15px; border-radius: 20px; }
-        .todo-item.done span { text-decoration: line-through; color: #aaa; }
-        #game-board { width: 100%; height: 350px; background: #222; margin-top: 10px; position: relative; overflow: hidden; }
-        .heart { position: absolute; font-size: 2rem; }
-        .cam-view { width: 100%; height: 300px; background: black; display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; }
+        /* --- SETTINGS --- */
+        .profile-card { display: flex; align-items: center; gap: 15px; background: white; padding: 20px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .profile-pic { width: 60px; height: 60px; background: #ffdde1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+        .s-group { background: white; border-radius: 15px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .s-item { padding: 15px 20px; border-bottom: 1px solid #f5f5f5; display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; }
+        .s-item:last-child { border-bottom: none; }
+        .s-val { color: #8e8e93; font-size: 0.9rem; }
+
+        /* --- GAME & CAM --- */
+        #game-board { width: 100%; height: 400px; background: #222; border-radius: 15px; position: relative; overflow: hidden; margin-top: 10px; }
+        .heart { position: absolute; font-size: 2.5rem; top: -50px; cursor: pointer; animation: fall 3s linear forwards; }
+        @keyframes fall { to { top: 450px; } }
+        .cam-view { width: 100%; height: 350px; background: black; border-radius: 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        
+        .gift-bounce { font-size: 3.5rem; animation: giftJump 1s infinite; }
+        @keyframes giftJump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
     </style>
 </head>
@@ -135,10 +184,11 @@
     </div>
 
     <div id="app-coupons" class="window">
-        <div class="header">Coupons 🎟️ <span class="close" onclick="closeApp('coupons')">Done</span></div>
+        <div class="header">LDR Coupons 🎟️ <span class="close" onclick="closeApp('coupons')">Done</span></div>
         <div class="content">
+            <p style="text-align:center; color:#888; margin-bottom:20px;">Tap to Redeem! ✨</p>
             <div class="coupon"><span>🎥 Virtual Movie Date</span><button class="coupon-btn" onclick="redeem(this)">Use</button></div>
-            <div class="coupon"><span>🍕 Order Food for You</span><button class="coupon-btn" onclick="redeem(this)">Use</button></div>
+            <div class="coupon"><span>🍕 I Order Food for You</span><button class="coupon-btn" onclick="redeem(this)">Use</button></div>
             <div class="coupon"><span>😴 Sleep on Call</span><button class="coupon-btn" onclick="redeem(this)">Use</button></div>
             <div class="coupon"><span>👗 Video Call Date</span><button class="coupon-btn" onclick="redeem(this)">Use</button></div>
             <div class="coupon"><span>🥺 Forgive 1 Mistake</span><button class="coupon-btn" onclick="redeem(this)">Use</button></div>
@@ -148,11 +198,12 @@
     <div id="app-goals" class="window">
         <div class="header">Our Future 📝 <span class="close" onclick="closeApp('goals')">Done</span></div>
         <div class="content">
-            <div class="todo-item" onclick="toggleTask(this)"><span>✈️ Meet in Person</span></div>
-            <div class="todo-item" onclick="toggleTask(this)"><span>🫂 First Tight Hug</span></div>
-            <div class="todo-item" onclick="toggleTask(this)"><span>🌙 Late Night Walk</span></div>
-            <div class="todo-item" onclick="toggleTask(this)"><span>🍝 Cook Together</span></div>
-            <div class="todo-item" onclick="toggleTask(this)"><span>💍 Get Married</span></div>
+            <p style="text-align:center; color:#888; margin-bottom:20px;">The "To-Do" List ❤️</p>
+            <div class="todo-item" onclick="toggleTask(this)"><div class="checkbox"></div><span>Meet in Person ✈️</span></div>
+            <div class="todo-item" onclick="toggleTask(this)"><div class="checkbox"></div><span>First Tight Hug 🫂</span></div>
+            <div class="todo-item" onclick="toggleTask(this)"><div class="checkbox"></div><span>Late Night Walk 🌙</span></div>
+            <div class="todo-item" onclick="toggleTask(this)"><div class="checkbox"></div><span>Cook Together 🍝</span></div>
+            <div class="todo-item" onclick="toggleTask(this)"><div class="checkbox"></div><span>Get Married 💍</span></div>
         </div>
     </div>
 
@@ -161,14 +212,14 @@
         <div class="content" style="background:#feca57; text-align:center;">
             <h3>Score: <span id="score">0</span></h3>
             <div id="game-board"></div>
-            <button class="opt-btn" onclick="startGame()" id="start-btn" style="margin-top:10px;">Play ▶️</button>
+            <button class="opt-btn" onclick="startGame()" id="start-btn" style="margin-top:20px; background:white; color:#333;">Play ▶️</button>
         </div>
     </div>
 
     <div id="app-camera" class="window">
         <div class="header">Camera <span class="close" onclick="closeApp('camera')">Done</span></div>
         <div class="content" style="background:black; text-align:center;">
-            <div class="cam-view"><img id="preview" src="" style="width:100%; height:100%; object-fit:cover; display:none;">📷</div>
+            <div class="cam-view"><img id="preview" src="" style="width:100%; height:100%; object-fit:cover; display:none;"><span id="cam-ph" style="font-size:3rem; color:white;">📷</span></div>
             <label class="opt-btn" style="margin-top:20px; display:inline-block; background:white; color:black;">Selfie <input type="file" accept="image/*" style="display:none;" onchange="loadPic(event)"></label>
         </div>
     </div>
@@ -179,81 +230,49 @@
             
             <div class="profile-card">
                 <div class="profile-pic">👩🏻</div>
-                <div>
-                    <h3 style="margin:0; font-size:1.1rem;">Ayuuuu</h3>
-                    <p style="margin:0; font-size:0.8rem; color:#888;">Apple ID • iCloud • My World 🌍</p>
-                </div>
+                <div><h3 style="margin:0; font-size:1.1rem;">Ayuuuu</h3><p style="margin:0; font-size:0.8rem; color:#888;">Apple ID • iCloud • My World 🌍</p></div>
             </div>
 
-            <div class="settings-group">
-                <div class="settings-item">
-                    <span>📶 Wi-Fi</span>
-                    <span class="s-val">Theshu's Heart ❤️</span>
-                </div>
-                <div class="settings-item">
-                    <span>🦷 Bluetooth</span>
-                    <span class="s-val">Paired for Life 🔗</span>
-                </div>
+            <div class="s-group">
+                <div class="s-item"><span>📶 Wi-Fi</span><span class="s-val">Theshu's Heart ❤️</span></div>
+                <div class="s-item"><span>🦷 Bluetooth</span><span class="s-val">Paired for Life 🔗</span></div>
             </div>
 
-            <div class="settings-group">
-                <div class="settings-item">
-                    <span>🔔 Notifications</span>
-                    <span class="s-val">Miss You Alerts (ON) 🚨</span>
-                </div>
-                <div class="settings-item">
-                    <span>🌙 Sleep Mode</span>
-                    <span class="s-val">Dreaming of You 😴</span>
-                </div>
+            <div class="s-group">
+                <div class="s-item"><span>🔔 Notifications</span><span class="s-val">Miss You Alerts (ON)</span></div>
+                <div class="s-item"><span>🌙 Sleep Mode</span><span class="s-val">Dreaming of You 😴</span></div>
             </div>
 
-            <div class="settings-group">
-                <div class="settings-item">
-                    <span>☀️ Brightness</span>
-                    <span class="s-val">Your Smile (Max) ✨</span>
-                </div>
-                <div class="settings-item">
-                    <span>🎵 Sound</span>
-                    <span class="s-val">Your Voice 🎶</span>
-                </div>
+            <div class="s-group">
+                <div class="s-item"><span>☀️ Brightness</span><span class="s-val">Your Smile (Max) ✨</span></div>
+                <div class="s-item"><span>🎵 Sound</span><span class="s-val">Your Voice 🎶</span></div>
             </div>
 
-            <div class="settings-group">
-                <div class="settings-item">
-                    <span>🔋 Battery</span>
-                    <span class="s-val">100% (Powered by Love) ⚡</span>
-                </div>
-                <div class="settings-item">
-                    <span>📍 Location</span>
-                    <span class="s-val">In My Heart 🏠</span>
-                </div>
+            <div class="s-group">
+                <div class="s-item"><span>🔋 Battery</span><span class="s-val">100% (Powered by Love)</span></div>
+                <div class="s-item"><span>📍 Location</span><span class="s-val">In My Heart 🏠</span></div>
             </div>
 
         </div>
     </div>
 
     <script>
-        // --- INSTANT NAVIGATION (NO ANIMATIONS) ---
-        function openApp(id) { document.getElementById('app-' + id).style.display = 'flex'; }
-        function closeApp(id) { document.getElementById('app-' + id).style.display = 'none'; }
+        // --- NAVIGATION (SLIDE UP) ---
+        function openApp(id) { document.getElementById('app-' + id).classList.add('open'); }
+        function closeApp(id) { document.getElementById('app-' + id).classList.remove('open'); }
 
         // --- COUPONS & GOALS ---
         function redeem(btn) {
-            btn.parentElement.style.opacity = '0.5';
+            btn.parentElement.classList.add('redeemed');
             btn.innerText = "Used";
-            alert("Redeemed! Send screenshot! 📸");
+            spawnConfetti();
         }
         function toggleTask(el) {
-            if(el.style.textDecoration === 'line-through') {
-                el.style.textDecoration = 'none';
-                el.style.opacity = '1';
-            } else {
-                el.style.textDecoration = 'line-through';
-                el.style.opacity = '0.5';
-            }
+            el.classList.toggle('done');
+            if(el.classList.contains('done')) spawnConfetti();
         }
 
-        // --- CHAT LOGIC ---
+        // --- CHAT WITH TYPING DOTS ---
         const script = [
             { t: "Hey Ayuuuu... ❤️", o: [{l:"Hi Theshu! 🥰", n:1}, {l:"Hey love ✨", n:1}] },
             { t: "I built this OS just for you. Because you deserve the world. 🌍", o: [{l:"Aww really? 🥺", n:2}, {l:"You are the best ❤️", n:2}] },
@@ -263,8 +282,7 @@
 
         function startChat() {
             document.getElementById('chat-opts').innerHTML = '';
-            addBub(script[0].t, 'rcvd');
-            showOpts(script[0].o);
+            showTyping(script[0].t, script[0].o);
         }
 
         function reply(n, l) {
@@ -272,38 +290,57 @@
             document.getElementById('chat-opts').innerHTML = '';
             
             if(n === -2) {
-                document.getElementById('call-ui').style.display = "flex";
-                setTimeout(() => { document.getElementById('call-status').innerText = "I LOVE YOU! ❤️"; }, 2000);
-                setTimeout(endCall, 5000);
+                setTimeout(() => {
+                    document.getElementById('call-ui').style.display = "flex";
+                    setTimeout(() => { document.getElementById('call-status').innerText = "I LOVE YOU! ❤️"; }, 2000);
+                    setTimeout(endCall, 5000);
+                }, 1000);
                 return;
             }
 
+            if(n === -1) showTyping("Now... check this out! 👇", null, true);
+            else showTyping(script[n].t, script[n].o, false);
+        }
+
+        function showTyping(text, opts, isGift) {
+            const t = document.createElement('div');
+            t.className = 'typing'; t.id = 'curr-typing';
+            t.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+            document.getElementById('chat-box').appendChild(t);
+            scrollToBottom();
+
             setTimeout(() => {
-                if(n === -1) {
-                    addBub("Now... check this out! 👇", 'rcvd');
-                    spawnGift();
-                } else {
-                    addBub(script[n].t, 'rcvd');
-                    showOpts(script[n].o);
-                }
-            }, 500);
+                document.getElementById('curr-typing').remove();
+                addBub(text, 'rcvd');
+                if(isGift) spawnGift();
+                else if(opts) showOpts(opts);
+            }, 1500);
+        }
+
+        function scrollToBottom() {
+            const c = document.getElementById('app-chat').querySelector('.content');
+            c.scrollTop = c.scrollHeight;
         }
 
         function endCall() {
             document.getElementById('call-ui').style.display = "none";
-            addBub("Check out the gift below! 👇", 'rcvd');
-            spawnGift();
+            showTyping("Check out the gift below! 👇", null, true);
         }
 
         function spawnGift() {
             const d = document.createElement('div');
             d.className = 'bubble gift-bub';
-            d.innerHTML = '🎁 Tap Me!';
+            d.innerHTML = '<div class="gift-bounce">🎁</div><div id="g-txt">Tap Me!</div>';
             d.onclick = function() {
-                if(this.innerText.includes('🎁')) this.innerHTML = '🍦 Ice Cream!';
-                else if(this.innerText.includes('🍦')) this.innerHTML = '💍 A Ring! (Promise)';
+                if(this.innerHTML.includes('🎁')) {
+                    this.innerHTML = '<div class="gift-bounce">🍦</div><div id="g-txt">Ice Cream!</div>';
+                } else {
+                    this.innerHTML = '<div class="gift-bounce">💍</div><div id="g-txt">Ring (Promise)!</div>';
+                    spawnConfetti();
+                }
             };
             document.getElementById('chat-box').appendChild(d);
+            scrollToBottom();
         }
 
         function addBub(t, c) {
@@ -311,48 +348,10 @@
             d.className = 'bubble ' + c;
             d.innerText = t;
             document.getElementById('chat-box').appendChild(d);
+            scrollToBottom();
         }
         function showOpts(opts) {
             const c = document.getElementById('chat-opts');
             c.innerHTML = '';
             opts.forEach(o => {
-                const b = document.createElement('button');
-                b.className = 'opt-btn'; b.innerText = o.l;
-                b.onclick = () => reply(o.n, o.l);
-                c.appendChild(b);
-            });
-        }
-
-        // --- GAME ---
-        let score=0, active=false;
-        function startGame() {
-            active=true; score=0;
-            document.getElementById('start-btn').style.display='none';
-            document.getElementById('game-board').innerHTML='';
-            document.getElementById('score').innerText='0';
-            loop();
-        }
-        function loop() { if(active) { spawn(); setTimeout(loop, 800); } }
-        function spawn() {
-            const h = document.createElement('div');
-            h.innerText='❤️'; h.className='heart';
-            h.style.left=Math.random()*250+'px';
-            let top = -50;
-            const interval = setInterval(() => {
-                top += 3; h.style.top = top + 'px';
-                if(top > 350) { clearInterval(interval); if(h.parentNode) h.remove(); }
-            }, 20);
-            h.onmousedown = function() {
-                score++; document.getElementById('score').innerText=score; 
-                this.remove(); clearInterval(interval);
-            };
-            document.getElementById('game-board').appendChild(h);
-        }
-
-        function loadPic(e) {
-            document.getElementById('preview').src = URL.createObjectURL(e.target.files[0]);
-            document.getElementById('preview').style.display='block';
-        }
-    </script>
-</body>
-</html>
+                const b = docume
