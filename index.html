@@ -34,73 +34,70 @@
         }
 
         /* APP LAYOUT */
-        .app {
+        .app-container {
             width: 100%; height: 100%;
             position: relative;
             background: var(--paper);
             color: var(--text);
             overflow: hidden;
-            display: flex; flex-direction: column;
+        }
+
+        /* BACKGROUND HEARTS */
+        .bg-heart {
+            position: absolute; bottom: -50px;
+            font-size: 20px; opacity: 0.5;
+            animation: floatUp linear infinite;
+            z-index: 0; pointer-events: none;
         }
 
         /* PAGES */
         .page {
             position: absolute; top: 0; left: 0;
             width: 100%; height: 100%; 
-            display: flex; flex-direction: column; 
-            opacity: 0; pointer-events: none; z-index: 0;
-            transition: opacity 0.3s, transform 0.3s;
-            background: var(--paper);
-            transform: translateX(20px);
-        }
-
-        .page.active { 
-            opacity: 1; pointer-events: all; z-index: 10; 
-            transform: translateX(0);
-        }
-
-        /* CONTENT AREA (Scrolls) */
-        .content {
-            flex: 1; overflow-y: auto; padding: 20px;
+            padding: 20px 20px 100px 20px; 
             display: flex; flex-direction: column; align-items: center; text-align: center;
+            opacity: 0; pointer-events: none; z-index: 0;
+            transition: opacity 0.3s;
+            background: var(--paper);
+            overflow-y: auto;
         }
 
-        /* FOOTER NAVIGATION (Fixed inside layout) */
-        .footer {
-            height: 80px; flex-shrink: 0;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 20px;
-            background: rgba(0,0,0,0.03);
-            border-top: 1px solid rgba(0,0,0,0.1);
+        .page.active { opacity: 1; pointer-events: all; z-index: 10; }
+
+        /* COVER PAGE (The Lock) */
+        #cover-page {
+            z-index: 99999; background: var(--cover); color: white;
+            justify-content: center; padding: 20px;
+            transition: transform 0.6s ease-in-out, opacity 0.6s;
         }
+        
+        /* HIDDEN STATE */
+        .hidden {
+            transform: translateY(-100vh);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* NAV BAR */
+        .footer {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            height: 70px; background: rgba(255,255,255,0.9);
+            border-top: 1px solid rgba(0,0,0,0.1);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+        
+        body.dark-mode .footer { background: rgba(30,30,30,0.9); }
 
         .nav-btn {
             background: var(--primary); color: white; border: none;
-            padding: 12px 25px; border-radius: 30px;
+            padding: 10px 25px; border-radius: 30px;
             font-weight: bold; cursor: pointer; font-size: 1rem;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-        
-        .page-num { font-weight: bold; opacity: 0.5; font-size: 0.9rem; }
 
-        /* COVER PAGE */
-        #cover-page {
-            z-index: 9999; background: var(--cover); color: white;
-            justify-content: center; align-items: center; text-align: center;
-            padding: 20px; transition: transform 0.5s ease-in-out;
-        }
-        
-        /* ELEMENTS */
-        h1 { font-family: 'Dancing Script', cursive; font-size: 3.5rem; margin: 0; }
-        h2 { font-family: 'Cinzel', serif; border-bottom: 3px solid var(--primary); padding-bottom: 5px; margin-bottom: 20px; font-size: 1.5rem; margin-top: 10px; }
-        
-        .btn {
-            background: white; color: var(--primary); border: none;
-            padding: 15px 40px; border-radius: 50px; cursor: pointer;
-            margin-top: 20px; font-weight: bold; font-size: 1.2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
+        /* INPUT & BUTTONS */
         input {
             padding: 15px; border-radius: 15px; border: 2px solid rgba(255,255,255,0.5); 
             text-align: center; width: 80%; margin-top: 20px;
@@ -108,11 +105,21 @@
         }
         input::placeholder { color: rgba(255,255,255,0.8); }
 
+        .btn {
+            background: white; color: var(--primary); border: none;
+            padding: 15px 40px; border-radius: 50px; cursor: pointer;
+            margin-top: 20px; font-weight: bold; font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* TEXT STYLES */
+        h1 { font-family: 'Dancing Script', cursive; font-size: 3.5rem; margin: 0; }
+        h2 { font-family: 'Cinzel', serif; border-bottom: 3px solid var(--primary); padding-bottom: 5px; margin-bottom: 20px; font-size: 1.5rem; margin-top: 10px; }
         .theme-btn { position: absolute; top: 15px; right: 15px; font-size: 1.5rem; cursor: pointer; z-index: 50; }
 
         /* WIDGETS */
         .polaroid-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; padding-bottom: 20px; }
-        .polaroid { background: white; padding: 5px 5px 25px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transform: rotate(-2deg); color: #333; }
+        .polaroid { background: white; padding: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transform: rotate(-2deg); color: #333; }
         .polaroid-img { height: 80px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
         
         .bucket-list { text-align: left; width: 100%; font-family: 'Indie Flower', cursive; font-size: 1.3rem; }
@@ -141,200 +148,139 @@
         
         .float { position: fixed; pointer-events: none; animation: up 3s linear forwards; z-index: 9999; font-size: 2rem; }
         @keyframes up { to { transform: translateY(-100vh); opacity: 0; } }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(0.5); opacity:0; } 50% { opacity:1; } 100% { transform: translateY(-100vh) scale(1); opacity:0; } }
 
     </style>
 </head>
 <body>
 
-    <div class="app" id="app-box">
+    <div class="app-container">
         
         <div class="theme-btn" onclick="toggleTheme()">🌗</div>
 
         <div class="page active" id="cover-page">
-            <h1 onclick="secretTap()">Theshu <br>&<br> Ayu ❤️</h1>
-            <p style="opacity: 0.9; letter-spacing: 2px; margin-top: 10px;">VOL. 2</p>
-            <br>
-            <p>🔒 Enter Password:</p>
-            <input type="text" id="pass" placeholder="hint: kushu">
-            <button class="btn" onclick="unlock()">Open Book 📖</button>
-            <p id="err" style="display:none; color:white; background:#ff4757; padding:5px 10px; border-radius:5px; margin-top:10px;">Wrong Password!</p>
+            <div style="margin-top: 50px;">
+                <h1 onclick="secretTap()">Theshu <br>&<br> Ayu ❤️</h1>
+                <p style="opacity: 0.9; letter-spacing: 2px; margin-top: 10px;">VOL. 2</p>
+                <br><br>
+                <p>🔒 Enter Password:</p>
+                <input type="text" id="pass" placeholder="hint: kushu" onkeyup="if(event.key === 'Enter') unlock()">
+                <br>
+                <button class="btn" onclick="unlock()">Open Book 📖</button>
+                <p id="err" style="display:none; margin-top:10px; color:#fff; background:#ff4757; padding:5px 10px; border-radius:5px; font-weight:bold;">Wrong Password!</p>
+            </div>
         </div>
 
         <div class="page" id="p1">
-            <div class="content">
-                <h2>The Beginning</h2>
-                <div style="font-size: 5rem; margin: 20px 0;">👸🏻❤️🤴🏻</div>
-                <p>"Distance gives us a reason to love harder."</p>
-                <div style="background: rgba(0,0,0,0.05); padding: 15px; border-radius: 15px; margin: 20px 0; width: 100%;">
-                    <div>🎂 <b>Her B-Day:</b></div>
-                    <div id="bday" style="font-size: 1.5rem; color: var(--primary); font-weight: bold;">...</div>
-                </div>
-                <button class="nav-btn" onclick="spawnEmoji('💋')">Send Kiss</button>
+            <h2>The Beginning</h2>
+            <div style="font-size: 5rem; margin: 20px 0;">👸🏻❤️🤴🏻</div>
+            <p>"Distance gives us a reason to love harder."</p>
+            <div style="background: rgba(0,0,0,0.05); padding: 15px; border-radius: 15px; margin: 20px 0; width: 100%;">
+                <div>🎂 <b>Her B-Day Countdown:</b></div>
+                <div id="bday" style="font-size: 1.5rem; color: var(--primary); font-weight: bold;">...</div>
             </div>
-            <div class="footer">
-                <span></span> 
-                <span class="page-num">1 / 10</span>
-                <button class="nav-btn" onclick="nextPage(1)">Next ➡️</button>
-            </div>
+            <button class="nav-btn" onclick="spawnEmoji('💋')">Send Kiss</button>
         </div>
 
         <div class="page" id="p2">
-            <div class="content">
-                <h2>Date Simulator</h2>
-                <p>Build our date! 🎮</p>
-                <div style="width:100%; text-align:left; margin-top:10px;">
-                    <p><b>1. Location:</b></p>
-                    <div class="sim-grid">
-                        <div class="sim-chip" onclick="setSim('loc', 'Beach', this)">Beach 🏖️</div>
-                        <div class="sim-chip" onclick="setSim('loc', 'Bed', this)">Bed 🛏️</div>
-                        <div class="sim-chip" onclick="setSim('loc', 'Rooftop', this)">Rooftop 🌃</div>
-                    </div>
-                    <p><b>2. Food:</b></p>
-                    <div class="sim-grid">
-                        <div class="sim-chip" onclick="setSim('food', 'Ice Cream', this)">Ice Cream 🍦</div>
-                        <div class="sim-chip" onclick="setSim('food', 'Pizza', this)">Pizza 🍕</div>
-                        <div class="sim-chip" onclick="setSim('food', 'Me', this)">You 😉</div>
-                    </div>
-                </div>
-                <button class="nav-btn" style="margin-top:10px;" onclick="runDate()">Simulate</button>
-                <div id="sim-res" style="color:var(--primary); font-weight:bold; margin-top:20px;"></div>
+            <h2>Date Simulator</h2>
+            <p>Plan our future date 🎮</p>
+            <br><p><b>1. Location:</b></p>
+            <div class="sim-grid">
+                <div class="sim-chip" onclick="setSim('loc', 'Beach', this)">Beach 🏖️</div>
+                <div class="sim-chip" onclick="setSim('loc', 'Bed', this)">Bed 🛏️</div>
+                <div class="sim-chip" onclick="setSim('loc', 'Rooftop', this)">Rooftop 🌃</div>
             </div>
-            <div class="footer">
-                <button class="nav-btn" onclick="nextPage(-1)">⬅️ Back</button>
-                <span class="page-num">2 / 10</span>
-                <button class="nav-btn" onclick="nextPage(1)">Next ➡️</button>
+            <p><b>2. Food:</b></p>
+            <div class="sim-grid">
+                <div class="sim-chip" onclick="setSim('food', 'Ice Cream', this)">Ice Cream 🍦</div>
+                <div class="sim-chip" onclick="setSim('food', 'Pizza', this)">Pizza 🍕</div>
+                <div class="sim-chip" onclick="setSim('food', 'Me', this)">You 😉</div>
             </div>
+            <button class="nav-btn" style="margin-top:10px;" onclick="runDate()">Simulate</button>
+            <div id="sim-res" style="color:var(--primary); font-weight:bold; margin-top:20px; font-size:1.1rem;"></div>
         </div>
 
         <div class="page" id="p3">
-            <div class="content">
-                <h2>Love Quiz</h2>
-                <div id="quiz-box" style="width:100%; margin-top:20px;">
-                    <p id="q-txt" style="font-weight:bold; font-size:1.2rem;">Question 1</p>
-                    <div id="q-opts"></div>
-                </div>
-                <div id="gift-box" style="display:none; margin-top:50px;">
-                    <div style="font-size:5rem;">🍦</div>
-                    <h3>Correct!</h3>
-                    <p>I owe you an Ice Cream!</p>
-                </div>
+            <h2>Love Quiz</h2>
+            <div id="quiz-box" style="width:100%; margin-top:20px;">
+                <p id="q-txt" style="font-weight:bold; font-size:1.2rem;">Question 1</p>
+                <div id="q-opts"></div>
             </div>
-            <div class="footer">
-                <button class="nav-btn" onclick="nextPage(-1)">⬅️ Back</button>
-                <span class="page-num">3 / 10</span>
-                <button class="nav-btn" onclick="nextPage(1)">Next ➡️</button>
+            <div id="gift-box" style="display:none; margin-top:50px;">
+                <div style="font-size:5rem;">🍦</div>
+                <h3>Correct!</h3>
+                <p>I owe you an Ice Cream!</p>
             </div>
         </div>
 
         <div class="page" id="p4">
-            <div class="content">
-                <h2>My Letter</h2>
-                <div id="typewriter-container">Tap button to read...</div>
-                <button class="nav-btn" style="margin-top:15px;" onclick="startLetter()">Read Letter 💌</button>
-            </div>
-            <div class="footer">
-                <button class="nav-btn" onclick="nextPage(-1)">⬅️ Back</button>
-                <span class="page-num">4 / 10</span>
-                <button class="nav-btn" onclick="nextPage(1)">Next ➡️</button>
-            </div>
+            <h2>My Letter</h2>
+            <div id="typewriter-container">Tap button to read...</div>
+            <button class="nav-btn" style="margin-top:10px;" onclick="startLetter()">Read Letter 💌</button>
         </div>
 
         <div class="page" id="p5">
-            <div class="content">
-                <h2>Gallery</h2>
-                <p>I love watching you ❤️</p>
-                <div class="polaroid-grid" style="margin-top:20px;">
-                    <div class="polaroid"><div class="polaroid-img">👩🏻</div><small>My Cutie</small></div>
-                    <div class="polaroid"><div class="polaroid-img">✨</div><small>Best Smile</small></div>
-                    <div class="polaroid"><div class="polaroid-img">🏖️</div><small>Summer Girl</small></div>
-                    <div class="polaroid"><div class="polaroid-img">💑</div><small>Us Soon</small></div>
-                </div>
-            </div>
-            <div class="footer">
-                <button class="nav-btn" onclick="nextPage(-1)">⬅️ Back</button>
-                <span class="page-num">5 / 10</span>
-                <button class="nav-btn" onclick="nextPage(1)">Next ➡️</button>
+            <h2>Ayu's Gallery</h2>
+            <p style="margin-bottom:20px;">I love watching your photos ❤️</p>
+            <div class="polaroid-grid">
+                <div class="polaroid"><div class="polaroid-img">👩🏻</div><small>My Cutie</small></div>
+                <div class="polaroid"><div class="polaroid-img">✨</div><small>Best Smile</small></div>
+                <div class="polaroid"><div class="polaroid-img">🏖️</div><small>Summer Girl</small></div>
+                <div class="polaroid"><div class="polaroid-img">💑</div><small>Us Soon</small></div>
             </div>
         </div>
 
         <div class="page" id="p6">
-            <div class="content">
-                <h2>Bucket List</h2>
-                <div style="width:100%; text-align:left; margin-top:20px; font-size:1.1rem;">
-                    <div onclick="checkItem(this)" style="padding:10px; border-bottom:1px solid #eee;">⬜ Meet in person ✈️</div>
-                    <div onclick="checkItem(this)" style="padding:10px; border-bottom:1px solid #eee;">⬜ Hug tightly 🫂</div>
-                    <div onclick="checkItem(this)" style="padding:10px; border-bottom:1px solid #eee;">⬜ Late night drive 🚗</div>
-                    <div onclick="checkItem(this)" style="padding:10px; border-bottom:1px solid #eee;">⬜ Get Married 💍</div>
-                </div>
-            </div>
-            <div class="footer">
-                <button class="nav-btn" onclick="nextPage(-1)">⬅️ Back</button>
-                <span class="page-num">6 / 10</span>
-                <button class="nav-btn" onclick="nextPage(1)">Next ➡️</button>
+            <h2>Our Bucket List</h2>
+            <div class="bucket-list">
+                <div class="bucket-item" onclick="this.classList.toggle('checked')">⬜ Meet in person ✈️</div>
+                <div class="bucket-item" onclick="this.classList.toggle('checked')">⬜ Hug tightly 🫂</div>
+                <div class="bucket-item" onclick="this.classList.toggle('checked')">⬜ Late night drive 🚗</div>
+                <div class="bucket-item" onclick="this.classList.toggle('checked')">⬜ Eat Ice Cream 🍦</div>
+                <div class="bucket-item" onclick="this.classList.toggle('checked')">⬜ Get Married 💍</div>
             </div>
         </div>
 
         <div class="page" id="p7">
-            <div class="content">
-                <h2>Mixtape</h2>
-                <p>Tap to play "Tum Hi Ho"</p>
-                <div style="width:150px; height:150px; background:#111; border-radius:50%; margin:30px auto; border:5px solid #333; display:flex; align-items:center; justify-content:center;" onclick="toggleMusic(this)">
-                    <div style="width:60px; height:60px; background:var(--primary); border-radius:50%;"></div>
-                </div>
-                <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
-                <div id="mus" style="font-weight:bold; color:var(--primary);">Paused</div>
+            <h2>Our Mixtape</h2>
+            <p>Tap to play "Tum Hi Ho" 🎵</p>
+            <div style="width:150px; height:150px; background:#111; border-radius:50%; margin:30px auto; border:5px solid #333; display:flex; align-items:center; justify-content:center;" onclick="toggleMusic(this)">
+                <div style="width:60px; height:60px; background:var(--primary); border-radius:50%; border:15px solid #222;"></div>
             </div>
-            <div class="footer">
-                <button class="nav-btn" onclick="nextPage(-1)">⬅️ Back</button>
-                <span class="page-num">7 / 10</span>
-                <button class="nav-btn" onclick="nextPage(1)">Next ➡️</button>
-            </div>
+            <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+            <div id="music-status" style="color:var(--primary); font-weight:bold;">Paused</div>
         </div>
 
         <div class="page" id="p8">
-            <div class="content">
-                <h2>Scanner</h2>
-                <p>Hold to scan 🧬</p>
-                <div style="width:100px; height:140px; border:3px solid var(--primary); border-radius:20px; margin:30px auto; display:flex; align-items:center; justify-content:center; font-size:3rem;" onmousedown="scan(this)" ontouchstart="scan(this)">👆</div>
-                <div id="scan-res" style="font-weight:bold;"></div>
-            </div>
-            <div class="footer">
-                <button class="nav-btn" onclick="nextPage(-1)">⬅️ Back</button>
-                <span class="page-num">8 / 10</span>
-                <button class="nav-btn" onclick="nextPage(1)">Next ➡️</button>
-            </div>
+            <h2>Love Scanner</h2>
+            <p>Hold finger to match 🧬</p>
+            <div style="width:100px; height:140px; border:3px solid var(--primary); border-radius:20px; margin:30px auto; display:flex; align-items:center; justify-content:center; font-size:3rem;" onmousedown="scan(this)" ontouchstart="scan(this)">👆</div>
+            <div id="scan-res" style="font-weight:bold; height:30px; margin-top:10px;"></div>
         </div>
 
         <div class="page" id="p9">
-            <div class="content">
-                <h2>Open When...</h2>
-                <div style="width:100%; margin-top:20px;">
-                    <div class="envelope" onclick="alert('Look at the moon. I am looking at it too. 🌙')">Miss You</div>
-                    <div class="envelope" style="background:#74b9ff" onclick="alert('You are strong. I love you! 💪')">Sad</div>
-                    <div class="envelope" style="background:#fdcb6e" onclick="alert('Your smile is my favorite thing! ✨')">Happy</div>
-                    <div class="envelope" style="background:#a29bfe" onclick="alert('Go look at my photos! 😜')">Bored</div>
-                </div>
-            </div>
-            <div class="footer">
-                <button class="nav-btn" onclick="nextPage(-1)">⬅️ Back</button>
-                <span class="page-num">9 / 10</span>
-                <button class="nav-btn" onclick="nextPage(1)">Next ➡️</button>
+            <h2>Open When...</h2>
+            <div style="width:100%; margin-top:20px;">
+                <div class="envelope" onclick="alert('Look at the moon. I am looking at it too. 🌙')">Miss You</div>
+                <div class="envelope" style="background:#74b9ff" onclick="alert('You are strong. I love you! 💪')">Sad</div>
+                <div class="envelope" style="background:#fdcb6e" onclick="alert('Your smile is my favorite thing! ✨')">Happy</div>
+                <div class="envelope" style="background:#a29bfe" onclick="alert('Go look at my photos! 😜')">Bored</div>
             </div>
         </div>
 
         <div class="page" id="p10">
-            <div class="content">
-                <h2>Why I Love You</h2>
-                <div id="reason-box" style="padding:20px; border:2px dashed var(--primary); margin:20px 0; border-radius:10px; font-family:'Indie Flower', cursive; font-size:1.2rem;">
-                    Tap button below...
-                </div>
-                <button class="nav-btn" onclick="showReason()">Tell Me Why</button>
+            <h2>Why I Love You</h2>
+            <div id="reason-box" style="padding:20px; border:2px dashed var(--primary); margin:20px 0; border-radius:10px; font-family:'Indie Flower', cursive; font-size:1.2rem;">
+                Tap button below...
             </div>
-            <div class="footer">
-                <button class="nav-btn" onclick="nextPage(-1)">⬅️ Back</button>
-                <span class="page-num">10 / 10</span>
-                <span></span>
-            </div>
+            <button class="nav-btn" onclick="showReason()">Tell Me Why</button>
+        </div>
+
+        <div class="footer" id="main-nav" style="display:none;">
+            <button class="nav-btn" onclick="changePage(-1)">⬅️</button>
+            <span id="page-num" style="font-weight:bold; opacity:0.6;">1 / 10</span>
+            <button class="nav-btn" onclick="changePage(1)">➡️</button>
         </div>
 
     </div>
@@ -343,48 +289,53 @@
         const pass = "kushu";
         let curr = 1;
         const total = 10;
-        
-        // SWIPE LOGIC
-        let touchStartX = 0;
-        let touchEndX = 0;
-        
-        const appBox = document.getElementById('app-box');
-        
-        appBox.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-        });
+        let qIdx = 0;
+        let currentSim = { loc: '', food: '' };
+        let typewriterTimeout;
+        let heartTaps = 0;
 
-        appBox.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        });
+        // INIT HEARTS
+        setInterval(() => {
+            let heart = document.createElement('div');
+            heart.innerText = ['❤️','💖','🌸','✨'][Math.floor(Math.random()*4)];
+            heart.className = 'bg-heart';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }, 800);
 
-        function handleSwipe() {
-            if (touchEndX < touchStartX - 50) nextPage(1); // Swipe Left -> Next
-            if (touchEndX > touchStartX + 50) nextPage(-1); // Swipe Right -> Back
-        }
-
-        // UNLOCK
+        // UNLOCK FUNCTION (UPDATED)
         function unlock() {
             let val = document.getElementById('pass').value.trim().toLowerCase();
             if(val === pass) {
-                document.getElementById('pass').blur(); 
-                document.getElementById('cover-page').style.transform = "translateY(-100%)";
-                // Trigger Confetti
+                document.getElementById('pass').blur();
+                const cover = document.getElementById('cover-page');
+                
+                // Animation
+                cover.classList.add('hidden'); 
+                
+                // Wait 0.5s then DESTROY IT so it can't block clicks
+                setTimeout(() => {
+                    cover.style.display = "none"; 
+                    document.getElementById('p1').classList.add('active'); // Force P1 active
+                    document.getElementById('main-nav').style.display = "flex"; // Show Nav
+                }, 500);
+
                 for(let i=0; i<30; i++) spawnConfetti();
             } else {
                 document.getElementById('err').style.display = 'block';
             }
         }
 
-        // NAV
-        function nextPage(dir) {
+        function changePage(dir) {
             let next = curr + dir;
             if(next < 1 || next > total) return;
             
             document.querySelector('.page.active').classList.remove('active');
             document.getElementById('p'+next).classList.add('active');
             curr = next;
+            document.getElementById('page-num').innerText = curr + " / " + total;
         }
 
         function toggleTheme() { document.body.classList.toggle('dark-mode'); }
@@ -410,8 +361,7 @@
         }
 
         // QUIZ
-        let qIdx=0; 
-        const qs=[{q:"Fav Color?",a:["Red","Black","Pink"],c:1},{q:"Who do I love?",a:["Pizza","Ayuuuu","Sleep"],c:1}];
+        const qs = [{q:"Fav Color?",a:["Red","Black","Pink"],c:1},{q:"Who do I love?",a:["Pizza","Ayuuuu","Sleep"],c:1}];
         function loadQuiz(){
             if(qIdx>=qs.length){ document.getElementById('quiz-box').style.display='none'; document.getElementById('gift-box').style.display='block'; return;}
             document.getElementById('q-txt').innerText=qs[qIdx].q;
@@ -422,4 +372,53 @@
         loadQuiz();
 
         // LETTER
-        function startLe
+        function startLetter() {
+            const txt = "yooo idiot I'm made this web for you 😸\n\ntook some time but it was worth it 😉\n\nik you have fear of loosing those people u truly love.\n\nDon't worry about it now cause I'm here 🥸\n\naheem ahemmm so be your self.\n\nExplore enjoy the web 😸 hehehe";
+            const c = document.getElementById('typewriter-container');
+            c.innerText = "";
+            clearTimeout(typewriterTimeout);
+            let i=0;
+            function type(){
+                if(i<txt.length){
+                    c.innerText += txt.charAt(i); i++;
+                    typewriterTimeout = setTimeout(type, 50);
+                }
+            }
+            type();
+        }
+
+        // EXTRAS
+        function toggleMusic(el) {
+            if(el.style.animation) {
+                el.style.animation = "";
+                document.getElementById('music-status').innerText = "Paused";
+            } else {
+                el.style.animation = "spin 2s linear infinite";
+                document.getElementById('music-status').innerText = "Now Playing: Tum Hi Ho 🎵";
+                spawnEmoji('🎵');
+            }
+        }
+
+        function scan(el) {
+            el.style.background = "rgba(255,107,129,0.2)";
+            document.getElementById('scan-res').innerText = "Scanning...";
+            setTimeout(() => {
+                document.getElementById('scan-res').innerText = "100% MATCH! ❤️";
+                el.style.background = "transparent";
+                spawnEmoji('💖');
+            }, 2000);
+        }
+
+        function showReason() {
+            const rs = ["Your smile", "You are my gamer girl", "You support me", "You are perfect"];
+            document.getElementById('reason-box').innerText = rs[Math.floor(Math.random()*rs.length)];
+            spawnEmoji('✨');
+        }
+
+        function spawnEmoji(char) {
+            let el = document.createElement('div');
+            el.innerText = char;
+            el.style.position = 'fixed';
+            el.style.left = Math.random()*80+10+'%';
+            el.style.top = '80%';
+            
