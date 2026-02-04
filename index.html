@@ -4,20 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#fff0f5">
-    <title>ValentineOS</title>
+    <title>ValentineOS Mobile</title>
     <style>
         /* --- 1. CORE STYLES --- */
         :root {
             --bg-color: #fff0f5;
-            --wallpaper: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); /* Clean default */
             --primary: #ff4757;
             --bubble-me: #ff4757;
             --bubble-her: #e5e5ea;
-            --app-bg: #ffffff;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
-        body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; overflow: hidden; position: fixed; color: #333; }
+        
+        body { 
+            margin: 0; padding: 0; width: 100vw; 
+            /* 100dvh fixes the mobile browser address bar issue */
+            height: 100dvh; 
+            background: #000; overflow: hidden; position: fixed; color: #333; 
+        }
 
         /* Wallpaper */
         .wallpaper {
@@ -30,15 +34,16 @@
         #lock-screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 500;
             display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 100px;
-            backdrop-filter: blur(5px); background: rgba(0,0,0,0.3); color: white;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.3); color: white;
             transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .clock { font-size: 5rem; font-weight: 200; line-height: 1; }
+        .clock { font-size: 5rem; font-weight: 200; line-height: 1; margin: 0; }
         .date { font-size: 1.2rem; font-weight: 500; margin-top: 10px; }
         .notif {
             margin-top: 30px; background: rgba(255,255,255,0.9); color: black; padding: 12px 20px;
             border-radius: 15px; width: 85%; display: flex; gap: 10px; align-items: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2); animation: popIn 0.5s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); animation: popIn 0.5s; cursor: pointer;
         }
 
         /* --- 3. HOME SCREEN --- */
@@ -66,7 +71,7 @@
         /* Dock */
         .dock {
             position: absolute; bottom: 25px; left: 15px; right: 15px; height: 90px;
-            background: rgba(255,255,255,0.4); border-radius: 35px; backdrop-filter: blur(20px);
+            background: rgba(255,255,255,0.4); border-radius: 35px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             display: flex; justify-content: space-around; align-items: center; z-index: 20;
         }
 
@@ -83,40 +88,40 @@
             height: 90px; padding: 45px 15px 10px 15px; background: white; border-bottom: 1px solid #ddd;
             display: flex; align-items: center; justify-content: space-between; font-weight: bold; font-size: 1.1rem;
         }
-        .back { color: #007aff; font-size: 1rem; cursor: pointer; }
+        .back { color: #007aff; font-size: 1rem; cursor: pointer; display: flex; align-items: center; gap: 5px; }
 
         /* Content Areas */
         .content { padding: 15px; overflow-y: auto; height: calc(100% - 90px); padding-bottom: 50px; }
 
         /* --- MESSAGES APP --- */
         .chat-list { display: flex; flex-direction: column; gap: 10px; padding-bottom: 80px; }
-        .bubble { max-width: 75%; padding: 10px 15px; border-radius: 18px; font-size: 1rem; }
+        .bubble { max-width: 75%; padding: 10px 15px; border-radius: 18px; font-size: 1rem; line-height: 1.4; }
         .them { background: #e5e5ea; align-self: flex-start; border-bottom-left-radius: 5px; }
         .me { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 5px; animation: pop 0.3s; }
         
         .chat-options {
-            position: absolute; bottom: 0; width: 100%; padding: 15px; background: white; border-top: 1px solid #ddd;
-            display: flex; gap: 10px; overflow-x: auto;
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px; background: white; border-top: 1px solid #ddd;
+            display: flex; gap: 10px; overflow-x: auto; padding-bottom: max(15px, env(safe-area-inset-bottom));
         }
         .opt-btn {
-            background: #e5e5ea; padding: 10px 20px; border-radius: 20px; border: none; font-size: 0.9rem;
-            white-space: nowrap; cursor: pointer; color: var(--primary); font-weight: bold;
+            background: #e5e5ea; padding: 12px 20px; border-radius: 25px; border: none; font-size: 0.95rem;
+            white-space: nowrap; cursor: pointer; color: var(--primary); font-weight: bold; flex-shrink: 0;
         }
 
         /* --- GIFT APP --- */
-        .gift-box { text-align: center; margin-top: 50px; }
+        .gift-box { text-align: center; margin-top: 80px; }
         .gift-emoji { font-size: 80px; cursor: pointer; animation: bounce 2s infinite; }
-        .gift-content { display: none; background: white; padding: 20px; border-radius: 20px; margin-top: 20px; }
+        .gift-content { display: none; background: white; padding: 20px; border-radius: 20px; margin-top: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
         /* --- SETTINGS APP --- */
         .settings-group { background: white; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
         .row { padding: 15px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
         .row:last-child { border-bottom: none; }
-        .toggle { width: 45px; height: 26px; background: #34c759; border-radius: 20px; position: relative; }
-        .toggle::after { content:''; position:absolute; right:2px; top:2px; width:22px; height:22px; background:white; border-radius:50%; }
+        .toggle { width: 50px; height: 30px; background: #34c759; border-radius: 20px; position: relative; }
+        .toggle::after { content:''; position:absolute; right:2px; top:2px; width:26px; height:26px; background:white; border-radius:50%; }
 
         /* Home Bar */
-        .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; background: rgba(0,0,0,0.2); border-radius: 10px; z-index: 9999; }
+        .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 10px; z-index: 9999; }
         .app-window .home-bar { background: black; }
 
         @keyframes pop { from{transform:scale(0.5)} to{transform:scale(1)} }
@@ -130,18 +135,19 @@
     <div class="wallpaper"></div>
 
     <div id="lock-screen" onclick="unlock()">
-        <div style="font-size:2rem; margin-bottom:10px;">🔓</div>
+        <div style="font-size:2rem; margin-bottom:10px;">🔒</div>
         <div class="clock" id="clock">12:00</div>
         <div class="date">Saturday, February 14</div>
         
         <div class="notif">
-            <div style="width:35px; height:35px; background:#ff4757; border-radius:8px; display:flex; align-items:center; justify-content:center; color:white;">💬</div>
+            <div style="width:40px; height:40px; background:#ff4757; border-radius:10px; display:flex; align-items:center; justify-content:center; color:white; font-size: 20px;">💬</div>
             <div>
-                <div style="font-weight:bold; font-size:0.9rem;">Theshu</div>
-                <div style="font-size:0.8rem;">Happy Valentine's Day! ❤️</div>
+                <div style="font-weight:bold; font-size:0.95rem;">Theshu</div>
+                <div style="font-size:0.85rem;">I have a question...</div>
             </div>
         </div>
-        <div style="margin-top:auto; margin-bottom: 50px; opacity: 0.8;">Tap to Open</div>
+        <div style="margin-top:auto; margin-bottom: 50px; opacity: 0.8; font-size: 0.9rem;">Tap to Open</div>
+        <div class="home-bar"></div>
     </div>
 
     <div id="home-screen">
@@ -189,9 +195,9 @@
         </div>
         <div class="chat-options" id="chat-opts">
             <button class="opt-btn" onclick="reply(1)">Happy Valentine's! ❤️</button>
-            <button class="opt-btn" onclick="reply(1)">I miss you! 🥺</button>
+            <button class="opt-btn" onclick="reply(1)">Miss you! 🥺</button>
         </div>
-        <div class="home-bar" onclick="closeApp('app-msg')"></div>
+        <div class="home-bar"></div>
     </div>
 
     <div class="app-window" id="app-gift">
@@ -204,28 +210,28 @@
             <div id="gift-locked" style="text-align:center; margin-top:100px;">
                 <div style="font-size:3rem;">🔒</div>
                 <h3>Locked</h3>
-                <p>Complete the chat with Theshu to unlock this!</p>
+                <p style="color:#666; margin-top:10px;">Finish the chat with Theshu first!</p>
             </div>
 
             <div id="gift-unlocked" style="display:none;">
                 <div class="gift-box" onclick="revealGift()">
                     <div class="gift-emoji">🎁</div>
-                    <p>Tap to Open</p>
+                    <p style="color:#ff4757; font-weight:bold;">Tap to Open</p>
                 </div>
                 <div class="gift-content" id="final-gift">
                     <h2 style="color:#ff4757; text-align:center;">Valentine Coupon</h2>
-                    <hr style="border:1px dashed #ccc;">
+                    <hr style="border:1px dashed #ccc; margin:15px 0;">
                     <div style="text-align:center; font-size:1.1rem; line-height:1.6;">
                         <strong>Valid For:</strong><br>
-                        One Dream Date (When we meet)<br>
+                        1 Dream Date (When we meet)<br>
                         +<br>
-                        Unlimited Kisses 😘
+                        Unlimited Hugs 🫂
                     </div>
-                    <button onclick="alert('Coupon Saved to Heart ❤️')" style="width:100%; padding:15px; background:#ff4757; color:white; border:none; border-radius:15px; margin-top:20px;">Redeem Later</button>
+                    <button onclick="alert('Coupon Saved! ❤️')" style="width:100%; padding:15px; background:#ff4757; color:white; border:none; border-radius:15px; margin-top:20px; font-weight:bold;">Redeem Later</button>
                 </div>
             </div>
         </div>
-        <div class="home-bar" onclick="closeApp('app-gift')"></div>
+        <div class="home-bar"></div>
     </div>
 
     <div class="app-window" id="app-settings">
@@ -235,7 +241,7 @@
             <div style="width:30px"></div>
         </div>
         <div class="content">
-            <div style="font-size:0.8rem; color:#666; margin-bottom:5px; margin-left:10px;">RELATIONSHIP STATUS</div>
+            <div style="font-size:0.8rem; color:#666; margin-bottom:5px; margin-left:10px; margin-top:20px;">RELATIONSHIP</div>
             <div class="settings-group">
                 <div class="row">
                     <span>Status</span> <span style="color:#888;">Taken ❤️</span>
@@ -244,33 +250,34 @@
                     <span>Partner</span> <span style="color:#888;">Theshu</span>
                 </div>
                 <div class="row">
-                    <span>Distance Mode</span> <div class="toggle"></div>
+                    <span>Long Distance</span> <div class="toggle"></div>
                 </div>
             </div>
 
             <div style="font-size:0.8rem; color:#666; margin-bottom:5px; margin-left:10px;">DEVICE</div>
             <div class="settings-group">
                 <div class="row">
-                    <span>Model</span> <span style="color:#888;">iPhone 14 Love</span>
+                    <span>Love Storage</span> <span style="color:#888;">Full</span>
                 </div>
                 <div class="row">
-                    <span>Battery</span> <span style="color:#888;">Powered by Love</span>
+                    <span>Battery</span> <span style="color:#888;">100% Love</span>
                 </div>
             </div>
         </div>
-        <div class="home-bar" onclick="closeApp('app-settings')"></div>
+        <div class="home-bar"></div>
     </div>
 
     <div class="app-window" id="app-photos">
-        <div class="nav-header"><div class="back" onclick="closeApp('app-photos')">‹ Home</div><div>Gallery</div><div></div></div>
+        <div class="nav-header"><div class="back" onclick="closeApp('app-photos')">‹ Home</div><div>Gallery</div><div style="width:30px"></div></div>
         <div class="content">
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                 <div style="height:150px; background:#ccc; border-radius:10px; background-size:cover; background-image:url('https://placehold.co/200x200/ffcccc/ff4757?text=Us');"></div>
                 <div style="height:150px; background:#ccc; border-radius:10px; background-size:cover; background-image:url('https://placehold.co/200x200/ffcccc/ff4757?text=Cute');"></div>
                 <div style="height:150px; background:#ccc; border-radius:10px; background-size:cover; background-image:url('https://placehold.co/200x200/ffcccc/ff4757?text=Love');"></div>
+                <div style="height:150px; background:#ccc; border-radius:10px; background-size:cover; background-image:url('https://placehold.co/200x200/ffcccc/ff4757?text=Date');"></div>
             </div>
         </div>
-        <div class="home-bar" onclick="closeApp('app-photos')"></div>
+        <div class="home-bar"></div>
     </div>
 
     <script>
@@ -295,7 +302,7 @@
         function openApp(id) { document.getElementById('app-'+id).classList.add('open'); }
         function closeApp(id) { document.getElementById('app-'+id).classList.remove('open'); }
 
-        // --- GIFT APP LOGIC ---
+        // --- GIFT APP ---
         function openGiftApp() {
             openApp('gift');
             if(giftUnlocked) {
@@ -309,14 +316,15 @@
             confetti();
         }
 
-        // --- CHAT SYSTEM (Branching logic) ---
-        const chatBox = document.getElementById('chat-box');
-        const optsDiv = document.getElementById('chat-opts');
-
+        // --- CHAT LOGIC ---
         function reply(choice) {
-            // 1. Add User Reply
+            const chatBox = document.getElementById('chat-box');
+            
+            // 1. First Reply
             if(chatProgress === 0) {
-                addMsg(choice === 1 ? "Happy Valentine's! ❤️" : "I miss you! 🥺", 'me');
+                addMsg(choice === 1 ? "Happy Valentine's! ❤️" : "Miss you! 🥺", 'me');
+                setOptions([]); // Clear buttons
+                
                 setTimeout(() => {
                     addMsg("I miss you too! I made this phone just for you.", 'them');
                     setTimeout(() => {
@@ -329,52 +337,53 @@
             // 2. The Question
             else if(chatProgress === 1) {
                 addMsg(choice === 1 ? "What is it? 👀" : "Tell me!", 'me');
+                setOptions([]); 
+                
                 setTimeout(() => {
                     addMsg("Will you be my Valentine? Forever? 💍", 'them');
                     setOptions(["YES! 😍", "Of course! ❤️"]);
                     chatProgress = 2;
                 }, 1500);
             }
-            // 3. The Result
+            // 3. The Finale
             else if(chatProgress === 2) {
                 addMsg("YES! 😍", 'me');
+                setOptions([]); 
+                
                 setTimeout(() => {
                     addMsg("Yay! I love you! ❤️", 'them');
                     addMsg("I sent a gift to your 'Gift App'. Go check it!", 'them');
-                    setOptions([]); // Remove buttons
                     
                     // Unlock Gift
                     giftUnlocked = true;
                     document.getElementById('gift-badge').style.display = 'block';
-                    alert("🎁 New Gift Unlocked!");
+                    alert("🎁 New Notification: Gift Unlocked!");
                 }, 1000);
             }
-            
-            // Clear buttons while waiting
-            setOptions([]);
         }
 
         function addMsg(text, side) {
             const div = document.createElement('div');
             div.className = `bubble ${side}`;
             div.innerText = text;
-            chatBox.appendChild(div);
-            chatBox.scrollTop = chatBox.scrollHeight; // Auto scroll
+            document.getElementById('chat-box').appendChild(div);
+            // Auto scroll
+            document.querySelector('.content').scrollTop = document.querySelector('.content').scrollHeight;
         }
 
         function setOptions(buttons) {
-            optsDiv.innerHTML = "";
+            const div = document.getElementById('chat-opts');
+            div.innerHTML = "";
             buttons.forEach((btnText, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'opt-btn';
                 btn.innerText = btnText;
                 btn.onclick = () => reply(index + 1);
-                optsDiv.appendChild(btn);
+                div.appendChild(btn);
             });
         }
 
         function confetti() {
-            // Simple visual confetti
             const colors = ['#ff4757', '#2ed573', '#1e90ff', '#ffa502'];
             for(let i=0; i<30; i++) {
                 const c = document.createElement('div');
