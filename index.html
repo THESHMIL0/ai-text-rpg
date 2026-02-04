@@ -5,138 +5,171 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Theshu ❤️ Ayuuu</title>
     <style>
-        /* --- MINIMALIST CORE --- */
+        /* --- WALLPAPER & CORE --- */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        body { margin: 0; padding: 0; height: 100vh; width: 100vw; background: #fff0f3; overflow: hidden; position: fixed; color: #333; }
         
+        body { 
+            margin: 0; padding: 0; height: 100vh; width: 100vw; 
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #ffd1ff, #a18cd1);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow: hidden; position: fixed; color: #333; 
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         /* --- UTILS --- */
-        .full-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; transition: transform 0.4s ease; }
+        .full-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .center { display: flex; align-items: center; justify-content: center; text-align: center; }
         .hidden { display: none !important; }
         
         /* --- LOCK SCREEN --- */
-        #lock { background: linear-gradient(135deg, #ff9a9e, #fecfef); z-index: 50; color: white; padding-top: 60px; }
-        .clock { font-size: 5rem; font-weight: 100; line-height: 1; }
-        .notif { background: rgba(255,255,255,0.9); color: #333; width: 85%; padding: 15px; border-radius: 12px; margin-top: 40px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        #lock { backdrop-filter: blur(10px); z-index: 50; color: white; padding-top: 60px; background: rgba(0,0,0,0.1); }
+        .clock { font-size: 5.5rem; font-weight: 100; line-height: 1; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .date { font-size: 1.2rem; margin-top: 5px; }
+        .notif { background: rgba(255,255,255,0.95); color: #333; width: 88%; padding: 18px; border-radius: 16px; margin-top: 50px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
         
         /* --- HOME SCREEN --- */
         #home { z-index: 10; justify-content: space-between; padding-bottom: 30px; }
-        .bar { height: 40px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: #ff4757; font-size: 0.8rem; }
-        .hero h1 { font-size: 3rem; color: #ff4757; margin: 0; font-family: cursive; }
+        .bar { height: 44px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: white; font-size: 0.9rem; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         
-        .dock { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; background: rgba(255,255,255,0.5); border-radius: 25px; margin: 15px; }
-        .icon { width: 55px; height: 55px; background: white; border-radius: 14px; font-size: 1.6rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin: 0 auto 5px; }
-        .app-lbl { font-size: 0.7rem; font-weight: 500; text-align: center; }
+        .hero { flex-direction: column; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .hero h1 { font-size: 3.5rem; margin: 0; font-family: 'Segoe UI', cursive; }
+        
+        .dock { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 25px; background: rgba(255,255,255,0.25); border-radius: 30px; margin: 20px; backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); }
+        .icon { width: 58px; height: 58px; background: white; border-radius: 15px; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin: 0 auto 6px; }
+        .app-lbl { font-size: 0.75rem; font-weight: 500; text-align: center; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
 
         /* --- WINDOWS --- */
         .win { background: #f2f2f7; z-index: 100; transform: translateY(100%); }
         .win.open { transform: translateY(0); }
-        .head { height: 50px; background: white; display: flex; align-items: center; padding: 0 15px; border-bottom: 1px solid #ddd; }
-        .back { color: #007aff; font-weight: 600; cursor: pointer; font-size: 1rem; }
-        .title { flex: 1; text-align: center; font-weight: 600; margin-right: 30px; }
+        .head { height: 56px; background: white; display: flex; align-items: center; padding: 0 15px; border-bottom: 1px solid #ddd; }
+        .back { color: #007aff; font-weight: 600; cursor: pointer; font-size: 1rem; display: flex; align-items: center; }
+        .title { flex: 1; text-align: center; font-weight: 600; margin-right: 30px; font-size: 1.1rem; }
         .body { flex: 1; overflow-y: auto; padding: 20px; }
 
-        /* --- APP SPECIFIC --- */
-        .list-item { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; font-size: 0.9rem; }
+        /* --- CHAT APP --- */
+        .chat-box { display: flex; flex-direction: column; padding-bottom: 100px; }
+        .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; margin-bottom: 10px; font-size: 0.95rem; line-height: 1.4; animation: popIn 0.3s ease; }
+        .them { background: white; border: 1px solid #e5e5ea; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .me { background: #007aff; color: white; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 2px 5px rgba(0,122,255,0.2); }
         
-        /* Chat */
-        .msg { max-width: 80%; padding: 10px 14px; border-radius: 16px; margin-bottom: 8px; font-size: 0.95rem; }
-        .them { background: white; border: 1px solid #ddd; align-self: flex-start; }
-        .me { background: #ff4757; color: white; align-self: flex-end; }
-        .chat-box { display: flex; flex-direction: column; padding-bottom: 80px; }
-        .chat-btn { position: fixed; bottom: 20px; left: 5%; width: 90%; padding: 12px; background: #ff4757; color: white; border: none; border-radius: 20px; font-weight: bold; box-shadow: 0 4px 10px rgba(255,71,87,0.3); }
+        .opts-area { position: fixed; bottom: 0; left: 0; width: 100%; padding: 15px; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-top: 1px solid #ddd; display: flex; gap: 10px; flex-direction: column; }
+        .opt-btn { width: 100%; padding: 14px; background: #007aff; color: white; border: none; border-radius: 14px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: transform 0.1s; }
+        .opt-btn:active { transform: scale(0.98); }
 
-        /* Timeline */
-        .event { border-left: 2px solid #ff4757; padding-left: 15px; margin-bottom: 25px; position: relative; }
-        .event::before { content: ''; position: absolute; left: -6px; top: 5px; width: 10px; height: 10px; background: #ff4757; border-radius: 50%; }
-        
-        /* Ticket */
-        .ticket { background: white; border-radius: 12px; border: 1px solid #eee; overflow: hidden; }
-        .t-head { background: #ff4757; padding: 15px; color: white; display:flex; justify-content: space-between; }
-        .t-body { padding: 20px; display: flex; justify-content: space-between; align-items: center; text-align: center; }
-        .code { font-size: 1.8rem; font-weight: 800; color: #333; }
+        /* --- COUNTDOWN CARDS --- */
+        .countdown-card { background: white; padding: 20px; border-radius: 16px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: center; }
+        .cd-title { font-size: 0.9rem; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .cd-days { font-size: 3rem; font-weight: 800; color: #ff4757; line-height: 1; }
+        .cd-label { font-size: 1rem; font-weight: 600; color: #333; }
+        .cd-sub { font-size: 0.8rem; color: #666; margin-top: 5px; }
+
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body>
 
     <div id="lock" class="full-screen center" onclick="this.style.transform='translateY(-100%)'">
-        <div style="margin-bottom: auto; margin-top: 50px;">
+        <div style="margin-bottom: auto; margin-top: 60px;">
             <div class="clock">11:11</div>
-            <div>Wednesday, February 14</div>
+            <div class="date">Wednesday, February 14</div>
         </div>
         <div class="notif" style="text-align: left;">
-            <div style="font-size:0.7rem; color:#666; margin-bottom:5px;">MESSAGES • NOW</div>
-            <strong>Theshuuuu ❤️</strong>
-            <div style="font-size:0.9rem;">I checked the dates... tap to open.</div>
+            <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:#666; margin-bottom:5px;">
+                <span>iMESSAGE</span><span>NOW</span>
+            </div>
+            <div style="font-weight:600; font-size:1rem; margin-bottom:3px;">Theshuuuu ❤️</div>
+            <div style="font-size:0.95rem; color:#444;">I have a question for you...</div>
         </div>
-        <div style="margin-top: auto; margin-bottom: 40px; opacity: 0.7; font-size: 0.9rem;">Tap to Unlock</div>
+        <div style="margin-top: auto; margin-bottom: 40px; opacity: 0.8; font-size: 0.9rem; animation: pulse 2s infinite;">Tap to Unlock</div>
     </div>
 
     <div id="home" class="full-screen">
-        <div class="bar"><span>Theshu OS</span><span>100% ❤️</span></div>
-        <div class="hero center" style="flex-direction:column;">
+        <div class="bar"><span>Theshu OS</span><span>❤️ 100%</span></div>
+        <div class="hero center">
             <h1>Hi Ayuuu</h1>
-            <p>August 18 was just the beginning.</p>
+            <p style="opacity:0.9; margin-top:5px;">Together Since Aug 18</p>
         </div>
         
         <div class="dock">
             <div onclick="openApp('chat')"><div class="icon center" style="color:#4cd137;">💬</div><div class="app-lbl">Chat</div></div>
-            <div onclick="openApp('journey')"><div class="icon center" style="color:#ff9f43;">📅</div><div class="app-lbl">Journey</div></div>
+            <div onclick="openApp('journey')"><div class="icon center" style="color:#ff9f43;">🎂</div><div class="app-lbl">Events</div></div>
             <div onclick="openApp('ticket')"><div class="icon center" style="color:#54a0ff;">✈️</div><div class="app-lbl">Ticket</div></div>
             <div onclick="openApp('settings')"><div class="icon center" style="color:#8e8e93;">⚙️</div><div class="app-lbl">Settings</div></div>
         </div>
     </div>
 
     <div id="chat" class="full-screen win">
-        <div class="head"><span class="back" onclick="closeApp('chat')">Back</span><span class="title">Theshuuuu</span></div>
+        <div class="head"><span class="back" onclick="closeApp('chat')">❮ Back</span><span class="title">Theshuuuu</span></div>
         <div class="body chat-box" id="msgs"></div>
-        <button id="replyBtn" class="chat-btn hidden" onclick="nextChat()"></button>
+        <div id="opts" class="opts-area hidden"></div>
     </div>
 
     <div id="journey" class="full-screen win">
-        <div class="head"><span class="back" onclick="closeApp('journey')">Back</span><span class="title">Our Timeline</span></div>
+        <div class="head"><span class="back" onclick="closeApp('journey')">❮ Back</span><span class="title">Upcoming Days</span></div>
         <div class="body">
-            <div class="event">
-                <strong>August 18, 2026</strong><br>The Day We Met ❤️<br><small style="color:#666">Best day of my life.</small>
+            
+            <div class="countdown-card">
+                <div class="cd-title">Upcoming</div>
+                <div class="cd-days" id="cd-theshu">00</div>
+                <div class="cd-label">Days to My Birthday 🥳</div>
+                <div class="cd-sub">March 14</div>
             </div>
-            <div class="event">
-                <strong>September 22</strong><br>Your Birthday 🎂<br><small style="color:#666">Queen's Day.</small>
+
+            <div class="countdown-card">
+                <div class="cd-title">The Queen's Day</div>
+                <div class="cd-days" id="cd-ayuuu">00</div>
+                <div class="cd-label">Days to Your Birthday 🎂</div>
+                <div class="cd-sub">September 22</div>
             </div>
-            <div class="event">
-                <strong>March 14</strong><br>My Birthday 🥳<br><small style="color:#666">Celebrate together soon.</small>
+
+            <div class="countdown-card" style="background:#fff0f3; border:1px dashed #ff4757;">
+                <div class="cd-title">Memory</div>
+                <div class="cd-days" style="font-size:2rem;">Aug 18</div>
+                <div class="cd-label">The Day We Met ❤️</div>
+                <div class="cd-sub">Where it all began.</div>
             </div>
-            <div class="event">
-                <strong>Future</strong><br>Closing the Distance ✈️
-            </div>
+
         </div>
     </div>
 
     <div id="ticket" class="full-screen win">
-        <div class="head"><span class="back" onclick="closeApp('ticket')">Back</span><span class="title">Boarding Pass</span></div>
+        <div class="head"><span class="back" onclick="closeApp('ticket')">❮ Back</span><span class="title">Boarding Pass</span></div>
         <div class="body">
-            <p style="text-align:center; color:#888;">One day soon...</p>
-            <div class="ticket">
-                <div class="t-head"><span>LDR AIRLINES</span><span>✈️</span></div>
-                <div class="t-body">
-                    <div><div class="code">ME</div><small>Theshu</small></div>
-                    <div style="color:#ddd;">--- To ---</div>
-                    <div><div class="code">YOU</div><small>Ayuuuu</small></div>
+            <p style="text-align:center; color:#888;">Keep this safe for the future.</p>
+            <div style="background:white; border-radius:12px; border:1px solid #ddd; overflow:hidden;">
+                <div style="background:#ff4757; padding:15px; color:white; display:flex; justify-content:space-between;">
+                    <span style="font-weight:bold;">LDR AIRLINES</span><span>✈️</span>
+                </div>
+                <div style="padding:20px; display:flex; justify-content:space-between; align-items:center; text-align:center;">
+                    <div><div style="font-size:2rem; font-weight:800; color:#333;">ME</div><small>Theshu</small></div>
+                    <div style="color:#ddd;">----------</div>
+                    <div><div style="font-size:2rem; font-weight:800; color:#333;">YOU</div><small>Ayuuuu</small></div>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="settings" class="full-screen win">
-        <div class="head"><span class="back" onclick="closeApp('settings')">Back</span><span class="title">Settings</span></div>
-        <div class="body" style="background:#f9f9f9;">
-            <div class="center" style="flex-direction:column; margin-bottom:20px;">
-                <div style="font-size:3rem;">💑</div>
-                <h3>Theshu & Ayuuu</h3>
+        <div class="head"><span class="back" onclick="closeApp('settings')">❮ Back</span><span class="title">Settings</span></div>
+        <div class="body">
+            <div class="countdown-card" style="display:flex; align-items:center; gap:15px; padding:15px; text-align:left;">
+                <div style="font-size:2.5rem;">💑</div>
+                <div>
+                    <div style="font-weight:bold; font-size:1.1rem;">Theshu & Ayuuu</div>
+                    <div style="color:#888; font-size:0.8rem;">Connected • Long Distance</div>
+                </div>
             </div>
-            <div class="list-item"><span>First Met</span><b>Aug 18</b></div>
-            <div class="list-item"><span>Her Bday</span><b>Sept 22</b></div>
-            <div class="list-item"><span>My Bday</span><b>Mar 14</b></div>
-            <div class="list-item"><span>Distance</span><b>Temporary</b></div>
+            <div style="background:white; border-radius:12px; padding:0 15px;">
+                <div style="padding:15px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between;"><span>Distance</span><span style="color:#888;">Temporary</span></div>
+                <div style="padding:15px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between;"><span>Love</span><span style="color:#ff4757;">Infinite</span></div>
+                <div style="padding:15px 0; display:flex; justify-content:space-between;"><span>Status</span><span style="color:#4cd137;">Happy</span></div>
+            </div>
         </div>
     </div>
 
@@ -144,18 +177,63 @@
         function openApp(id) { document.getElementById(id).classList.add('open'); }
         function closeApp(id) { document.getElementById(id).classList.remove('open'); }
 
-        // --- CONVERSATION LOGIC ---
-        const script = [
-            { r: "Happy Valentine's Day Ayuuu! 🌹", b: "Happy Valentine's Theshu! ❤️" },
-            { r: "I was looking at the calendar... August 18 seems so long ago, but also like yesterday.", b: "The best day ever 🥰" },
-            { r: "I miss you so much. But I have a question for you...", b: "What is it? 😮" },
-            { r: "Will you be my Valentine? Now and forever? 💍", b: "YES! Of course! ❤️" },
-            { r: "I love you Ayushka. Check the Ticket app, I'm coming for you one day. ✈️", b: null }
-        ];
+        // --- COUNTDOWN LOGIC ---
+        function updateCountdowns() {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            
+            // Theshu Bday: March 14
+            let theshuNext = new Date(currentYear, 2, 14); // Month is 0-indexed (2 = March)
+            if (now > theshuNext) theshuNext.setFullYear(currentYear + 1);
+            const diffTheshu = Math.ceil((theshuNext - now) / (1000 * 60 * 60 * 24));
+            document.getElementById('cd-theshu').innerText = diffTheshu;
 
-        let step = 0;
+            // Ayuuu Bday: Sept 22
+            let ayuuuNext = new Date(currentYear, 8, 22); // Month 8 = Sept
+            if (now > ayuuuNext) ayuuuNext.setFullYear(currentYear + 1);
+            const diffAyuuu = Math.ceil((ayuuuNext - now) / (1000 * 60 * 60 * 24));
+            document.getElementById('cd-ayuuu').innerText = diffAyuuu;
+        }
+        updateCountdowns();
+
+        // --- INTERACTIVE CHAT LOGIC ---
         const msgBox = document.getElementById('msgs');
-        const btn = document.getElementById('replyBtn');
+        const optsBox = document.getElementById('opts');
+
+        // Chat Script Tree
+        const chatFlow = {
+            start: {
+                msg: "Happy Valentine's Day Ayuuu! 🌹",
+                options: [
+                    { txt: "Happy Valentine's! ❤️", next: 'miss_u' },
+                    { txt: "I miss you Theshu 🥺", next: 'miss_u' }
+                ]
+            },
+            miss_u: {
+                msg: "I miss you too. I was just looking at our photos from August 18. Do you remember?",
+                options: [
+                    { txt: "The day we met! 🥰", next: 'met' },
+                    { txt: "How could I forget? ❤️", next: 'met' }
+                ]
+            },
+            met: {
+                msg: "Best day of my life. Distance is hard, but I know we can make it. I have a question...",
+                options: [
+                    { txt: "What is it? 😮", next: 'ask' }
+                ]
+            },
+            ask: {
+                msg: "Will you be my Valentine? Now and forever? 💍",
+                options: [
+                    { txt: "YES! Of course! ❤️", next: 'yes' },
+                    { txt: "Definitely Yes! 💖", next: 'yes' }
+                ]
+            },
+            yes: {
+                msg: "I knew you'd say yes! 😘 I love you Ayushka. Check the 'Events' app to see our countdowns!",
+                options: [] // End
+            }
+        };
 
         function addMsg(txt, type) {
             const d = document.createElement('div');
@@ -165,35 +243,45 @@
             msgBox.scrollTop = msgBox.scrollHeight;
         }
 
-        function nextChat() {
-            if (step >= script.length) return;
-            
-            // User Reply
-            addMsg(script[step].b, 'me');
-            btn.classList.add('hidden');
-            
-            step++;
-            
-            // Theshu Reply
-            if (step < script.length) {
-                setTimeout(() => {
-                    addMsg(script[step].r, 'them');
-                    if(script[step].b) {
-                        btn.innerText = script[step].b;
-                        btn.classList.remove('hidden');
-                    }
-                }, 1000);
+        function showOptions(opts) {
+            optsBox.innerHTML = '';
+            if (!opts || opts.length === 0) {
+                optsBox.classList.add('hidden');
+                return;
             }
+            optsBox.classList.remove('hidden');
+            opts.forEach(o => {
+                const b = document.createElement('button');
+                b.className = 'opt-btn';
+                b.innerText = o.txt;
+                b.onclick = () => handleChoice(o.txt, o.next);
+                optsBox.appendChild(b);
+            });
+        }
+
+        function handleChoice(userText, nextStepKey) {
+            // 1. User message
+            addMsg(userText, 'me');
+            optsBox.classList.add('hidden'); // Hide buttons
+            
+            // 2. Delay for "Typing" feel
+            setTimeout(() => {
+                const nextStep = chatFlow[nextStepKey];
+                if (nextStep) {
+                    addMsg(nextStep.msg, 'them');
+                    showOptions(nextStep.options);
+                }
+            }, 800);
         }
 
         // Start Chat
         setTimeout(() => {
             if(msgBox.innerHTML === "") {
-                addMsg(script[0].r, 'them');
-                btn.innerText = script[0].b;
-                btn.classList.remove('hidden');
+                addMsg(chatFlow.start.msg, 'them');
+                showOptions(chatFlow.start.options);
             }
         }, 800);
+
     </script>
 </body>
 </html>
