@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>For Ayushka ❤️</title>
+    <title>Theshu OS v32.0 🔒</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&family=Indie+Flower&display=swap" rel="stylesheet">
 
@@ -26,25 +26,29 @@
             overflow: hidden; color: var(--text);
         }
 
-        /* --- 1. INTRO SCREEN (Valentine) --- */
-        #intro-screen {
+        /* --- 1. LOCK SCREEN (Back by Popular Demand) --- */
+        #lock-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #ffe6eb; z-index: 9999;
+            background: rgba(0,0,0,0.95); z-index: 10000;
             display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
+            justify-content: center; align-items: center; color: white;
         }
 
-        .title { font-family: 'Dancing Script'; font-size: 3.5rem; color: #ff4757; margin-bottom: 20px; animation: pulse 2s infinite; }
+        .title { font-family: 'Dancing Script'; font-size: 3.5rem; margin-bottom: 10px; }
         
-        .btn-box { display: flex; gap: 20px; justify-content: center; width: 100%; }
-        
-        .big-btn {
-            padding: 15px 40px; border-radius: 50px; border: none; font-size: 1.2rem; font-weight: bold;
-            cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.2s;
+        .lock-input {
+            padding: 15px; border-radius: 30px; border: 2px solid white; 
+            text-align: center; font-size: 1.2rem; width: 220px;
+            background: rgba(255,255,255,0.2); color: white; margin-top: 20px;
+            outline: none;
         }
-        .yes { background: #ff4757; color: white; }
-        .no { background: white; color: #333; position: relative; }
-        .yes:active { transform: scale(0.9); }
+        
+        .lock-btn {
+            background: white; color: #333; border: none; padding: 12px 40px;
+            border-radius: 30px; font-weight: bold; margin-top: 20px; font-size: 1rem;
+            cursor: pointer; transition: 0.2s;
+        }
+        .lock-btn:active { transform: scale(0.95); }
 
         /* --- 2. MAIN OS --- */
         #main-os { display: none; width: 100%; height: 100%; animation: fade 1s; }
@@ -111,7 +115,6 @@
         .cam-view { width: 100%; height: 300px; background: black; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         
         /* ANIMATIONS */
-        @keyframes pulse { 0% {transform:scale(1);} 50% {transform:scale(1.05);} 100% {transform:scale(1);} }
         @keyframes bounce { 0%, 100% {transform:translateY(0);} 50% {transform:translateY(-10px);} }
         .gift-icon { font-size: 3rem; animation: bounce 1s infinite; }
 
@@ -119,12 +122,17 @@
 </head>
 <body>
 
-    <div id="intro-screen">
-        <h1 class="title">Ayushka,<br>Will you be my<br>Valentine?</h1>
-        <div class="btn-box">
-            <button class="big-btn yes" onclick="enterOS()" ontouchstart="enterOS()">YES ❤️</button>
-            <button class="big-btn no" id="noBtn" onclick="moveNo()" onmouseover="moveNo()">NO 😤</button>
-        </div>
+    <div id="lock-screen">
+        <h1 class="title" onclick="emergencyUnlock()">Theshu & Ayu</h1>
+        <p>Vol. 32 (Secure Romance)</p>
+        
+        <form onsubmit="event.preventDefault(); unlock();" style="display:flex; flex-direction:column; align-items:center;">
+            <input type="password" id="pass" class="lock-input" placeholder="hint: kushu" autocomplete="off">
+            <button type="submit" class="lock-btn">Unlock</button>
+        </form>
+        
+        <p id="err" style="display:none; color:#ff6b81; margin-top:10px; font-weight:bold;">Wrong Password!</p>
+        <div style="margin-top:20px; font-size:0.8rem; opacity:0.6;">(Tap Title 5 times if stuck)</div>
     </div>
 
     <div id="main-os">
@@ -155,7 +163,7 @@
             <h3>Score: <span id="score">0</span> | <span id="lives">❤️❤️❤️</span></h3>
             <p>High Score: <span id="hs">0</span></p>
             <div id="game-board"></div>
-            <button class="big-btn yes" onclick="startGame()" id="start-btn" style="margin-top:20px;">Play ▶️</button>
+            <button class="lock-btn" onclick="startGame()" id="start-btn" style="margin-top:20px;">Play ▶️</button>
         </div>
     </div>
 
@@ -163,7 +171,7 @@
         <div class="header">Camera <span class="close" onclick="closeApp('cam')">Done</span></div>
         <div class="content" style="background:black; text-align:center;">
             <div class="cam-view"><img id="preview" src="" style="width:100%; height:100%; object-fit:cover; display:none;"><span id="cam-ph" style="font-size:3rem; color:white;">📷</span></div>
-            <label class="big-btn yes" style="margin-top:20px; display:inline-block; color:white;">Selfie <input type="file" accept="image/*" style="display:none;" onchange="loadPic(event)"></label>
+            <label class="lock-btn" style="margin-top:20px; display:inline-block; color:white;">Selfie <input type="file" accept="image/*" style="display:none;" onchange="loadPic(event)"></label>
         </div>
     </div>
 
@@ -202,18 +210,26 @@
     </div>
 
     <script>
-        // --- 1. ENTRY LOGIC ---
-        function enterOS() {
-            document.getElementById('intro-screen').style.display = 'none';
-            document.getElementById('main-os').style.display = 'block';
-            document.getElementById('hs').innerText = localStorage.getItem('hs') || 0;
+        // --- 1. UNLOCK LOGIC ---
+        function unlock() {
+            const pass = document.getElementById('pass').value.trim().toLowerCase();
+            if(pass === "kushu") {
+                document.getElementById('lock-screen').style.display = 'none';
+                document.getElementById('main-os').style.display = 'block';
+                document.getElementById('hs').innerText = localStorage.getItem('hs') || 0;
+            } else {
+                document.getElementById('err').style.display = 'block';
+            }
         }
-        
-        function moveNo() {
-            const b = document.getElementById('noBtn');
-            b.style.position = 'absolute';
-            b.style.left = Math.random()*(window.innerWidth-100)+'px';
-            b.style.top = Math.random()*(window.innerHeight-100)+'px';
+
+        // Emergency Bypass (Tap Title 5 times)
+        let taps = 0;
+        function emergencyUnlock() {
+            taps++;
+            if(taps >= 5) {
+                document.getElementById('lock-screen').style.display = 'none';
+                document.getElementById('main-os').style.display = 'block';
+            }
         }
 
         // --- 2. NAVIGATION ---
