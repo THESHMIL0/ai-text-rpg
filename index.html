@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Theshu OS v10.0 ❤️</title>
+    <title>Theshu OS Final 💎</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&family=Indie+Flower&display=swap" rel="stylesheet">
 
@@ -26,11 +26,11 @@
             color: var(--text);
         }
 
-        /* --- LOCK SCREEN --- */
+        /* --- LOCK SCREEN (Layer Top) --- */
         #lock-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(15px);
-            z-index: 10000; display: flex; flex-direction: column;
+            background: rgba(0,0,0,0.95); z-index: 999999;
+            display: flex; flex-direction: column;
             justify-content: center; align-items: center; color: white;
             text-align: center;
         }
@@ -116,17 +116,6 @@
         }
         @keyframes popIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
 
-        /* --- NEW GAME STYLES (HEART POP) --- */
-        #game-canvas {
-            width: 100%; height: 400px; background: #81ecec; border-radius: 15px;
-            position: relative; overflow: hidden; margin-top: 10px; border: 4px solid #00cec9;
-        }
-        .floater {
-            position: absolute; font-size: 3rem; cursor: pointer; bottom: -60px;
-            animation: floatUp linear forwards; user-select: none;
-        }
-        @keyframes floatUp { to { bottom: 450px; } }
-
         /* --- CAMERA STYLES --- */
         .camera-view {
             width: 100%; height: 350px; background: #000; border-radius: 20px;
@@ -159,7 +148,7 @@
     <div id="lock-screen">
         <div style="font-size: 4rem;">🔒</div>
         <h1 style="font-family: 'Dancing Script'; margin: 10px 0;">Theshu & Ayu</h1>
-        <p>Vol. 10 (Heart Pop)</p>
+        <p>Stable Edition 💎</p>
         <input type="password" id="pass" placeholder="hint: kushu" onkeyup="if(event.key==='Enter') unlock()">
         <button class="btn" style="background:white; color:#333; margin-top:20px;" onclick="unlock()">Unlock</button>
         <p id="err" style="display:none; color:#ff6b81; margin-top:10px; font-weight:bold;">Wrong Password!</p>
@@ -183,14 +172,11 @@
             <div class="app-icon" onclick="openApp('camera')">
                 <div class="icon-box" style="background:#333; color:white;">📸</div><span class="icon-label">Camera</span>
             </div>
-            <div class="app-icon" onclick="openApp('game')">
-                <div class="icon-box" style="background:#ff9f43; color:white;">🎈</div><span class="icon-label">Pop It</span>
+            <div class="app-icon" onclick="openApp('gift')">
+                <div class="icon-box" style="background:#e17055; color:white;">🎁</div><span class="icon-label">Gift</span>
             </div>
             <div class="app-icon" onclick="openApp('settings')">
                 <div class="icon-box" style="background:#bdc3c7; color:white;">⚙️</div><span class="icon-label">Settings</span>
-            </div>
-            <div class="app-icon" onclick="openApp('gift')">
-                <div class="icon-box" style="background:#e17055; color:white;">🎁</div><span class="icon-label">Gift</span>
             </div>
             <div class="app-icon" onclick="openApp('notes')">
                 <div class="icon-box" style="background:#f1c40f; color:white;">📝</div><span class="icon-label">Bucket List</span>
@@ -198,16 +184,6 @@
             <div class="app-icon" onclick="openApp('music')">
                 <div class="icon-box" style="background:#ff6b81; color:white;">🎵</div><span class="icon-label">Music</span>
             </div>
-        </div>
-    </div>
-
-    <div class="app-window" id="app-game">
-        <div class="app-header">Heart Pop <button class="close-btn" onclick="closeApp('game')">×</button></div>
-        <div class="app-content" style="background:#d1ccc0;">
-            <h2>Score: <span id="score">0</span></h2>
-            <p>Pop the floating hearts! ❤️</p>
-            <div id="game-canvas"></div>
-            <button class="btn" onclick="startGame()" style="background:white; color:#333; margin-top:20px;" id="start-btn">Start Game ▶️</button>
         </div>
     </div>
 
@@ -252,6 +228,7 @@
             <div class="bucket-item" onclick="toggleCheck(this)"><span>⬜</span> Late night drive 🚗</div>
             <div class="bucket-item" onclick="toggleCheck(this)"><span>⬜</span> Cook together 🍝</div>
             <div class="bucket-item" onclick="toggleCheck(this)"><span>⬜</span> Wear matching hoodies 👕</div>
+            <div class="bucket-item" onclick="toggleCheck(this)"><span>⬜</span> Adopt a friend for Kitchu 🐈</div>
             <div class="bucket-item" onclick="toggleCheck(this)"><span>⬜</span> Get Married 💍</div>
         </div>
     </div>
@@ -271,7 +248,7 @@
             <p style="text-align:left; color:#666; margin-left:10px; font-size:0.9rem;">ABOUT</p>
             <div class="settings-list">
                 <div class="settings-item"><span>Name</span> <span class="settings-value">Theshu OS</span></div>
-                <div class="settings-item"><span>Version</span> <span class="settings-value">10.0 (Perfect)</span></div>
+                <div class="settings-item"><span>Version</span> <span class="settings-value">Final (Stable)</span></div>
                 <div class="settings-item"><span>Developer</span> <span class="settings-value">Theshmil</span></div>
                 <div class="settings-item"><span>For</span> <span class="settings-value">My Summer Girl ☀️</span></div>
             </div>
@@ -280,14 +257,30 @@
     </div>
 
     <script>
-        // --- CHAT SCRIPT (NEW TEXT) ---
+        // --- SYSTEM UNLOCK (THE CRITICAL FIX) ---
+        function unlock() {
+            // Trim spaces and lowercase to prevent typing errors
+            if(document.getElementById('pass').value.trim().toLowerCase() === "kushu") {
+                // Completely remove the lock screen element from the DOM
+                document.getElementById('lock-screen').remove(); 
+                spawnConfetti();
+            } else {
+                document.getElementById('err').style.display = 'block';
+            }
+        }
+
+        // --- NAVIGATION ---
+        function openApp(id) { document.getElementById('app-' + id).classList.add('open'); }
+        function closeApp(id) { document.getElementById('app-' + id).classList.remove('open'); }
+
+        // --- CHAT SCRIPT ---
         const script = [
             { text: "Yooo Ayuuu! Guess what? 😸", options: [{label: "What??", next: 1}, {label: "Tell me!", next: 1}] },
             { text: "I made this OS for you. Took some time but worth it 😉", options: [{label: "Crazy boy 😂", next: 2}, {label: "Aww thanks! ❤️", next: 2}] },
             { text: "Crazy for you! 😜 Kitchu 🐈‍⬛ is judging me right now btw.", options: [{label: "Hehe show Kitchu!", next: 3}] },
             { text: "He says meow. Listen, I just wanted to remind you... you are the best thing that happened to me. ✨", options: [{label: "Aww really? 🥺", next: 4}] },
             { text: "Yes! I'm right here idiot! 🥸 Always by your side. Be yourself.", options: [{label: "Love you Theshu ❤️", next: 5}] },
-            { text: "Love you too Ayuuu! Now go play the new Game! 🎈", options: [{label: "Okay bye! 😘", next: -1}] }
+            { text: "Love you too Ayuuu! Now go check your Gift! 🎁", options: [{label: "Okay bye! 😘", next: -1}] }
         ];
 
         function startChat() {
@@ -305,7 +298,7 @@
                     showOptions(script[nextIndex].options);
                 }, 1000);
             } else {
-                setTimeout(() => alert("Go play Pop It! 🎈"), 1000);
+                setTimeout(() => alert("Go check the Gift App! 🎁"), 1000);
             }
         }
 
@@ -326,44 +319,6 @@
                 b.onclick = () => handleReply(o.next, o.label);
                 c.appendChild(b);
             });
-        }
-
-        // --- NEW GAME LOGIC (HEART POP) ---
-        let score = 0;
-        let gameInterval;
-        
-        function startGame() {
-            document.getElementById('start-btn').style.display = 'none';
-            score = 0;
-            document.getElementById('score').innerText = "Score: 0";
-            gameInterval = setInterval(spawnFloater, 600);
-        }
-
-        function spawnFloater() {
-            const canvas = document.getElementById('game-canvas');
-            const heart = document.createElement('div');
-            heart.innerText = "❤️";
-            heart.className = "floater";
-            heart.style.left = Math.random() * (canvas.offsetWidth - 40) + "px";
-            
-            // Random Speed
-            let duration = Math.random() * 2 + 2; 
-            heart.style.animationDuration = duration + "s";
-
-            heart.onclick = function() {
-                score++;
-                document.getElementById('score').innerText = "Score: " + score;
-                this.innerText = "💥"; // Pop effect
-                setTimeout(() => this.remove(), 200);
-                spawnConfetti();
-            };
-
-            canvas.appendChild(heart);
-
-            // Cleanup
-            setTimeout(() => {
-                if(heart.parentNode) heart.remove();
-            }, duration * 1000);
         }
 
         // --- CAMERA LOGIC ---
@@ -389,18 +344,6 @@
             document.getElementById('gift-text').style.opacity = 1;
             spawnConfetti();
         }
-
-        // --- SYSTEM ---
-        function unlock() {
-            if(document.getElementById('pass').value.trim().toLowerCase() === "kushu") {
-                document.getElementById('lock-screen').remove(); // NUCLEAR FIX
-                spawnConfetti();
-            } else {
-                document.getElementById('err').style.display = 'block';
-            }
-        }
-        function openApp(id) { document.getElementById('app-' + id).classList.add('open'); }
-        function closeApp(id) { document.getElementById('app-' + id).classList.remove('open'); }
         
         function toggleCheck(el) {
             el.classList.toggle('checked');
@@ -412,4 +355,11 @@
             let c = document.createElement('div');
             c.className = 'confetti';
             c.style.left = Math.random()*100+'vw';
-            c.style.background = ['#f00','#0f
+            c.style.background = ['#f00','#0f0','#00f'][Math.floor(Math.random()*3)];
+            c.style.animationDuration = Math.random()*2+2+'s';
+            document.body.appendChild(c);
+        }
+    </script>
+
+</body>
+</html>
