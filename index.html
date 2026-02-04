@@ -6,193 +6,255 @@
     <meta name="theme-color" content="#fff5f7">
     <title>Theshu ❤️ Ayuuu</title>
     <style>
-        /* --- CORE --- */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
-        
-        body { 
-            margin: 0; padding: 0; width: 100vw; height: 100dvh;
-            background: #fff5f7; color: #333; overflow: hidden;
+        /* --- CORE VARIABLES --- */
+        :root {
+            --primary: #ff4757;
+            --bg: #fff5f7;
+            --text: #2f3542;
+            --glass: rgba(255, 255, 255, 0.9);
         }
 
-        /* --- LOCK SCREEN (Fingerprint) --- */
+        /* --- RESET & BODY --- */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; user-select: none; }
+        body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: var(--bg); color: var(--text); overflow: hidden; position: relative; }
+
+        /* --- BACKGROUND ANIMATION --- */
+        .bg-hearts { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .heart-float { position: absolute; bottom: -20px; animation: floatUp 8s linear forwards; font-size: 20px; opacity: 0.6; }
+
+        /* --- LOCK SCREEN --- */
         #lock {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #ff9a9e 0%, #ff6b81 100%);
-            z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: white; transition: transform 0.5s ease-in-out;
+            z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; transition: transform 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+        .scanner-container { position: relative; width: 100px; height: 100px; margin-bottom: 20px; }
+        .scanner {
+            width: 100%; height: 100%; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; position: relative; z-index: 2;
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);
+        }
+        .fingerprint { font-size: 3.5rem; transition: 0.3s; }
+        .scanner::after {
+            content: ''; position: absolute; top:0; left:0; width: 100%; height: 100%; border-radius: 50%;
+            border: 2px solid white; animation: ripple 1.5s infinite; opacity: 0; z-index: 1;
+        }
+        .scanning .fingerprint { transform: scale(0.9); opacity: 0.8; }
+
+        /* --- APP LAYOUT --- */
+        .app-container { display: flex; flex-direction: column; height: 100%; position: relative; z-index: 10; }
+        .content { flex: 1; overflow-y: auto; padding: 25px; display: none; padding-bottom: 120px; scroll-behavior: smooth; }
+        .content.active { display: block; animation: fadeIn 0.4s ease-out; }
+
+        /* --- CARDS & WIDGETS --- */
+        .card { background: white; border-radius: 22px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(255, 71, 87, 0.08); transition: transform 0.2s; }
+        .card:active { transform: scale(0.98); }
+        
+        /* Map Widget */
+        .map-line { height: 2px; background: #eee; width: 80%; margin: 25px auto; position: relative; border-top: 2px dashed var(--primary); background: transparent; }
+        .plane { position: absolute; top: -14px; left: 0; font-size: 1.6rem; animation: fly 4s linear infinite; }
+        .locations { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 800; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Photo Reel (New) */
+        .photo-reel { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; margin: -5px -5px 15px -5px; -webkit-overflow-scrolling: touch; }
+        .photo-item { 
+            min-width: 140px; height: 180px; background: #eee; border-radius: 15px; 
+            display: flex; align-items: center; justify-content: center; color: #aaa; font-weight: bold;
+            background-size: cover; background-position: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Envelopes (New) */
+        .letter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .envelope {
+            background: #fff; padding: 20px; border-radius: 15px; text-align: center; border: 2px solid #f0f0f0;
+            position: relative; overflow: hidden; cursor: pointer;
+        }
+        .envelope::before { content: '💌'; font-size: 2rem; display: block; margin-bottom: 10px; }
+        .envelope h3 { margin: 0; font-size: 0.9rem; color: #555; }
+        
+        /* Modal for Letters */
+        #modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);
+            z-index: 5000; display: none; align-items: center; justify-content: center; padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: white; width: 100%; max-width: 400px; padding: 30px; border-radius: 25px;
+            text-align: center; animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
         
-        .scanner {
-            width: 80px; height: 80px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; position: relative;
-            margin-bottom: 20px; cursor: pointer;
-        }
-        .scanner::after {
-            content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%;
-            border: 2px solid white; animation: ripple 1.5s infinite; opacity: 0;
-        }
-        .scan-icon { font-size: 3rem; }
-        .scanning .scan-icon { color: #fff; text-shadow: 0 0 10px white; }
-
-        /* --- LAYOUT --- */
-        .app-container { display: flex; flex-direction: column; height: 100%; }
-        .content { 
-            flex: 1; overflow-y: auto; padding: 20px; display: none; 
-            padding-bottom: 100px; -webkit-overflow-scrolling: touch;
-        }
-        .content.active { display: block; animation: fadeIn 0.3s; }
-
-        /* --- MAP WIDGET (NEW) --- */
-        .map-card {
-            background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.03); position: relative; overflow: hidden;
-        }
-        .map-line {
-            height: 2px; background: #eee; width: 80%; margin: 20px auto; position: relative;
-            border-top: 2px dashed #ff4757; background: transparent;
-        }
-        .plane {
-            position: absolute; top: -12px; left: 0; font-size: 1.5rem;
-            animation: fly 4s linear infinite;
-        }
-        .locations { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; color: #555; padding: 0 10px; }
-
-        /* --- DRAWING CANVAS (NEW) --- */
-        .canvas-container {
-            background: white; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            height: 300px; position: relative; touch-action: none; border: 2px dashed #eee;
-        }
-        canvas { width: 100%; height: 100%; border-radius: 20px; }
-        .tools { display: flex; gap: 10px; margin-top: 15px; justify-content: center; }
-        .tool-btn { padding: 10px 20px; border-radius: 20px; border: none; font-weight: 600; cursor: pointer; }
-        .btn-clear { background: #eee; color: #333; }
-        .btn-save { background: #ff4757; color: white; }
-
-        /* --- MUSIC PLAYER --- */
-        .music-card {
-            background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px;
-            display: flex; align-items: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-        }
-        .album-art { 
-            width: 50px; height: 50px; background: #333; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; color: white;
-            animation: spin 5s linear infinite; animation-play-state: paused;
-        }
-        .album-art.playing { animation-play-state: running; }
-
-        /* --- CHAT --- */
+        /* Chat */
         .chat-list { display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 80%; padding: 14px 18px; border-radius: 20px; font-size: 0.95rem; }
-        .them { background: white; align-self: flex-start; }
-        .me { background: #ff4757; color: white; align-self: flex-end; }
+        .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; line-height: 1.4; }
+        .them { background: white; align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .me { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3); }
 
-        /* --- NAV BAR --- */
+        /* Nav Bar */
         .nav-bar {
-            height: 75px; background: rgba(255,255,255,0.95); border-top: 1px solid #f0f0f0;
+            height: 80px; background: rgba(255,255,255,0.95); 
+            position: fixed; bottom: 0; left: 0; width: 100%;
             display: flex; justify-content: space-around; align-items: center;
-            padding-bottom: env(safe-area-inset-bottom); z-index: 50;
+            padding-bottom: 15px; border-radius: 30px 30px 0 0;
+            box-shadow: 0 -5px 30px rgba(0,0,0,0.05); z-index: 100;
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #ccc; font-size: 0.7rem; font-weight: 600; }
-        .nav-item.active { color: #ff4757; }
-        .nav-icon { font-size: 1.5rem; margin-bottom: 3px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #d1ccc0; font-size: 0.7rem; font-weight: 700; transition: 0.3s; }
+        .nav-item.active { color: var(--primary); transform: translateY(-5px); }
+        .nav-icon { font-size: 1.6rem; margin-bottom: 4px; display: block; }
 
-        /* --- HERO --- */
-        .hero { margin: 20px 0; text-align: left; padding: 0 10px; }
-        .hero h1 { font-size: 2rem; color: #ff4757; margin: 0; }
-        .hero p { color: #ff8fa3; font-weight: 700; font-size: 0.8rem; letter-spacing: 1px; }
+        /* HERO */
+        .hero { margin: 10px 0 25px 0; }
+        .hero p { color: #a4b0be; font-weight: 700; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
+        .hero h1 { font-size: 2.2rem; color: var(--text); margin: 5px 0 0 0; font-weight: 800; }
+        .highlight { color: var(--primary); }
 
-        /* Animations */
-        @keyframes ripple { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(1.5); opacity: 0; } }
+        /* ANIMATIONS */
+        @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg); opacity: 0.8; } 100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
+        @keyframes ripple { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(1.6); opacity: 0; } }
         @keyframes fly { 0% { left: 0%; transform: rotate(0deg); } 50% { top: -20px; } 100% { left: 90%; transform: rotate(10deg); } }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popUp { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
 
     </style>
 </head>
 <body>
 
+    <div class="bg-hearts" id="bgHearts"></div>
+
     <div id="lock" onmousedown="startUnlock()" onmouseup="stopUnlock()" ontouchstart="startUnlock()" ontouchend="stopUnlock()">
-        <div class="scanner" id="scanner">
-            <div class="scan-icon">👆</div>
+        <div class="scanner-container">
+            <div class="scanner" id="scanner">
+                <div class="fingerprint">❤️</div>
+            </div>
         </div>
-        <p style="font-weight: 600; margin-top: 10px;">Touch & Hold ID</p>
+        <h2 style="margin: 0;">Touch ID</h2>
+        <p style="opacity: 0.8; font-size: 0.9rem;">Hold to unlock Ayuuu's Heart</p>
+    </div>
+
+    <div id="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div style="font-size:3rem; margin-bottom:10px;">💌</div>
+            <h2 id="modalTitle" style="color:var(--primary);">Title</h2>
+            <p id="modalBody" style="line-height:1.6; color:#555;">Content goes here...</p>
+            <button onclick="closeModal()" style="margin-top:20px; padding:12px 30px; background:var(--primary); color:white; border:none; border-radius:50px; font-weight:bold;">Close</button>
+        </div>
     </div>
 
     <div class="app-container">
         
         <div id="tab-home" class="content active">
             <div class="hero">
-                <p>GOOD MORNING</p>
-                <h1>My Ayuuu ❤️</h1>
+                <p>Welcome Back</p>
+                <h1>Hey <span class="highlight">Ayuuu</span> ❤️</h1>
             </div>
 
-            <div class="music-card" onclick="toggleMusic()">
-                <div class="album-art" id="vinyl">🎵</div>
-                <div style="flex:1;">
-                    <div style="font-weight:700;">Your Voice</div>
-                    <div style="font-size:0.8rem; color:#888;">Tap to Play/Pause</div>
+            <div class="card" style="display:flex; align-items:center; justify-content:space-between; background: linear-gradient(135deg, #ff4757, #ff6b81); color:white;">
+                <div>
+                    <div style="font-size:3rem; font-weight:800; line-height:1;" id="days">0</div>
+                    <div style="font-size:0.8rem; opacity:0.9; font-weight:600;">DAYS IN LOVE</div>
                 </div>
-                <div style="font-size:1.5rem;">▶️</div>
+                <div style="font-size:3rem;">📅</div>
             </div>
 
-            <div class="map-card">
-                <div style="font-size:0.8rem; font-weight:700; color:#aaa; margin-bottom:15px; text-transform:uppercase;">Distance is Temporary</div>
+            <div class="card">
+                <div style="font-size:0.8rem; font-weight:700; color:#aaa; margin-bottom:10px; text-transform:uppercase;">Distance is Temporary</div>
                 <div class="map-line">
                     <div class="plane">✈️</div>
                 </div>
                 <div class="locations">
                     <span>Theshu</span>
-                    <span>Ayuuuu</span>
+                    <span style="color:var(--primary)">Ayuuuu</span>
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; text-align:center;">
-                <div style="background:white; padding:20px; border-radius:15px;">
-                    <div style="font-size:2rem; font-weight:800; color:#ff4757;" id="days">0</div>
-                    <div style="font-size:0.7rem; color:#aaa; font-weight:700;">DAYS</div>
-                </div>
-                <div style="background:white; padding:20px; border-radius:15px;">
-                    <div style="font-size:2rem;">🔋</div>
-                    <div style="font-size:0.7rem; color:#aaa; font-weight:700;">100% LOVE</div>
+            <div style="margin-bottom: 20px;">
+                <h3 style="margin-bottom:10px;">Us Together 📸</h3>
+                <div class="photo-reel">
+                    <div class="photo-item" style="background-image: url('https://placehold.co/140x180/ffcccc/ff4757?text=Cute');"></div>
+                    <div class="photo-item" style="background-image: url('https://placehold.co/140x180/ffcccc/ff4757?text=Smile');"></div>
+                    <div class="photo-item" style="background-image: url('https://placehold.co/140x180/ffcccc/ff4757?text=Love');"></div>
+                    <div class="photo-item" style="background-image: url('https://placehold.co/140x180/ffcccc/ff4757?text=Hugs');"></div>
                 </div>
             </div>
         </div>
 
-        <div id="tab-draw" class="content">
-            <div class="hero"><h1>Draw a Heart 🎨</h1><p>For Me</p></div>
-            <div class="canvas-container">
-                <canvas id="drawArea"></canvas>
+        <div id="tab-letters" class="content">
+            <div class="hero">
+                <p>From My Heart</p>
+                <h1>Open When...</h1>
             </div>
-            <div class="tools">
-                <button class="tool-btn btn-clear" onclick="clearCanvas()">Clear</button>
-                <button class="tool-btn btn-save" onclick="alert('Saved to my heart! ❤️')">Send to Theshu</button>
+            
+            <div class="letter-grid">
+                <div class="envelope" onclick="openLetter('miss')">
+                    <h3>You Miss Me</h3>
+                </div>
+                <div class="envelope" onclick="openLetter('sad')">
+                    <h3>You Are Sad</h3>
+                </div>
+                <div class="envelope" onclick="openLetter('happy')">
+                    <h3>You Are Happy</h3>
+                </div>
+                <div class="envelope" onclick="openLetter('fight')">
+                    <h3>We Fight</h3>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:20px; text-align:center;">
+                <p style="font-size:0.9rem; color:#888;">"I love you more than words can say."</p>
             </div>
         </div>
 
         <div id="tab-chat" class="content">
-            <div class="hero"><h1>Chat 💬</h1></div>
+            <div class="hero">
+                <p>Love Logs</p>
+                <h1>Chat 💬</h1>
+            </div>
             <div class="chat-list" id="msgs">
                 <div class="msg them">Hey Ayuuu! ❤️</div>
             </div>
-            <div style="margin-top:20px;">
-                <button onclick="nextChat()" style="width:100%; padding:15px; background:#ff4757; color:white; border:none; border-radius:15px; font-weight:700;">Reply</button>
+            <div style="position:fixed; bottom:90px; left:0; width:100%; padding:0 25px;">
+                <button onclick="nextChat()" style="width:100%; padding:18px; background:var(--primary); color:white; border:none; border-radius:20px; font-weight:700; font-size:1rem; box-shadow: 0 10px 20px rgba(255, 71, 87, 0.3);">
+                    Reply to Theshu 💌
+                </button>
+            </div>
+        </div>
+
+        <div id="tab-draw" class="content">
+            <div class="hero"><h1>Draw ❤️</h1></div>
+            <div style="height: 60vh; border:2px dashed #ccc; border-radius:20px; overflow:hidden; position:relative; background:white;">
+                 <canvas id="drawArea" style="width:100%; height:100%;"></canvas>
+            </div>
+            <div style="display:flex; justify-content:center; gap:10px; margin-top:20px;">
+                <button onclick="clearCanvas()" style="padding:10px 20px; border-radius:10px; border:none; background:#eee;">Clear</button>
             </div>
         </div>
 
         <div class="nav-bar">
-            <div class="nav-item active" onclick="switchTab('home', this)"><div class="nav-icon">🏠</div>Home</div>
-            <div class="nav-item" onclick="switchTab('draw', this)"><div class="nav-icon">🎨</div>Draw</div>
-            <div class="nav-item" onclick="switchTab('chat', this)"><div class="nav-icon">💬</div>Chat</div>
+            <div class="nav-item active" onclick="switchTab('home', this)">
+                <span class="nav-icon">🏠</span>Home
+            </div>
+            <div class="nav-item" onclick="switchTab('letters', this)">
+                <span class="nav-icon">💌</span>Letters
+            </div>
+            <div class="nav-item" onclick="switchTab('draw', this)">
+                <span class="nav-icon">🎨</span>Draw
+            </div>
+            <div class="nav-item" onclick="switchTab('chat', this)">
+                <span class="nav-icon">💬</span>Chat
+            </div>
         </div>
 
     </div>
 
     <script>
-        // --- LOCK LOGIC ---
+        // --- CONFIGURATION ---
+        const START_DATE = "2026-01-18"; 
+        
+        // --- LOCK SCREEN ---
         let holdTimer;
         function startUnlock() {
             document.getElementById('scanner').classList.add('scanning');
-            // Unlock after 0.8s
             holdTimer = setTimeout(() => {
                 if(navigator.vibrate) navigator.vibrate(50);
                 document.getElementById('lock').style.transform = 'translateY(-100%)';
@@ -211,76 +273,90 @@
             el.classList.add('active');
         }
 
-        // --- MUSIC ---
-        function toggleMusic() {
-            const vinyl = document.getElementById('vinyl');
-            if (vinyl.classList.contains('playing')) {
-                vinyl.classList.remove('playing');
-            } else {
-                vinyl.classList.add('playing');
-            }
+        // --- FLOATING HEARTS ANIMATION ---
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-float');
+            heart.innerText = Math.random() > 0.5 ? '❤️' : '💖';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 4 + 's'; 
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            document.getElementById('bgHearts').appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 8000);
         }
-
-        // --- DRAWING CANVAS LOGIC ---
-        const canvas = document.getElementById('drawArea');
-        const ctx = canvas.getContext('2d');
-        let drawing = false;
-
-        // Resize canvas
-        function resizeCanvas() {
-            canvas.width = canvas.parentElement.offsetWidth;
-            canvas.height = canvas.parentElement.offsetHeight;
-            ctx.lineWidth = 4;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = '#ff4757';
-        }
-        window.onload = resizeCanvas;
-
-        // Touch Events
-        canvas.addEventListener('touchstart', (e) => {
-            drawing = true;
-            ctx.beginPath();
-            const rect = canvas.getBoundingClientRect();
-            ctx.moveTo(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
-        });
-        
-        canvas.addEventListener('touchmove', (e) => {
-            if(!drawing) return;
-            const rect = canvas.getBoundingClientRect();
-            ctx.lineTo(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
-            ctx.stroke();
-        });
-
-        canvas.addEventListener('touchend', () => drawing = false);
-
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
+        setInterval(createHeart, 600);
 
         // --- DATE LOGIC ---
-        const start = new Date("2026-01-18");
-        const diff = Math.floor((new Date() - start) / (1000 * 60 * 60 * 24));
+        const diff = Math.floor((new Date() - new Date(START_DATE)) / (1000 * 60 * 60 * 24));
         document.getElementById('days').innerText = diff > 0 ? diff : 0;
+
+        // --- LETTERS LOGIC ---
+        const letters = {
+            'miss': { title: "When you miss me...", body: "Remember that I am looking at the same moon as you. Close your eyes, take a deep breath, and feel my hug. I'll be there soon. ❤️" },
+            'sad': { title: "When you are sad...", body: "I wish I could wipe your tears away. You are the strongest person I know. Eat some chocolate, listen to our song, and call me. I love you." },
+            'happy': { title: "When you are happy...", body: "Your smile is my favorite thing in the world! Keep shining, my love. I'm celebrating with you from afar! 🎉" },
+            'fight': { title: "When we fight...", body: "I'm sorry. Even when we disagree, you are my person. Let's fix this, because us > the problem. I love you." }
+        };
+
+        function openLetter(type) {
+            document.getElementById('modalTitle').innerText = letters[type].title;
+            document.getElementById('modalBody').innerText = letters[type].body;
+            document.getElementById('modal').style.display = 'flex';
+        }
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
 
         // --- CHAT LOGIC ---
         let step = 0;
         const msgs = document.getElementById('msgs');
         const script = [
-            { me: "Hey Theshu! 👋", them: "I miss you so much. Thinking about Jan 18 makes me smile. ❤️" },
-            { me: "Me too! 🥰", them: "Distance is hard, but you are worth it. I have a question..." },
-            { me: "What is it? 😮", them: "<b>Will you be my Valentine?</b> Forever? 💍" },
-            { me: "YES! Of course! ❤️", them: "I knew it! ❤️ One day I'll put a real ring on your finger. 💍" }
+            { me: "Hey Theshu! 👋", them: "I miss you so much. ❤️" },
+            { me: "Me too! 🥰", them: "You are the best thing that happened to me." },
+            { me: "Aww stop! 🙈", them: "Will you be my Valentine? 💍" },
+            { me: "YES! 1000x YES! ❤️", them: "Yay! I love you Ayuuu! ❤️" }
         ];
 
         function nextChat() {
             if(step >= script.length) return;
             const m = document.createElement('div'); m.className = 'msg me'; m.innerHTML = script[step].me;
             msgs.appendChild(m);
+            msgs.scrollTop = msgs.scrollHeight; // Auto scroll
             setTimeout(() => {
                 const t = document.createElement('div'); t.className = 'msg them'; t.innerHTML = script[step].them;
-                msgs.appendChild(t); step++;
+                msgs.appendChild(t);
+                msgs.scrollTop = msgs.scrollHeight;
+                step++;
             }, 800);
         }
+
+        // --- DRAWING LOGIC ---
+        const canvas = document.getElementById('drawArea');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = canvas.parentElement.offsetHeight;
+            ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.strokeStyle = '#ff4757';
+        }
+        // Resize on tab switch to fix layout bugs
+        setInterval(() => { if(document.getElementById('tab-draw').classList.contains('active')) resizeCanvas(); }, 1000);
+
+        canvas.addEventListener('touchstart', (e) => {
+            drawing = true; ctx.beginPath();
+            const rect = canvas.getBoundingClientRect();
+            ctx.moveTo(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
+        });
+        canvas.addEventListener('touchmove', (e) => {
+            if(!drawing) return;
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineTo(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
+            ctx.stroke();
+        });
+        canvas.addEventListener('touchend', () => drawing = false);
+        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
     </script>
 </body>
 </html>
