@@ -26,7 +26,7 @@
             overflow: hidden; color: var(--text);
         }
 
-        /* --- 1. INTRO SCREEN (Valentine) --- */
+        /* --- 1. VALENTINE ENTRY SCREEN --- */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #ffe6eb; z-index: 9999;
@@ -46,7 +46,7 @@
         .no { background: white; color: #333; position: relative; }
         .yes:active { transform: scale(0.9); }
 
-        /* --- 2. OS SCREEN (Hidden) --- */
+        /* --- 2. MAIN OS --- */
         #main-os { display: none; width: 100%; height: 100%; animation: fade 1s; }
         @keyframes fade { from{opacity:0} to{opacity:1} }
 
@@ -66,7 +66,7 @@
         }
         .icon-label { color: white; font-size: 0.9rem; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
 
-        /* --- APPS WINDOW --- */
+        /* --- WINDOWS --- */
         .window {
             position: fixed; top: 100vh; left: 0; width: 100%; height: 100%;
             background: #f8f8f8; z-index: 5000; transition: top 0.3s ease-out;
@@ -90,14 +90,14 @@
         .gift-bub { background: #ffeaa7; width: 100%; text-align: center; cursor: pointer; align-self: center; }
         
         .opts { position: absolute; bottom: 0; width: 100%; background: white; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #eee; }
-        .opt-btn { flex: 1; padding: 12px; border-radius: 20px; border: none; background: #007aff; color: white; font-weight: bold; font-size: 0.9rem; white-space: nowrap; }
+        .opt-btn { flex: 1; padding: 12px; border-radius: 20px; border: none; background: #007aff; color: white; font-weight: bold; }
 
         /* --- GAME --- */
         #game-board { width: 100%; height: 400px; background: #222; border-radius: 15px; position: relative; overflow: hidden; margin-top: 10px; }
         .heart { position: absolute; font-size: 2.5rem; top: -50px; cursor: pointer; }
         @keyframes fall { to { top: 450px; } }
 
-        /* --- SETTINGS (MINIMAL) --- */
+        /* --- SETTINGS --- */
         .simple-list { background: white; border-radius: 10px; overflow: hidden; }
         .list-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 0.95rem; }
         .list-item:last-child { border-bottom: none; }
@@ -128,8 +128,8 @@
         <h2 class="home-title">Hey Ayuuu ❤️</h2>
 
         <div class="app-grid">
-            <div class="app-icon" onclick="openApp('chat')"><div class="icon-box" style="background:#4cd137; color:white;">💬</div><span class="icon-label">Chat</span></div>
-            <div class="app-icon" onclick="openApp('game')"><div class="icon-box" style="background:#ff9f43; color:white;">🎈</div><span class="icon-label">Game</span></div>
+            <div class="app-icon" onclick="openApp('chat')"><div class="icon-box" style="background:#4cd137;">💬</div><span class="icon-label">Chat</span></div>
+            <div class="app-icon" onclick="openApp('game')"><div class="icon-box" style="background:#ff9f43;">🎈</div><span class="icon-label">Game</span></div>
             <div class="app-icon" onclick="openApp('cam')"><div class="icon-box" style="background:#333; color:white;">📸</div><span class="icon-label">Camera</span></div>
             <div class="app-icon" onclick="openApp('set')"><div class="icon-box" style="background:#8e8e93; color:white;">⚙️</div><span class="icon-label">Settings</span></div>
         </div>
@@ -169,7 +169,7 @@
             <p style="margin-left:10px; font-size:0.8rem; color:#666;">INFO</p>
             <div class="simple-list">
                 <div class="list-item"><span>Name</span> <span class="val">Ayushka</span></div>
-                <div class="list-item"><span>Version</span> <span class="val">Theshu OS 28.0</span></div>
+                <div class="list-item"><span>Version</span> <span class="val">Theshu OS 30.0</span></div>
             </div>
             <p style="margin-left:10px; font-size:0.8rem; color:#666; margin-top:20px;">STATUS</p>
             <div class="simple-list">
@@ -199,23 +199,23 @@
         function openApp(id) { document.getElementById('app-'+id).classList.add('open'); }
         function closeApp(id) { document.getElementById('app-'+id).classList.remove('open'); }
 
-        // --- 3. CHAT LOGIC (IMPROVED) ---
+        // --- 3. CHAT LOGIC (ROMANTIC & DEEP) ---
         const script = [
             { 
-                t: "Hii Ayuuu! ❤️ Finally you opened this!", 
-                o: [{l:"Took you long enough! 😤", n:1}, {l:"Hi my love! 🥰", n:1}] 
+                t: "Hey Ayushka... ❤️", 
+                o: [{l:"Hi Theshu! 🥰", n:1}, {l:"Hey love ✨", n:1}] 
             },
             { 
-                t: "I know, I know! 😅 But I coded this whole thing myself! Kitchu was literally biting my toes the whole time.", 
-                o: [{l:"Aww poor Kitchu! 🐈‍⬛", n:2}, {l:"You did great! 👏", n:2}] 
+                t: "I built this entire world just for you. Because you deserve everything. 🌍", 
+                o: [{l:"Aww really? 🥺", n:2}, {l:"You are the best ❤️", n:2}] 
             },
             { 
-                t: "He says meow. But seriously, I made this because I want to keep making you smile. You're stuck with me, okay? 🔒", 
-                o: [{l:"Forever stuck! 😜", n:3}, {l:"I love being stuck! ❤️", n:3}] 
+                t: "I just wanted to remind you... no matter what happens, I am always right here by your side. ✨", 
+                o: [{l:"Promise? 💍", n:3}, {l:"I love you 🥺", n:3}] 
             },
             { 
-                t: "Good. Now... I hid a special surprise for you here. Are you ready? 🎁", 
-                o: [{l:"Born ready! 😎", n:-1}, {l:"Give it to me! 😽", n:-1}] 
+                t: "Yes! You are the best thing that ever happened to me. Stuck with me forever! 🔒", 
+                o: [{l:"Forever! ❤️", n:-1}, {l:"Stuck with you! 😜", n:-1}] 
             }
         ];
 
@@ -229,7 +229,6 @@
             addBub(l, 'sent');
             document.getElementById('chat-opts').innerHTML = '';
             
-            // Typing indicator
             const typing = document.createElement('div');
             typing.className = 'bubble rcvd'; typing.innerText = '...'; typing.id='typ';
             document.getElementById('chat-box').appendChild(typing);
@@ -237,8 +236,7 @@
             setTimeout(() => {
                 document.getElementById('typ').remove();
                 if(n === -1) {
-                    // Trigger Gift
-                    addBub("Here it is! 👇", 'rcvd');
+                    addBub("Now... I have a special gift for you. 👇", 'rcvd');
                     spawnGift();
                 } else {
                     addBub(script[n].t, 'rcvd');
@@ -261,11 +259,11 @@
             t.style.display = 'block';
             if(gStep === 0) {
                 el.innerText = "🍦";
-                t.innerText = "Ice Cream! 🍦 (Tap again)";
+                t.innerText = "Ice Cream for my sweet! 🍦\n(Tap one more time...)";
                 gStep++;
             } else {
                 el.innerText = "💍";
-                t.innerText = "A Ring! 💍 (Promise)";
+                t.innerText = "And a Ring! 💍\n(Promise Forever) ❤️";
                 confetti();
             }
         }
