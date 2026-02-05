@@ -87,7 +87,7 @@ function calcDays() {
     document.getElementById('days-her').innerText = Math.ceil((her - now)/(1000*60*60*24)) + " Days";
 }
 
-/* --- CHAT LOGIC (CORRECTED: YOU ARE 'THEM') --- */
+/* --- CHAT LOGIC --- */
 const chatBox = document.getElementById('chat-box');
 const opts = document.getElementById('chat-opts');
 const typing = document.getElementById('typing');
@@ -95,17 +95,15 @@ const typing = document.getElementById('typing');
 function reply(choice) {
     let txt = "";
     
-    // STEP 0: SHE REPLIES TO YOUR INTRO
+    // STEP 0: SHE REPLIES
     if(chatStep === 0) {
         txt = choice === 1 ? "Happy Valentine's! ❤️" : "I miss you! 🥺";
-        addBubble(txt, 'chat-me'); // SHE speaks
+        addBubble(txt, 'chat-me'); 
         opts.classList.add('hidden');
         
-        // YOU (Theshu) Reply
+        // YOU Reply
         simulateTyping(() => {
             addBubble("Look who is sleeping! 🐈", 'chat-them');
-            
-            // SEND PHOTO OF KUCHU
             let row = document.createElement('div'); row.className = "chat-row";
             let avatar = document.createElement('div'); avatar.className = "chat-avatar"; avatar.style.backgroundImage = "url('us.jpg')";
             let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-them";
@@ -114,13 +112,12 @@ function reply(choice) {
             bubble.innerHTML += `<div class="time-tick">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
             row.appendChild(avatar); row.appendChild(bubble);
             chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
-
             showOpts(["Omg cute!! 🥺", "I miss him!"]);
             chatStep = 1;
         });
     } 
     
-    // STEP 1: SHE REACTS TO CAT
+    // STEP 1: SHE REACTS
     else if(chatStep === 1) {
         txt = choice === 1 ? "Omg cute!! 🥺" : "I miss him!";
         addBubble(txt, 'chat-me');
@@ -134,7 +131,7 @@ function reply(choice) {
         });
     } 
     
-    // STEP 2: SHE ASKS "WHAT IS IT?"
+    // STEP 2: YOU ASK
     else if(chatStep === 2) {
         txt = "What is it? 👀";
         addBubble(txt, 'chat-me');
@@ -142,16 +139,13 @@ function reply(choice) {
         
         simulateTyping(() => {
             addBubble("Since we are far apart, I wanted to ask this digitally...", 'chat-them');
-            
-            // YOU (Theshu) SEND THE RING
             let row = document.createElement('div'); row.className = "chat-row";
             let avatar = document.createElement('div'); avatar.className = "chat-avatar"; avatar.style.backgroundImage = "url('us.jpg')";
-            let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-them"; // Sent by YOU
+            let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-them"; 
             bubble.style.background = "#FFFBE6"; bubble.style.border = "2px solid #FFD700";
             bubble.innerHTML = `<div style="font-size:3rem;">💍</div><h3 style="color:#D4AF37; margin:5px 0;">WILL YOU MARRY ME?</h3>`;
             row.appendChild(avatar); row.appendChild(bubble);
             chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
-            
             showOpts(["YES! 1000x YES! 😭❤️"]);
             chatStep = 3;
         });
@@ -161,15 +155,11 @@ function reply(choice) {
     else if(chatStep === 3) {
         addBubble("YES! 1000x YES! 😭❤️", 'chat-me');
         opts.classList.add('hidden');
-        
         simulateTyping(() => {
             addBubble("I love you Ayuuu! ❤️", 'chat-them');
             addBubble("Check your 'Gift' app now!", 'chat-them');
-            
-            // Unlock Gift
             document.getElementById('gift-lock').style.display = 'none';
             document.getElementById('gift-open').style.display = 'block';
-            
             opts.innerHTML = `<div class="chat-btn" style="width:100%" onclick="goHome()">🏠 Go Check "Gift" App</div>`;
             opts.classList.remove('hidden');
         });
@@ -182,24 +172,14 @@ function simulateTyping(callback) {
 }
 
 function addBubble(text, className) {
-    let row = document.createElement('div');
-    row.className = "chat-row";
-    
-    // If it's YOUR message (Theshu), add Avatar
+    let row = document.createElement('div'); row.className = "chat-row";
     if(className === 'chat-them') {
-        let avatar = document.createElement('div');
-        avatar.className = "chat-avatar";
-        avatar.style.backgroundImage = "url('us.jpg')"; 
+        let avatar = document.createElement('div'); avatar.className = "chat-avatar"; avatar.style.backgroundImage = "url('us.jpg')"; 
         row.appendChild(avatar);
     }
-    
-    let bubble = document.createElement('div');
-    bubble.className = `chat-bubble ${className}`;
+    let bubble = document.createElement('div'); bubble.className = `chat-bubble ${className}`;
     bubble.innerHTML = text + `<div class="time-tick">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
-    
-    row.appendChild(bubble);
-    chatBox.appendChild(row);
-    chatBox.scrollTop = chatBox.scrollHeight;
+    row.appendChild(bubble); chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 function showOpts(arr) {
