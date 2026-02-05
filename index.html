@@ -1,4 +1,91 @@
-    <div class="screen" id="gift">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#FFF0F5">
+    <title>Thesuuuu's Phone</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body onload="init()">
+
+    <div id="bg-hearts"></div>
+
+    <div class="screen active" id="home-screen">
+        <div class="status-bar">
+            <div id="clock">12:00</div>
+            <div>📶 LDR • 100% 🔋</div>
+        </div>
+
+        <div class="widget">
+            <div>
+                <div style="font-size:0.8rem; color:#888; font-weight:bold;">NEXT MEETING</div>
+                <div style="font-size:1.2rem; font-weight:800; color:#FF1493;">Soon ✈️</div>
+            </div>
+            <div style="font-size:2rem;">🌏</div>
+        </div>
+
+        <div class="app-grid">
+            <div class="app-icon-wrapper" onclick="openApp('msg')">
+                <div class="app-icon" style="background:#E0F7FA;">💌</div><div class="app-name">Messages</div>
+            </div>
+            <div class="app-icon-wrapper" onclick="openApp('events')">
+                <div class="app-icon" style="background:#E3F2FD;">📅</div><div class="app-name">Events</div>
+            </div>
+            <div class="app-icon-wrapper" onclick="openApp('gallery')">
+                <div class="app-icon" style="background:#FFF3E0;">📸</div><div class="app-name">Gallery</div>
+            </div>
+            <div class="app-icon-wrapper" onclick="openApp('settings')">
+                <div class="app-icon" style="background:#F3E5F5;">⚙️</div><div class="app-name">Settings</div>
+            </div>
+        </div>
+
+        <div class="dock-container">
+            <div class="app-icon-wrapper"><div class="app-icon" style="background:#E8F5E9;">📞</div></div>
+            <div class="app-icon-wrapper"><div class="app-icon" style="background:#fff9c4;">📒</div></div>
+            <div class="app-icon-wrapper" onclick="openApp('msg')"><div class="app-icon" style="background:#ffebee;">❤️</div></div>
+        </div>
+        <div class="home-indicator"></div>
+    </div>
+
+    <div class="screen" id="app-msg">
+        <div class="nav-bar">
+            <div class="back-btn" onclick="goHome()">‹ Home</div>
+            <span>Ayuuu ❤️</span>
+            <div style="width:50px"></div>
+        </div>
+        
+        <div class="chat-container" id="chat-box">
+            <div style="text-align: center; color: #aaa; font-size: 0.8rem;">Today 12:00 PM</div>
+            <div class="chat-bubble chat-them">Yooo Thesuuuu! ❤️</div>
+        </div>
+        
+        <div class="typing" id="typing">Ayuuu is typing...</div>
+
+        <div class="chat-footer" id="chat-opts">
+            <div class="chat-btn" onclick="reply(1)">Yooo Ayuuuu! ❤️</div>
+            <div class="chat-btn" onclick="reply(2)">Miss you! 🥺</div>
+        </div>
+    </div>
+
+    <div class="screen" id="app-events">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Events</span><div></div></div>
+        <div class="settings-list">
+            <div class="settings-card">
+                <div class="settings-row">
+                    <span>🎂 Theshu's Bday</span>
+                    <span style="font-weight:bold; color:#FF69B4;" id="days-me">0 Days</span>
+                </div>
+                <div class="settings-row">
+                    <span>🥳 Ayuuu's Bday</span>
+                    <span style="font-weight:bold; color:#FF69B4;" id="days-her">0 Days</span>
+                </div>
+            </div>
+        </div>
+        <div class="home-indicator" style="background:black;"></div>
+    </div>
+
+    <div class="screen" id="app-gift">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>My Gift</span><div></div></div>
         <div class="gift-container">
             <div id="gift-lock">
@@ -7,14 +94,47 @@
                 <p style="color: #888; margin-top: 10px;">Finish your chat with Theshu to unlock!</p>
             </div>
             
-            <div id="gift-open" class="ticket" style="border: 2px solid gold; box-shadow: 0 10px 30px rgba(255,215,0,0.3);">
-                <div style="font-size: 4rem; animation: float 3s infinite ease-in-out;">💍</div>
-                <h2 style="color:#FF1493; margin-top: 10px;">FOR MY FUTURE WIFE</h2>
-                <hr style="border: 1px dashed gold; margin: 15px 0;">
-                <p style="font-size: 1.1rem; color: #444;">Promising you my heart, my life, and all my love.</p>
-                <div style="margin-top: 20px; background: #FFF0F5; padding: 10px; border-radius: 10px; font-size: 0.9rem; color: #FF69B4; font-weight: bold;">
-                    Will you marry me one day? 🥺
+            <div id="gift-open" class="ticket" style="border: 3px solid #FFD700; background: #FFFBE6;">
+                <div style="font-size: 4rem; animation: bounce 2s infinite;">💍</div>
+                <h2 style="color:#D4AF37; margin: 10px 0;">WILL YOU MARRY ME?</h2>
+                <hr style="border: 1px dashed #D4AF37; margin: 15px 0;">
+                <p style="font-size: 1.1rem; color: #555; line-height: 1.5;">
+                    You are my person.<br>
+                    My love.<br>
+                    My future wife.
+                </p>
+                <div style="margin-top: 20px; background: white; padding: 10px; border-radius: 10px; color: #888; font-size: 0.8rem;">
+                    PROMISE RING
                 </div>
             </div>
         </div>
+        <div class="home-indicator" style="background:black;"></div>
     </div>
+
+    <div class="screen" id="app-settings">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Settings</span><div></div></div>
+        <div class="settings-list">
+            <p style="font-size:0.8rem; color:#888; margin-left:10px;">RELATIONSHIP</p>
+            <div class="settings-card">
+                <div class="settings-row"><span>Status</span><span style="color:#FF1493;">Taken by Ayuuu ❤️</span></div>
+                <div class="settings-row"><span>Cat</span><span>Kitchu (Kuchu) 🐱</span></div>
+                <div class="settings-row"><span>Distance</span><span>Temporary ✈️</span></div>
+            </div>
+        </div>
+        <div class="home-indicator" style="background:black;"></div>
+    </div>
+
+    <div class="screen" id="app-gallery">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Us & Kuchu</span><div></div></div>
+        <div class="app-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="photo" style="background-image:url('https://placehold.co/300x300/ffcccc/ff4757?text=Us');"></div>
+            <div class="photo" style="background-image:url('https://placehold.co/300x300/e3f2fd/007aff?text=Kuchu+🐱');"></div>
+            <div class="photo" style="background-image:url('https://placehold.co/300x300/fff3e0/ff9800?text=Video+Call');"></div>
+            <div class="photo" style="background-image:url('https://placehold.co/300x300/e8f5e9/4caf50?text=Love');"></div>
+        </div>
+        <div class="home-indicator" style="background:black;"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
