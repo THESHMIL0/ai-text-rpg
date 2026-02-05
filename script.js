@@ -16,9 +16,7 @@ function updateClock() {
 
 /* --- LOCK SCREEN & PASSCODE LOGIC --- */
 function unlockPhone() {
-    // This function is triggered by tapping the screen, but we only want to unlock via password
-    // So tapping the screen just opens the password entry now.
-    // The visual unlock happens inside checkPasscode()
+    // Tapping the screen just triggers the password overlay
 }
 
 function showPasscode() {
@@ -38,16 +36,13 @@ function checkPasscode() {
     const input = document.getElementById('pass-input');
     const msg = document.getElementById('pass-msg');
     
-    // Normalize input to lowercase
     if (input.value.toLowerCase().trim() === 'kushu') {
-        // CORRECT PASSWORD
         document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
         document.getElementById('home-screen').classList.add('active');
         setTimeout(() => {
             document.getElementById('lock-screen').style.display = 'none';
         }, 500);
     } else {
-        // WRONG PASSWORD
         msg.innerText = "Wrong Password 😿";
         input.classList.add('shake');
         setTimeout(() => input.classList.remove('shake'), 500);
@@ -126,17 +121,20 @@ function calcDays() {
     document.getElementById('days-her').innerText = Math.ceil((her - now)/(1000*60*60*24)) + " Days";
 }
 
-/* --- CHAT LOGIC --- */
+/* --- CHAT LOGIC (UPDATED FOR VALENTINE) --- */
 const chatBox = document.getElementById('chat-box');
 const opts = document.getElementById('chat-opts');
 const typing = document.getElementById('typing');
 
 function reply(choice) {
     let txt = "";
+    
+    // STEP 0: SHE REPLIES
     if(chatStep === 0) {
         txt = choice === 1 ? "Happy Valentine's! ❤️" : "I miss you! 🥺";
         addBubble(txt, 'chat-me'); 
         opts.classList.add('hidden');
+        
         simulateTyping(() => {
             addBubble("Look who is sleeping! 🐈", 'chat-them');
             let row = document.createElement('div'); row.className = "chat-row";
@@ -150,34 +148,46 @@ function reply(choice) {
             showOpts(["Omg cute!! 🥺", "I miss him!"]);
             chatStep = 1;
         });
-    } else if(chatStep === 1) {
+    } 
+    
+    // STEP 1: SHE REACTS
+    else if(chatStep === 1) {
         txt = choice === 1 ? "Omg cute!! 🥺" : "I miss him!";
         addBubble(txt, 'chat-me');
         opts.classList.add('hidden');
+        
         simulateTyping(() => {
             addBubble("He misses you too...", 'chat-them');
             addBubble("Actually, I have a serious question.", 'chat-them');
             showOpts(["What is it? 👀", "Tell me!"]);
             chatStep = 2;
         });
-    } else if(chatStep === 2) {
+    } 
+    
+    // STEP 2: YOU ASK
+    else if(chatStep === 2) {
         txt = "What is it? 👀";
         addBubble(txt, 'chat-me');
         opts.classList.add('hidden');
+        
         simulateTyping(() => {
             addBubble("Since we are far apart, I wanted to ask this digitally...", 'chat-them');
             let row = document.createElement('div'); row.className = "chat-row";
             let avatar = document.createElement('div'); avatar.className = "chat-avatar"; avatar.style.backgroundImage = "url('us.jpg')";
             let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-them"; 
             bubble.style.background = "#FFFBE6"; bubble.style.border = "2px solid #FFD700";
-            bubble.innerHTML = `<div style="font-size:3rem;">💍</div><h3 style="color:#D4AF37; margin:5px 0;">WILL YOU MARRY ME?</h3>`;
+            // CHANGED TEXT TO VALENTINE
+            bubble.innerHTML = `<div style="font-size:3rem;">💍</div><h3 style="color:#D4AF37; margin:5px 0;">BE MY VALENTINE?</h3>`;
             row.appendChild(avatar); row.appendChild(bubble);
             chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
-            showOpts(["YES! 1000x YES! 😭❤️"]);
+            showOpts(["YES! FOREVER! ❤️🌹"]);
             chatStep = 3;
         });
-    } else if(chatStep === 3) {
-        addBubble("YES! 1000x YES! 😭❤️", 'chat-me');
+    } 
+    
+    // STEP 3: SHE SAYS YES
+    else if(chatStep === 3) {
+        addBubble("YES! FOREVER! ❤️🌹", 'chat-me');
         opts.classList.add('hidden');
         simulateTyping(() => {
             addBubble("I love you Ayuuu! ❤️", 'chat-them');
