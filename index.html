@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Thesuuuu's Phone</title>
+    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#FFF0F5">
@@ -11,7 +12,9 @@
     <link rel="preload" as="image" href="wallpaper.jpg">
     <link rel="preload" as="image" href="lockscreen.jpg">
     <link rel="preload" as="image" href="kuchu.jpg">
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="preload" as="image" href="us.jpg">
+
+    <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body onload="init()">
 
@@ -99,22 +102,13 @@
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Love Notes</span><div></div></div>
         <div class="settings-list">
             <div class="settings-card" onclick="alert('Read this when you miss me:\n\nRemember that no matter how far apart we are, we are looking at the same moon. I am always with you. ❤️')">
-                <div class="settings-row">
-                    <span>💌 Open When You Miss Me</span>
-                    <span>›</span>
-                </div>
+                <div class="settings-row"><span>💌 Open When You Miss Me</span><span>›</span></div>
             </div>
             <div class="settings-card" onclick="alert('Read this when you are sad:\n\nI wish I could be there to hug you right now. Just know that you are my favorite person and I believe in you! 🥺')">
-                <div class="settings-row">
-                    <span>😢 Open When You're Sad</span>
-                    <span>›</span>
-                </div>
+                <div class="settings-row"><span>😢 Open When You're Sad</span><span>›</span></div>
             </div>
             <div class="settings-card" onclick="alert('Our Future:\n\n1. Adopt 10 cats 🐈\n2. Travel the world ✈️\n3. Grow old together 👴👵')">
-                <div class="settings-row">
-                    <span>🏠 Our Future Plans</span>
-                    <span>›</span>
-                </div>
+                <div class="settings-row"><span>🏠 Our Future Plans</span><span>›</span></div>
             </div>
         </div>
     </div>
@@ -160,12 +154,27 @@
     <div class="screen" id="app-gallery">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Memories</span><div></div></div>
         <div class="gallery-scroll">
-            <div class="polaroid" style="transform: rotate(-2deg);"><img src="wallpaper.jpg"><div class="caption">Us Forever ❤️</div></div>
-            <div class="polaroid" style="transform: rotate(2deg);"><img src="kuchu.jpg"><div class="caption">King Kuchu 👑</div></div>
-            <div class="polaroid" style="transform: rotate(-1deg);"><img src="lockscreen.jpg"><div class="caption">Favorite View 🌎</div></div>
+            
+            <div class="polaroid" style="transform: rotate(2deg);">
+                <img src="us.jpg">
+                <div class="caption">My Favorite Night 🌙</div>
+            </div>
+
+            <div class="polaroid" style="transform: rotate(-2deg);">
+                <img src="wallpaper.jpg">
+                <div class="caption">Us Forever ❤️</div>
+            </div>
+            <div class="polaroid" style="transform: rotate(1deg);">
+                <img src="kuchu.jpg">
+                <div class="caption">King Kuchu 👑</div>
+            </div>
+            <div class="polaroid" style="transform: rotate(-1deg);">
+                <img src="lockscreen.jpg">
+                <div class="caption">Best Day 🌎</div>
+            </div>
         </div>
     </div>
 
-    <script src="script.js?v=6"></script>
+    <script src="script.js?v=7"></script>
 </body>
 </html>
