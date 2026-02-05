@@ -9,11 +9,13 @@
     --shadow: 0 4px 12px rgba(255, 105, 180, 0.15);
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; -webkit-font-smoothing: antialiased; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
+img { pointer-events: none; }
 
 body { 
     margin: 0; padding: 0; width: 100vw; height: 100dvh; 
     background: var(--bg-color); overflow: hidden; position: fixed; color: var(--text);
+    overscroll-behavior: none;
 }
 
 /* --- BACKGROUND HEARTS --- */
@@ -36,24 +38,29 @@ body {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: var(--bg-color); display: none; flex-direction: column;
     padding-top: env(safe-area-inset-top);
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s;
 }
-.screen.active { 
-    display: flex; 
-    animation: zoomIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
+.screen.active { display: flex; transform: scale(1); opacity: 1; }
 
-@keyframes zoomIn {
-    from { transform: scale(0.9); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+/* --- LOCK SCREEN STYLES (NEW) --- */
+#lock-screen {
+    background-image: url('lockscreen.jpg'); /* YOUR PHOTO */
+    background-size: cover; background-position: center;
+    color: white;
+    justify-content: space-between;
+    padding-bottom: 40px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5); /* Makes text readable over photo */
+    z-index: 999; /* Always on top */
 }
+.lock-content { text-align: center; margin-top: 60px; }
+.lock-time { font-size: 5.5rem; font-weight: 200; line-height: 1; }
+.lock-date { font-size: 1.3rem; font-weight: 500; margin-top: 10px; }
+.lock-hint { text-align: center; font-size: 0.9rem; opacity: 0.8; animation: pulse 2s infinite; }
+@keyframes pulse { 50% { opacity: 0.5; } }
 
-@keyframes bounce {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-}
 
 /* --- HOME SCREEN --- */
-.status-bar { padding: 10px 20px; display: flex; justify-content: space-between; font-weight: 600; color: var(--accent); opacity: 0.8; }
+.status-bar { padding: 10px 20px; display: flex; justify-content: space-between; font-weight: 600; color: var(--accent); opacity: 0.8; font-size: 0.9rem; }
 
 .widget {
     margin: 10px 20px; padding: 20px; background: white; border-radius: 20px;
@@ -61,33 +68,32 @@ body {
 }
 
 .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; }
-.app-icon-wrapper { 
-    display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; 
-    transition: transform 0.1s;
-}
-.app-icon-wrapper:active { transform: scale(0.9); }
+.app-icon-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; transition: transform 0.1s; }
+.app-icon-wrapper:active { transform: scale(0.95); }
 
 .app-icon {
     width: 62px; height: 62px; border-radius: 16px; background: white;
     display: flex; align-items: center; justify-content: center; font-size: 28px;
     box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.5);
 }
-.app-name { font-size: 11px; font-weight: 600; color: var(--text); }
+.app-name { font-size: 11px; font-weight: 600; color: var(--text); margin-top: 4px; }
 
 .dock-container {
     position: absolute; bottom: 30px; left: 15px; right: 15px; 
-    background: rgba(255,255,255,0.5); backdrop-filter: blur(15px);
+    background: rgba(255,255,255,0.5); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
     border-radius: 24px; padding: 15px; display: flex; justify-content: space-around;
+    margin-bottom: env(safe-area-inset-bottom);
 }
 
 /* --- MESSAGES APP --- */
 .nav-bar {
     height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px;
     font-weight: 700; font-size: 1.1rem; color: var(--accent); background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 10;
 }
 .back-btn { font-size: 1rem; color: var(--primary); cursor: pointer; display: flex; align-items: center; gap: 5px; }
 
-.chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; padding-bottom: 140px; -webkit-overflow-scrolling: touch; }
+.chat-container { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 15px; display: flex; flex-direction: column; gap: 15px; padding-bottom: 150px; }
 
 .chat-bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; line-height: 1.4; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 .chat-them { background: var(--bubble-her); color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; }
@@ -100,27 +106,27 @@ body {
     background: white; border: 2px dashed #FF1493; padding: 15px; border-radius: 15px;
     text-align: center; margin-top: 5px; width: 100%;
 }
+@keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
 .chat-footer {
     position: absolute; bottom: 0; left: 0; width: 100%;
-    background: white; padding: 20px; border-top: 1px solid #eee;
-    display: flex; flex-direction: column; gap: 10px;
+    background: rgba(255,255,255,0.95); border-top: 1px solid #eee;
+    display: flex; flex-direction: column; gap: 10px; padding: 15px;
     box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-    padding-bottom: max(20px, env(safe-area-inset-bottom));
+    padding-bottom: max(20px, env(safe-area-inset-bottom)); z-index: 20;
 }
 
 .chat-btn {
     background: #FFF0F5; border: 2px solid var(--primary); color: var(--accent);
     padding: 15px; border-radius: 15px; font-weight: 700; font-size: 1rem;
-    text-align: center; cursor: pointer; width: 100%;
-    transition: 0.1s;
+    text-align: center; cursor: pointer; width: 100%; transition: 0.1s;
 }
 .chat-btn:active { transform: scale(0.98); background: #FFC1E3; }
 
 .typing { font-size: 0.8rem; color: #888; margin-left: 20px; display: none; margin-bottom: 10px;}
 
 /* --- SETTINGS & EVENTS --- */
-.settings-list { padding: 20px; }
+.settings-list { padding: 20px; -webkit-overflow-scrolling: touch; overflow-y: auto; height: 100%; }
 .settings-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); margin-bottom: 20px; }
 .settings-row { padding: 16px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
 
