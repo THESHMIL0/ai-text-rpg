@@ -1,13 +1,10 @@
-/* --- LOGIC --- */
 let chatStep = 0;
 
 function init() {
     updateClock();
     calcDays();
-    startFloatingHearts();
 }
 
-/* --- CLOCK & UNLOCK --- */
 function updateClock() {
     let d = new Date();
     let m = d.getMinutes().toString().padStart(2,'0');
@@ -18,11 +15,8 @@ function updateClock() {
 }
 
 function unlockPhone() {
-    const lock = document.getElementById('lock-screen');
-    const home = document.getElementById('home-screen');
-    lock.style.transform = 'translateY(-100%)';
-    home.classList.add('active'); // Ensure home is visible underneath
-    setTimeout(() => lock.classList.remove('active'), 500);
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('home-screen').classList.add('active');
 }
 
 function goHome() {
@@ -39,20 +33,6 @@ function openApp(id) {
     document.getElementById('app-' + id).classList.add('active');
 }
 
-/* --- FLOATING HEARTS --- */
-function startFloatingHearts() {
-    setInterval(() => {
-        const h = document.createElement('div');
-        h.innerHTML = Math.random() > 0.5 ? '❤️' : '🌸';
-        h.className = 'floating-heart';
-        h.style.left = Math.random() * 100 + 'vw';
-        h.style.animationDuration = (Math.random() * 5 + 5) + 's';
-        document.getElementById('bg-hearts').appendChild(h);
-        setTimeout(() => h.remove(), 10000);
-    }, 1000);
-}
-
-/* --- EVENTS --- */
 function calcDays() {
     let now = new Date();
     let yr = now.getFullYear();
@@ -62,7 +42,7 @@ function calcDays() {
     document.getElementById('days-her').innerText = Math.ceil((her - now)/(1000*60*60*24)) + " Days";
 }
 
-/* --- CHAT --- */
+/* --- CHAT LOGIC --- */
 const chatBox = document.getElementById('chat-box');
 const opts = document.getElementById('chat-opts');
 const typing = document.getElementById('typing');
@@ -107,7 +87,7 @@ function reply(choice) {
             let ticket = document.createElement('div');
             ticket.className = "ticket";
             ticket.style.border = "3px solid #FFD700"; ticket.style.background = "#FFFBE6";
-            ticket.innerHTML = `<div style="font-size:3rem; animation: bounce 2s infinite;">💍</div><h3 style="color:#D4AF37; margin:5px 0;">WILL YOU MARRY ME?</h3><p style="font-size:0.8rem; color:#555;">(One Day)</p>`;
+            ticket.innerHTML = `<div style="font-size:3rem;">💍</div><h3 style="color:#D4AF37; margin:5px 0;">WILL YOU MARRY ME?</h3><p style="font-size:0.8rem; color:#555;">(One Day)</p>`;
             chatBox.appendChild(ticket); chatBox.scrollTop = chatBox.scrollHeight;
             document.getElementById('gift-lock').style.display = 'none';
             document.getElementById('gift-open').style.display = 'block';
