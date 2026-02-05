@@ -13,7 +13,7 @@
     <link rel="preload" as="image" href="kuchu.jpg">
     <link rel="preload" as="image" href="us.jpg">
     
-    <link rel="stylesheet" href="style.css?v=18">
+    <link rel="stylesheet" href="style.css?v=19">
 </head>
 <body onload="init()">
 
@@ -55,6 +55,9 @@
             <div class="app-icon-wrapper" onclick="openApp('notes')">
                 <div class="app-icon" style="background:#fff9c4;">📝</div><div class="app-name">Notes</div>
             </div>
+            <div class="app-icon-wrapper" onclick="openApp('coupons')">
+                <div class="app-icon" style="background:#FFE0B2;">🎟️</div><div class="app-name">Coupons</div>
+            </div>
             <div class="app-icon-wrapper" onclick="openApp('settings')">
                 <div class="app-icon" style="background:#F3E5F5;">⚙️</div><div class="app-name">Settings</div>
             </div>
@@ -67,16 +70,41 @@
         </div>
     </div>
 
+    <div class="screen" id="app-coupons">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Love Coupons</span><div></div></div>
+        <div class="settings-list">
+            <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">TAP TO REDEEM 🎟️</p>
+            
+            <div class="settings-card" onclick="alert('Coupon Redeemed! 💆‍♂️\n\nValid for: One relaxing back massage from Theshu.\n(No expiration date!)')">
+                <div class="settings-row"><span>💆‍♂️ Free Massage</span><span>Redeem ›</span></div>
+            </div>
+
+            <div class="settings-card" onclick="alert('Coupon Redeemed! 🍝\n\nTheshu is cooking dinner tonight! (Or buying...) 😋')">
+                <div class="settings-row"><span>🍝 Dinner Date</span><span>Redeem ›</span></div>
+            </div>
+
+            <div class="settings-card" onclick="alert('Coupon Redeemed! 🥺\n\nOne argument ended instantly. I am sorry, you are right! ❤️')">
+                <div class="settings-row"><span>🏳️ Win An Argument</span><span>Redeem ›</span></div>
+            </div>
+
+            <div class="settings-card" onclick="alert('Coupon Redeemed! 🎬\n\nMovie night of YOUR choice. Even if it\'s a cheesy rom-com! 🍿')">
+                <div class="settings-row"><span>🎬 Movie Night Choice</span><span>Redeem ›</span></div>
+            </div>
+            
+            <div class="settings-card" onclick="alert('Coupon Redeemed! 🫂\n\nA really long, tight hug. Redeemable as soon as we meet! ❤️')">
+                <div class="settings-row"><span>🫂 Unlimited Hugs</span><span>Redeem ›</span></div>
+            </div>
+        </div>
+    </div>
+
     <div class="screen" id="app-global">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Our World</span><div></div></div>
-        
         <div class="map-view">
             <div class="map-line"></div>
             <div class="map-plane">✈️</div>
             <div class="map-point me"><div class="dot"></div><div class="label">Theshu</div></div>
             <div class="map-point her"><div class="dot"></div><div class="label">Ayuuu</div></div>
         </div>
-
         <div class="settings-list">
             <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">FLIGHT STATUS</p>
             <div class="settings-card">
@@ -94,7 +122,6 @@
     <div class="screen" id="app-call">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Phone</span><div></div></div>
         <div class="settings-list">
-            
             <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">FAVORITES ❤️</p>
             <div class="settings-card" onclick="alert('Calling Theshu... Ring Ring! 📞')">
                 <div class="settings-row" style="justify-content: flex-start; gap: 15px;">
@@ -106,7 +133,6 @@
                     <div style="font-size:1.5rem;">📞</div>
                 </div>
             </div>
-
             <p style="font-size:0.8rem; color:#888; margin-left:10px;">RECENT CALLS 🕓</p>
             <div class="settings-card">
                 <div class="settings-row">
@@ -116,14 +142,6 @@
                 <div class="settings-row">
                     <div><div style="font-weight:bold; color:#E91E63;">Theshu ❤️ (Video)</div><div style="font-size:0.8rem; color:#888;">FaceTime • Sleeping 😴</div></div>
                     <span style="font-size:0.8rem;">02:00 AM</span>
-                </div>
-                <div class="settings-row">
-                    <div><div style="font-weight:bold; color:#E91E63;">Theshu ❤️</div><div style="font-size:0.8rem; color:#F44336;">Missed Call (I was showering)</div></div>
-                    <span style="font-size:0.8rem;">08:15 PM</span>
-                </div>
-                <div class="settings-row">
-                    <div><div style="font-weight:bold; color:#E91E63;">Theshu ❤️</div><div style="font-size:0.8rem; color:#888;">Outgoing • Just to say hi 👋</div></div>
-                    <span style="font-size:0.8rem;">05:30 PM</span>
                 </div>
             </div>
         </div>
@@ -155,7 +173,6 @@
     <div class="screen" id="app-music">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Now Playing</span><div></div></div>
         <audio id="audio-player"></audio>
-        
         <div class="music-player" style="flex:0; padding-bottom:10px;">
             <div class="album-art" id="album-art" style="background-image: url('wallpaper.jpg'); width:200px; height:200px;"></div>
             <div class="song-info">
@@ -169,39 +186,15 @@
                 <div style="font-size:2rem;" onclick="nextSong()">⏭️</div>
             </div>
         </div>
-
         <div class="settings-list" style="padding-top:0;">
             <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-bottom:10px;">UP NEXT 🎵</p>
             <div class="settings-card">
                 <div class="settings-row" onclick="loadSong(1)">
                     <div style="display:flex; gap:10px; align-items:center;">
                         <div style="font-size:1.2rem;">💿</div>
-                        <div>
-                            <div style="font-weight:bold;">Like My Father</div>
-                            <div style="font-size:0.8rem; color:#888;">Our Song ❤️</div>
-                        </div>
+                        <div><div style="font-weight:bold;">Like My Father</div><div style="font-size:0.8rem; color:#888;">Our Song ❤️</div></div>
                     </div>
                     <span>3:45</span>
-                </div>
-                <div class="settings-row">
-                    <div style="display:flex; gap:10px; align-items:center;">
-                        <div style="font-size:1.2rem;">🎸</div>
-                        <div>
-                            <div style="font-weight:bold;">Perfect</div>
-                            <div style="font-size:0.8rem; color:#888;">Ed Sheeran</div>
-                        </div>
-                    </div>
-                    <span>4:23</span>
-                </div>
-                <div class="settings-row">
-                    <div style="display:flex; gap:10px; align-items:center;">
-                        <div style="font-size:1.2rem;">🎤</div>
-                        <div>
-                            <div style="font-weight:bold;">Lover</div>
-                            <div style="font-size:0.8rem; color:#888;">Taylor Swift</div>
-                        </div>
-                    </div>
-                    <span>3:41</span>
                 </div>
             </div>
         </div>
@@ -217,12 +210,8 @@
             <div class="settings-card" onclick="alert('Read this when you are sad:\n\nI wish I could be there to hug you right now. Just know that you are my favorite person and I believe in you! 🥺')">
                 <div class="settings-row"><span>😢 You Are Sad</span><span>›</span></div>
             </div>
-            <div class="settings-card" onclick="alert('Read this when you can\'t sleep:\n\nClose your eyes and imagine me holding your hand. I am dreaming of you right now. 😴')">
-                <div class="settings-row"><span>🌙 You Can't Sleep</span><span>›</span></div>
-            </div>
-            
             <p style="font-size:0.8rem; color:#888; margin-left:10px;">PLANS</p>
-            <div class="settings-card" onclick="alert('Our Bucket List:\n\n1. Adopt 10 cats 🐈\n2. Travel the world ✈️\n3. Grow old together 👴👵\n4. Cook dinner together 🍝')">
+            <div class="settings-card" onclick="alert('Our Bucket List:\n\n1. Adopt 10 cats 🐈\n2. Travel the world ✈️\n3. Grow old together 👴👵')">
                 <div class="settings-row"><span>📝 Bucket List</span><span>›</span></div>
             </div>
         </div>
@@ -240,7 +229,6 @@
             <div class="settings-card">
                 <div class="settings-row"><span>💏 First Kiss</span><span>Best Day Ever</span></div>
                 <div class="settings-row"><span>💍 Proposal Day</span><span style="color:#E91E63; font-weight:bold;">TODAY!</span></div>
-                <div class="settings-row"><span>✈️ Next Hug</span><span>Coming Soon...</span></div>
             </div>
         </div>
     </div>
@@ -277,14 +265,11 @@
                 <div class="settings-row"><span>🔔 Miss You Alerts</span><span style="color:green;">ON</span></div>
                 <div class="settings-row"><span>🔋 Battery Health</span><span>100% Love</span></div>
                 <div class="settings-row"><span>😽 Kisses</span><span>Unlimited</span></div>
-                <div class="settings-row"><span>🐱 Cat</span><span>Kitchu (The King)</span></div>
             </div>
             <p style="font-size:0.8rem; color:#888; margin-left:10px;">ABOUT PHONE</p>
             <div class="settings-card">
                 <div class="settings-row"><span>📱 Model</span><span>LovePhone Pro Max</span></div>
-                <div class="settings-row"><span>🔐 Security</span><span>FaceID (Your Smile)</span></div>
                 <div class="settings-row"><span>👨‍💻 Developer</span><span>Theshu</span></div>
-                <div class="settings-row"><span>🔢 Version</span><span>14.02.2026</span></div>
             </div>
         </div>
     </div>
@@ -299,6 +284,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=18"></script>
+    <script src="script.js?v=19"></script>
 </body>
 </html>
