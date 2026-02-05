@@ -33,6 +33,14 @@ function openApp(id) {
     document.getElementById('app-' + id).classList.add('active');
 }
 
+function togglePlay(btn) {
+    if(btn.innerText === "▶️") {
+        btn.innerText = "⏸️";
+    } else {
+        btn.innerText = "▶️";
+    }
+}
+
 function calcDays() {
     let now = new Date();
     let yr = now.getFullYear();
