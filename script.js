@@ -33,11 +33,17 @@ function openApp(id) {
     document.getElementById('app-' + id).classList.add('active');
 }
 
-function togglePlay(btn) {
-    if(btn.innerText === "▶️") {
-        btn.innerText = "⏸️";
+/* --- MUSIC LOGIC --- */
+function togglePlay() {
+    const audio = document.getElementById('audio-player');
+    const btn = document.getElementById('play-btn');
+    
+    if (audio.paused) {
+        audio.play();
+        btn.innerText = "⏸️"; // Change to Pause icon
     } else {
-        btn.innerText = "▶️";
+        audio.pause();
+        btn.innerText = "▶️"; // Change to Play icon
     }
 }
 
