@@ -87,7 +87,7 @@ function calcDays() {
     document.getElementById('days-her').innerText = Math.ceil((her - now)/(1000*60*60*24)) + " Days";
 }
 
-/* --- CHAT LOGIC (CORRECTED FLOW) --- */
+/* --- CHAT LOGIC (CORRECTED: YOU ARE 'THEM') --- */
 const chatBox = document.getElementById('chat-box');
 const opts = document.getElementById('chat-opts');
 const typing = document.getElementById('typing');
@@ -95,83 +95,82 @@ const typing = document.getElementById('typing');
 function reply(choice) {
     let txt = "";
     
-    // STEP 0: YOU SEND KUCHU PIC
+    // STEP 0: SHE REPLIES TO YOUR INTRO
     if(chatStep === 0) {
-        txt = choice === 1 ? "Look who is sleeping! 🐈" : "Kuchu says hi! ❤️";
-        addBubble(txt, 'chat-me'); 
-        
-        // YOU send the image!
-        let row = document.createElement('div'); row.className = "chat-row";
-        let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-me";
-        let img = document.createElement('img'); img.src = "kuchu.jpg"; img.className = "chat-img";
-        bubble.appendChild(img);
-        row.appendChild(bubble);
-        chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
-
+        txt = choice === 1 ? "Happy Valentine's! ❤️" : "I miss you! 🥺";
+        addBubble(txt, 'chat-me'); // SHE speaks
         opts.classList.add('hidden');
         
-        // SHE Replies
+        // YOU (Theshu) Reply
         simulateTyping(() => {
-            addBubble("Omg he is so cute!! 🥺", 'chat-them');
-            addBubble("I miss him so much... and you too.", 'chat-them');
-            showOpts(["We miss you too! ❤️", "Come back soon! ✈️"]);
+            addBubble("Look who is sleeping! 🐈", 'chat-them');
+            
+            // SEND PHOTO OF KUCHU
+            let row = document.createElement('div'); row.className = "chat-row";
+            let avatar = document.createElement('div'); avatar.className = "chat-avatar"; avatar.style.backgroundImage = "url('us.jpg')";
+            let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-them";
+            let img = document.createElement('img'); img.src = "kuchu.jpg"; img.className = "chat-img";
+            bubble.appendChild(img);
+            bubble.innerHTML += `<div class="time-tick">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
+            row.appendChild(avatar); row.appendChild(bubble);
+            chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
+
+            showOpts(["Omg cute!! 🥺", "I miss him!"]);
             chatStep = 1;
         });
     } 
     
-    // STEP 1: YOU HINT AT SURPRISE
+    // STEP 1: SHE REACTS TO CAT
     else if(chatStep === 1) {
-        txt = choice === 1 ? "We miss you too! ❤️" : "Come back soon! ✈️";
+        txt = choice === 1 ? "Omg cute!! 🥺" : "I miss him!";
         addBubble(txt, 'chat-me');
         opts.classList.add('hidden');
         
         simulateTyping(() => {
-            addBubble("I wish I was there right now...", 'chat-them');
-            showOpts(["I have a surprise...", "Actually..."]);
+            addBubble("He misses you too...", 'chat-them');
+            addBubble("Actually, I have a serious question.", 'chat-them');
+            showOpts(["What is it? 👀", "Tell me!"]);
             chatStep = 2;
         });
     } 
     
-    // STEP 2: YOU PROPOSE (SEND RING)
+    // STEP 2: SHE ASKS "WHAT IS IT?"
     else if(chatStep === 2) {
-        txt = "Actually... I have a question.";
+        txt = "What is it? 👀";
         addBubble(txt, 'chat-me');
         opts.classList.add('hidden');
         
         simulateTyping(() => {
-            addBubble("What is it? 👀", 'chat-them');
+            addBubble("Since we are far apart, I wanted to ask this digitally...", 'chat-them');
             
-            // Show Proposal Button
-            showOpts(["Will you marry me? 💍"]);
+            // YOU (Theshu) SEND THE RING
+            let row = document.createElement('div'); row.className = "chat-row";
+            let avatar = document.createElement('div'); avatar.className = "chat-avatar"; avatar.style.backgroundImage = "url('us.jpg')";
+            let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-them"; // Sent by YOU
+            bubble.style.background = "#FFFBE6"; bubble.style.border = "2px solid #FFD700";
+            bubble.innerHTML = `<div style="font-size:3rem;">💍</div><h3 style="color:#D4AF37; margin:5px 0;">WILL YOU MARRY ME?</h3>`;
+            row.appendChild(avatar); row.appendChild(bubble);
+            chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
+            
+            showOpts(["YES! 1000x YES! 😭❤️"]);
             chatStep = 3;
         });
     } 
     
-    // STEP 3: YOU SEND THE RING & SHE SAYS YES
+    // STEP 3: SHE SAYS YES
     else if(chatStep === 3) {
-        // You send the text
-        addBubble("Will you marry me? 💍", 'chat-me');
-        
-        // YOU send the Ring Box
-        let row = document.createElement('div'); row.className = "chat-row";
-        let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-me"; // Sent by YOU
-        bubble.style.background = "#FFFBE6"; bubble.style.border = "2px solid #FFD700";
-        bubble.innerHTML = `<div style="font-size:3rem;">💍</div><h3 style="color:#D4AF37; margin:5px 0;">MARRY ME?</h3>`;
-        row.appendChild(bubble);
-        chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
-
+        addBubble("YES! 1000x YES! 😭❤️", 'chat-me');
         opts.classList.add('hidden');
         
-        // SHE REPLIES
         simulateTyping(() => {
-            addBubble("OMG THESUUUU!!! 😭😭", 'chat-them');
-            addBubble("YES! A THOUSAND TIMES YES! ❤️💍", 'chat-them');
+            addBubble("I love you Ayuuu! ❤️", 'chat-them');
+            addBubble("Check your 'Gift' app now!", 'chat-them');
             
-            // Unlock Gift App
+            // Unlock Gift
             document.getElementById('gift-lock').style.display = 'none';
             document.getElementById('gift-open').style.display = 'block';
             
-            opts.innerHTML = `<div class="chat-btn" style="width:100%" onclick="goHome()">🏠 Check "Gift" App</div>`;
+            opts.innerHTML = `<div class="chat-btn" style="width:100%" onclick="goHome()">🏠 Go Check "Gift" App</div>`;
             opts.classList.remove('hidden');
         });
     }
@@ -186,11 +185,11 @@ function addBubble(text, className) {
     let row = document.createElement('div');
     row.className = "chat-row";
     
-    // If it's HER message, add Avatar
+    // If it's YOUR message (Theshu), add Avatar
     if(className === 'chat-them') {
         let avatar = document.createElement('div');
         avatar.className = "chat-avatar";
-        avatar.style.backgroundImage = "url('wallpaper.jpg')"; 
+        avatar.style.backgroundImage = "url('us.jpg')"; 
         row.appendChild(avatar);
     }
     
