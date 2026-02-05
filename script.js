@@ -61,6 +61,7 @@ function reply(choice) {
             img.src = "https://placehold.co/400x300/e3f2fd/000000?text=Kuchu+Sleeping+💤";
             img.className = "chat-img";
             chatBox.appendChild(img);
+            chatBox.scrollTop = chatBox.scrollHeight;
             
             showOpts(["Omg my Kuchu!! 🥺", "He misses me too!"]);
             chatStep = 1;
