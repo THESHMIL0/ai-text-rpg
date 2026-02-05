@@ -11,7 +11,18 @@
 
     <div id="bg-hearts"></div>
 
-    <div class="screen active" id="home-screen">
+    <div class="screen active" id="lock-screen" onclick="unlockPhone()">
+        <div class="lock-content">
+            <div class="lock-time" id="lock-clock">12:00</div>
+            <div class="lock-date">Saturday, February 14</div>
+        </div>
+        <div class="lock-hint">
+            <div>Tap to unlock</div>
+        </div>
+        <div class="home-indicator"></div>
+    </div>
+
+    <div class="screen" id="home-screen">
         <div class="status-bar">
             <div id="clock">12:00</div>
             <div>📶 LDR • 100% 🔋</div>
@@ -94,7 +105,7 @@
                 <p style="color: #888; margin-top: 10px;">Finish your chat with Theshu to unlock!</p>
             </div>
             
-            <div id="gift-open" class="ticket" style="border: 3px solid #FFD700; background: #FFFBE6;">
+            <div id="gift-open" class="ticket" style="border: 3px solid #FFD700; background: #FFFBE6; display: none;">
                 <div style="font-size: 4rem; animation: bounce 2s infinite;">💍</div>
                 <h2 style="color:#D4AF37; margin: 10px 0;">WILL YOU MARRY ME?</h2>
                 <hr style="border: 1px dashed #D4AF37; margin: 15px 0;">
