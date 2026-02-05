@@ -55,12 +55,15 @@ function togglePlay() {
     if (!audioPlayer.src || audioPlayer.src === window.location.href) {
         loadSong(currentSongIndex);
     }
+    
     if (audioPlayer.paused) {
         audioPlayer.play();
         playBtn.innerText = "⏸️";
+        albumArt.classList.add('rotating'); // Start Spin
     } else {
         audioPlayer.pause();
         playBtn.innerText = "▶️";
+        albumArt.classList.remove('rotating'); // Stop Spin
     }
 }
 
@@ -69,6 +72,7 @@ function nextSong() {
     loadSong(currentSongIndex);
     audioPlayer.play();
     playBtn.innerText = "⏸️";
+    albumArt.classList.add('rotating');
 }
 
 function prevSong() {
@@ -76,6 +80,7 @@ function prevSong() {
     loadSong(currentSongIndex);
     audioPlayer.play();
     playBtn.innerText = "⏸️";
+    albumArt.classList.add('rotating');
 }
 
 function calcDays() {
