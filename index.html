@@ -3,359 +3,390 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#ffe4e1">
-    <title>Simple Valentine</title>
+    <meta name="theme-color" content="#FFF0F5">
+    <title>My Valentine Phone</title>
     <style>
-        /* --- 1. CORE STYLES --- */
+        /* --- 1. MODERN THEME --- */
         :root {
-            --bg-color: #ffe4e1; /* Misty Rose */
-            --app-bg: #fff0f5;   /* Lavender Blush */
-            --primary: #ff69b4;  /* Hot Pink */
-            --text: #5e3a43;
-            --white: #ffffff;
+            --bg-color: #FFF0F5; /* Lavender Blush */
+            --primary: #FF69B4;  /* Hot Pink */
+            --accent: #FF1493;   /* Deep Pink */
+            --text: #4A4A4A;     /* Soft Black */
+            --white: #FFFFFF;
+            --gray-light: #F5F5F7;
+            --shadow: 0 4px 12px rgba(255, 105, 180, 0.15);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: sans-serif; user-select: none; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; user-select: none; }
         
         body { 
             margin: 0; padding: 0; width: 100vw; height: 100dvh; 
             background: var(--bg-color); overflow: hidden; position: fixed; color: var(--text);
         }
 
-        /* --- 2. SCREENS --- */
-        /* All screens stack on top of each other. We use Z-Index to show them. */
+        /* --- 2. LAYOUT HELPERS --- */
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color);
-            display: none; /* Hidden by default */
-            flex-direction: column;
+            display: none; flex-direction: column;
+            padding-top: env(safe-area-inset-top);
         }
-        
-        /* Active screen is visible */
         .screen.active { display: flex; }
 
-        /* LOCK SCREEN */
-        #lock-screen {
-            z-index: 100; align-items: center; padding-top: 100px;
-            background: radial-gradient(circle, #ffe4e1 0%, #ffc0cb 100%);
-        }
-        .clock { font-size: 5rem; font-weight: bold; color: var(--primary); margin: 0; }
-        .date { font-size: 1.2rem; margin-top: 5px; color: #888; }
-        .notif {
-            margin-top: 40px; background: var(--white); padding: 15px; width: 85%;
-            border-radius: 12px; display: flex; align-items: center; gap: 15px;
-            border: 1px solid #ffb7b2;
-        }
-        .tap-hint { margin-top: auto; margin-bottom: 50px; color: var(--primary); font-weight: bold; }
-
-        /* HOME SCREEN */
-        #home-screen { z-index: 50; padding: 50px 20px; }
+        /* --- 3. UI COMPONENTS --- */
         
-        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px 10px; margin-top: 20px; }
-        .app { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; }
-        .icon {
-            width: 60px; height: 60px; border-radius: 12px; background: var(--white);
-            display: flex; align-items: center; justify-content: center; font-size: 26px;
-            border: 1px solid #ffc0cb;
-        }
-        .name { font-size: 11px; font-weight: bold; }
-
-        /* DOCK */
-        .dock {
-            position: absolute; bottom: 20px; left: 15px; right: 15px; height: 85px;
-            background: rgba(255,255,255,0.6); border-radius: 25px;
-            display: flex; justify-content: space-around; align-items: center;
+        /* Status Bar */
+        .status-bar {
+            padding: 10px 20px; display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: 600; color: var(--text); opacity: 0.6;
         }
 
-        /* --- 3. APP WINDOWS --- */
-        .app-window {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--app-bg); z-index: 200; 
-            display: none; flex-direction: column;
-        }
-        .app-window.open { display: flex; }
-
-        /* Header */
+        /* Nav Bar */
         .nav-bar {
-            height: 80px; background: var(--white); border-bottom: 1px solid #ffc0cb;
-            display: flex; align-items: flex-end; justify-content: space-between;
-            padding: 15px; padding-bottom: 15px; font-weight: bold; font-size: 1.1rem;
+            height: 60px; background: transparent; 
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 15px; font-weight: 700; font-size: 1.2rem;
+            color: var(--accent);
         }
-        .back-btn { color: var(--primary); cursor: pointer; font-size: 1rem; }
-
-        /* Content */
-        .content { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 60px; }
-
-        /* MESSAGES */
-        .chat-list { display: flex; flex-direction: column; gap: 10px; }
-        .bubble { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 1rem; }
-        .them { background: #e6e6e6; align-self: flex-start; }
-        .me { background: var(--primary); color: white; align-self: flex-end; }
-        
-        .chat-opts {
-            height: 60px; background: var(--white); border-top: 1px solid #eee;
-            display: flex; gap: 10px; align-items: center; padding: 0 15px;
-        }
-        .btn-opt {
-            background: #ffe4e1; border: 1px solid var(--primary); color: var(--primary);
-            padding: 8px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem;
+        .back-btn { 
+            font-size: 1rem; color: var(--primary); cursor: pointer; 
+            display: flex; align-items: center; gap: 5px;
+            background: rgba(255,255,255,0.8); padding: 8px 12px; border-radius: 20px;
         }
 
-        /* GIFT */
-        .gift-box { text-align: center; margin-top: 60px; }
-        .gift-emoji { font-size: 80px; }
-        .gift-card { background: var(--white); padding: 20px; border-radius: 15px; border: 2px dashed var(--primary); display: none; margin-top: 20px; }
+        /* App Grid */
+        .app-grid { 
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; 
+        }
+        .app-icon-wrapper { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+        .app-icon {
+            width: 62px; height: 62px; border-radius: 16px; 
+            display: flex; align-items: center; justify-content: center; font-size: 28px;
+            background: var(--white); box-shadow: var(--shadow);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .app-name { font-size: 11px; font-weight: 600; color: var(--text); }
 
-        /* SETTINGS */
+        /* Widgets */
+        .widget-area { padding: 0 20px; margin-bottom: 10px; }
+        .widget {
+            background: var(--white); border-radius: 20px; padding: 20px;
+            box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between;
+            background: linear-gradient(135deg, #fff 0%, #fff0f5 100%);
+        }
+
+        /* Dock */
+        .dock-container {
+            position: absolute; bottom: 30px; left: 15px; right: 15px; 
+            background: rgba(255,255,255,0.45); backdrop-filter: blur(10px);
+            border-radius: 24px; padding: 15px;
+            display: flex; justify-content: space-around;
+        }
+
+        /* --- 4. APP SPECIFIC STYLES --- */
+
+        /* Messages */
+        .chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; padding-bottom: 80px; }
+        .chat-bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; line-height: 1.4; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .chat-them { background: var(--white); color: var(--text); border-bottom-left-radius: 4px; align-self: flex-start; }
+        .chat-me { background: var(--primary); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+        .chat-footer {
+            background: var(--white); padding: 15px; border-top: 1px solid #eee;
+            display: flex; gap: 10px; overflow-x: auto;
+        }
+        .chat-btn {
+            background: #FFF0F5; border: 1px solid var(--primary); color: var(--accent);
+            padding: 10px 20px; border-radius: 25px; font-weight: 600; white-space: nowrap; font-size: 0.9rem;
+        }
+
+        /* Settings */
+        .settings-list { padding: 20px; }
+        .settings-card { background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); margin-bottom: 20px; }
         .settings-row {
-            background: var(--white); padding: 15px; margin-bottom: 1px;
-            display: flex; justify-content: space-between;
+            padding: 16px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem;
         }
-        .settings-group { margin-bottom: 20px; border-radius: 10px; overflow: hidden; border: 1px solid #ffc0cb; }
+        .settings-row:last-child { border-bottom: none; }
+        .row-label { display: flex; align-items: center; gap: 10px; }
+        .row-value { color: #888; font-weight: 500; }
+        .icon-small { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; }
 
-        /* UTILS */
-        .home-bar {
-            position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
-            width: 130px; height: 5px; background: #000; opacity: 0.2; border-radius: 10px; z-index: 999;
+        /* Gallery */
+        .gallery-grid { padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .gallery-item { background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); padding: 5px; }
+        .photo-placeholder {
+            height: 120px; background-color: #eee; border-radius: 8px;
+            background-size: cover; background-position: center;
         }
-        .home-hitbox { position: absolute; bottom: 0; width: 100%; height: 40px; z-index: 1000; }
+        .photo-caption { padding: 8px 5px; font-size: 0.8rem; text-align: center; color: #666; font-weight: 500; }
 
-        /* Simple helper classes */
+        /* Gift */
+        .ticket-wrapper { padding: 30px 20px; display: flex; justify-content: center; }
+        .ticket {
+            background: white; width: 100%; max-width: 320px;
+            border-radius: 12px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .ticket-header { background: var(--primary); color: white; padding: 20px; text-align: center; }
+        .ticket-body { padding: 30px 20px; text-align: center; border-bottom: 2px dashed #eee; }
+        .ticket-footer { padding: 15px; text-align: center; background: #fafafa; font-size: 0.8rem; color: #888; }
+        
+        /* Utils */
         .hidden { display: none !important; }
-        .visible { display: block !important; }
 
     </style>
 </head>
-<body onload="init()">
+<body onload="updateClock()">
 
-    <div class="screen active" id="lock-screen" onclick="unlock()">
-        <div style="font-size:2rem;">🔒</div>
-        <div class="clock" id="clock">12:00</div>
-        <div class="date">Saturday, Feb 14</div>
-        
-        <div class="notif">
-            <div style="font-size:30px;">💬</div>
-            <div>
-                <div style="font-weight:bold;">Theshu</div>
-                <div>Happy Valentine's Day! ❤️</div>
+    <div class="screen active" id="home-screen">
+        <div class="status-bar">
+            <div id="clock">12:00</div>
+            <div>📶 5G Love • 100% 🔋</div>
+        </div>
+
+        <div class="widget-area" style="margin-top: 20px;">
+            <div class="widget">
+                <div>
+                    <div style="font-size: 0.8rem; color: #888; font-weight: 700; text-transform: uppercase;">Relationship Status</div>
+                    <div style="font-size: 1.4rem; font-weight: 800; color: var(--accent); margin-top: 5px;">Going Strong ❤️</div>
+                </div>
+                <div style="font-size: 2.5rem;">🔥</div>
             </div>
         </div>
-        <div class="tap-hint">Tap to Unlock</div>
-    </div>
 
-    <div class="screen" id="home-screen">
         <div class="app-grid">
-            <div class="app" onclick="openApp('msg')">
-                <div class="icon" style="background:#b8f2e6;">💬</div>
-                <div class="name">Messages</div>
+            <div class="app-icon-wrapper" onclick="openApp('msg')">
+                <div class="app-icon" style="background:#E0F7FA;"><span style="font-size:30px">💌</span></div>
+                <div class="app-name">Messages</div>
             </div>
-            <div class="app" onclick="openGift()">
-                <div class="icon" style="background:#ffb7b2;">🎁</div>
-                <div class="name">Gift</div>
+            <div class="app-icon-wrapper" onclick="openGift()">
+                <div class="app-icon" style="background:#FFEBEE;"><span style="font-size:30px">🎁</span></div>
+                <div class="app-name">Gift</div>
             </div>
-            <div class="app" onclick="openApp('settings')">
-                <div class="icon" style="background:#e0e0e0;">⚙️</div>
-                <div class="name">Settings</div>
+            <div class="app-icon-wrapper" onclick="openApp('gallery')">
+                <div class="app-icon" style="background:#FFF3E0;"><span style="font-size:30px">📸</span></div>
+                <div class="app-name">Gallery</div>
             </div>
-            <div class="app" onclick="openApp('photos')">
-                <div class="icon" style="background:#fff;">📸</div>
-                <div class="name">Photos</div>
+            <div class="app-icon-wrapper" onclick="openApp('settings')">
+                <div class="app-icon" style="background:#F3E5F5;"><span style="font-size:30px">⚙️</span></div>
+                <div class="app-name">Settings</div>
             </div>
         </div>
 
-        <div class="dock">
-            <div class="app"><div class="icon" style="background:#90ee90;">📞</div></div>
-            <div class="app"><div class="icon" style="background:#87cefa;">🧭</div></div>
-            <div class="app" onclick="openApp('msg')"><div class="icon" style="background:#ffa07a;">❤️</div></div>
+        <div class="dock-container">
+            <div class="app-icon-wrapper"><div class="app-icon" style="background:#E8F5E9; width:55px; height:55px;">📞</div></div>
+            <div class="app-icon-wrapper"><div class="app-icon" style="background:#E3F2FD; width:55px; height:55px;">🧭</div></div>
+            <div class="app-icon-wrapper"><div class="app-icon" style="background:#FFFDE7; width:55px; height:55px;">⭐</div></div>
+            <div class="app-icon-wrapper" onclick="openApp('msg')"><div class="app-icon" style="background:#ffebee; width:55px; height:55px;">❤️</div></div>
         </div>
-        <div class="home-bar"></div>
     </div>
 
-    <div class="app-window" id="app-msg">
+    <div class="screen" id="app-msg">
         <div class="nav-bar">
             <div class="back-btn" onclick="goHome()">‹ Home</div>
-            <div>Theshu ❤️</div>
-            <div style="width:40px"></div>
+            <span>Theshu ❤️</span>
+            <div style="width:50px"></div>
         </div>
-        <div class="content" id="chat-content">
-            <div class="chat-list" id="chat-box">
-                <div class="bubble them">Happy Valentine's Day! 🌹</div>
-            </div>
+        <div class="chat-container" id="chat-box">
+            <div style="text-align: center; color: #aaa; font-size: 0.8rem; margin-bottom: 10px;">Today 12:00 PM</div>
+            <div class="chat-bubble chat-them">Happy Valentine's Day! 🌹</div>
         </div>
-        <div class="chat-opts" id="chat-buttons">
-            <div class="btn-opt" onclick="reply(1)">Happy Valentine's! ❤️</div>
-            <div class="btn-opt" onclick="reply(1)">Miss you! 🥺</div>
+        <div class="chat-footer" id="chat-opts">
+            <div class="chat-btn" onclick="reply(1)">Happy Valentine's! ❤️</div>
+            <div class="chat-btn" onclick="reply(2)">Miss you! 🥺</div>
         </div>
-        <div class="home-bar"></div>
-        <div class="home-hitbox" onclick="goHome()"></div>
     </div>
 
-    <div class="app-window" id="app-gift">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><div>Gift</div><div style="width:40px"></div></div>
-        <div class="content">
-            <div id="gift-locked" style="text-align:center; margin-top:50px;">
-                <div style="font-size:3rem;">🔒</div>
-                <h3>Locked</h3>
-                <p>Chat with Theshu to unlock.</p>
-            </div>
-            <div id="gift-unlocked" class="hidden">
-                <div class="gift-box" onclick="showCard()">
-                    <div class="gift-emoji">🎁</div>
-                    <p style="color:#ff69b4; font-weight:bold;">Tap to Open</p>
+    <div class="screen" id="app-gift">
+        <div class="nav-bar">
+            <div class="back-btn" onclick="goHome()">‹ Home</div>
+            <span>My Gift</span>
+            <div style="width:50px"></div>
+        </div>
+        
+        <div id="gift-locked" style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+            <div style="font-size: 5rem; margin-bottom: 20px;">🔒</div>
+            <h2 style="margin:0; color:var(--text);">Gift Locked</h2>
+            <p style="color:#888; padding: 0 40px;">You need to reply to Theshu in messages to get the access code!</p>
+        </div>
+
+        <div id="gift-unlocked" class="ticket-wrapper hidden">
+            <div class="ticket">
+                <div class="ticket-header">
+                    <h2 style="margin:0;">LOVE COUPON</h2>
+                    <p style="margin:5px 0 0 0; opacity:0.9;">Admit One</p>
                 </div>
-                <div class="gift-card" id="final-gift">
-                    <h2 style="color:#ff69b4; text-align:center; margin:0;">Coupon</h2>
-                    <hr style="border:1px dashed #ccc; margin:15px 0;">
-                    <div style="text-align:center; line-height:1.5;">
-                        <strong>Valid For:</strong><br>
-                        One Dream Date<br>
-                        + Unlimited Hugs
-                    </div>
+                <div class="ticket-body">
+                    <div style="font-size: 3rem; margin-bottom: 10px;">🎬 + 🍕</div>
+                    <h3 style="color:var(--accent); margin:0;">One Dream Date</h3>
+                    <p style="color:#666; line-height:1.5;">Valid for movies, dinner, and unlimited cuddles.</p>
+                </div>
+                <div class="ticket-footer">
+                    CODE: THESHU-LOVES-YOU-XXXX
                 </div>
             </div>
         </div>
-        <div class="home-bar"></div>
-        <div class="home-hitbox" onclick="goHome()"></div>
     </div>
 
-    <div class="app-window" id="app-settings">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><div>Settings</div><div style="width:40px"></div></div>
-        <div class="content" style="background:#f2f2f7;">
-            <p style="margin-left:15px; color:#888; font-size:0.8rem;">RELATIONSHIP</p>
-            <div class="settings-group">
-                <div class="settings-row"><span>Status</span> <span style="color:#888">Taken ❤️</span></div>
-                <div class="settings-row"><span>Partner</span> <span style="color:#888">Theshu</span></div>
+    <div class="screen" id="app-settings">
+        <div class="nav-bar">
+            <div class="back-btn" onclick="goHome()">‹ Home</div>
+            <span>Settings</span>
+            <div style="width:50px"></div>
+        </div>
+        
+        <div class="settings-list">
+            <div style="padding-left:15px; margin-bottom:8px; font-size:0.8rem; font-weight:bold; color:#888;">RELATIONSHIP</div>
+            <div class="settings-card">
+                <div class="settings-row">
+                    <div class="row-label"><div class="icon-small" style="background:#FF6B6B">❤️</div> Status</div>
+                    <div class="row-value">Taken</div>
+                </div>
+                <div class="settings-row">
+                    <div class="row-label"><div class="icon-small" style="background:#4ECDC4">👤</div> Partner</div>
+                    <div class="row-value">Theshu</div>
+                </div>
+                <div class="settings-row">
+                    <div class="row-label"><div class="icon-small" style="background:#FFD93D">📅</div> Since</div>
+                    <div class="row-value">Forever</div>
+                </div>
             </div>
-            <p style="margin-left:15px; color:#888; font-size:0.8rem;">DEVICE</p>
-            <div class="settings-group">
-                <div class="settings-row"><span>Battery</span> <span style="color:#888">100% Love</span></div>
-                <div class="settings-row"><span>Storage</span> <span style="color:#888">Full of Memories</span></div>
+
+            <div style="padding-left:15px; margin-bottom:8px; font-size:0.8rem; font-weight:bold; color:#888;">CONNECTION</div>
+            <div class="settings-card">
+                <div class="settings-row">
+                    <div class="row-label"><div class="icon-small" style="background:#6C5CE7">📡</div> Network</div>
+                    <div class="row-value">Connected to Heart</div>
+                </div>
+                <div class="settings-row">
+                    <div class="row-label"><div class="icon-small" style="background:#A8E6CF">📶</div> Wi-Fi</div>
+                    <div class="row-value">5G Love</div>
+                </div>
             </div>
         </div>
-        <div class="home-bar"></div>
-        <div class="home-hitbox" onclick="goHome()"></div>
     </div>
 
-    <div class="app-window" id="app-photos">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><div>Gallery</div><div style="width:40px"></div></div>
-        <div class="content">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div style="height:150px; background:#ddd; border-radius:10px;"></div>
-                <div style="height:150px; background:#ddd; border-radius:10px;"></div>
-                <div style="height:150px; background:#ddd; border-radius:10px;"></div>
-                <div style="height:150px; background:#ddd; border-radius:10px;"></div>
+    <div class="screen" id="app-gallery">
+        <div class="nav-bar">
+            <div class="back-btn" onclick="goHome()">‹ Home</div>
+            <span>Memories</span>
+            <div style="width:50px"></div>
+        </div>
+        
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <div class="photo-placeholder" style="background-image: url('https://placehold.co/200x200/ffe4e1/ff69b4?text=Our+First+Date');"></div>
+                <div class="photo-caption">First Date ❤️</div>
+            </div>
+            <div class="gallery-item">
+                <div class="photo-placeholder" style="background-image: url('https://placehold.co/200x200/e0f7fa/00bcd4?text=Funny+Selfie');"></div>
+                <div class="photo-caption">Silly Times 🤪</div>
+            </div>
+            <div class="gallery-item">
+                <div class="photo-placeholder" style="background-image: url('https://placehold.co/200x200/fff3e0/ff9800?text=Fav+Trip');"></div>
+                <div class="photo-caption">Vacation 🌴</div>
+            </div>
+            <div class="gallery-item">
+                <div class="photo-placeholder" style="background-image: url('https://placehold.co/200x200/f3e5f5/9c27b0?text=Future+Home');"></div>
+                <div class="photo-caption">Future Goals 🏡</div>
             </div>
         </div>
-        <div class="home-bar"></div>
-        <div class="home-hitbox" onclick="goHome()"></div>
     </div>
 
     <script>
         // --- LOGIC ---
         let chatStep = 0;
-        let giftReady = false;
+        let giftUnlocked = false;
 
-        function init() {
-            setInterval(() => {
-                let d = new Date();
-                let m = d.getMinutes().toString().padStart(2,'0');
-                document.getElementById('clock').innerText = d.getHours() + ":" + m;
-            }, 1000);
+        function updateClock() {
+            const now = new Date();
+            const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('clock').innerText = time;
+            setTimeout(updateClock, 1000);
         }
 
-        // Screens
-        function unlock() {
-            document.getElementById('lock-screen').classList.remove('active');
+        function goHome() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('home-screen').classList.add('active');
         }
+
         function openApp(id) {
-            document.getElementById('app-'+id).classList.add('open');
-        }
-        function goHome() {
-            // Close all apps
-            document.querySelectorAll('.app-window').forEach(w => w.classList.remove('open'));
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('app-' + id).classList.add('active');
         }
 
-        // Gift
         function openGift() {
             openApp('gift');
-            if(giftReady) {
+            if(giftUnlocked) {
                 document.getElementById('gift-locked').classList.add('hidden');
                 document.getElementById('gift-unlocked').classList.remove('hidden');
             }
         }
-        function showCard() {
-            document.querySelector('.gift-emoji').classList.add('hidden');
-            document.getElementById('final-gift').style.display = 'block';
-        }
-
-        // Chat
-        const chatBox = document.getElementById('chat-box');
-        const btns = document.getElementById('chat-buttons');
 
         function reply(choice) {
+            const chatBox = document.getElementById('chat-box');
+            const opts = document.getElementById('chat-opts');
+            
+            // Step 1
             if(chatStep === 0) {
-                addMsg(choice === 1 ? "Happy Valentine's! ❤️" : "Miss you! 🥺", 'me');
-                btns.innerHTML = ""; // Clear buttons
-                
+                addMsg(choice === 1 ? "Happy Valentine's! ❤️" : "Miss you! 🥺", 'chat-me');
+                opts.innerHTML = "";
                 setTimeout(() => {
-                    addMsg("I miss you too! I have a question...", 'them');
+                    addMsg("I miss you too! I made this cute phone just for you.", 'chat-them');
                     setTimeout(() => {
-                        setBtns(["What is it? 👀", "Tell me!"]);
+                        addMsg("But I have a very important question...", 'chat-them');
+                        setOpts(["What is it? 👀", "Tell me!"]);
                         chatStep = 1;
-                    }, 500);
-                }, 500);
+                    }, 1000);
+                }, 800);
             }
+            // Step 2
             else if(chatStep === 1) {
-                addMsg(choice === 1 ? "What is it? 👀" : "Tell me!", 'me');
-                btns.innerHTML = "";
-                
+                addMsg(choice === 1 ? "What is it? 👀" : "Tell me!", 'chat-me');
+                opts.innerHTML = "";
                 setTimeout(() => {
-                    addMsg("Will you be my Valentine? 💍", 'them');
-                    setBtns(["YES! 😍", "Of course! ❤️"]);
+                    addMsg("Will you be my Valentine? 💍", 'chat-them');
+                    setOpts(["YES! 😍", "Of course! ❤️"]);
                     chatStep = 2;
-                }, 500);
+                }, 1000);
             }
+            // Step 3
             else if(chatStep === 2) {
-                addMsg("YES! 😍", 'me');
-                btns.innerHTML = "";
-                
+                addMsg("YES! 😍", 'chat-me');
+                opts.innerHTML = "";
                 setTimeout(() => {
-                    addMsg("Yay! I love you! ❤️", 'them');
-                    addMsg("Check the Gift App now!", 'them');
-                    giftReady = true;
-                    
-                    // Add Home Button
-                    let b = document.createElement('div');
-                    b.className = 'btn-opt';
-                    b.innerText = "🏠 Go Home";
-                    b.style.width = "100%";
-                    b.style.textAlign = "center";
-                    b.onclick = goHome;
-                    btns.appendChild(b);
-                }, 500);
+                    addMsg("Yay! Love you! ❤️", 'chat-them');
+                    addMsg("I unlocked a gift for you. Go check the Gift App!", 'chat-them');
+                    giftUnlocked = true;
+                    setOpts([{text:"🏠 Go Home", action:goHome}]);
+                }, 800);
             }
         }
 
-        function addMsg(txt, side) {
-            let d = document.createElement('div');
-            d.className = 'bubble ' + side;
-            d.innerText = txt;
-            chatBox.appendChild(d);
-            document.getElementById('chat-content').scrollTop = document.getElementById('chat-content').scrollHeight;
+        function addMsg(txt, className) {
+            let div = document.createElement('div');
+            div.className = `chat-bubble ${className}`;
+            div.innerText = txt;
+            document.getElementById('chat-box').appendChild(div);
+            // Scroll to bottom
+            document.getElementById('chat-container').scrollTop = document.getElementById('chat-container').scrollHeight;
         }
 
-        function setBtns(arr) {
-            btns.innerHTML = "";
-            arr.forEach((t, i) => {
-                let b = document.createElement('div');
-                b.className = 'btn-opt';
-                b.innerText = t;
-                b.onclick = () => reply(i+1);
-                btns.appendChild(b);
+        function setOpts(arr) {
+            const opts = document.getElementById('chat-opts');
+            opts.innerHTML = "";
+            arr.forEach(item => {
+                let div = document.createElement('div');
+                div.className = 'chat-btn';
+                if(typeof item === 'object') {
+                    div.innerText = item.text;
+                    div.onclick = item.action;
+                } else {
+                    div.innerText = item;
+                    div.onclick = () => reply(1); // Default logic
+                }
+                opts.appendChild(div);
             });
         }
-
     </script>
 </body>
 </html>
