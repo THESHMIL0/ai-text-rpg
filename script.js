@@ -33,18 +33,51 @@ function openApp(id) {
     document.getElementById('app-' + id).classList.add('active');
 }
 
-/* --- MUSIC LOGIC --- */
+/* --- MUSIC PLAYLIST LOGIC --- */
+const songs = [
+    { title: "Hawayein", src: "song.mp3", art: "wallpaper.jpg" },
+    { title: "Sangatan", src: "song2.mp3", art: "us.jpg" },
+    { title: "Like My Father", src: "song3.mp3", art: "kuchu.jpg" }
+];
+let currentSongIndex = 0;
+const audioPlayer = document.getElementById('audio-player');
+const playBtn = document.getElementById('play-btn');
+const songTitle = document.getElementById('song-title');
+const albumArt = document.getElementById('album-art');
+
+function loadSong(index) {
+    const song = songs[index];
+    audioPlayer.src = song.src;
+    songTitle.innerText = song.title;
+    albumArt.style.backgroundImage = `url('${song.art}')`;
+}
+
 function togglePlay() {
-    const audio = document.getElementById('audio-player');
-    const btn = document.getElementById('play-btn');
-    
-    if (audio.paused) {
-        audio.play();
-        btn.innerText = "⏸️"; // Change to Pause icon
-    } else {
-        audio.pause();
-        btn.innerText = "▶️"; // Change to Play icon
+    if (!audioPlayer.src || audioPlayer.src === window.location.href) {
+        loadSong(currentSongIndex);
     }
+    
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+        playBtn.innerText = "⏸️";
+    } else {
+        audioPlayer.pause();
+        playBtn.innerText = "▶️";
+    }
+}
+
+function nextSong() {
+    currentSongIndex = (currentSongIndex + 1) % songs.length;
+    loadSong(currentSongIndex);
+    audioPlayer.play();
+    playBtn.innerText = "⏸️";
+}
+
+function prevSong() {
+    currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+    loadSong(currentSongIndex);
+    audioPlayer.play();
+    playBtn.innerText = "⏸️";
 }
 
 function calcDays() {
