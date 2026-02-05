@@ -51,14 +51,16 @@ function reply(choice) {
     if(chatStep === 0) {
         txt = choice === 1 ? "Yooo Ayuuuu! ❤️" : "Miss you so much! 🥺";
         addBubble(txt, 'chat-me');
-        
+        opts.classList.add('hidden'); // Hide buttons
+
         // Trigger her reply
         simulateTyping(() => {
             addBubble("Kitchu says hi btw! 🐈", 'chat-them');
             addBubble("Look at him sleeping!", 'chat-them');
-            // Add Cat Photo
+            
+            // SHOW REAL KUCHU PHOTO
             let img = document.createElement('img');
-            img.src = "https://placehold.co/400x300/e3f2fd/000000?text=Kuchu+Sleeping+💤";
+            img.src = "kuchu.jpg"; // MUST match your file name exactly
             img.className = "chat-img";
             chatBox.appendChild(img);
             chatBox.scrollTop = chatBox.scrollHeight;
@@ -72,6 +74,7 @@ function reply(choice) {
     else if(chatStep === 1) {
         txt = choice === 1 ? "Omg my Kuchu!! 🥺" : "He misses me too!";
         addBubble(txt, 'chat-me');
+        opts.classList.add('hidden');
         
         simulateTyping(() => {
             addBubble("He definitely does. We both do.", 'chat-them');
@@ -85,6 +88,7 @@ function reply(choice) {
     else if(chatStep === 2) {
         txt = "What is it? 👀";
         addBubble(txt, 'chat-me');
+        opts.classList.add('hidden');
         
         simulateTyping(() => {
             addBubble("Since we are far apart, I wanted to ask this digitally...", 'chat-them');
@@ -97,6 +101,7 @@ function reply(choice) {
     // STEP 3: The Gift
     else if(chatStep === 3) {
         addBubble("YES! 1000x YES! 😍", 'chat-me');
+        opts.classList.add('hidden');
         
         simulateTyping(() => {
             addBubble("Yay! Happy Valentine's Day Ayuuu! ❤️", 'chat-them');
@@ -115,10 +120,9 @@ function reply(choice) {
             
             // Show Home Button
             opts.innerHTML = `<div class="chat-btn" style="width:100%" onclick="goHome()">🏠 Go Home</div>`;
+            opts.classList.remove('hidden');
         });
     }
-    
-    opts.classList.add('hidden'); // Hide buttons while typing
 }
 
 function simulateTyping(callback) {
