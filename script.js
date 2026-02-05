@@ -36,7 +36,7 @@ function openApp(id) {
 /* --- MUSIC PLAYLIST LOGIC --- */
 const songs = [
     { title: "Hawayein", src: "song.mp3", art: "wallpaper.jpg" },
-    { title: "Sangatan", src: "song2.mp3", art: "us.jpg" },
+    // Removed Song 2
     { title: "Like My Father", src: "song3.mp3", art: "kuchu.jpg" }
 ];
 let currentSongIndex = 0;
@@ -104,7 +104,16 @@ function reply(choice) {
             addBubble("Look at him sleeping!", 'chat-them');
             let img = document.createElement('img');
             img.src = "kuchu.jpg"; img.className = "chat-img";
-            chatBox.appendChild(img); chatBox.scrollTop = chatBox.scrollHeight;
+            
+            // Manually append image bubble
+            let row = document.createElement('div'); row.className = "chat-row";
+            let avatar = document.createElement('div'); avatar.className = "chat-avatar"; avatar.style.backgroundImage = "url('wallpaper.jpg')";
+            let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-them";
+            bubble.appendChild(img);
+            bubble.innerHTML += `<div class="time-tick">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
+            row.appendChild(avatar); row.appendChild(bubble);
+            chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
+
             showOpts(["Omg my Kuchu!! 🥺", "He misses me too!"]);
             chatStep = 1;
         });
@@ -148,10 +157,28 @@ function simulateTyping(callback) {
     typing.style.display = 'block'; chatBox.scrollTop = chatBox.scrollHeight;
     setTimeout(() => { typing.style.display = 'none'; callback(); }, 1500);
 }
+
 function addBubble(text, className) {
-    let div = document.createElement('div'); div.className = `chat-bubble ${className}`; div.innerHTML = text;
-    chatBox.appendChild(div); chatBox.scrollTop = chatBox.scrollHeight;
+    let row = document.createElement('div');
+    row.className = "chat-row";
+    
+    // If it's HER message, add Avatar
+    if(className === 'chat-them') {
+        let avatar = document.createElement('div');
+        avatar.className = "chat-avatar";
+        avatar.style.backgroundImage = "url('wallpaper.jpg')"; // HER PROFILE PIC
+        row.appendChild(avatar);
+    }
+    
+    let bubble = document.createElement('div');
+    bubble.className = `chat-bubble ${className}`;
+    bubble.innerHTML = text + `<div class="time-tick">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
+    
+    row.appendChild(bubble);
+    chatBox.appendChild(row);
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
+
 function showOpts(arr) {
     opts.innerHTML = ""; opts.classList.remove('hidden');
     arr.forEach((t, i) => {
