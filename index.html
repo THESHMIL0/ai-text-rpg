@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ayuuu's Gift</title>
-    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#FFF0F5">
@@ -14,7 +13,7 @@
     <link rel="preload" as="image" href="kuchu.jpg">
     <link rel="preload" as="image" href="us.jpg">
     
-    <link rel="stylesheet" href="style.css?v=14">
+    <link rel="stylesheet" href="style.css?v=15">
 </head>
 <body onload="init()">
 
@@ -62,9 +61,55 @@
         </div>
 
         <div class="dock-container">
-            <div class="app-icon-wrapper"><div class="app-icon" style="background:#E8F5E9;">📞</div></div>
+            <div class="app-icon-wrapper" onclick="openApp('call')"><div class="app-icon" style="background:#E8F5E9;">📞</div></div>
             <div class="app-icon-wrapper"><div class="app-icon" style="background:#E1BEE7;">🌐</div></div>
             <div class="app-icon-wrapper" onclick="openApp('msg')"><div class="app-icon" style="background:#ffebee;">❤️</div></div>
+        </div>
+    </div>
+
+    <div class="screen" id="app-call">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Phone</span><div></div></div>
+        <div class="settings-list">
+            
+            <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">FAVORITES ❤️</p>
+            
+            <div class="settings-card" onclick="alert('Calling Theshu... just kidding, look beside you (or call me for real!) 😜')">
+                <div class="settings-row" style="justify-content: flex-start; gap: 15px;">
+                    <div class="chat-avatar" style="background-image: url('us.jpg'); width:40px; height:40px;"></div>
+                    <div style="flex:1;">
+                        <div style="font-weight:bold;">Theshu (Hubby) 💍</div>
+                        <div style="font-size:0.8rem; color:#888;">Mobile • ❤️❤️❤️</div>
+                    </div>
+                    <div style="font-size:1.5rem;">📞</div>
+                </div>
+            </div>
+
+            <p style="font-size:0.8rem; color:#888; margin-left:10px;">RECENT CALLS 🕓</p>
+            
+            <div class="settings-card">
+                <div class="settings-row">
+                    <div>
+                        <div style="font-weight:bold; color:#E91E63;">Theshu ❤️</div>
+                        <div style="font-size:0.8rem; color:#888;">Yesterday • 4 hrs 32 mins</div>
+                    </div>
+                    <span style="font-size:0.8rem;">11:30 PM</span>
+                </div>
+                <div class="settings-row">
+                    <div>
+                        <div style="font-weight:bold; color:#E91E63;">Theshu ❤️</div>
+                        <div style="font-size:0.8rem; color:#888;">Today • 2 hrs 15 mins</div>
+                    </div>
+                    <span style="font-size:0.8rem;">09:00 AM</span>
+                </div>
+                <div class="settings-row">
+                    <div>
+                        <div style="font-weight:bold; color:#E91E63;">Theshu ❤️ (Video)</div>
+                        <div style="font-size:0.8rem; color:#888;">Facetime • Sleeping Call 😴</div>
+                    </div>
+                    <span style="font-size:0.8rem;">02:00 AM</span>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -77,21 +122,14 @@
             </div>
             <div style="width:20px;"></div>
         </div>
-        
         <div class="chat-container" id="chat-box">
             <div style="text-align: center; color: #aaa; font-size: 0.7rem; margin-bottom: 10px; font-weight:bold;">Today 12:00 PM</div>
-            
             <div class="chat-row">
                 <div class="chat-avatar" style="background-image: url('us.jpg');"></div>
-                <div class="chat-bubble chat-them">
-                    Happy Valentine's Day Ayuuu! ❤️
-                    <div class="time-tick">12:00</div>
-                </div>
+                <div class="chat-bubble chat-them">Happy Valentine's Day Ayuuu! ❤️<div class="time-tick">12:00</div></div>
             </div>
         </div>
-        
         <div class="typing" id="typing">Theshu is typing...</div>
-        
         <div class="chat-footer" id="chat-opts">
             <div class="chat-btn" onclick="reply(1)">Happy Valentine's! ❤️</div>
             <div class="chat-btn" onclick="reply(2)">I miss you! 🥺</div>
@@ -147,7 +185,7 @@
             <div id="gift-lock">
                 <div style="font-size: 5rem;">🔒</div>
                 <h2>Gift Locked</h2>
-                <p style="color: #888; margin-top: 10px;">Finish your chat to unlock!</p>
+                <p style="color: #888; margin-top: 10px;">Finish your chat with Theshu to unlock!</p>
             </div>
             <div id="gift-open" class="ticket" style="border: 3px solid #FFD700; background: #FFFBE6; display: none;">
                 <div style="font-size: 4rem;">💍</div>
@@ -166,20 +204,12 @@
             <div class="settings-card">
                 <div class="settings-row"><span>👤 Name</span><span>Theshu & Ayuuu</span></div>
                 <div class="settings-row"><span>❤️ Status</span><span>Taken Forever 💍</span></div>
-                <div class="settings-row"><span>📅 Anniversary</span><span>Every Day</span></div>
             </div>
             <p style="font-size:0.8rem; color:#888; margin-left:10px;">PREFERENCES</p>
             <div class="settings-card">
                 <div class="settings-row"><span>🔔 Miss You Alerts</span><span style="color:green;">ON</span></div>
                 <div class="settings-row"><span>😽 Kisses</span><span>Unlimited</span></div>
                 <div class="settings-row"><span>🐱 Cat</span><span>Kitchu (The King)</span></div>
-            </div>
-            <p style="font-size:0.8rem; color:#888; margin-left:10px;">ABOUT PHONE</p>
-            <div class="settings-card">
-                <div class="settings-row"><span>📱 Model</span><span>LovePhone Pro</span></div>
-                <div class="settings-row"><span>👨‍💻 Developer</span><span>Theshu</span></div>
-                <div class="settings-row"><span>💝 Made For</span><span>Ayuuu</span></div>
-                <div class="settings-row"><span>🔢 Version</span><span>14.02.2026</span></div>
             </div>
         </div>
     </div>
@@ -194,6 +224,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=14"></script>
+    <script src="script.js?v=15"></script>
 </body>
 </html>
