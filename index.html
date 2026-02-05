@@ -14,7 +14,7 @@
     <link rel="preload" as="image" href="kuchu.jpg">
     <link rel="preload" as="image" href="us.jpg">
     
-    <link rel="stylesheet" href="style.css?v=8">
+    <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body onload="init()">
 
@@ -84,21 +84,19 @@
     <div class="screen" id="app-music">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Now Playing</span><div></div></div>
         
-        <audio id="audio-player" loop>
-            <source src="song.mp3" type="audio/mpeg">
-        </audio>
+        <audio id="audio-player"></audio>
 
         <div class="music-player">
-            <div class="album-art" style="background-image: url('wallpaper.jpg');"></div>
+            <div class="album-art" id="album-art" style="background-image: url('wallpaper.jpg');"></div>
             <div class="song-info">
-                <h2 style="margin:0; color:#333;">Perfect</h2>
+                <h2 style="margin:0; color:#333;" id="song-title">Hawayein</h2>
                 <p style="margin:5px 0; color:#888;">Theshu Radio 📻</p>
             </div>
             <div class="progress-bar"><div class="progress-fill"></div></div>
             <div class="music-controls">
-                <div style="font-size:2rem; opacity: 0.5;">⏮️</div>
+                <div style="font-size:2rem;" onclick="prevSong()">⏮️</div>
                 <div id="play-btn" style="font-size:3.5rem;" onclick="togglePlay()">▶️</div>
-                <div style="font-size:2rem; opacity: 0.5;">⏭️</div>
+                <div style="font-size:2rem;" onclick="nextSong()">⏭️</div>
             </div>
         </div>
     </div>
@@ -166,6 +164,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=8"></script>
+    <script src="script.js?v=9"></script>
 </body>
 </html>
