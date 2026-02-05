@@ -13,8 +13,8 @@
     <link rel="preload" as="image" href="lockscreen.jpg">
     <link rel="preload" as="image" href="kuchu.jpg">
     <link rel="preload" as="image" href="us.jpg">
-
-    <link rel="stylesheet" href="style.css?v=7">
+    
+    <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body onload="init()">
 
@@ -83,6 +83,11 @@
 
     <div class="screen" id="app-music">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Now Playing</span><div></div></div>
+        
+        <audio id="audio-player" loop>
+            <source src="song.mp3" type="audio/mpeg">
+        </audio>
+
         <div class="music-player">
             <div class="album-art" style="background-image: url('wallpaper.jpg');"></div>
             <div class="song-info">
@@ -91,9 +96,9 @@
             </div>
             <div class="progress-bar"><div class="progress-fill"></div></div>
             <div class="music-controls">
-                <div style="font-size:2rem;">⏮️</div>
-                <div style="font-size:3.5rem;" onclick="togglePlay(this)">▶️</div>
-                <div style="font-size:2rem;">⏭️</div>
+                <div style="font-size:2rem; opacity: 0.5;">⏮️</div>
+                <div id="play-btn" style="font-size:3.5rem;" onclick="togglePlay()">▶️</div>
+                <div style="font-size:2rem; opacity: 0.5;">⏭️</div>
             </div>
         </div>
     </div>
@@ -154,27 +159,13 @@
     <div class="screen" id="app-gallery">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Memories</span><div></div></div>
         <div class="gallery-scroll">
-            
-            <div class="polaroid" style="transform: rotate(2deg);">
-                <img src="us.jpg">
-                <div class="caption">My Favorite Night 🌙</div>
-            </div>
-
-            <div class="polaroid" style="transform: rotate(-2deg);">
-                <img src="wallpaper.jpg">
-                <div class="caption">Us Forever ❤️</div>
-            </div>
-            <div class="polaroid" style="transform: rotate(1deg);">
-                <img src="kuchu.jpg">
-                <div class="caption">King Kuchu 👑</div>
-            </div>
-            <div class="polaroid" style="transform: rotate(-1deg);">
-                <img src="lockscreen.jpg">
-                <div class="caption">Best Day 🌎</div>
-            </div>
+            <div class="polaroid" style="transform: rotate(2deg);"><img src="us.jpg"><div class="caption">My Favorite Night 🌙</div></div>
+            <div class="polaroid" style="transform: rotate(-2deg);"><img src="wallpaper.jpg"><div class="caption">Us Forever ❤️</div></div>
+            <div class="polaroid" style="transform: rotate(1deg);"><img src="kuchu.jpg"><div class="caption">King Kuchu 👑</div></div>
+            <div class="polaroid" style="transform: rotate(-1deg);"><img src="lockscreen.jpg"><div class="caption">Best Day 🌎</div></div>
         </div>
     </div>
 
-    <script src="script.js?v=7"></script>
+    <script src="script.js?v=8"></script>
 </body>
 </html>
