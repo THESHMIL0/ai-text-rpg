@@ -16,10 +16,7 @@
             <div class="lock-time" id="lock-clock">12:00</div>
             <div class="lock-date">Saturday, February 14</div>
         </div>
-        <div class="lock-hint">
-            <div>Tap to unlock</div>
-        </div>
-        <div class="home-indicator"></div>
+        <div class="lock-hint">Tap to unlock</div>
     </div>
 
     <div class="screen" id="home-screen">
@@ -30,7 +27,7 @@
 
         <div class="widget">
             <div>
-                <div style="font-size:0.8rem; color:#888; font-weight:bold;">NEXT MEETING</div>
+                <div style="font-size:0.8rem; opacity:0.8; font-weight:bold;">NEXT MEETING</div>
                 <div style="font-size:1.2rem; font-weight:800; color:#FF1493;">Soon ✈️</div>
             </div>
             <div style="font-size:2rem;">🌏</div>
@@ -56,23 +53,15 @@
             <div class="app-icon-wrapper"><div class="app-icon" style="background:#fff9c4;">📒</div></div>
             <div class="app-icon-wrapper" onclick="openApp('msg')"><div class="app-icon" style="background:#ffebee;">❤️</div></div>
         </div>
-        <div class="home-indicator"></div>
     </div>
 
     <div class="screen" id="app-msg">
-        <div class="nav-bar">
-            <div class="back-btn" onclick="goHome()">‹ Home</div>
-            <span>Ayuuu ❤️</span>
-            <div style="width:50px"></div>
-        </div>
-        
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Ayuuu ❤️</span><div></div></div>
         <div class="chat-container" id="chat-box">
             <div style="text-align: center; color: #aaa; font-size: 0.8rem;">Today 12:00 PM</div>
             <div class="chat-bubble chat-them">Yooo Thesuuuu! ❤️</div>
         </div>
-        
         <div class="typing" id="typing">Ayuuu is typing...</div>
-
         <div class="chat-footer" id="chat-opts">
             <div class="chat-btn" onclick="reply(1)">Yooo Ayuuuu! ❤️</div>
             <div class="chat-btn" onclick="reply(2)">Miss you! 🥺</div>
@@ -83,17 +72,10 @@
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Events</span><div></div></div>
         <div class="settings-list">
             <div class="settings-card">
-                <div class="settings-row">
-                    <span>🎂 Theshu's Bday</span>
-                    <span style="font-weight:bold; color:#FF69B4;" id="days-me">0 Days</span>
-                </div>
-                <div class="settings-row">
-                    <span>🥳 Ayuuu's Bday</span>
-                    <span style="font-weight:bold; color:#FF69B4;" id="days-her">0 Days</span>
-                </div>
+                <div class="settings-row"><span>🎂 Theshu's Bday</span><span style="font-weight:bold; color:#FF69B4;" id="days-me">0 Days</span></div>
+                <div class="settings-row"><span>🥳 Ayuuu's Bday</span><span style="font-weight:bold; color:#FF69B4;" id="days-her">0 Days</span></div>
             </div>
         </div>
-        <div class="home-indicator" style="background:black;"></div>
     </div>
 
     <div class="screen" id="app-gift">
@@ -102,37 +84,26 @@
             <div id="gift-lock">
                 <div style="font-size: 5rem;">🔒</div>
                 <h2>Gift Locked</h2>
-                <p style="color: #888; margin-top: 10px;">Finish your chat with Theshu to unlock!</p>
+                <p style="color: #888; margin-top: 10px;">Finish your chat to unlock!</p>
             </div>
-            
             <div id="gift-open" class="ticket" style="border: 3px solid #FFD700; background: #FFFBE6; display: none;">
                 <div style="font-size: 4rem; animation: bounce 2s infinite;">💍</div>
                 <h2 style="color:#D4AF37; margin: 10px 0;">WILL YOU MARRY ME?</h2>
                 <hr style="border: 1px dashed #D4AF37; margin: 15px 0;">
-                <p style="font-size: 1.1rem; color: #555; line-height: 1.5;">
-                    You are my person.<br>
-                    My love.<br>
-                    My future wife.
-                </p>
-                <div style="margin-top: 20px; background: white; padding: 10px; border-radius: 10px; color: #888; font-size: 0.8rem;">
-                    PROMISE RING
-                </div>
+                <p style="font-size: 1.1rem; color: #555;">You are my future wife.</p>
+                <div style="margin-top: 20px; background: white; padding: 10px; border-radius: 10px; color: #888; font-size: 0.8rem;">PROMISE RING</div>
             </div>
         </div>
-        <div class="home-indicator" style="background:black;"></div>
     </div>
 
     <div class="screen" id="app-settings">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Settings</span><div></div></div>
         <div class="settings-list">
-            <p style="font-size:0.8rem; color:#888; margin-left:10px;">RELATIONSHIP</p>
             <div class="settings-card">
                 <div class="settings-row"><span>Status</span><span style="color:#FF1493;">Taken by Ayuuu ❤️</span></div>
                 <div class="settings-row"><span>Cat</span><span>Kitchu (Kuchu) 🐱</span></div>
-                <div class="settings-row"><span>Distance</span><span>Temporary ✈️</span></div>
             </div>
         </div>
-        <div class="home-indicator" style="background:black;"></div>
     </div>
 
     <div class="screen" id="app-gallery">
@@ -143,7 +114,6 @@
             <div class="photo" style="background-image:url('https://placehold.co/300x300/fff3e0/ff9800?text=Video+Call');"></div>
             <div class="photo" style="background-image:url('https://placehold.co/300x300/e8f5e9/4caf50?text=Love');"></div>
         </div>
-        <div class="home-indicator" style="background:black;"></div>
     </div>
 
     <script src="script.js"></script>
