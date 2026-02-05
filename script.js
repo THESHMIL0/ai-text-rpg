@@ -4,6 +4,7 @@ let chatStep = 0;
 function init() {
     updateClock();
     calcDays();
+    startFloatingHearts();
 }
 
 function updateClock() {
@@ -21,6 +22,21 @@ function goHome() {
 function openApp(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('app-' + id).classList.add('active');
+}
+
+/* --- FLOATING HEARTS LOGIC --- */
+function startFloatingHearts() {
+    setInterval(() => {
+        const heart = document.createElement('div');
+        heart.innerHTML = Math.random() > 0.5 ? '❤️' : '🌸';
+        heart.className = 'floating-heart';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+        document.getElementById('bg-hearts').appendChild(heart);
+        
+        // Remove heart after it floats up to save memory
+        setTimeout(() => heart.remove(), 10000);
+    }, 1000); // Create a new heart every 1 second
 }
 
 /* --- EVENTS LOGIC --- */
@@ -60,7 +76,7 @@ function reply(choice) {
             
             // SHOW REAL KUCHU PHOTO
             let img = document.createElement('img');
-            img.src = "kuchu.jpg"; // MUST match your file name exactly
+            img.src = "kuchu.jpg"; 
             img.className = "chat-img";
             chatBox.appendChild(img);
             chatBox.scrollTop = chatBox.scrollHeight;
