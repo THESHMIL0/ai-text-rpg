@@ -2,20 +2,9 @@
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; touch-action: manipulation; }
 img { pointer-events: none; }
 body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; overflow: hidden; position: fixed; color: var(--text); overscroll-behavior: none; }
-
-/* APP OPEN ANIMATION */
-.screen { 
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-    background: var(--bg-color); display: none; flex-direction: column; 
-    padding-top: env(safe-area-inset-top); 
-}
-.screen.active { 
-    display: flex; 
-    animation: popIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); 
-}
+.screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: none; flex-direction: column; padding-top: env(safe-area-inset-top); }
+.screen.active { display: flex; animation: popIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
 @keyframes popIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-
-/* FADE IN UP ANIMATION (For Lists) */
 .fade-in-up { animation: fadeInUp 0.5s ease-out backwards; }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -26,6 +15,20 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .lock-hint { text-align: center; opacity: 0.8; animation: pulse 2s infinite; font-size:0.9rem; }
 @keyframes pulse { 50% { opacity: 0.5; } }
 
+/* PASSCODE SCREEN */
+#lock-passcode {
+    width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    position: absolute; top: 0; left: 0; z-index: 1000;
+}
+.pass-container { background: rgba(255,255,255,0.9); padding: 30px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; color: #333; text-shadow: none; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+#pass-input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #ddd; font-size: 1.2rem; text-align: center; margin-bottom: 15px; outline: none; }
+#pass-input:focus { border-color: var(--primary); }
+.pass-btn { background: var(--primary); color: white; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 1rem; cursor: pointer; }
+.pass-btn:active { transform: scale(0.98); }
+.shake { animation: shake 0.4s; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+
 /* PULSING NOTIFICATION */
 .lock-notification {
     margin-top: 30px;
@@ -35,7 +38,6 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
     animation: gentlePulse 3s infinite;
 }
 @keyframes gentlePulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
-
 .notif-icon { background: white; width: 35px; height: 35px; border-radius: 8px; display:flex; align-items:center; justify-content:center; font-size: 1.2rem; }
 .notif-text { flex: 1; color: white; text-shadow: none; }
 .notif-title { font-weight: bold; font-size: 0.9rem; }
@@ -53,13 +55,10 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .dock-container { position: absolute; bottom: 30px; left: 15px; right: 15px; background: rgba(255,255,255,0.4); border-radius: 20px; padding: 15px; display: flex; justify-content: space-around; margin-bottom: env(safe-area-inset-bottom); }
 .nav-bar { height: 50px; display: flex; align-items: center; padding: 0 15px; background: white; border-bottom: 1px solid #eee; justify-content: space-between; font-weight: bold; color: var(--accent); }
 .back-btn { color: var(--primary); padding: 10px; font-size: 1.5rem; }
-
-/* MUSIC PLAYER SPIN */
 .music-player { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; gap: 20px; }
 .album-art { width: 250px; height: 250px; border-radius: 20px; background-size: cover; background-position: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: background-image 0.5s; }
 .album-art.rotating { animation: spin 10s linear infinite; border-radius: 50%; }
 @keyframes spin { 100% { transform: rotate(360deg); } }
-
 .song-info { text-align: center; }
 .progress-bar { width: 100%; height: 5px; background: #eee; border-radius: 10px; overflow: hidden; }
 .progress-fill { width: 30%; height: 100%; background: var(--primary); }
