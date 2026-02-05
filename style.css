@@ -14,7 +14,7 @@ img { pointer-events: none; }
 
 body { 
     margin: 0; padding: 0; width: 100vw; height: 100dvh; 
-    background: var(--bg-color); overflow: hidden; position: fixed; color: var(--text);
+    background: #000; overflow: hidden; position: fixed; color: var(--text);
     overscroll-behavior: none;
 }
 
@@ -38,19 +38,19 @@ body {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: var(--bg-color); display: none; flex-direction: column;
     padding-top: env(safe-area-inset-top);
-    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.screen.active { display: flex; transform: scale(1); opacity: 1; }
+.screen.active { display: flex; animation: zoomIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
 
-/* --- LOCK SCREEN STYLES (NEW) --- */
+@keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+/* --- LOCK SCREEN --- */
 #lock-screen {
-    background-image: url('lockscreen.jpg'); /* YOUR PHOTO */
+    background-image: url('lockscreen.jpg'); /* Your Lock Photo */
     background-size: cover; background-position: center;
-    color: white;
-    justify-content: space-between;
-    padding-bottom: 40px;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.5); /* Makes text readable over photo */
-    z-index: 999; /* Always on top */
+    color: white; justify-content: space-between; padding-bottom: 40px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5); z-index: 999;
 }
 .lock-content { text-align: center; margin-top: 60px; }
 .lock-time { font-size: 5.5rem; font-weight: 200; line-height: 1; }
@@ -58,13 +58,27 @@ body {
 .lock-hint { text-align: center; font-size: 0.9rem; opacity: 0.8; animation: pulse 2s infinite; }
 @keyframes pulse { 50% { opacity: 0.5; } }
 
+/* --- HOME SCREEN (WALLPAPER UPDATE) --- */
+#home-screen {
+    background-image: url('wallpaper.jpg'); /* YOUR NEW WALLPAPER */
+    background-size: cover;
+    background-position: center;
+}
 
-/* --- HOME SCREEN --- */
-.status-bar { padding: 10px 20px; display: flex; justify-content: space-between; font-weight: 600; color: var(--accent); opacity: 0.8; font-size: 0.9rem; }
+/* White text for status bar so it's readable on photos */
+.status-bar { 
+    padding: 10px 20px; display: flex; justify-content: space-between; 
+    font-weight: 600; color: white; font-size: 0.9rem;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
 
+/* Glassy Widget */
 .widget {
-    margin: 10px 20px; padding: 20px; background: white; border-radius: 20px;
-    box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center;
+    margin: 10px 20px; padding: 20px; 
+    background: rgba(255, 255, 255, 0.85); /* Semi-transparent */
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    display: flex; justify-content: space-between; align-items: center;
 }
 
 .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; }
@@ -74,13 +88,20 @@ body {
 .app-icon {
     width: 62px; height: 62px; border-radius: 16px; background: white;
     display: flex; align-items: center; justify-content: center; font-size: 28px;
-    box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.5);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
-.app-name { font-size: 11px; font-weight: 600; color: var(--text); margin-top: 4px; }
+/* White text with shadow for App Names */
+.app-name { 
+    font-size: 11px; font-weight: 600; color: white; margin-top: 4px; 
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
 
+/* Glassy Dock */
 .dock-container {
     position: absolute; bottom: 30px; left: 15px; right: 15px; 
-    background: rgba(255,255,255,0.5); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    background: rgba(255, 255, 255, 0.3); /* Very transparent */
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.4);
     border-radius: 24px; padding: 15px; display: flex; justify-content: space-around;
     margin-bottom: env(safe-area-inset-bottom);
 }
@@ -88,8 +109,9 @@ body {
 /* --- MESSAGES APP --- */
 .nav-bar {
     height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px;
-    font-weight: 700; font-size: 1.1rem; color: var(--accent); background: rgba(255,255,255,0.8);
+    font-weight: 700; font-size: 1.1rem; color: var(--accent); background: rgba(255,255,255,0.85);
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 10;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 .back-btn { font-size: 1rem; color: var(--primary); cursor: pointer; display: flex; align-items: center; gap: 5px; }
 
@@ -101,12 +123,7 @@ body {
 
 .chat-img { width: 70%; border-radius: 10px; margin-top: 5px; border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-/* Updated Gift Box Style */
-.ticket {
-    background: white; border: 2px dashed #FF1493; padding: 15px; border-radius: 15px;
-    text-align: center; margin-top: 5px; width: 100%;
-}
-@keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+.ticket { background: white; border: 2px dashed #FF1493; padding: 15px; border-radius: 15px; text-align: center; margin-top: 5px; width: 100%; }
 
 .chat-footer {
     position: absolute; bottom: 0; left: 0; width: 100%;
