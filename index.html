@@ -13,7 +13,7 @@
     <link rel="preload" as="image" href="lockscreen.jpg">
     <link rel="preload" as="image" href="kuchu.jpg">
 
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body onload="init()">
 
@@ -33,10 +33,10 @@
 
         <div class="widget">
             <div>
-                <div style="font-size:0.8rem; font-weight:bold; opacity:0.8;">NEXT MEETING</div>
-                <div style="font-size:1.2rem; font-weight:800; color:#FF1493;">Soon ✈️</div>
+                <div style="font-size:0.8rem; font-weight:bold; opacity:0.8; color:white; text-shadow:0 1px 2px rgba(0,0,0,0.5);">NEXT MEETING</div>
+                <div style="font-size:1.2rem; font-weight:800; color:#FF1493; text-shadow:0 0 10px rgba(255,255,255,0.8);">Soon ✈️</div>
             </div>
-            <div style="font-size:2rem;">🌏</div>
+            <div style="font-size:2rem; filter:drop-shadow(0 2px 5px rgba(0,0,0,0.2));">🌏</div>
         </div>
 
         <div class="app-grid">
@@ -113,15 +113,23 @@
     </div>
 
     <div class="screen" id="app-gallery">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Us & Kuchu</span><div></div></div>
-        <div class="app-grid" style="grid-template-columns: 1fr 1fr;">
-            <div class="photo" style="background-image:url('https://placehold.co/300x300/ffcccc/ff4757?text=Us');"></div>
-            <div class="photo" style="background-image:url('https://placehold.co/300x300/e3f2fd/007aff?text=Kuchu+🐱');"></div>
-            <div class="photo" style="background-image:url('https://placehold.co/300x300/fff3e0/ff9800?text=Video+Call');"></div>
-            <div class="photo" style="background-image:url('https://placehold.co/300x300/e8f5e9/4caf50?text=Love');"></div>
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Memories</span><div></div></div>
+        <div class="gallery-scroll">
+            <div class="polaroid" style="transform: rotate(-2deg);">
+                <img src="wallpaper.jpg">
+                <div class="caption">Us Forever ❤️</div>
+            </div>
+            <div class="polaroid" style="transform: rotate(2deg);">
+                <img src="kuchu.jpg">
+                <div class="caption">King Kuchu 👑</div>
+            </div>
+            <div class="polaroid" style="transform: rotate(-1deg);">
+                <img src="lockscreen.jpg">
+                <div class="caption">Favorite View 🌎</div>
+            </div>
         </div>
     </div>
 
-    <script src="script.js?v=4"></script>
+    <script src="script.js?v=5"></script>
 </body>
 </html>
