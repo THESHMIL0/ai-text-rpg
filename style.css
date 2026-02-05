@@ -1,13 +1,5 @@
 /* --- THEME --- */
-:root {
-    --bg-color: #FFF0F5;
-    --primary: #FF69B4;
-    --accent: #FF1493;
-    --text: #4A4A4A;
-    --bubble-me: #FF69B4;
-    --bubble-her: #FFFFFF;
-    --shadow: 0 4px 12px rgba(255, 105, 180, 0.15);
-}
+:root { --bg-color: #FFF0F5; --primary: #FF69B4; --accent: #FF1493; --text: #4A4A4A; --bubble-me: #FF69B4; --bubble-her: #FFFFFF; --shadow: 0 4px 12px rgba(255, 105, 180, 0.15); }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; -webkit-font-smoothing: antialiased; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
 img { pointer-events: none; }
@@ -19,31 +11,18 @@ body {
 }
 
 /* --- BACKGROUND HEARTS --- */
-#bg-hearts {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; z-index: -1; overflow: hidden;
-}
-.floating-heart {
-    position: absolute; bottom: -20px; font-size: 20px; opacity: 0.6;
-    animation: floatUp 10s linear infinite;
-}
-@keyframes floatUp {
-    0% { transform: translateY(0) scale(0.8); opacity: 0; }
-    20% { opacity: 0.8; }
-    100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
-}
+#bg-hearts { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; overflow: hidden; }
+.floating-heart { position: absolute; bottom: -20px; font-size: 20px; opacity: 0.6; animation: floatUp 10s linear infinite; }
+@keyframes floatUp { 0% { transform: translateY(0) scale(0.8); opacity: 0; } 100% { transform: translateY(-110vh) scale(1.2); opacity: 0; } }
 
 /* --- SCREENS --- */
 .screen {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: var(--bg-color); display: none; flex-direction: column;
-    padding-top: env(safe-area-inset-top);
-    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    padding-top: env(safe-area-inset-top); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.screen.active { display: flex; animation: zoomIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
-
+.screen.active { display: flex; animation: zoomIn 0.3s; }
 @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-@keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
 /* --- LOCK SCREEN --- */
 #lock-screen {
@@ -58,25 +37,17 @@ body {
 .lock-hint { text-align: center; font-size: 0.9rem; opacity: 0.8; animation: pulse 2s infinite; }
 @keyframes pulse { 50% { opacity: 0.5; } }
 
-/* --- HOME SCREEN (WALLPAPER UPDATE) --- */
+/* --- HOME SCREEN (WALLPAPER) --- */
 #home-screen {
-    background-image: url('wallpaper.jpg'); /* YOUR NEW WALLPAPER */
-    background-size: cover;
-    background-position: center;
+    background-image: url('wallpaper.jpg'); /* YOUR WALLPAPER */
+    background-size: cover; background-position: center;
 }
-
-/* White text for status bar so it's readable on photos */
-.status-bar { 
-    padding: 10px 20px; display: flex; justify-content: space-between; 
-    font-weight: 600; color: white; font-size: 0.9rem;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-}
+.status-bar { padding: 10px 20px; display: flex; justify-content: space-between; font-weight: 600; color: white; font-size: 0.9rem; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
 
 /* Glassy Widget */
 .widget {
     margin: 10px 20px; padding: 20px; 
-    background: rgba(255, 255, 255, 0.85); /* Semi-transparent */
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px);
     border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     display: flex; justify-content: space-between; align-items: center;
 }
@@ -90,64 +61,34 @@ body {
     display: flex; align-items: center; justify-content: center; font-size: 28px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
-/* White text with shadow for App Names */
-.app-name { 
-    font-size: 11px; font-weight: 600; color: white; margin-top: 4px; 
-    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-}
+.app-name { font-size: 11px; font-weight: 600; color: white; margin-top: 4px; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
 
-/* Glassy Dock */
 .dock-container {
     position: absolute; bottom: 30px; left: 15px; right: 15px; 
-    background: rgba(255, 255, 255, 0.3); /* Very transparent */
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.4);
-    border-radius: 24px; padding: 15px; display: flex; justify-content: space-around;
+    background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.4); border-radius: 24px; padding: 15px; display: flex; justify-content: space-around;
     margin-bottom: env(safe-area-inset-bottom);
 }
 
-/* --- MESSAGES APP --- */
+/* --- MESSAGES & OTHER APPS --- */
 .nav-bar {
     height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px;
     font-weight: 700; font-size: 1.1rem; color: var(--accent); background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 10;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    backdrop-filter: blur(10px); z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 .back-btn { font-size: 1rem; color: var(--primary); cursor: pointer; display: flex; align-items: center; gap: 5px; }
-
 .chat-container { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 15px; display: flex; flex-direction: column; gap: 15px; padding-bottom: 150px; }
-
 .chat-bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 0.95rem; line-height: 1.4; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 .chat-them { background: var(--bubble-her); color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; }
 .chat-me { background: var(--bubble-me); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
-
 .chat-img { width: 70%; border-radius: 10px; margin-top: 5px; border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-
 .ticket { background: white; border: 2px dashed #FF1493; padding: 15px; border-radius: 15px; text-align: center; margin-top: 5px; width: 100%; }
-
-.chat-footer {
-    position: absolute; bottom: 0; left: 0; width: 100%;
-    background: rgba(255,255,255,0.95); border-top: 1px solid #eee;
-    display: flex; flex-direction: column; gap: 10px; padding: 15px;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-    padding-bottom: max(20px, env(safe-area-inset-bottom)); z-index: 20;
-}
-
-.chat-btn {
-    background: #FFF0F5; border: 2px solid var(--primary); color: var(--accent);
-    padding: 15px; border-radius: 15px; font-weight: 700; font-size: 1rem;
-    text-align: center; cursor: pointer; width: 100%; transition: 0.1s;
-}
-.chat-btn:active { transform: scale(0.98); background: #FFC1E3; }
-
+.chat-footer { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.95); padding: 20px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); padding-bottom: max(20px, env(safe-area-inset-bottom)); z-index: 20; display:flex; flex-direction:column; gap:10px;}
+.chat-btn { background: #FFF0F5; border: 2px solid var(--primary); color: var(--accent); padding: 15px; border-radius: 15px; font-weight: 700; font-size: 1rem; text-align: center; cursor: pointer; width: 100%; }
 .typing { font-size: 0.8rem; color: #888; margin-left: 20px; display: none; margin-bottom: 10px;}
-
-/* --- SETTINGS & EVENTS --- */
-.settings-list { padding: 20px; -webkit-overflow-scrolling: touch; overflow-y: auto; height: 100%; }
+.settings-list { padding: 20px; overflow-y: auto; height: 100%; }
 .settings-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); margin-bottom: 20px; }
 .settings-row { padding: 16px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
-
 .hidden { display: none !important; }
-.home-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; background: rgba(0,0,0,0.2); border-radius: 10px; z-index: 9999; pointer-events: none;}
-.photo { height: 140px; background: #eee; border-radius: 10px; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; border: 4px solid white; }
+.photo { height: 140px; background: #eee; border-radius: 10px; background-size: cover; background-position: center; border: 4px solid white; }
 .gift-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
