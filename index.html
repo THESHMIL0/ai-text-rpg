@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Thesuuuu's Phone</title>
-    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#FFF0F5">
@@ -12,8 +11,7 @@
     <link rel="preload" as="image" href="wallpaper.jpg">
     <link rel="preload" as="image" href="lockscreen.jpg">
     <link rel="preload" as="image" href="kuchu.jpg">
-
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body onload="init()">
 
@@ -49,6 +47,12 @@
             <div class="app-icon-wrapper" onclick="openApp('gallery')">
                 <div class="app-icon" style="background:#FFF3E0;">📸</div><div class="app-name">Gallery</div>
             </div>
+            <div class="app-icon-wrapper" onclick="openApp('music')">
+                <div class="app-icon" style="background:#FFEBEE;">🎵</div><div class="app-name">Music</div>
+            </div>
+            <div class="app-icon-wrapper" onclick="openApp('notes')">
+                <div class="app-icon" style="background:#fff9c4;">📝</div><div class="app-name">Notes</div>
+            </div>
             <div class="app-icon-wrapper" onclick="openApp('settings')">
                 <div class="app-icon" style="background:#F3E5F5;">⚙️</div><div class="app-name">Settings</div>
             </div>
@@ -56,7 +60,7 @@
 
         <div class="dock-container">
             <div class="app-icon-wrapper"><div class="app-icon" style="background:#E8F5E9;">📞</div></div>
-            <div class="app-icon-wrapper"><div class="app-icon" style="background:#fff9c4;">📒</div></div>
+            <div class="app-icon-wrapper"><div class="app-icon" style="background:#E1BEE7;">🌐</div></div>
             <div class="app-icon-wrapper" onclick="openApp('msg')"><div class="app-icon" style="background:#ffebee;">❤️</div></div>
         </div>
     </div>
@@ -71,6 +75,47 @@
         <div class="chat-footer" id="chat-opts">
             <div class="chat-btn" onclick="reply(1)">Yooo Ayuuuu! ❤️</div>
             <div class="chat-btn" onclick="reply(2)">Miss you! 🥺</div>
+        </div>
+    </div>
+
+    <div class="screen" id="app-music">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Now Playing</span><div></div></div>
+        <div class="music-player">
+            <div class="album-art" style="background-image: url('wallpaper.jpg');"></div>
+            <div class="song-info">
+                <h2 style="margin:0; color:#333;">Perfect</h2>
+                <p style="margin:5px 0; color:#888;">Theshu Radio 📻</p>
+            </div>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+            <div class="music-controls">
+                <div style="font-size:2rem;">⏮️</div>
+                <div style="font-size:3.5rem;" onclick="togglePlay(this)">▶️</div>
+                <div style="font-size:2rem;">⏭️</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="screen" id="app-notes">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Love Notes</span><div></div></div>
+        <div class="settings-list">
+            <div class="settings-card" onclick="alert('Read this when you miss me:\n\nRemember that no matter how far apart we are, we are looking at the same moon. I am always with you. ❤️')">
+                <div class="settings-row">
+                    <span>💌 Open When You Miss Me</span>
+                    <span>›</span>
+                </div>
+            </div>
+            <div class="settings-card" onclick="alert('Read this when you are sad:\n\nI wish I could be there to hug you right now. Just know that you are my favorite person and I believe in you! 🥺')">
+                <div class="settings-row">
+                    <span>😢 Open When You're Sad</span>
+                    <span>›</span>
+                </div>
+            </div>
+            <div class="settings-card" onclick="alert('Our Future:\n\n1. Adopt 10 cats 🐈\n2. Travel the world ✈️\n3. Grow old together 👴👵')">
+                <div class="settings-row">
+                    <span>🏠 Our Future Plans</span>
+                    <span>›</span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -115,21 +160,12 @@
     <div class="screen" id="app-gallery">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Memories</span><div></div></div>
         <div class="gallery-scroll">
-            <div class="polaroid" style="transform: rotate(-2deg);">
-                <img src="wallpaper.jpg">
-                <div class="caption">Us Forever ❤️</div>
-            </div>
-            <div class="polaroid" style="transform: rotate(2deg);">
-                <img src="kuchu.jpg">
-                <div class="caption">King Kuchu 👑</div>
-            </div>
-            <div class="polaroid" style="transform: rotate(-1deg);">
-                <img src="lockscreen.jpg">
-                <div class="caption">Favorite View 🌎</div>
-            </div>
+            <div class="polaroid" style="transform: rotate(-2deg);"><img src="wallpaper.jpg"><div class="caption">Us Forever ❤️</div></div>
+            <div class="polaroid" style="transform: rotate(2deg);"><img src="kuchu.jpg"><div class="caption">King Kuchu 👑</div></div>
+            <div class="polaroid" style="transform: rotate(-1deg);"><img src="lockscreen.jpg"><div class="caption">Favorite View 🌎</div></div>
         </div>
     </div>
 
-    <script src="script.js?v=5"></script>
+    <script src="script.js?v=6"></script>
 </body>
 </html>
