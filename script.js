@@ -14,9 +14,44 @@ function updateClock() {
     setTimeout(updateClock, 1000);
 }
 
+/* --- LOCK SCREEN & PASSCODE LOGIC --- */
 function unlockPhone() {
-    document.getElementById('lock-screen').style.display = 'none';
-    document.getElementById('home-screen').classList.add('active');
+    // This function is triggered by tapping the screen, but we only want to unlock via password
+    // So tapping the screen just opens the password entry now.
+    // The visual unlock happens inside checkPasscode()
+}
+
+function showPasscode() {
+    document.getElementById('lock-main').classList.add('hidden');
+    document.getElementById('lock-passcode').classList.remove('hidden');
+    document.getElementById('pass-input').focus();
+}
+
+function showMainLock() {
+    document.getElementById('lock-passcode').classList.add('hidden');
+    document.getElementById('lock-main').classList.remove('hidden');
+    document.getElementById('pass-msg').innerText = "";
+    document.getElementById('pass-input').value = "";
+}
+
+function checkPasscode() {
+    const input = document.getElementById('pass-input');
+    const msg = document.getElementById('pass-msg');
+    
+    // Normalize input to lowercase
+    if (input.value.toLowerCase().trim() === 'kushu') {
+        // CORRECT PASSWORD
+        document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
+        document.getElementById('home-screen').classList.add('active');
+        setTimeout(() => {
+            document.getElementById('lock-screen').style.display = 'none';
+        }, 500);
+    } else {
+        // WRONG PASSWORD
+        msg.innerText = "Wrong Password 😿";
+        input.classList.add('shake');
+        setTimeout(() => input.classList.remove('shake'), 500);
+    }
 }
 
 function goHome() {
@@ -55,15 +90,14 @@ function togglePlay() {
     if (!audioPlayer.src || audioPlayer.src === window.location.href) {
         loadSong(currentSongIndex);
     }
-    
     if (audioPlayer.paused) {
         audioPlayer.play();
         playBtn.innerText = "⏸️";
-        albumArt.classList.add('rotating'); // Start Spin
+        albumArt.classList.add('rotating');
     } else {
         audioPlayer.pause();
         playBtn.innerText = "▶️";
-        albumArt.classList.remove('rotating'); // Stop Spin
+        albumArt.classList.remove('rotating');
     }
 }
 
