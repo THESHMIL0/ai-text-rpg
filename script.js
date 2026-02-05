@@ -33,10 +33,8 @@ function startFloatingHearts() {
         heart.style.left = Math.random() * 100 + 'vw';
         heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
         document.getElementById('bg-hearts').appendChild(heart);
-        
-        // Remove heart after it floats up to save memory
         setTimeout(() => heart.remove(), 10000);
-    }, 1000); // Create a new heart every 1 second
+    }, 1000);
 }
 
 /* --- EVENTS LOGIC --- */
@@ -114,28 +112,34 @@ function reply(choice) {
         });
     }
     
-    // STEP 3: The Gift
+    // STEP 3: The Gift (UPDATED TO RING 💍)
     else if(chatStep === 3) {
         addBubble("YES! 1000x YES! 😍", 'chat-me');
         opts.classList.add('hidden');
         
         simulateTyping(() => {
             addBubble("Yay! Happy Valentine's Day Ayuuu! ❤️", 'chat-them');
-            addBubble("Here is your gift:", 'chat-them');
+            addBubble("I have a promise for you...", 'chat-them');
             
-            // Insert Gift Ticket
+            // Insert Wedding Ring
             let ticket = document.createElement('div');
             ticket.className = "chat-ticket";
+            ticket.style.background = "#FFFBE6";
+            ticket.style.border = "2px solid #D4AF37";
             ticket.innerHTML = `
-                <div style="font-size:2rem;">✈️ + 🫂</div>
-                <h3 style="color:#FF1493; margin:5px 0;">ONE FLIGHT TICKET</h3>
-                <p style="font-size:0.8rem; color:#555;">To: My Arms<br>Valid: Soon</p>
+                <div style="font-size:3rem; animation: bounce 2s infinite;">💍</div>
+                <h3 style="color:#D4AF37; margin:5px 0;">WILL YOU MARRY ME?</h3>
+                <p style="font-size:0.8rem; color:#555;">(One Day)</p>
             `;
             chatBox.appendChild(ticket);
             chatBox.scrollTop = chatBox.scrollHeight;
             
+            // Unlock Gift App
+            document.getElementById('gift-lock').style.display = 'none';
+            document.getElementById('gift-open').style.display = 'block';
+
             // Show Home Button
-            opts.innerHTML = `<div class="chat-btn" style="width:100%" onclick="goHome()">🏠 Go Home</div>`;
+            opts.innerHTML = `<div class="chat-btn" style="width:100%" onclick="goHome()">🏠 Go Check "Gift" App</div>`;
             opts.classList.remove('hidden');
         });
     }
