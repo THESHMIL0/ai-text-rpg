@@ -13,31 +13,48 @@
     <link rel="preload" as="image" href="kuchu.jpg">
     <link rel="preload" as="image" href="us.jpg">
     
-    <link rel="stylesheet" href="style.css?v=21">
+    <link rel="stylesheet" href="style.css?v=22">
 </head>
 <body onload="init()">
 
-    <div class="screen active" id="lock-screen" onclick="unlockPhone()">
-        <div class="lock-content">
-            <div class="lock-time" id="lock-clock">12:00</div>
-            <div class="lock-date">Saturday, February 14</div>
-            
-            <div class="lock-notification">
-                <div class="notif-icon">❤️</div>
-                <div class="notif-text">
-                    <div class="notif-title">Theshu</div>
-                    <div class="notif-msg">I have a surprise for you... 👀</div>
+    <div class="screen active" id="lock-screen">
+        
+        <div id="lock-main" onclick="showPasscode()">
+            <div class="lock-content">
+                <div class="lock-time" id="lock-clock">12:00</div>
+                <div class="lock-date">Saturday, February 14</div>
+                
+                <div class="lock-notification">
+                    <div class="notif-icon">❤️</div>
+                    <div class="notif-text">
+                        <div class="notif-title">Theshu</div>
+                        <div class="notif-msg">I have a surprise for you... 👀</div>
+                    </div>
+                    <div class="notif-time">now</div>
                 </div>
-                <div class="notif-time">now</div>
+            </div>
+            <div class="lock-hint">Tap to unlock</div>
+        </div>
+
+        <div id="lock-passcode" class="hidden">
+            <div class="pass-container">
+                <div class="chat-avatar" style="background-image: url('us.jpg'); width:80px; height:80px; margin:0 auto 20px auto; border:3px solid white;"></div>
+                <h3>Enter Password</h3>
+                <p style="font-size:0.8rem; opacity:0.7; margin-bottom:20px;">Hint: The cute one 😽</p>
+                
+                <input type="text" id="pass-input" placeholder="Type here..." autocomplete="off">
+                <div class="pass-btn" onclick="checkPasscode()">Unlock 🔓</div>
+                <p id="pass-msg" style="color:#FF4081; font-weight:bold; margin-top:10px; height:20px;"></p>
+                <div style="margin-top:20px; font-size:0.8rem; opacity:0.6;" onclick="showMainLock()">Cancel</div>
             </div>
         </div>
-        <div class="lock-hint">Tap screen to unlock</div>
+
     </div>
 
     <div class="screen" id="home-screen">
         <div class="status-bar">
             <div id="clock">12:00</div>
-            <div>LDR • 100% 🔋</div>
+            <div>Love 5G • 100% 🔋</div>
         </div>
 
         <div class="widget">
@@ -284,6 +301,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=21"></script>
+    <script src="script.js?v=22"></script>
 </body>
 </html>
