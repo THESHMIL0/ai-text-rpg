@@ -94,14 +94,10 @@ const typing = document.getElementById('typing');
 
 function reply(choice) {
     let txt = "";
-    
-    // STEP 0: SHE REPLIES
     if(chatStep === 0) {
         txt = choice === 1 ? "Happy Valentine's! ❤️" : "I miss you! 🥺";
         addBubble(txt, 'chat-me'); 
         opts.classList.add('hidden');
-        
-        // YOU Reply
         simulateTyping(() => {
             addBubble("Look who is sleeping! 🐈", 'chat-them');
             let row = document.createElement('div'); row.className = "chat-row";
@@ -115,28 +111,20 @@ function reply(choice) {
             showOpts(["Omg cute!! 🥺", "I miss him!"]);
             chatStep = 1;
         });
-    } 
-    
-    // STEP 1: SHE REACTS
-    else if(chatStep === 1) {
+    } else if(chatStep === 1) {
         txt = choice === 1 ? "Omg cute!! 🥺" : "I miss him!";
         addBubble(txt, 'chat-me');
         opts.classList.add('hidden');
-        
         simulateTyping(() => {
             addBubble("He misses you too...", 'chat-them');
             addBubble("Actually, I have a serious question.", 'chat-them');
             showOpts(["What is it? 👀", "Tell me!"]);
             chatStep = 2;
         });
-    } 
-    
-    // STEP 2: YOU ASK
-    else if(chatStep === 2) {
+    } else if(chatStep === 2) {
         txt = "What is it? 👀";
         addBubble(txt, 'chat-me');
         opts.classList.add('hidden');
-        
         simulateTyping(() => {
             addBubble("Since we are far apart, I wanted to ask this digitally...", 'chat-them');
             let row = document.createElement('div'); row.className = "chat-row";
@@ -149,10 +137,7 @@ function reply(choice) {
             showOpts(["YES! 1000x YES! 😭❤️"]);
             chatStep = 3;
         });
-    } 
-    
-    // STEP 3: SHE SAYS YES
-    else if(chatStep === 3) {
+    } else if(chatStep === 3) {
         addBubble("YES! 1000x YES! 😭❤️", 'chat-me');
         opts.classList.add('hidden');
         simulateTyping(() => {
