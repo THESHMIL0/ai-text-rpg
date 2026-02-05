@@ -13,30 +13,40 @@
     <link rel="preload" as="image" href="kuchu.jpg">
     <link rel="preload" as="image" href="us.jpg">
     
-    <link rel="stylesheet" href="style.css?v=19">
+    <link rel="stylesheet" href="style.css?v=20">
 </head>
 <body onload="init()">
 
     <div class="screen active" id="lock-screen" onclick="unlockPhone()">
         <div class="lock-content">
+            <div style="font-size:1rem; opacity:0.8; margin-bottom:5px;">🔓 Swipe up to open</div>
             <div class="lock-time" id="lock-clock">12:00</div>
             <div class="lock-date">Saturday, February 14</div>
+            
+            <div class="lock-notification">
+                <div class="notif-icon">❤️</div>
+                <div class="notif-text">
+                    <div class="notif-title">Theshu</div>
+                    <div class="notif-msg">I have a surprise for you... 👀</div>
+                </div>
+                <div class="notif-time">now</div>
+            </div>
         </div>
-        <div class="lock-hint">Tap to unlock</div>
+        <div class="lock-hint">Tap screen to unlock</div>
     </div>
 
     <div class="screen" id="home-screen">
         <div class="status-bar">
             <div id="clock">12:00</div>
-            <div>LDR • 100% 🔋</div>
+            <div>Love 5G • 100% 🔋</div>
         </div>
 
         <div class="widget">
             <div>
-                <div style="font-size:0.8rem; font-weight:bold; opacity:0.8; color:white; text-shadow:0 1px 2px rgba(0,0,0,0.5);">STATUS UPDATE</div>
-                <div style="font-size:1.2rem; font-weight:800; color:#FF1493; text-shadow:0 0 10px rgba(255,255,255,0.8);">Miss You 3000 ❤️</div>
+                <div style="font-size:0.8rem; font-weight:bold; opacity:0.8; color:white; text-shadow:0 1px 2px rgba(0,0,0,0.5);">CURRENT MOOD</div>
+                <div style="font-size:1.2rem; font-weight:800; color:#FF1493; text-shadow:0 0 10px rgba(255,255,255,0.8);">Loving You 💯</div>
             </div>
-            <div style="font-size:2rem; filter:drop-shadow(0 2px 5px rgba(0,0,0,0.2));">🌏</div>
+            <div style="font-size:2rem; filter:drop-shadow(0 2px 5px rgba(0,0,0,0.2));">😽</div>
         </div>
 
         <div class="app-grid">
@@ -75,24 +85,20 @@
         <div class="settings-list">
             <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">TAP TO REDEEM 🎟️</p>
             
-            <div class="settings-card" onclick="alert('Coupon Redeemed! 💆‍♂️\n\nValid for: One relaxing back massage from Theshu.\n(No expiration date!)')">
+            <div class="settings-card" onclick="alert('Redeemed! 🥞\n\nBreakfast in Bed coming up! (I will cook... hopefully it is edible!) 😂')">
+                <div class="settings-row"><span>🥞 Breakfast in Bed</span><span>Redeem ›</span></div>
+            </div>
+            <div class="settings-card" onclick="alert('Redeemed! 💆‍♂️\n\nOne relaxing back massage from Theshu. Valid Forever! ❤️')">
                 <div class="settings-row"><span>💆‍♂️ Free Massage</span><span>Redeem ›</span></div>
             </div>
-
-            <div class="settings-card" onclick="alert('Coupon Redeemed! 🍝\n\nTheshu is cooking dinner tonight! (Or buying...) 😋')">
+            <div class="settings-card" onclick="alert('Redeemed! 🍝\n\nTheshu is paying for a fancy dinner date! 🍷')">
                 <div class="settings-row"><span>🍝 Dinner Date</span><span>Redeem ›</span></div>
             </div>
-
-            <div class="settings-card" onclick="alert('Coupon Redeemed! 🥺\n\nOne argument ended instantly. I am sorry, you are right! ❤️')">
+            <div class="settings-card" onclick="alert('Redeemed! 🥺\n\nOne argument ended instantly. I am sorry, you win! 🏳️')">
                 <div class="settings-row"><span>🏳️ Win An Argument</span><span>Redeem ›</span></div>
             </div>
-
-            <div class="settings-card" onclick="alert('Coupon Redeemed! 🎬\n\nMovie night of YOUR choice. Even if it\'s a cheesy rom-com! 🍿')">
-                <div class="settings-row"><span>🎬 Movie Night Choice</span><span>Redeem ›</span></div>
-            </div>
-            
-            <div class="settings-card" onclick="alert('Coupon Redeemed! 🫂\n\nA really long, tight hug. Redeemable as soon as we meet! ❤️')">
-                <div class="settings-row"><span>🫂 Unlimited Hugs</span><span>Redeem ›</span></div>
+            <div class="settings-card" onclick="alert('Redeemed! 🎬\n\nMovie night of YOUR choice. No complaints from me! 🍿')">
+                <div class="settings-row"><span>🎬 Movie Control</span><span>Redeem ›</span></div>
             </div>
         </div>
     </div>
@@ -108,13 +114,13 @@
         <div class="settings-list">
             <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">FLIGHT STATUS</p>
             <div class="settings-card">
-                <div class="settings-row"><span>📍 Current Location</span><span>In My Heart ❤️</span></div>
-                <div class="settings-row"><span>🏁 Destination</span><span>Your Arms 🫂</span></div>
-                <div class="settings-row"><span>🌧️ Weather</span><span>Missing You 🥺</span></div>
-                <div class="settings-row"><span>⏳ Time Difference</span><span>Doesn't Matter</span></div>
+                <div class="settings-row"><span>📍 My Location</span><span>Missing You Ville 🥺</span></div>
+                <div class="settings-row"><span>🏁 Destination</span><span>Your Heart ❤️</span></div>
+                <div class="settings-row"><span>🌤️ Weather</span><span>Cloudy without you</span></div>
+                <div class="settings-row"><span>✈️ Ticket Type</span><span>One Way (Forever)</span></div>
             </div>
-            <div class="chat-btn" onclick="alert('Booking ticket... \n\nConfirmation: I AM COMING SOON! ✈️❤️')">
-                🎫 Book Flight to Her
+            <div class="chat-btn" onclick="alert('Booking ticket... \n\nSUCCESS! ✈️\n\nPassenger: Theshu\nSeat: Next to Ayuuu ❤️')">
+                🎫 Book Flight Now
             </div>
         </div>
     </div>
@@ -123,12 +129,12 @@
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Phone</span><div></div></div>
         <div class="settings-list">
             <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">FAVORITES ❤️</p>
-            <div class="settings-card" onclick="alert('Calling Theshu... Ring Ring! 📞')">
+            <div class="settings-card" onclick="alert('Calling Theshu... \n\n*Pick up pick up pick up* 📞')">
                 <div class="settings-row" style="justify-content: flex-start; gap: 15px;">
                     <div class="chat-avatar" style="background-image: url('us.jpg'); width:40px; height:40px;"></div>
                     <div style="flex:1;">
                         <div style="font-weight:bold;">Theshu (Hubby) 💍</div>
-                        <div style="font-size:0.8rem; color:#888;">Mobile • ❤️❤️❤️</div>
+                        <div style="font-size:0.8rem; color:#888;">Mobile • My World 🌍</div>
                     </div>
                     <div style="font-size:1.5rem;">📞</div>
                 </div>
@@ -140,8 +146,12 @@
                     <span style="font-size:0.8rem;">11:30 PM</span>
                 </div>
                 <div class="settings-row">
-                    <div><div style="font-weight:bold; color:#E91E63;">Theshu ❤️ (Video)</div><div style="font-size:0.8rem; color:#888;">FaceTime • Sleeping 😴</div></div>
+                    <div><div style="font-weight:bold; color:#E91E63;">Theshu ❤️ (Video)</div><div style="font-size:0.8rem; color:#888;">FaceTime • Sleepy talks 😴</div></div>
                     <span style="font-size:0.8rem;">02:00 AM</span>
+                </div>
+                <div class="settings-row">
+                    <div><div style="font-weight:bold; color:#333;">Mom</div><div style="font-size:0.8rem; color:#888;">Mobile • 5 mins</div></div>
+                    <span style="font-size:0.8rem;">Yesterday</span>
                 </div>
             </div>
         </div>
@@ -171,7 +181,7 @@
     </div>
 
     <div class="screen" id="app-music">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Now Playing</span><div></div></div>
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Music</span><div></div></div>
         <audio id="audio-player"></audio>
         <div class="music-player" style="flex:0; padding-bottom:10px;">
             <div class="album-art" id="album-art" style="background-image: url('wallpaper.jpg'); width:200px; height:200px;"></div>
@@ -187,12 +197,12 @@
             </div>
         </div>
         <div class="settings-list" style="padding-top:0;">
-            <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-bottom:10px;">UP NEXT 🎵</p>
+            <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-bottom:10px;">PLAYLIST: US ❤️</p>
             <div class="settings-card">
                 <div class="settings-row" onclick="loadSong(1)">
                     <div style="display:flex; gap:10px; align-items:center;">
                         <div style="font-size:1.2rem;">💿</div>
-                        <div><div style="font-weight:bold;">Like My Father</div><div style="font-size:0.8rem; color:#888;">Our Song ❤️</div></div>
+                        <div><div style="font-weight:bold;">Like My Father</div><div style="font-size:0.8rem; color:#888;">Our Anthem</div></div>
                     </div>
                     <span>3:45</span>
                 </div>
@@ -201,18 +211,24 @@
     </div>
 
     <div class="screen" id="app-notes">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Love Notes</span><div></div></div>
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Notes</span><div></div></div>
         <div class="settings-list">
-            <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">OPEN WHEN...</p>
+            <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">PINNED 📌</p>
+            <div class="settings-card" onclick="alert('Daily Reminder:\n\nYou are beautiful.\nYou are smart.\nYou are loved by Theshu!\nDon\'t forget to drink water! 💧')">
+                <div class="settings-row"><span>☀️ Daily Reminder</span><span>›</span></div>
+            </div>
+            
+            <p style="font-size:0.8rem; color:#888; margin-left:10px;">OPEN WHEN...</p>
             <div class="settings-card" onclick="alert('Read this when you miss me:\n\nRemember that no matter how far apart we are, we are looking at the same moon. I am always with you. ❤️')">
                 <div class="settings-row"><span>💌 You Miss Me</span><span>›</span></div>
             </div>
             <div class="settings-card" onclick="alert('Read this when you are sad:\n\nI wish I could be there to hug you right now. Just know that you are my favorite person and I believe in you! 🥺')">
                 <div class="settings-row"><span>😢 You Are Sad</span><span>›</span></div>
             </div>
+            
             <p style="font-size:0.8rem; color:#888; margin-left:10px;">PLANS</p>
-            <div class="settings-card" onclick="alert('Our Bucket List:\n\n1. Adopt 10 cats 🐈\n2. Travel the world ✈️\n3. Grow old together 👴👵')">
-                <div class="settings-row"><span>📝 Bucket List</span><span>›</span></div>
+            <div class="settings-card" onclick="alert('Bucket List:\n\n1. Adopt 10 cats 🐈\n2. Japan Trip 🇯🇵\n3. Build our dream house 🏠\n4. Grow old together 👴👵')">
+                <div class="settings-row"><span>📝 Our Bucket List</span><span>›</span></div>
             </div>
         </div>
     </div>
@@ -220,15 +236,17 @@
     <div class="screen" id="app-events">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Events</span><div></div></div>
         <div class="settings-list">
-            <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">BIRTHDAYS</p>
+            <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">COUNTDOWNS ⏳</p>
             <div class="settings-card">
                 <div class="settings-row"><span>🎂 Theshu's Bday</span><span style="font-weight:bold; color:#FF69B4;" id="days-me">0 Days</span></div>
                 <div class="settings-row"><span>🥳 Ayuuu's Bday</span><span style="font-weight:bold; color:#FF69B4;" id="days-her">0 Days</span></div>
             </div>
-            <p style="font-size:0.8rem; color:#888; margin-left:10px;">MILESTONES</p>
+            <p style="font-size:0.8rem; color:#888; margin-left:10px;">MILESTONES 🏆</p>
             <div class="settings-card">
-                <div class="settings-row"><span>💏 First Kiss</span><span>Best Day Ever</span></div>
+                <div class="settings-row"><span>💏 First Kiss</span><span>Magical ✨</span></div>
                 <div class="settings-row"><span>💍 Proposal Day</span><span style="color:#E91E63; font-weight:bold;">TODAY!</span></div>
+                <div class="settings-row"><span>🚗 First Trip</span><span>Coming Soon</span></div>
+                <div class="settings-row"><span>🗓️ Anniversary</span><span>Forever</span></div>
             </div>
         </div>
     </div>
@@ -239,7 +257,7 @@
             <div id="gift-lock">
                 <div style="font-size: 5rem;">🔒</div>
                 <h2>Gift Locked</h2>
-                <p style="color: #888; margin-top: 10px;">Finish your chat with Theshu to unlock!</p>
+                <p style="color: #888; margin-top: 10px;">Check your messages first! 💌</p>
             </div>
             <div id="gift-open" class="ticket" style="border: 3px solid #FFD700; background: #FFFBE6; display: none;">
                 <div style="font-size: 4rem;">💍</div>
@@ -260,15 +278,22 @@
                 <div class="settings-row"><span>❤️ Status</span><span>Taken Forever 💍</span></div>
                 <div class="settings-row"><span>💾 Storage</span><span>Full of Memories 📸</span></div>
             </div>
+            <p style="font-size:0.8rem; color:#888; margin-left:10px;">CONNECTIVITY</p>
+            <div class="settings-card">
+                <div class="settings-row"><span>📶 Network</span><span style="color:green;">Love 5G</span></div>
+                <div class="settings-row"><span>📡 Wi-Fi</span><span>Connected to Heart ❤️</span></div>
+            </div>
             <p style="font-size:0.8rem; color:#888; margin-left:10px;">PREFERENCES</p>
             <div class="settings-card">
                 <div class="settings-row"><span>🔔 Miss You Alerts</span><span style="color:green;">ON</span></div>
                 <div class="settings-row"><span>🔋 Battery Health</span><span>100% Love</span></div>
                 <div class="settings-row"><span>😽 Kisses</span><span>Unlimited</span></div>
+                <div class="settings-row"><span>🐱 Cat</span><span>Kitchu (The King)</span></div>
             </div>
             <p style="font-size:0.8rem; color:#888; margin-left:10px;">ABOUT PHONE</p>
             <div class="settings-card">
                 <div class="settings-row"><span>📱 Model</span><span>LovePhone Pro Max</span></div>
+                <div class="settings-row"><span>🔐 Security</span><span>FaceID (Your Smile)</span></div>
                 <div class="settings-row"><span>👨‍💻 Developer</span><span>Theshu</span></div>
             </div>
         </div>
@@ -284,6 +309,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=19"></script>
+    <script src="script.js?v=20"></script>
 </body>
 </html>
