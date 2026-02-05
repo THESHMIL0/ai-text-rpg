@@ -7,20 +7,47 @@ function init() {
     startFloatingHearts();
 }
 
+/* --- CLOCK & UNLOCK LOGIC --- */
 function updateClock() {
     let d = new Date();
     let m = d.getMinutes().toString().padStart(2,'0');
-    document.getElementById('clock').innerText = d.getHours() + ":" + m;
+    let timeStr = d.getHours() + ":" + m;
+    // Update both clocks (Home and Lock Screen)
+    document.getElementById('clock').innerText = timeStr;
+    document.getElementById('lock-clock').innerText = timeStr;
     setTimeout(updateClock, 1000);
 }
 
+function unlockPhone() {
+    const lockScreen = document.getElementById('lock-screen');
+    const homeScreen = document.getElementById('home-screen');
+    
+    // Slide up animation
+    lockScreen.style.transform = 'translateY(-100%)';
+    
+    // Show home screen underneath immediately
+    homeScreen.classList.add('active');
+    
+    // Wait for animation to finish, then hide lock screen completely
+    setTimeout(() => {
+       lockScreen.classList.remove('active');
+       // Reset transform for next time (if we re-lock)
+       lockScreen.style.transform = '';
+    }, 500);
+}
+
+
 function goHome() {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.screen').forEach(s => {
+        if(s.id !== 'lock-screen') s.classList.remove('active');
+    });
     document.getElementById('home-screen').classList.add('active');
 }
 
 function openApp(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.screen').forEach(s => {
+         if(s.id !== 'lock-screen') s.classList.remove('active');
+    });
     document.getElementById('app-' + id).classList.add('active');
 }
 
@@ -65,9 +92,8 @@ function reply(choice) {
     if(chatStep === 0) {
         txt = choice === 1 ? "Yooo Ayuuuu! ❤️" : "Miss you so much! 🥺";
         addBubble(txt, 'chat-me');
-        opts.classList.add('hidden'); // Hide buttons
+        opts.classList.add('hidden'); 
 
-        // Trigger her reply
         simulateTyping(() => {
             addBubble("Kitchu says hi btw! 🐈", 'chat-them');
             addBubble("Look at him sleeping!", 'chat-them');
@@ -112,7 +138,7 @@ function reply(choice) {
         });
     }
     
-    // STEP 3: The Gift (UPDATED TO RING 💍)
+    // STEP 3: The Gift (RING)
     else if(chatStep === 3) {
         addBubble("YES! 1000x YES! 😍", 'chat-me');
         opts.classList.add('hidden');
@@ -121,11 +147,11 @@ function reply(choice) {
             addBubble("Yay! Happy Valentine's Day Ayuuu! ❤️", 'chat-them');
             addBubble("I have a promise for you...", 'chat-them');
             
-            // Insert Wedding Ring
+            // Insert Ring Box
             let ticket = document.createElement('div');
-            ticket.className = "chat-ticket";
+            ticket.className = "chat-ticket ticket"; // Added ticket class for styling
+            ticket.style.border = "3px solid #FFD700";
             ticket.style.background = "#FFFBE6";
-            ticket.style.border = "2px solid #D4AF37";
             ticket.innerHTML = `
                 <div style="font-size:3rem; animation: bounce 2s infinite;">💍</div>
                 <h3 style="color:#D4AF37; margin:5px 0;">WILL YOU MARRY ME?</h3>
