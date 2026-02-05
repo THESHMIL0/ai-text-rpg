@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ayuuu's Gift</title>
+    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#FFF0F5">
@@ -13,7 +14,7 @@
     <link rel="preload" as="image" href="kuchu.jpg">
     <link rel="preload" as="image" href="us.jpg">
     
-    <link rel="stylesheet" href="style.css?v=16">
+    <link rel="stylesheet" href="style.css?v=17">
 </head>
 <body onload="init()">
 
@@ -61,7 +62,7 @@
         </div>
 
         <div class="dock-container">
-            <div class="app-icon-wrapper"><div class="app-icon" style="background:#E8F5E9;">📞</div></div>
+            <div class="app-icon-wrapper" onclick="openApp('call')"><div class="app-icon" style="background:#E8F5E9;">📞</div></div>
             <div class="app-icon-wrapper" onclick="openApp('global')"><div class="app-icon" style="background:#E1BEE7;">🌐</div></div>
             <div class="app-icon-wrapper" onclick="openApp('msg')"><div class="app-icon" style="background:#ffebee;">❤️</div></div>
         </div>
@@ -94,6 +95,52 @@
             <div class="chat-btn" onclick="alert('Booking ticket to Ayuuu... \n\nError: Not enough money yet! 😂\nDon\'t worry, I am coming soon! ❤️')">
                 🎫 Book Flight to Her
             </div>
+        </div>
+    </div>
+
+    <div class="screen" id="app-call">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Phone</span><div></div></div>
+        <div class="settings-list">
+            
+            <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">FAVORITES ❤️</p>
+            
+            <div class="settings-card" onclick="alert('Calling Theshu... just kidding, look beside you (or call me for real!) 😜')">
+                <div class="settings-row" style="justify-content: flex-start; gap: 15px;">
+                    <div class="chat-avatar" style="background-image: url('us.jpg'); width:40px; height:40px;"></div>
+                    <div style="flex:1;">
+                        <div style="font-weight:bold;">Theshu (Hubby) 💍</div>
+                        <div style="font-size:0.8rem; color:#888;">Mobile • ❤️❤️❤️</div>
+                    </div>
+                    <div style="font-size:1.5rem;">📞</div>
+                </div>
+            </div>
+
+            <p style="font-size:0.8rem; color:#888; margin-left:10px;">RECENT CALLS 🕓</p>
+            
+            <div class="settings-card">
+                <div class="settings-row">
+                    <div>
+                        <div style="font-weight:bold; color:#E91E63;">Theshu ❤️</div>
+                        <div style="font-size:0.8rem; color:#888;">Yesterday • 4 hrs 32 mins</div>
+                    </div>
+                    <span style="font-size:0.8rem;">11:30 PM</span>
+                </div>
+                <div class="settings-row">
+                    <div>
+                        <div style="font-weight:bold; color:#E91E63;">Theshu ❤️</div>
+                        <div style="font-size:0.8rem; color:#888;">Today • 2 hrs 15 mins</div>
+                    </div>
+                    <span style="font-size:0.8rem;">09:00 AM</span>
+                </div>
+                <div class="settings-row">
+                    <div>
+                        <div style="font-weight:bold; color:#E91E63;">Theshu ❤️ (Video)</div>
+                        <div style="font-size:0.8rem; color:#888;">Facetime • Sleeping Call 😴</div>
+                    </div>
+                    <span style="font-size:0.8rem;">02:00 AM</span>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -188,6 +235,7 @@
             <div class="settings-card">
                 <div class="settings-row"><span>👤 Name</span><span>Theshu & Ayuuu</span></div>
                 <div class="settings-row"><span>❤️ Status</span><span>Taken Forever 💍</span></div>
+                <div class="settings-row"><span>📅 Anniversary</span><span>Every Day</span></div>
             </div>
             <p style="font-size:0.8rem; color:#888; margin-left:10px;">PREFERENCES</p>
             <div class="settings-card">
@@ -204,34 +252,6 @@
         </div>
     </div>
 
-    <div class="screen" id="app-call">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Phone</span><div></div></div>
-        <div class="settings-list">
-            <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">FAVORITES ❤️</p>
-            <div class="settings-card" onclick="alert('Calling Theshu... just kidding, look beside you (or call me for real!) 😜')">
-                <div class="settings-row" style="justify-content: flex-start; gap: 15px;">
-                    <div class="chat-avatar" style="background-image: url('us.jpg'); width:40px; height:40px;"></div>
-                    <div style="flex:1;">
-                        <div style="font-weight:bold;">Theshu (Hubby) 💍</div>
-                        <div style="font-size:0.8rem; color:#888;">Mobile • ❤️❤️❤️</div>
-                    </div>
-                    <div style="font-size:1.5rem;">📞</div>
-                </div>
-            </div>
-            <p style="font-size:0.8rem; color:#888; margin-left:10px;">RECENT CALLS 🕓</p>
-            <div class="settings-card">
-                <div class="settings-row">
-                    <div><div style="font-weight:bold; color:#E91E63;">Theshu ❤️</div><div style="font-size:0.8rem; color:#888;">Yesterday • 4 hrs</div></div>
-                    <span style="font-size:0.8rem;">11:30 PM</span>
-                </div>
-                <div class="settings-row">
-                    <div><div style="font-weight:bold; color:#E91E63;">Theshu ❤️</div><div style="font-size:0.8rem; color:#888;">Today • 2 hrs</div></div>
-                    <span style="font-size:0.8rem;">09:00 AM</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="screen" id="app-gallery">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Memories</span><div></div></div>
         <div class="gallery-scroll">
@@ -242,6 +262,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=16"></script>
+    <script src="script.js?v=17"></script>
 </body>
 </html>
