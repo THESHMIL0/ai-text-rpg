@@ -3,11 +3,11 @@
     --primary: #FF69B4; 
     --accent: #E91E63; 
     --text: #333; 
-    --glass: rgba(255, 255, 255, 0.95);
+    --glass: rgba(255, 255, 255, 0.90);
 }
 
 /* DARK MODE */
-body.dark-mode { --bg-color: #121212; --text: #f0f0f0; --glass: rgba(30, 30, 30, 0.95); }
+body.dark-mode { --bg-color: #121212; --text: #f0f0f0; --glass: rgba(30, 30, 30, 0.90); }
 body.dark-mode .settings-card, body.dark-mode .contact-profile, body.dark-mode .chat-footer, body.dark-mode .coupon-ticket, body.dark-mode .pet-stats, body.dark-mode .note-search-container { background: #252525; color: white; }
 body.dark-mode .settings-row { border-bottom: 1px solid #444; }
 body.dark-mode .chat-them { background: #333; color: white; }
@@ -136,9 +136,8 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .gallery-caption { text-align: center; font-size: 0.8rem; color: #555; margin-top: 5px; font-weight: bold; }
 .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; display: none; flex-direction: column; justify-content: center; align-items: center; }
 .lightbox.active { display: flex; }
-.lightbox img { max-width: 95%; max-height: 70vh; border: 2px solid white; object-fit: contain; }
+.lightbox img { max-width: 95%; max-height: 80vh; border: 2px solid white; object-fit: contain; }
 .lightbox-close { position: absolute; top: 30px; right: 20px; color: white; font-size: 3rem; padding: 20px; cursor: pointer; }
-.lightbox-dl { margin-top: 20px; background: #E91E63; color: white; padding: 12px 30px; border-radius: 30px; font-weight: bold; cursor: pointer; }
 
 /* GLOBAL MAP */
 .map-view { position: relative; height: 250px; background: linear-gradient(to bottom, #87CEEB, #E0F7FA); border-radius: 20px; margin: 0 0 20px 0; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 2px solid white; flex-shrink: 0; }
