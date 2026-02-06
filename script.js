@@ -1,4 +1,5 @@
-window.onload = init;
+/* START IMMEDIATELY (Fixes "Loading..." issue) */
+document.addEventListener('DOMContentLoaded', init);
 
 let chatStep = 0;
 
@@ -12,13 +13,11 @@ function updateClock() {
     let m = now.getMinutes().toString().padStart(2,'0');
     let t = now.getHours() + ":" + m;
     
-    // Update both clocks
     const clockEl = document.getElementById('clock');
     const lockClockEl = document.getElementById('lock-clock');
     if(clockEl) clockEl.innerText = t;
     if(lockClockEl) lockClockEl.innerText = t;
 
-    // Real Date
     const dateOptions = { weekday: 'long', month: 'short', day: 'numeric' };
     const dateString = now.toLocaleDateString('en-US', dateOptions);
     const lockDateEl = document.getElementById('lock-date');
@@ -45,7 +44,7 @@ function toggleFlashlight(e) {
     e.stopPropagation();
     const btn = e.currentTarget;
     btn.classList.toggle('active');
-    if(navigator.vibrate) navigator.vibrate(50); // Feedback
+    if(navigator.vibrate) navigator.vibrate(50);
 }
 
 function openCamera(e) {
@@ -73,8 +72,6 @@ function goHome() {
         if(s.id !== 'lock-screen') s.classList.remove('active');
     });
     document.getElementById('home-screen').classList.add('active');
-    
-    // Reset states
     const albumArt = document.getElementById('album-art');
     if(albumArt) albumArt.classList.remove('rotating');
 }
@@ -199,6 +196,7 @@ function reply(selectedText) {
             let avatar = document.createElement('div'); avatar.className = "chat-avatar"; avatar.style.backgroundImage = "url('us.jpg')";
             let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-them";
             let img = document.createElement('img'); img.src = "kuchu.jpg"; img.className = "chat-img";
+            img.onerror = function() { this.src = 'https://placekitten.com/300/300'; }; 
             img.onclick = function() { this.classList.toggle('zoomed'); }; 
             bubble.appendChild(img);
             bubble.innerHTML += `<div class="time-tick">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
