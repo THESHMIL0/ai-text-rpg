@@ -3,15 +3,22 @@
     --primary: #FF69B4; 
     --accent: #E91E63; 
     --text: #333; 
-    --glass: rgba(255, 255, 255, 0.90);
+    --glass: rgba(255, 255, 255, 0.95);
 }
+
+/* DARK MODE */
+body.dark-mode { --bg-color: #121212; --text: #f0f0f0; --glass: rgba(30, 30, 30, 0.95); }
+body.dark-mode .settings-card, body.dark-mode .contact-profile, body.dark-mode .chat-footer, body.dark-mode .coupon-ticket, body.dark-mode .pet-stats, body.dark-mode .note-search-container { background: #252525; color: white; }
+body.dark-mode .settings-row { border-bottom: 1px solid #444; }
+body.dark-mode .chat-them { background: #333; color: white; }
+body.dark-mode .chat-container { background: #121212; }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; user-select: none; touch-action: manipulation; }
 
-/* RESET & MOBILE OPTIMIZATIONS */
+/* RESET */
 ::-webkit-scrollbar { display: none; }
 * { -ms-overflow-style: none; scrollbar-width: none; }
-body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; overflow: hidden; position: fixed; color: var(--text); }
+body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; overflow: hidden; position: fixed; color: var(--text); transition: background 0.3s; }
 
 /* ANIMATIONS */
 @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
@@ -58,7 +65,7 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .app-name { font-size: 11px; font-weight: 500; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.8); margin-top: 5px; white-space: nowrap; }
 .dock-container { position: absolute; bottom: 25px; left: 15px; right: 15px; background: rgba(255,255,255,0.4); border-radius: 24px; padding: 18px; display: flex; justify-content: space-around; backdrop-filter: blur(15px); z-index: 30; }
 
-/* APP COMMON */
+/* APP LAYOUT */
 .nav-bar { height: 50px; display: flex; align-items: center; padding: 0 15px; background: white; border-bottom: 1px solid #eee; justify-content: space-between; font-weight: bold; color: var(--accent); flex-shrink: 0; z-index: 50; }
 .back-btn { color: #333; padding: 10px; font-size: 1.2rem; cursor: pointer; }
 .scroll-content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 80px; width: 100%; }
@@ -77,6 +84,15 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .chat-img.zoomed { height: auto; max-height: none; width: 100%; object-fit: contain; transform: scale(1.02); z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
 .typing { font-size: 0.8rem; color: #666; margin-left: 55px; display: none; margin-bottom: 10px; font-style: italic;}
 
+/* MUSIC */
+.music-player { display: flex; flex-direction: column; align-items: center; padding-top: 20px; height: 100%; overflow-y: auto; }
+.album-art { width: 220px; height: 220px; border-radius: 20px; background-size: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.2); flex-shrink: 0; }
+.album-art.rotating { animation: spin 5s linear infinite; border-radius: 50%; }
+.music-controls { display: flex; align-items: center; gap: 30px; margin-top: 20px; font-size: 2.5rem; color: var(--accent); }
+.music-progress { width: 85%; margin-top: 20px; }
+.progress-bar-bg { width: 100%; height: 5px; background: #ddd; border-radius: 10px; position: relative; }
+.progress-fill { height: 100%; width: 0%; background: var(--accent); border-radius: 10px; }
+.time-stamps { display: flex; justify-content: space-between; width: 100%; margin-top: 5px; font-size: 0.75rem; color: #888; font-weight: bold; }
 /* KUCHU PET */
 .pet-view { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; padding: 20px; }
 .pet-avatar { width: 180px; height: 180px; border-radius: 50%; background-image: url('kuchu.jpg'); background-size: cover; border: 6px solid white; box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: transform 0.2s; flex-shrink: 0; }
@@ -88,23 +104,13 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .progress-bar { width: 70%; height: 10px; background: #eee; border-radius: 5px; overflow: hidden; }
 .fill { height: 100%; background: #4CAF50; transition: width 0.5s; }
 
-/* MUSIC */
-.music-player { display: flex; flex-direction: column; align-items: center; padding-top: 20px; height: 100%; overflow-y: auto; }
-.album-art { width: 220px; height: 220px; border-radius: 20px; background-size: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.2); flex-shrink: 0; }
-.album-art.rotating { animation: spin 5s linear infinite; border-radius: 50%; }
-.music-controls { display: flex; align-items: center; gap: 30px; margin-top: 20px; font-size: 2.5rem; color: var(--accent); }
-.music-progress { width: 85%; margin-top: 20px; }
-.progress-bar-bg { width: 100%; height: 5px; background: #ddd; border-radius: 10px; position: relative; }
-.progress-fill { height: 100%; width: 0%; background: var(--accent); border-radius: 10px; }
-.time-stamps { display: flex; justify-content: space-between; width: 100%; margin-top: 5px; font-size: 0.75rem; color: #888; font-weight: bold; }
-/* COUPONS & LISTS (FIXED) */
+/* COUPONS & LISTS */
 .coupon-list { padding: 20px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; padding-bottom: 100px; width: 100%; }
 .coupon-ticket { background: white; border-radius: 12px; display: flex; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08); position: relative; min-height: 100px; border: 1px solid #eee; }
 .coupon-left { background: #FFF0F5; width: 80px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border-right: 2px dashed #ffb7b2; }
 .coupon-right { flex: 1; padding: 15px; display: flex; flex-direction: column; justify-content: center; }
 .coupon-title { font-weight: bold; color: #333; font-size: 1.1rem; margin-bottom: 4px; }
 .coupon-desc { font-size: 0.8rem; color: #666; }
-.coupon-valid { font-size: 0.65rem; color: #aaa; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
 .coupon-ticket.redeemed { filter: grayscale(100%); opacity: 0.6; pointer-events: none; }
 .stamp-mark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg) scale(0); border: 3px solid #D32F2F; color: #D32F2F; font-weight: 900; font-size: 1.5rem; padding: 5px 10px; border-radius: 8px; opacity: 0; transition: 0.3s; background: rgba(255,255,255,0.9); }
 .coupon-ticket.redeemed .stamp-mark { opacity: 1; transform: translate(-50%, -50%) rotate(-15deg) scale(1); }
@@ -120,6 +126,8 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .note-text { display: flex; flex-direction: column; flex: 1; }
 .note-text b { font-size: 1rem; color: #333; margin-bottom: 3px; }
 .note-text span { font-size: 0.85rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px; }
+.fab { position: absolute; bottom: 30px; right: 20px; width: 60px; height: 60px; background: #E91E63; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4); cursor: pointer; transition: transform 0.2s; }
+.fab:active { transform: scale(0.9); }
 
 /* GALLERY & LIGHTBOX */
 .gallery-grid { padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding-bottom: 100px; }
@@ -147,11 +155,17 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .oracle-input { width: 80%; padding: 15px; border-radius: 30px; border: 1px solid #E91E63; margin-top: 30px; outline: none; text-align: center; background: rgba(255, 255, 255, 0.9); }
 .oracle-btn { margin-top: 15px; background: #E91E63; color: white; padding: 10px 25px; border-radius: 25px; font-weight: bold; }
 
-/* HEART, PHONE & CONTACT */
+/* PHONE & TOGGLES */
 .contact-profile { padding: 30px 20px; text-align: center; background: white; border-bottom: 1px solid #f0f0f0; }
 .contact-avatar { width: 100px; height: 100px; border-radius: 50%; background-size: cover; margin: 0 auto 15px; border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 .heart-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; }
 .big-heart { font-size: 8rem; margin-bottom: 20px; animation: heartbeat 1.5s infinite ease-in-out; cursor: pointer; }
 .love-note { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); width: 100%; max-width: 300px; margin-bottom: 30px; }
+.toggle-switch { width: 45px; height: 26px; background: #e9e9ea; border-radius: 20px; position: relative; transition: 0.3s; cursor: pointer; }
+.toggle-switch.active { background: #34C759; }
+.toggle-knob { width: 22px; height: 22px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+.toggle-switch.active .toggle-knob { transform: translateX(19px); }
+.color-picker { display: flex; gap: 10px; }
+.color-dot { width: 25px; height: 25px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
 .fade-in-up { animation: slideUp 0.4s ease-out backwards; }
 .hidden { display: none !important; }
