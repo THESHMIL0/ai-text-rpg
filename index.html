@@ -5,17 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ayuuu's Gift</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="style.css?v=81">
+    <link rel="stylesheet" href="style.css?v=76">
 </head>
 <body onload="init()">
 
-    <div class="lightbox" id="lightbox">
-        <div class="lightbox-close" onclick="closeLightbox()">×</div>
+    <div class="home-indicator"></div>
+
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <div class="lightbox-close">×</div>
         <img id="lightbox-img" src="">
     </div>
 
     <div class="screen active" id="lock-screen">
-        <div id="lock-main">
+        <div id="lock-main" onclick="showPasscode()">
             <div class="lock-header">
                 <div class="lock-date" id="lock-date">Loading...</div>
                 <div class="lock-time" id="lock-clock">12:00</div>
@@ -28,8 +30,8 @@
                 </div>
             </div>
             <div class="lock-footer">
-                <div class="lock-shortcut" onclick="toggleFlashlight(event)">🔦</div>
-                <div style="font-size:0.9rem; opacity:0.8; font-weight:500; padding:20px;" onclick="showPasscode()">Tap to Unlock 🔓</div>
+                <div class="lock-shortcut" onclick="toggleFlashlight(event)"><span id="flash-icon">🔦</span></div>
+                <div style="font-size:0.9rem; opacity:0.8; font-weight:500;">Swipe up to unlock</div>
                 <div class="lock-shortcut" onclick="openCamera(event)">📷</div>
             </div>
         </div>
@@ -49,11 +51,11 @@
     <div class="screen" id="home-screen">
         <div class="status-bar"><span>12:00</span><span>5G 📶 100%</span></div>
         <div class="widget">
-            <div class="widget-text">
-                <div class="widget-title">STATUS</div>
-                <div class="widget-status">Miss You 3000 ❤️</div>
+            <div>
+                <div style="font-size:0.75rem; font-weight:bold; opacity:0.7;">STATUS</div>
+                <div style="font-size:1.2rem; font-weight:800; color:#E91E63;">Miss You 3000 ❤️</div>
             </div>
-            <div style="font-size:2.5rem;">😽</div>
+            <div style="font-size:2rem;">😽</div>
         </div>
         <div class="scroll-content">
             <div class="app-grid">
@@ -142,6 +144,7 @@
             <div class="oracle-btn" onclick="askOracle()">Reveal Answer</div>
         </div>
     </div>
+
     <div class="screen" id="app-music">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Music</span><div></div></div>
         <audio id="audio-player"></audio>
@@ -169,7 +172,6 @@
             </div>
         </div>
     </div>
-
     <div class="screen" id="app-events">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Our Timeline</span><div></div></div>
         <div class="scroll-content">
@@ -184,6 +186,12 @@
                     <div class="settings-row"><span>🤴 Theshu's Bday</span><span id="days-me" style="color:#E91E63; font-weight:bold;">14 March</span></div>
                     <div class="settings-row"><span>👸 Ayuuu's Bday</span><span id="days-her" style="color:#E91E63; font-weight:bold;">22 Sept</span></div>
                     <div class="settings-row"><span>💑 Anniversary</span><span id="days-anni" style="color:#E91E63; font-weight:bold;">18 Jan</span></div>
+                </div>
+                <p style="font-size:0.8rem; color:#888; margin-left:15px;">MEMORY LANE 🕰️</p>
+                <div class="settings-card fade-in-up" style="animation-delay:0.2s">
+                    <div class="settings-row"><span>💯 100th Day</span><span id="date-100" style="color:#888;">Calculating...</span></div>
+                    <div class="settings-row"><span>💌 First I Love You</span><span style="color:#888;">Tap ›</span></div>
+                    <div class="settings-row"><span>💍 Proposal</span><span style="color:#E91E63; font-weight:bold;">TODAY!</span></div>
                 </div>
             </div>
         </div>
@@ -227,18 +235,27 @@
                 <p style="font-size:0.8rem; color:#888; text-align:center; margin-bottom:5px;">TAP TO REDEEM 🎟️</p>
                 <div class="coupon-ticket fade-in-up" onclick="redeemCoupon(this)">
                     <div class="coupon-left">💆‍♂️</div>
-                    <div class="coupon-right"><div class="coupon-title">Free Massage</div><div class="coupon-desc">20 minutes. No complaining.</div></div>
+                    <div class="coupon-right"><div class="coupon-title">Free Massage</div><div class="coupon-desc">20 minutes. No complaining.</div><div class="coupon-valid">Valid: Forever</div></div>
                     <div class="stamp-mark">USED</div>
                 </div>
                 <div class="coupon-ticket fade-in-up" onclick="redeemCoupon(this)" style="animation-delay:0.1s">
                     <div class="coupon-left">🥞</div>
-                    <div class="coupon-right"><div class="coupon-title">Breakfast in Bed</div><div class="coupon-desc">Pancakes & Coffee served by me.</div></div>
+                    <div class="coupon-right"><div class="coupon-title">Breakfast in Bed</div><div class="coupon-desc">Pancakes & Coffee served by me.</div><div class="coupon-valid">Valid: Any Sunday</div></div>
                     <div class="stamp-mark">YUM!</div>
+                </div>
+                <div class="coupon-ticket fade-in-up" onclick="redeemCoupon(this)" style="animation-delay:0.2s">
+                    <div class="coupon-left">🎬</div>
+                    <div class="coupon-right"><div class="coupon-title">Movie Choice</div><div class="coupon-desc">I watch whatever YOU want.</div><div class="coupon-valid">One use only</div></div>
+                    <div class="stamp-mark">USED</div>
+                </div>
+                <div class="coupon-ticket fade-in-up" onclick="redeemCoupon(this)" style="animation-delay:0.3s">
+                    <div class="coupon-left">🏳️</div>
+                    <div class="coupon-right"><div class="coupon-title">End Argument</div><div class="coupon-desc">I admit I was wrong.</div><div class="coupon-valid">Emergency Only 🚨</div></div>
+                    <div class="stamp-mark">SAVED</div>
                 </div>
             </div>
         </div>
     </div>
-
     <div class="screen" id="app-heart">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>My Heart</span><div></div></div>
         <div class="heart-container">
@@ -258,18 +275,23 @@
                 <p style="font-size:0.8rem; color:#888; margin-left:15px; margin-top:10px;">PINNED</p>
                 <div class="settings-card fade-in-up" onclick="openNote('bucket')">
                     <div class="settings-row" style="padding:15px;">
-                        <div class="note-row"><div class="note-icon">📌</div><div class="note-text"><b>Our Bucket List ✈️</b><span>Japan, Maldives...</span></div></div>
+                        <div class="note-row"><div class="note-icon">📌</div><div class="note-text"><b>Our Bucket List ✈️</b><span>Japan, Maldives, Northern Lights...</span></div></div>
                     </div>
                 </div>
                 <div class="settings-card fade-in-up" onclick="openNote('love')" style="animation-delay:0.1s">
                     <div class="settings-row" style="padding:15px;">
-                        <div class="note-row"><div class="note-icon">📝</div><div class="note-text"><b>10 Reasons I Love You ❤️</b><span>1. Your smile...</span></div></div>
+                        <div class="note-row"><div class="note-icon">📝</div><div class="note-text"><b>10 Reasons I Love You ❤️</b><span>1. Your smile 2. Your eyes...</span></div></div>
                     </div>
                 </div>
                 <p style="font-size:0.8rem; color:#888; margin-left:15px;">TODAY</p>
                 <div class="settings-card fade-in-up" onclick="openNote('shopping')" style="animation-delay:0.2s">
                     <div class="settings-row" style="padding:15px;">
-                        <div class="note-row"><div class="note-icon">🛒</div><div class="note-text"><b>Shopping List</b><span>Cat food for Kuchu...</span></div></div>
+                        <div class="note-row"><div class="note-icon">🛒</div><div class="note-text"><b>Shopping List</b><span>Cat food for Kuchu, Chocolates...</span></div></div>
+                    </div>
+                </div>
+                <div class="settings-card fade-in-up" onclick="openNote('date')" style="animation-delay:0.3s">
+                    <div class="settings-row" style="padding:15px;">
+                        <div class="note-row"><div class="note-icon">💡</div><div class="note-text"><b>Date Night Ideas</b><span>Pizza night, Movie marathon...</span></div></div>
                     </div>
                 </div>
             </div>
@@ -281,25 +303,108 @@
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Settings</span><div></div></div>
         <div class="scroll-content">
             <div class="settings-list">
-                <p style="font-size:0.8rem; color:#888; margin-left:15px; margin-top:10px;">ACCOUNT</p>
-                <div class="settings-card fade-in-up">
-                    <div class="settings-row" style="padding: 10px 15px;">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <div style="width:50px; height:50px; background-image:url('us.jpg'); background-size:cover; border-radius:50%;"></div>
-                            <div><div style="font-weight:bold;">Theshuuu & Ayuuu</div><div style="font-size:0.8rem; color:#888;">Premium Couple ID</div></div>
+                
+                <div class="settings-card fade-in-up" onclick="alert('Profile: Theshuuu & Ayuuu\nStatus: Soulmates 💍')">
+                    <div class="settings-row" style="padding: 15px;">
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <div style="width:60px; height:60px; background-image:url('us.jpg'); background-size:cover; border-radius:50%; border: 2px solid #eee;"></div>
+                            <div>
+                                <div style="font-weight:bold; font-size:1.1rem;">Theshuuu & Ayuuu</div>
+                                <div style="font-size:0.8rem; color:#888;">AppleID: love@forever.com</div>
+                            </div>
                         </div>
+                        <div style="color:#ccc;">›</div>
                     </div>
                 </div>
-                <p style="font-size:0.8rem; color:#888; margin-left:15px;">APPEARANCE</p>
+
+                <p style="font-size:0.8rem; color:#888; margin-left:15px; margin-top:10px;">CONNECTIVITY</p>
                 <div class="settings-card fade-in-up" style="animation-delay:0.1s">
-                    <div class="settings-row"><span>🌙 Dark Mode</span><div class="toggle-switch" onclick="toggleTheme(this)"><div class="toggle-knob"></div></div></div>
-                    <div class="settings-row"><span>🎨 App Color</span><div class="color-picker"><div class="color-dot" style="background:#FF69B4" onclick="setTheme('#FF69B4')"></div><div class="color-dot" style="background:#007AFF" onclick="setTheme('#007AFF')"></div><div class="color-dot" style="background:#9C27B0" onclick="setTheme('#9C27B0')"></div></div></div>
+                    <div class="settings-row">
+                        <div style="display:flex; gap:10px;"><span>✈️</span> <span>Airplane Mode</span></div>
+                        <div class="toggle-switch" onclick="alert('Cannot disconnect from love! ✈️🚫')"><div class="toggle-knob"></div></div>
+                    </div>
+                    <div class="settings-row">
+                        <div style="display:flex; gap:10px;"><span>❤️</span> <span>Love Signal</span></div>
+                        <span style="color:green;">5G Ultra 📶</span>
+                    </div>
+                    <div class="settings-row">
+                        <div style="display:flex; gap:10px;"><span>📍</span> <span>Find My Heart</span></div>
+                        <span>Always On ›</span>
+                    </div>
                 </div>
-                <div style="text-align:center; margin-top:20px; color:#aaa; font-size:0.8rem; padding-bottom:30px;">Made with ❤️ by Theshuuu</div>
+
+                <p style="font-size:0.8rem; color:#888; margin-left:15px;">NOTIFICATIONS</p>
+                <div class="settings-card fade-in-up" style="animation-delay:0.2s">
+                    <div class="settings-row">
+                        <span>🔔 Miss You Alerts</span>
+                        <div class="toggle-switch active" onclick="toggleTheme(this)"><div class="toggle-knob"></div></div>
+                    </div>
+                    <div class="settings-row">
+                        <span>💋 Good Morning Kisses</span>
+                        <div class="toggle-switch active" onclick="toggleTheme(this)"><div class="toggle-knob"></div></div>
+                    </div>
+                    <div class="settings-row">
+                        <span>🌙 Late Night Talks</span>
+                        <div class="toggle-switch active" onclick="toggleTheme(this)"><div class="toggle-knob"></div></div>
+                    </div>
+                </div>
+
+                <p style="font-size:0.8rem; color:#888; margin-left:15px;">DISPLAY & LOVE</p>
+                <div class="settings-card fade-in-up" style="animation-delay:0.3s">
+                    <div class="settings-row"><span>🌙 Dark Mode</span><div class="toggle-switch" onclick="toggleTheme(this)"><div class="toggle-knob"></div></div></div>
+                    <div class="settings-row">
+                        <span>🎨 App Theme</span>
+                        <div class="color-picker">
+                            <div class="color-dot" style="background:#FF69B4" onclick="setTheme('#FF69B4')"></div>
+                            <div class="color-dot" style="background:#007AFF" onclick="setTheme('#007AFF')"></div>
+                            <div class="color-dot" style="background:#9C27B0" onclick="setTheme('#9C27B0')"></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" onclick="alert('Brightness is already at 100% because you shine! ✨')">
+                        <span>☀️ Brightness</span>
+                        <span>Max ✨</span>
+                    </div>
+                </div>
+
+                <p style="font-size:0.8rem; color:#888; margin-left:15px;">BATTERY & STORAGE</p>
+                <div class="settings-card fade-in-up" style="animation-delay:0.4s">
+                    <div class="settings-row">
+                        <span>🔋 Love Battery</span>
+                        <span style="color:#4CAF50; font-weight:bold;">Infinite ⚡</span>
+                    </div>
+                    <div class="settings-row">
+                        <span>💾 Heart Storage</span>
+                        <span>100% Full ❤️</span>
+                    </div>
+                    <div class="settings-row" onclick="cleanCache()">
+                        <span>🗑️ Clear Bad Memories</span>
+                        <span>Tap to Clean</span>
+                    </div>
+                </div>
+
+                <p style="font-size:0.8rem; color:#888; margin-left:15px;">SYSTEM</p>
+                <div class="settings-card fade-in-up" style="animation-delay:0.5s">
+                    <div class="settings-row" onclick="checkUpdate()">
+                        <span>🔄 Software Update</span>
+                        <span style="color:red; font-size:0.8rem;">1 Update Available</span>
+                    </div>
+                    <div class="settings-row">
+                        <span>ℹ️ About Love OS</span>
+                        <span>v14.03 (Theshu Edition)</span>
+                    </div>
+                    <div class="settings-row" onclick="resetLove()" style="border-top: 1px solid #eee;">
+                        <span style="color:red;">⚠️ Reset Relationship</span>
+                    </div>
+                </div>
+
+                <div style="text-align:center; margin-top:20px; color:#aaa; font-size:0.8rem; padding-bottom: 20px;">
+                    Designed by Theshuuu in Kerala 🌴<br>
+                    Licensed to Ayuuu Forever
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="script.js?v=81"></script>
+    <script src="script.js?v=76"></script>
 </body>
 </html>
