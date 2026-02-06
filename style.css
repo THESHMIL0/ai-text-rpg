@@ -26,6 +26,9 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: none; flex-direction: column; padding-top: env(safe-area-inset-top); z-index: 10; }
 .screen.active { display: flex; z-index: 20; animation: popIn 0.25s ease-out; }
 
+/* HOME INDICATOR */
+.home-indicator { position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; background: #000; border-radius: 10px; opacity: 0.2; z-index: 9999; pointer-events: none; }
+
 /* LOCK SCREEN */
 #lock-screen { background-image: url('lockscreen.jpg'); background-size: cover; background-position: center; color: white; z-index: 1000; }
 #lock-main { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding-top: 60px; padding-bottom: 40px; }
@@ -54,6 +57,10 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .app-icon { width: 60px; height: 60px; border-radius: 15px; background: white; display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 .app-name { font-size: 11px; font-weight: bold; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.8); white-space: nowrap; }
 .dock-container { position: absolute; bottom: 30px; left: 15px; right: 15px; background: rgba(255,255,255,0.5); border-radius: 20px; padding: 15px; display: flex; justify-content: space-around; backdrop-filter: blur(10px); z-index: 30; }
+.nav-bar { height: 50px; display: flex; align-items: center; padding: 0 15px; background: white; border-bottom: 1px solid #eee; justify-content: space-between; font-weight: bold; color: var(--accent); flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.back-btn { color: #333; padding: 10px; font-size: 1.2rem; cursor: pointer; }
+
+/* CHAT */
 .chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 220px; background: #FFF0F5; }
 .chat-row { display: flex; align-items: flex-end; gap: 8px; animation: slideUp 0.3s; }
 .chat-avatar { width: 35px; height: 35px; border-radius: 50%; background-size: cover; background-position: center; border: 1px solid #eee; flex-shrink: 0; background-color: white; }
@@ -66,16 +73,16 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .chat-btn { background: #FFF; border: 2px solid var(--accent); color: var(--accent); padding: 14px; border-radius: 25px; font-weight: bold; text-align: center; font-size: 0.95rem; }
 .chat-btn:active { background: var(--accent); color: white; }
 .typing { font-size: 0.8rem; color: #666; margin-left: 55px; display: none; margin-bottom: 10px; font-style: italic;}
+
+/* COMPONENTS */
 .pet-view, .magic-container, .music-player { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
 .pet-avatar { width: 180px; height: 180px; border-radius: 50%; background-image: url('kuchu.jpg'); background-size: cover; border: 5px solid white; transition: transform 0.2s; }
 .pet-btn { background: white; border: 2px solid var(--primary); padding: 15px; border-radius: 50%; font-size: 2rem; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 .pet-btn:active { transform: scale(0.9); }
+.magic-ball { width: 220px; height: 220px; background: radial-gradient(circle at 30% 30%, #FF69B4, #E91E63); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.3rem; border: 5px solid white; padding: 20px; text-align: center; }
 .album-art { width: 240px; height: 240px; border-radius: 20px; background-size: cover; background-position: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 .album-art.rotating { animation: spin 5s linear infinite; border-radius: 50%; }
-.music-controls { display: flex; align-items: center; gap: 40px; margin-top: 30px; font-size: 2.5rem; color: var(--accent); }
-.gallery-scroll { padding: 30px 20px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; gap: 30px; padding-bottom: 100px; }
-.polaroid { background: white; padding: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); width: 85%; max-width: 300px; text-align: center; transition: transform 0.2s; }
-.polaroid img { width: 100%; display: block; border: 1px solid #eee; }
+.music-controls { display: flex; align-items: center; gap: 40px; margin-top: 20px; font-size: 2.5rem; color: var(--accent); }
 .settings-list { padding: 20px; overflow-y: auto; height: 100%; padding-bottom: 80px; }
 .settings-card { background: white; border-radius: 12px; padding: 0; overflow: hidden; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 .settings-row { padding: 16px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; }
@@ -90,8 +97,6 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .dot { width: 12px; height: 12px; background: #FF1493; border-radius: 50%; border: 2px solid white; }
 .label { font-size: 0.7rem; font-weight: bold; color: #555; margin-top: 5px; background: rgba(255,255,255,0.8); padding: 2px 5px; border-radius: 5px; }
 .map-plane { position: absolute; top: 40%; left: 20%; font-size: 1.5rem; animation: fly 4s infinite linear; }
-.nav-bar { height: 50px; display: flex; align-items: center; padding: 0 15px; background: white; border-bottom: 1px solid #eee; justify-content: space-between; font-weight: bold; color: var(--accent); flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-.back-btn { color: #333; padding: 10px; font-size: 1.2rem; cursor: pointer; }
 .contact-profile { padding: 30px 20px; text-align: center; background: white; border-bottom: 1px solid #f0f0f0; }
 .contact-avatar { width: 100px; height: 100px; border-radius: 50%; background-size: cover; background-position: center; margin: 0 auto 15px; border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 .contact-profile h2 { margin: 0; font-size: 1.4rem; color: #333; }
@@ -133,9 +138,26 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .big-heart:active { transform: scale(0.9); }
 .love-note { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); width: 100%; max-width: 300px; font-style: italic; color: #555; margin-bottom: 30px; transition: opacity 0.3s; }
 .floating-heart { position: fixed; font-size: 2rem; pointer-events: none; animation: floatUp 3s linear forwards; z-index: 1000; }
-
-/* ASK APP (NEW) */
 .crystal-ball { width: 200px; height: 200px; background: radial-gradient(circle at 30% 30%, #FFB6C1, #E91E63); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.2rem; border: 5px solid rgba(255,255,255,0.5); padding: 20px; text-align: center; box-shadow: 0 0 20px #FF69B4; animation: glow 3s infinite alternate; position: relative; }
 .crystal-ball::before { content: ''; position: absolute; top: 15%; left: 20%; width: 40px; height: 20px; background: rgba(255,255,255,0.4); border-radius: 50%; transform: rotate(-45deg); }
 .oracle-input { width: 80%; padding: 12px; border-radius: 25px; border: 1px solid #E91E63; margin-top: 30px; outline: none; text-align: center; font-size: 1rem; color: #E91E63; background: rgba(255, 255, 255, 0.9); }
 .oracle-btn { margin-top: 15px; background: #E91E63; color: white; padding: 10px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(233, 30, 99, 0.3); }
+
+/* GALLERY 2.0 STYLES */
+.gallery-grid { padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; overflow-y: auto; padding-bottom: 80px; }
+.gallery-item { background: white; padding: 8px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.2s; cursor: pointer; }
+.gallery-item:active { transform: scale(0.95); }
+.gallery-img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; display: block; border: 1px solid #eee; }
+.gallery-caption { text-align: center; font-size: 0.8rem; color: #555; margin-top: 8px; font-weight: bold; font-family: 'Courier New', monospace; }
+
+/* LIGHTBOX */
+.lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; animation: popIn 0.3s; }
+.lightbox.active { display: flex; }
+.lightbox img { max-width: 95%; max-height: 80%; border-radius: 10px; border: 4px solid white; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
+.lightbox-close { position: absolute; top: 30px; right: 20px; color: white; font-size: 2rem; cursor: pointer; padding: 10px; }
+
+/* MUSIC PLAYER 2.0 */
+.music-progress { width: 85%; margin-top: 20px; }
+.progress-bar-bg { width: 100%; height: 5px; background: rgba(0,0,0,0.1); border-radius: 10px; position: relative; overflow: hidden; }
+.progress-fill { height: 100%; width: 0%; background: var(--accent); border-radius: 10px; transition: width 0.5s linear; }
+.time-stamps { display: flex; justify-content: space-between; width: 85%; margin-top: 5px; font-size: 0.75rem; color: #888; font-weight: bold; }
