@@ -115,6 +115,7 @@ function reply(selectedText) {
             // THIS FIXES THE SCROLL WHEN IMAGE LOADS
             img.onload = scrollToBottom; 
             img.onclick = function() { this.classList.toggle('zoomed'); }; 
+            img.onerror = function() { this.src = 'https://placekitten.com/300/300'; }; 
             
             bubble.appendChild(img);
             bubble.innerHTML += `<div class="time-tick">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
@@ -316,3 +317,51 @@ function updateMusicProgress() {
 
 function prevSong() { currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length; loadSong(currentSongIndex); togglePlay(); }
 function nextSong() { currentSongIndex = (currentSongIndex + 1) % songs.length; loadSong(currentSongIndex); togglePlay(); }
+
+/* GLOBAL TELEPORT */
+function teleport() {
+    alert("Initiating Teleport sequence... 🚀");
+    setTimeout(() => { alert("Loading... ▓▓▓▓▒▒▒▒▒▒ 40%"); }, 1000);
+    setTimeout(() => { alert("Loading... ▓▓▓▓▓▓▓▓▒▒ 80%"); }, 2000);
+    setTimeout(() => { alert("❌ ERROR: Teleport Failed! Reason: You need to hug Theshuuu in real life to recharge! 🥺❤️"); }, 3000);
+}
+
+/* GAMES */
+function interactPet(action) {
+    const msg = document.getElementById('pet-bubble');
+    const img = document.getElementById('pet-img');
+    img.style.transform = "scale(1.1)";
+    setTimeout(() => img.style.transform = "scale(1)", 200);
+    if(action === 'feed') {
+        msg.innerText = "Yummy! 🐟 Burp!";
+        document.getElementById('bar-hunger').style.width = "100%";
+    }
+    if(action === 'play') {
+        msg.innerText = "Zoomies!! 🐈💨";
+        document.getElementById('bar-happy').style.width = "100%";
+    }
+    if(action === 'love') {
+        msg.innerText = "Purr... I love Ayuuu! ❤️";
+        document.getElementById('bar-love').style.width = "100%";
+    }
+}
+
+function askOracle() {
+    const input = document.getElementById('oracle-input');
+    const ball = document.getElementById('magic-ball');
+    if(input.value.trim() === "") {
+        ball.innerText = "Type something first! 🔮";
+        ball.classList.add('shake');
+        setTimeout(() => ball.classList.remove('shake'), 500);
+        return;
+    }
+    const answers = ["Theshuuu says YES! ❤️", "Absolutely 100% 😽", "Kuchu says maybe... 🐈", "Ask me later with a kiss 😘", "My heart says YES! 💖", "Only if you hug me! 🤗"];
+    ball.classList.add('shake');
+    ball.innerText = "Thinking...";
+    setTimeout(() => {
+        ball.classList.remove('shake');
+        ball.innerText = answers[Math.floor(Math.random() * answers.length)];
+        ball.style.background = "white";
+        ball.style.color = "#E91E63";
+    }, 1000);
+}
