@@ -34,17 +34,6 @@ function updateClock() {
     setTimeout(updateClock, 1000);
 }
 
-/* SETTINGS & THEMES */
-function toggleTheme(el) {
-    el.classList.toggle('active');
-    document.body.classList.toggle('dark-mode');
-}
-
-function setTheme(color) {
-    document.documentElement.style.setProperty('--primary', color);
-    document.documentElement.style.setProperty('--accent', color);
-}
-
 /* LOCK SCREEN */
 function showPasscode() {
     document.getElementById('lock-main').classList.add('hidden');
@@ -213,10 +202,14 @@ function reply(selectedText) {
             let row = document.createElement('div'); row.className = "chat-row";
             let avatar = document.createElement('div'); avatar.className = "chat-avatar"; avatar.style.backgroundImage = "url('us.jpg')";
             let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-them";
-            let img = document.createElement('img'); img.src = "kuchu.jpg"; img.className = "chat-img";
+            
+            let img = document.createElement('img'); 
+            img.src = "kuchu.jpg"; 
+            img.className = "chat-img";
             img.onload = scrollToBottom; 
             img.onclick = function() { this.classList.toggle('zoomed'); }; 
             img.onerror = function() { this.src = 'https://placekitten.com/300/300'; }; 
+            
             bubble.appendChild(img);
             bubble.innerHTML += `<div class="time-tick">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
             row.appendChild(avatar); row.appendChild(bubble);
@@ -358,10 +351,58 @@ function sendLoveWave() {
     alert("Love Wave Sent! 🌊❤️");
 }
 
-function openLightbox(src) {
-    document.getElementById('lightbox-img').src = src;
-    document.getElementById('lightbox').classList.add('active');
+/* SETTINGS & THEMES */
+function toggleTheme(el) {
+    el.classList.toggle('active');
+    document.body.classList.toggle('dark-mode');
 }
+
+function setTheme(color) {
+    document.documentElement.style.setProperty('--primary', color);
+    document.documentElement.style.setProperty('--accent', color);
+}
+
+function checkUpdate() {
+    alert("Checking for updates...");
+    setTimeout(() => {
+        alert("🚨 UPDATE FOUND: 'Even More Love v2.0' \n\nInstalling automatically... done! I love you even more now! 📈❤️");
+    }, 2000);
+}
+
+function cleanCache() {
+    if(confirm("Delete all bad memories and arguments? 🗑️")) {
+        alert("Cleaning... 🧹");
+        setTimeout(() => { alert("✨ Success! Only happy memories remain. Love storage is optimized! ❤️"); }, 1500);
+    }
+}
+
+function resetLove() {
+    alert("⚠️ ERROR: Action not permitted!");
+    alert("🚫 You cannot reset this relationship.");
+    alert("🔒 Stuck with Theshuuu forever! Deal with it! 😽❤️");
+}
+
+/* LIGHTBOX DOWNLOAD */
+function openLightbox(src) {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    if (lightbox && lightboxImg) {
+        lightboxImg.src = src;
+        lightbox.classList.add('active');
+    }
+}
+
 function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
+}
+
+function downloadImage() {
+    const img = document.getElementById('lightbox-img');
+    const link = document.createElement('a');
+    link.href = img.src;
+    link.download = 'Our_Memory_❤️.jpg';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    alert("Image Saved! 📸");
 }
