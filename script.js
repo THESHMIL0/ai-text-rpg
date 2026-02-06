@@ -99,7 +99,7 @@ function calcDays() {
     document.getElementById('days-her').innerText = Math.ceil((her - now)/(1000*60*60*24)) + " Days";
 }
 
-/* --- UPDATED CHAT LOGIC (NAMES FIXED) --- */
+/* --- CHAT LOGIC WITH CORRECT NICKNAMES --- */
 const chatBox = document.getElementById('chat-box');
 const opts = document.getElementById('chat-opts');
 const typing = document.getElementById('typing');
@@ -200,7 +200,7 @@ function reply(choice) {
 }
 
 function simulateTyping(callback, delay) {
-    typing.innerText = "Theshuuu is typing..."; // FIX TYPING NAME
+    typing.innerText = "Theshuuu is typing...";
     typing.style.display = 'block'; chatBox.scrollTop = chatBox.scrollHeight;
     setTimeout(() => { typing.style.display = 'none'; callback(); }, delay || 1500);
 }
