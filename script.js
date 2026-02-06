@@ -188,10 +188,7 @@ function reply(selectedText) {
         simulateTyping(() => {
             addBubble("I love you Ayuuu! ❤️", 'chat-them');
             opts.innerHTML = "";
-            let btn = document.createElement('div'); 
-            btn.className = "chat-btn"; 
-            btn.innerText = "🏠 Go Home"; 
-            btn.onclick = () => goHome(); 
+            let btn = document.createElement('div'); btn.className = "chat-btn"; btn.innerText = "🏠 Go Home"; btn.onclick = () => goHome(); 
             opts.appendChild(btn);
             opts.classList.remove('hidden');
         }, 1500);
