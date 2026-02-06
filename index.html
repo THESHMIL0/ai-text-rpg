@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ayuuu's Gift</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="style.css?v=61">
+    <link rel="stylesheet" href="style.css?v=62">
 </head>
 <body onload="init()">
 
@@ -15,7 +15,6 @@
                 <div class="lock-time" id="lock-clock">12:00</div>
                 <div class="lock-date" id="lock-date">Loading...</div>
             </div>
-
             <div style="width:100%; display:flex; flex-direction:column; align-items:center;">
                 <div class="lock-notification">
                     <div class="notif-header"><span>MESSAGES • NOW</span></div>
@@ -33,7 +32,6 @@
                 </div>
             </div>
         </div>
-
         <div id="lock-passcode" class="hidden">
             <div class="pass-container">
                 <div class="pass-avatar" style="background-image: url('us.jpg');"></div>
@@ -56,7 +54,6 @@
             </div>
             <div style="font-size:2rem;">😽</div>
         </div>
-
         <div class="app-grid">
             <div class="app-icon-wrapper" onclick="openApp('msg')"><div class="app-icon" style="background:#E0F7FA;">💌</div><div class="app-name">Messages</div></div>
             <div class="app-icon-wrapper" onclick="openApp('events')"><div class="app-icon" style="background:#E3F2FD;">📅</div><div class="app-name">Events</div></div>
@@ -69,11 +66,47 @@
             <div class="app-icon-wrapper" onclick="openApp('notes')"><div class="app-icon" style="background:#C8E6C9;">📝</div><div class="app-name">Notes</div></div>
             <div class="app-icon-wrapper" onclick="openApp('settings')"><div class="app-icon" style="background:#F3E5F5;">⚙️</div><div class="app-name">Settings</div></div>
         </div>
-
         <div class="dock-container">
             <div class="app-icon-wrapper" onclick="openApp('call')"><div class="app-icon" style="background:#E8F5E9;">📞</div></div>
             <div class="app-icon-wrapper" onclick="openApp('global')"><div class="app-icon" style="background:#E1BEE7;">🌐</div></div>
             <div class="app-icon-wrapper" onclick="openApp('msg')"><div class="app-icon" style="background:#ffebee;">❤️</div></div>
+        </div>
+    </div>
+
+    <div class="screen" id="app-call">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Contact Info</span><div></div></div>
+        
+        <div class="contact-profile">
+            <div class="contact-avatar" style="background-image: url('us.jpg');"></div>
+            <h2>Theshuuu (Hubby) 💍</h2>
+            <p style="color:#888;">Mobile • ❤️</p>
+            
+            <div class="contact-actions">
+                <div class="action-btn" onclick="openApp('msg')">
+                    <div class="icon">💬</div><span>Message</span>
+                </div>
+                <div class="action-btn" onclick="alert('Calling Theshuuu... 📞\n(He misses you!)')">
+                    <div class="icon" style="background:#4CAF50; color:white; border:none;">📞</div><span>Call</span>
+                </div>
+                <div class="action-btn" onclick="alert('FaceTime unavailable.\nReason: He needs a hug first! 🥺')">
+                    <div class="icon">📹</div><span>Video</span>
+                </div>
+                <div class="action-btn" onclick="alert('Mail sent: I Love You! 💌')">
+                    <div class="icon">📧</div><span>Mail</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-list">
+            <div class="settings-card fade-in-up">
+                <div class="settings-row"><span>📱 mobile</span><span style="color:#007AFF;">+91 1801 2026</span></div>
+                <div class="settings-row"><span>🏠 home</span><span style="color:#007AFF;">Our Dream House 🏡</span></div>
+                <div class="settings-row" style="border:none;"><span>🎂 birthday</span><span>March 14</span></div>
+            </div>
+            <div class="settings-card fade-in-up" style="animation-delay:0.1s">
+                <div class="settings-row" onclick="alert('Added to Favorites! ⭐')"><span style="color:#007AFF;">Add to Favorites</span></div>
+                <div class="settings-row" onclick="alert('Blocked? Never! 😽')" style="border:none;"><span style="color:#FF3B30;">Block this Caller</span></div>
+            </div>
         </div>
     </div>
 
@@ -183,13 +216,6 @@
         </div>
     </div>
 
-    <div class="screen" id="app-call">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Phone</span><div></div></div>
-        <div class="settings-list">
-            <div class="settings-card fade-in-up" onclick="alert('Calling Theshuuu... 📞')"><div class="settings-row"><div style="flex:1;"><b>Theshuuu (Hubby) 💍</b><br><small>Mobile • ❤️</small></div><div style="font-size:1.5rem;">📞</div></div></div>
-        </div>
-    </div>
-
     <div class="screen" id="app-coupons">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Coupons</span><div></div></div>
         <div class="settings-list">
@@ -227,6 +253,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=61"></script>
+    <script src="script.js?v=62"></script>
 </body>
 </html>
