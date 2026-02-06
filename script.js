@@ -273,3 +273,35 @@ function redeemCoupon(element) {
         alert("Coupon Redeemed! Send a screenshot to Theshuuu! 📸");
     }
 }
+
+/* MY HEART APP LOGIC */
+function generateLoveNote() {
+    const notes = [
+        "You are my sunshine! ☀️",
+        "My heart beats only for you! 💓",
+        "I love you more than pizza! 🍕",
+        "You + Me = Forever ❤️",
+        "Can't wait to hug you! 🤗",
+        "You are perfect to me. ✨"
+    ];
+    const noteEl = document.getElementById('love-note-text');
+    noteEl.style.opacity = 0;
+    setTimeout(() => {
+        noteEl.innerText = notes[Math.floor(Math.random() * notes.length)];
+        noteEl.style.opacity = 1;
+    }, 300);
+}
+
+function sendLoveWave() {
+    for (let i = 0; i < 10; i++) {
+        let heart = document.createElement('div');
+        heart.innerText = "❤️";
+        heart.className = "floating-heart";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.top = "100vh";
+        heart.style.animationDuration = (Math.random() * 2 + 2) + "s";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 4000);
+    }
+    alert("Love Wave Sent! 🌊❤️");
+}
