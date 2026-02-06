@@ -9,8 +9,6 @@ function init() {
 
 function updateClock() {
     const now = new Date();
-    
-    // Time
     let m = now.getMinutes().toString().padStart(2,'0');
     let t = now.getHours() + ":" + m;
     
@@ -19,7 +17,6 @@ function updateClock() {
     if(clockEl) clockEl.innerText = t;
     if(lockClockEl) lockClockEl.innerText = t;
 
-    // Real Date for Lock Screen
     const dateOptions = { weekday: 'long', month: 'short', day: 'numeric' };
     const dateString = now.toLocaleDateString('en-US', dateOptions);
     const lockDateEl = document.getElementById('lock-date');
@@ -103,10 +100,7 @@ function askOracle() {
 }
 
 /* MUSIC */
-const songs = [
-    { title: "Hawayein", src: "song.mp3", art: "wallpaper.jpg" },
-    { title: "Like My Father", src: "song3.mp3", art: "kuchu.jpg" }
-];
+const songs = [{ title: "Hawayein", src: "song.mp3", art: "wallpaper.jpg" }, { title: "Like My Father", src: "song3.mp3", art: "kuchu.jpg" }];
 let currentSongIndex = 0;
 const audioPlayer = document.getElementById('audio-player');
 const playBtn = document.getElementById('play-btn');
@@ -125,7 +119,6 @@ function loadSong(index) {
 function togglePlay() {
     if (!audioPlayer) return;
     if (!audioPlayer.src || audioPlayer.src === "") loadSong(0);
-    
     if (audioPlayer.paused) { 
         audioPlayer.play().catch(e => alert("Please make sure 'song.mp3' and 'song3.mp3' are in the folder! 🎵")); 
         playBtn.innerText = "⏸️"; 
@@ -136,16 +129,8 @@ function togglePlay() {
         albumArt.classList.remove('rotating'); 
     }
 }
-function prevSong() {
-    currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-    loadSong(currentSongIndex);
-    togglePlay();
-}
-function nextSong() {
-    currentSongIndex = (currentSongIndex + 1) % songs.length;
-    loadSong(currentSongIndex);
-    togglePlay();
-}
+function prevSong() { currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length; loadSong(currentSongIndex); togglePlay(); }
+function nextSong() { currentSongIndex = (currentSongIndex + 1) % songs.length; loadSong(currentSongIndex); togglePlay(); }
 
 /* CHAT LOGIC */
 const chatBox = document.getElementById('chat-box');
@@ -160,7 +145,6 @@ function reply(selectedText) {
         simulateTyping(() => {
             addBubble("Happy Valentine's Day Ayuuu! ❤️", 'chat-them');
             addBubble("I wish I was there to hug you... but look who is here!", 'chat-them');
-            
             let row = document.createElement('div'); row.className = "chat-row";
             let avatar = document.createElement('div'); avatar.className = "chat-avatar"; avatar.style.backgroundImage = "url('us.jpg')";
             let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-them";
@@ -170,7 +154,6 @@ function reply(selectedText) {
             bubble.innerHTML += `<div class="time-tick">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
             row.appendChild(avatar); row.appendChild(bubble);
             chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
-
             showOpts(["Omg my Kuchu!! 🥺", "He's so cute!"]);
             chatStep = 1;
         }, 1500);
@@ -235,9 +218,7 @@ function addBubble(text, className) {
 function showOpts(arr) {
     opts.innerHTML = ""; opts.classList.remove('hidden');
     arr.forEach((t) => {
-        let btn = document.createElement('div'); btn.className = "chat-btn"; btn.innerText = t; 
-        btn.onclick = () => reply(t); 
-        opts.appendChild(btn);
+        let btn = document.createElement('div'); btn.className = "chat-btn"; btn.innerText = t; btn.onclick = () => reply(t); opts.appendChild(btn);
     });
 }
 
@@ -246,20 +227,17 @@ function toggleZoom(el) { el.classList.toggle('zoomed'); }
 /* DATES & TIMELINE */
 function calcDays() {
     const now = new Date();
-    // START: Jan 18, 2026
     const startDate = new Date("2026-01-18"); 
-    
     const diff = now - startDate;
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     
     const el = document.getElementById('together-time');
     if(el) el.innerText = days + " Days";
 
-    updateCountdown('days-me', 2, 14);   // Mar 14
-    updateCountdown('days-her', 8, 22);  // Sept 22
-    updateCountdown('days-anni', 0, 18); // Jan 18 (Anniversary)
+    updateCountdown('days-me', 2, 14);   
+    updateCountdown('days-her', 8, 22);  
+    updateCountdown('days-anni', 0, 18); 
 
-    // 100th Day: Apr 28, 2026
     const el100 = document.getElementById('date-100');
     if(el100) el100.innerText = "Apr 28, 2026";
 }
