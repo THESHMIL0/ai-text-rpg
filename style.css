@@ -4,7 +4,6 @@
     --accent: #E91E63; 
     --text: #333; 
     --glass: rgba(255, 255, 255, 0.85);
-    --glass-border: rgba(255, 255, 255, 0.4);
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; user-select: none; touch-action: manipulation; }
@@ -23,8 +22,8 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 @keyframes heartbeat { 0% { transform: scale(1); } 15% { transform: scale(1.15); } 30% { transform: scale(1); } 45% { transform: scale(1.15); } 60% { transform: scale(1); } }
 @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-100vh) scale(1.5); opacity: 0; } }
 @keyframes rotating { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@keyframes fly { 0% { left: 15%; transform: translateY(0) rotate(10deg); } 50% { transform: translateY(-10px) rotate(10deg); } 100% { left: 75%; transform: translateY(0) rotate(10deg); } }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+@keyframes fly { 0% { left: 15%; transform: translateY(0) rotate(10deg); } 50% { transform: translateY(-10px) rotate(10deg); } 100% { left: 75%; transform: translateY(0) rotate(10deg); } }
 
 /* SCREENS */
 .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: none; flex-direction: column; padding-top: env(safe-area-inset-top); z-index: 10; }
@@ -116,7 +115,7 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .oracle-btn { margin-top: 15px; background: #E91E63; color: white; padding: 10px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(233, 30, 99, 0.3); }
 
 /* GALLERY & LIGHTBOX */
-.gallery-grid { padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding-bottom: 100px; }
+.gallery-grid { padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 .gallery-item { background: white; padding: 8px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.2s; cursor: pointer; }
 .gallery-item:active { transform: scale(0.95); }
 .gallery-img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; display: block; border: 1px solid #eee; }
@@ -179,3 +178,11 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .floating-heart { position: fixed; font-size: 2rem; pointer-events: none; animation: floatUp 3s linear forwards; z-index: 1000; }
 .fade-in-up { animation: slideUp 0.4s ease-out backwards; }
 .hidden { display: none !important; }
+
+/* TOGGLES & THEMES (SETTINGS) */
+.toggle-switch { width: 40px; height: 24px; background: #e9e9ea; border-radius: 20px; position: relative; transition: 0.3s; cursor: pointer; }
+.toggle-switch.active { background: #34C759; }
+.toggle-knob { width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+.toggle-switch.active .toggle-knob { transform: translateX(16px); }
+.color-picker { display: flex; gap: 10px; }
+.color-dot { width: 25px; height: 25px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
