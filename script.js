@@ -12,11 +12,13 @@ function updateClock() {
     let m = now.getMinutes().toString().padStart(2,'0');
     let t = now.getHours() + ":" + m;
     
+    // Update both clocks
     const clockEl = document.getElementById('clock');
     const lockClockEl = document.getElementById('lock-clock');
     if(clockEl) clockEl.innerText = t;
     if(lockClockEl) lockClockEl.innerText = t;
 
+    // Real Date for Lock Screen
     const dateOptions = { weekday: 'long', month: 'short', day: 'numeric' };
     const dateString = now.toLocaleDateString('en-US', dateOptions);
     const lockDateEl = document.getElementById('lock-date');
@@ -25,7 +27,7 @@ function updateClock() {
     setTimeout(updateClock, 1000);
 }
 
-/* LOCK SCREEN */
+/* LOCK SCREEN & SHORTCUTS */
 function showPasscode() {
     document.getElementById('lock-main').classList.add('hidden');
     document.getElementById('lock-passcode').classList.remove('hidden');
@@ -37,6 +39,17 @@ function showMainLock() {
     document.getElementById('lock-main').classList.remove('hidden');
     document.getElementById('pass-msg').innerText = "";
     document.getElementById('pass-input').value = "";
+}
+
+function toggleFlashlight(e) {
+    e.stopPropagation(); // Prevent opening passcode
+    const btn = e.currentTarget;
+    btn.classList.toggle('active');
+}
+
+function openCamera(e) {
+    e.stopPropagation(); // Prevent opening passcode
+    alert("📸 Camera Locked!\nUnlock device to take cute selfies.");
 }
 
 function checkPasscode() {
@@ -59,8 +72,7 @@ function goHome() {
         if(s.id !== 'lock-screen') s.classList.remove('active');
     });
     document.getElementById('home-screen').classList.add('active');
-    
-    // Stop music visualizer if playing
+    // Stop music visualizer
     const albumArt = document.getElementById('album-art');
     if(albumArt) albumArt.classList.remove('rotating');
 }
@@ -134,8 +146,7 @@ function loadSong(index) {
     audioPlayer.src = song.src;
     if(songTitle) songTitle.innerText = song.title;
     if(albumArt) albumArt.style.backgroundImage = `url('${song.art}')`;
-    // Reset progress
-    musicFill.style.width = "0%";
+    if(musicFill) musicFill.style.width = "0%";
 }
 
 function togglePlay() {
@@ -157,12 +168,13 @@ function togglePlay() {
 function updateMusicProgress() {
     if(audioPlayer.duration) {
         const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-        musicFill.style.width = percent + "%";
+        if(musicFill) musicFill.style.width = percent + "%";
         
         let min = Math.floor(audioPlayer.currentTime / 60);
         let sec = Math.floor(audioPlayer.currentTime % 60);
         if(sec < 10) sec = "0" + sec;
-        document.getElementById('curr-time').innerText = min + ":" + sec;
+        const currTime = document.getElementById('curr-time');
+        if(currTime) currTime.innerText = min + ":" + sec;
     }
 }
 
