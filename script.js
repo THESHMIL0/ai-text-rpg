@@ -79,9 +79,18 @@ function interactPet(action) {
     const img = document.getElementById('pet-img');
     img.style.transform = "scale(1.1)";
     setTimeout(() => img.style.transform = "scale(1)", 200);
-    if(action === 'feed') msg.innerText = "Yum! Kuchu is happy! 🐟";
-    if(action === 'play') msg.innerText = "Zoomies! 🐈💨";
-    if(action === 'love') msg.innerText = "Purr... Kuchu loves Ayuuu! ❤️";
+    if(action === 'feed') {
+        msg.innerText = "Yummy! 🐟 Burp!";
+        document.getElementById('bar-hunger').style.width = "100%";
+    }
+    if(action === 'play') {
+        msg.innerText = "Zoomies!! 🐈💨";
+        document.getElementById('bar-happy').style.width = "100%";
+    }
+    if(action === 'love') {
+        msg.innerText = "Purr... I love Ayuuu! ❤️";
+        document.getElementById('bar-love').style.width = "100%";
+    }
 }
 
 function askOracle() {
@@ -253,4 +262,14 @@ function openNote(type) {
     if(type === 'love') alert("1. Your smile\n2. Your kindness\n3. How you love Kuchu\n4. Your laugh\n5. Everything! ❤️");
     if(type === 'shopping') alert("1. Cat food 🐟\n2. Ice cream 🍦\n3. Chocolates 🍫\n4. Pizza 🍕");
     if(type === 'date') alert("1. Pizza & Movie Night 🍕\n2. Stargazing 🌌\n3. Cooking together 🍝");
+}
+
+/* REDEEM COUPONS */
+function redeemCoupon(element) {
+    if (element.classList.contains('redeemed')) return; 
+    if (confirm("Are you sure you want to use this coupon? 🎟️")) {
+        element.classList.add('redeemed');
+        if (navigator.vibrate) navigator.vibrate(200);
+        alert("Coupon Redeemed! Send a screenshot to Theshuuu! 📸");
+    }
 }
