@@ -61,10 +61,14 @@
                 <div class="app-icon-wrapper" onclick="openApp('msg')"><div class="app-icon" style="background:#E0F7FA;">💌</div><div class="app-name">Messages</div></div>
                 <div class="app-icon-wrapper" onclick="openApp('events')"><div class="app-icon" style="background:#E3F2FD;">📅</div><div class="app-name">Events</div></div>
                 <div class="app-icon-wrapper" onclick="openApp('gallery')"><div class="app-icon" style="background:#FFF3E0;">📸</div><div class="app-name">Gallery</div></div>
-                <div class="app-icon-wrapper" onclick="openApp('coupons')"><div class="app-icon" style="background:#FFE0B2;">🎟️</div><div class="app-name">Coupons</div></div>
+                <div class="app-icon-wrapper" onclick="openApp('music')"><div class="app-icon" style="background:#FFEBEE;">🎵</div><div class="app-name">Music</div></div>
                 <div class="app-icon-wrapper" onclick="openApp('kuchu')"><div class="app-icon" style="background:#FFF9C4;">🐱</div><div class="app-name">Kuchu</div></div>
                 <div class="app-icon-wrapper" onclick="openApp('ask')"><div class="app-icon" style="background:#E1BEE7;">🔮</div><div class="app-name">Ask Me</div></div>
-                </div>
+                <div class="app-icon-wrapper" onclick="openApp('coupons')"><div class="app-icon" style="background:#FFE0B2;">🎟️</div><div class="app-name">Coupons</div></div>
+                <div class="app-icon-wrapper" onclick="openApp('heart')"><div class="app-icon" style="background:#FFCDD2;">💖</div><div class="app-name">My Heart</div></div>
+                <div class="app-icon-wrapper" onclick="openApp('notes')"><div class="app-icon" style="background:#C8E6C9;">📝</div><div class="app-name">Notes</div></div>
+                <div class="app-icon-wrapper" onclick="openApp('settings')"><div class="app-icon" style="background:#F3E5F5;">⚙️</div><div class="app-name">Settings</div></div>
+            </div>
         </div>
         <div class="dock-container">
             <div class="app-icon-wrapper" onclick="openApp('call')"><div class="app-icon" style="background:#E8F5E9;">📞</div></div>
@@ -72,20 +76,29 @@
             <div class="app-icon-wrapper" onclick="openApp('msg')"><div class="app-icon" style="background:#ffebee;">❤️</div></div>
         </div>
     </div>
-    <div class="screen" id="app-coupons">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Love Wallet</span><div></div></div>
+    <div class="screen" id="app-call">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Contact Info</span><div></div></div>
         <div class="scroll-content">
-            <div class="coupon-list">
-                <p style="font-size:0.8rem; color:#888; text-align:center; margin-bottom:5px;">TAP TO REDEEM 🎟️</p>
-                <div class="coupon-ticket fade-in-up" onclick="redeemCoupon(this)">
-                    <div class="coupon-left">💆‍♂️</div>
-                    <div class="coupon-right"><div class="coupon-title">Free Massage</div><div class="coupon-desc">20 minutes. No complaining.</div></div>
-                    <div class="stamp-mark">USED</div>
+            <div class="contact-profile">
+                <div class="contact-avatar" style="background-image: url('us.jpg');"></div>
+                <h2>Theshuuu (Hubby) 💍</h2>
+                <p style="color:#888;">Mobile • ❤️</p>
+                <div class="contact-actions">
+                    <div class="action-btn" onclick="openApp('msg')"><div class="icon">💬</div><span>Message</span></div>
+                    <div class="action-btn" onclick="alert('Calling Theshuuu... 📞')"><div class="icon" style="background:#4CAF50; color:white; border:none;">📞</div><span>Call</span></div>
+                    <div class="action-btn" onclick="alert('FaceTime needs a hug first! 🥺')"><div class="icon">📹</div><span>Video</span></div>
+                    <div class="action-btn" onclick="alert('Mail sent: I Love You! 💌')"><div class="icon">📧</div><span>Mail</span></div>
                 </div>
-                <div class="coupon-ticket fade-in-up" onclick="redeemCoupon(this)" style="animation-delay:0.1s">
-                    <div class="coupon-left">🥞</div>
-                    <div class="coupon-right"><div class="coupon-title">Breakfast in Bed</div><div class="coupon-desc">Pancakes & Coffee served by me.</div></div>
-                    <div class="stamp-mark">YUM!</div>
+            </div>
+            <div class="settings-list">
+                <div class="settings-card fade-in-up">
+                    <div class="settings-row"><span>📱 mobile</span><span style="color:#007AFF;">+91 1801 2026</span></div>
+                    <div class="settings-row"><span>🏠 home</span><span style="color:#007AFF;">Our Dream House 🏡</span></div>
+                    <div class="settings-row" style="border:none;"><span>🎂 birthday</span><span>March 14</span></div>
+                </div>
+                <div class="settings-card fade-in-up" style="animation-delay:0.1s">
+                    <div class="settings-row" onclick="alert('Added to Favorites! ⭐')"><span style="color:#007AFF;">Add to Favorites</span></div>
+                    <div class="settings-row" onclick="alert('Blocked? Never! 😽')" style="border:none;"><span style="color:#FF3B30;">Block this Caller</span></div>
                 </div>
             </div>
         </div>
@@ -104,61 +117,6 @@
         </div>
     </div>
 
-    <div class="screen" id="app-ask">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Theshuuu Oracle</span><div></div></div>
-        <div class="magic-container">
-            <div class="crystal-ball" id="magic-ball">🔮</div>
-            <input type="text" id="oracle-input" class="oracle-input" placeholder="Ask yes/no question...">
-            <div class="oracle-btn" onclick="askOracle()">Reveal Answer</div>
-        </div>
-    </div>
-
-    <div class="screen" id="app-kuchu">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Kuchu's World</span><div></div></div>
-        <div class="pet-view">
-            <div class="pet-bubble" id="pet-bubble">Meow! I missed you! 😽</div>
-            <div class="pet-avatar" id="pet-img"></div>
-            <div class="pet-stats">
-                <div class="stat-row"><span>Hunger</span><div class="progress-bar"><div class="fill" id="bar-hunger" style="width:40%; background:#FF9800;"></div></div></div>
-                <div class="stat-row"><span>Happy</span><div class="progress-bar"><div class="fill" id="bar-happy" style="width:60%; background:#4CAF50;"></div></div></div>
-                <div class="stat-row"><span>Love</span><div class="progress-bar"><div class="fill" id="bar-love" style="width:90%; background:#E91E63;"></div></div></div>
-            </div>
-            <div class="pet-controls">
-                <div class="pet-btn" onclick="interactPet('feed')">🐟</div>
-                <div class="pet-btn" onclick="interactPet('play')">🧶</div>
-                <div class="pet-btn" onclick="interactPet('love')">✋</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="screen" id="app-gallery">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Memories</span><div></div></div>
-        <div class="scroll-content">
-            <div class="gallery-grid">
-                <div class="gallery-item fade-in-up" onclick="openLightbox('us.jpg')"><img src="us.jpg" class="gallery-img"><div class="gallery-caption">Us ❤️</div></div>
-                <div class="gallery-item fade-in-up" onclick="openLightbox('wallpaper.jpg')" style="animation-delay:0.1s"><img src="wallpaper.jpg" class="gallery-img"><div class="gallery-caption">Fav Spot 🏡</div></div>
-                <div class="gallery-item fade-in-up" onclick="openLightbox('kuchu.jpg')" style="animation-delay:0.2s"><img src="kuchu.jpg" class="gallery-img"><div class="gallery-caption">Kuchu 🐈</div></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="screen" id="app-global">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Our World</span><div></div></div>
-        <div class="scroll-content">
-            <div class="map-view">
-                <div class="map-line"></div>
-                <div class="map-plane">✈️</div>
-                <div class="map-point me"><div class="dot"></div><div class="label">Theshuuu</div></div>
-                <div class="map-point her"><div class="dot"></div><div class="label">Ayuuu</div></div>
-            </div>
-            <div class="settings-list">
-                <div class="settings-card fade-in-up">
-                    <div class="settings-row"><span>📏 Distance</span><span>Too far 🥺</span></div>
-                    <div class="settings-row"><span>❤️ Heart Connection</span><span style="color:green; font-weight:bold;">Strong 📶</span></div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="screen" id="app-kuchu">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Kuchu's World</span><div></div></div>
         <div class="pet-view">
@@ -185,7 +143,6 @@
             <div class="oracle-btn" onclick="askOracle()">Reveal Answer</div>
         </div>
     </div>
-
     <div class="screen" id="app-music">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Music</span><div></div></div>
         <audio id="audio-player"></audio>
@@ -213,6 +170,7 @@
             </div>
         </div>
     </div>
+
     <div class="screen" id="app-events">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Our Timeline</span><div></div></div>
         <div class="scroll-content">
@@ -239,7 +197,6 @@
                 <div class="gallery-item fade-in-up" onclick="openLightbox('us.jpg')"><img src="us.jpg" class="gallery-img"><div class="gallery-caption">Us ❤️</div></div>
                 <div class="gallery-item fade-in-up" onclick="openLightbox('wallpaper.jpg')" style="animation-delay:0.1s"><img src="wallpaper.jpg" class="gallery-img"><div class="gallery-caption">Fav Spot 🏡</div></div>
                 <div class="gallery-item fade-in-up" onclick="openLightbox('kuchu.jpg')" style="animation-delay:0.2s"><img src="kuchu.jpg" class="gallery-img"><div class="gallery-caption">Kuchu 🐈</div></div>
-                <div class="gallery-item fade-in-up" onclick="openLightbox('lockscreen.jpg')" style="animation-delay:0.3s"><img src="lockscreen.jpg" class="gallery-img"><div class="gallery-caption">Trips ✈️</div></div>
             </div>
         </div>
     </div>
@@ -259,6 +216,24 @@
                     <div class="settings-row"><span>❤️ Heart Connection</span><span style="color:green; font-weight:bold;">Strong 📶</span></div>
                 </div>
                 <div class="chat-btn fade-in-up" style="animation-delay:0.2s;" onclick="teleport()">🚀 Teleport to Ayuuu</div>
+            </div>
+        </div>
+    </div>
+    <div class="screen" id="app-coupons">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Love Wallet</span><div></div></div>
+        <div class="scroll-content">
+            <div class="coupon-list">
+                <p style="font-size:0.8rem; color:#888; text-align:center; margin-bottom:5px;">TAP TO REDEEM 🎟️</p>
+                <div class="coupon-ticket fade-in-up" onclick="redeemCoupon(this)">
+                    <div class="coupon-left">💆‍♂️</div>
+                    <div class="coupon-right"><div class="coupon-title">Free Massage</div><div class="coupon-desc">20 minutes. No complaining.</div></div>
+                    <div class="stamp-mark">USED</div>
+                </div>
+                <div class="coupon-ticket fade-in-up" onclick="redeemCoupon(this)" style="animation-delay:0.1s">
+                    <div class="coupon-left">🥞</div>
+                    <div class="coupon-right"><div class="coupon-title">Breakfast in Bed</div><div class="coupon-desc">Pancakes & Coffee served by me.</div></div>
+                    <div class="stamp-mark">YUM!</div>
+                </div>
             </div>
         </div>
     </div>
@@ -283,6 +258,11 @@
                 <div class="settings-card fade-in-up" onclick="openNote('bucket')">
                     <div class="settings-row" style="padding:15px;">
                         <div class="note-row"><div class="note-icon">📌</div><div class="note-text"><b>Our Bucket List ✈️</b><span>Japan, Maldives...</span></div></div>
+                    </div>
+                </div>
+                <div class="settings-card fade-in-up" onclick="openNote('love')" style="animation-delay:0.1s">
+                    <div class="settings-row" style="padding:15px;">
+                        <div class="note-row"><div class="note-icon">📝</div><div class="note-text"><b>10 Reasons I Love You ❤️</b><span>1. Your smile...</span></div></div>
                     </div>
                 </div>
                 <p style="font-size:0.8rem; color:#888; margin-left:15px;">TODAY</p>
@@ -314,11 +294,11 @@
                     <div class="settings-row"><span>🌙 Dark Mode</span><div class="toggle-switch" onclick="toggleTheme(this)"><div class="toggle-knob"></div></div></div>
                     <div class="settings-row"><span>🎨 App Color</span><div class="color-picker"><div class="color-dot" style="background:#FF69B4" onclick="setTheme('#FF69B4')"></div><div class="color-dot" style="background:#007AFF" onclick="setTheme('#007AFF')"></div><div class="color-dot" style="background:#9C27B0" onclick="setTheme('#9C27B0')"></div></div></div>
                 </div>
-                <div style="text-align:center; margin-top:20px; color:#aaa; font-size:0.8rem;">Made with ❤️ by Theshuuu</div>
+                <div style="text-align:center; margin-top:20px; color:#aaa; font-size:0.8rem; padding-bottom:30px;">Made with ❤️ by Theshuuu</div>
             </div>
         </div>
     </div>
 
-    <script src="script.js?v=79"></script>
+    <script src="script.js?v=80"></script>
 </body>
 </html>
