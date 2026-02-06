@@ -59,6 +59,10 @@ function goHome() {
         if(s.id !== 'lock-screen') s.classList.remove('active');
     });
     document.getElementById('home-screen').classList.add('active');
+    
+    // Stop music visualizer if playing
+    const albumArt = document.getElementById('album-art');
+    if(albumArt) albumArt.classList.remove('rotating');
 }
 
 function openApp(id) {
@@ -93,30 +97,18 @@ function interactPet(action) {
     }
 }
 
-/* ORACLE (UPDATED) */
 function askOracle() {
     const input = document.getElementById('oracle-input');
     const ball = document.getElementById('magic-ball');
-    
     if(input.value.trim() === "") {
         ball.innerText = "Type something first! 🔮";
         ball.classList.add('shake');
         setTimeout(() => ball.classList.remove('shake'), 500);
         return;
     }
-
-    const answers = [
-        "Theshuuu says YES! ❤️",
-        "Absolutely 100% 😽",
-        "Kuchu says maybe... 🐈",
-        "Ask me later with a kiss 😘",
-        "My heart says YES! 💖",
-        "Only if you hug me! 🤗"
-    ];
-    
+    const answers = ["Theshuuu says YES! ❤️", "Absolutely 100% 😽", "Kuchu says maybe... 🐈", "Ask me later with a kiss 😘", "My heart says YES! 💖", "Only if you hug me! 🤗"];
     ball.classList.add('shake');
     ball.innerText = "Thinking...";
-    
     setTimeout(() => {
         ball.classList.remove('shake');
         ball.innerText = answers[Math.floor(Math.random() * answers.length)];
@@ -132,6 +124,8 @@ const audioPlayer = document.getElementById('audio-player');
 const playBtn = document.getElementById('play-btn');
 const songTitle = document.getElementById('song-title');
 const albumArt = document.getElementById('album-art');
+const musicFill = document.getElementById('music-fill');
+let musicTimer;
 
 function loadSong(index) {
     if(!audioPlayer) return;
@@ -140,6 +134,8 @@ function loadSong(index) {
     audioPlayer.src = song.src;
     if(songTitle) songTitle.innerText = song.title;
     if(albumArt) albumArt.style.backgroundImage = `url('${song.art}')`;
+    // Reset progress
+    musicFill.style.width = "0%";
 }
 
 function togglePlay() {
@@ -148,13 +144,28 @@ function togglePlay() {
     if (audioPlayer.paused) { 
         audioPlayer.play().catch(e => alert("Please make sure 'song.mp3' and 'song3.mp3' are in the folder! 🎵")); 
         playBtn.innerText = "⏸️"; 
-        albumArt.classList.add('rotating'); 
+        albumArt.classList.add('rotating');
+        musicTimer = setInterval(updateMusicProgress, 500);
     } else { 
         audioPlayer.pause(); 
         playBtn.innerText = "▶️"; 
-        albumArt.classList.remove('rotating'); 
+        albumArt.classList.remove('rotating');
+        clearInterval(musicTimer);
     }
 }
+
+function updateMusicProgress() {
+    if(audioPlayer.duration) {
+        const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        musicFill.style.width = percent + "%";
+        
+        let min = Math.floor(audioPlayer.currentTime / 60);
+        let sec = Math.floor(audioPlayer.currentTime % 60);
+        if(sec < 10) sec = "0" + sec;
+        document.getElementById('curr-time').innerText = min + ":" + sec;
+    }
+}
+
 function prevSong() { currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length; loadSong(currentSongIndex); togglePlay(); }
 function nextSong() { currentSongIndex = (currentSongIndex + 1) % songs.length; loadSong(currentSongIndex); togglePlay(); }
 
@@ -166,7 +177,6 @@ const typing = document.getElementById('typing');
 function reply(selectedText) {
     addBubble(selectedText, 'chat-me'); 
     opts.classList.add('hidden');
-    
     if(chatStep === 0) {
         simulateTyping(() => {
             addBubble("Happy Valentine's Day Ayuuu! ❤️", 'chat-them');
@@ -315,4 +325,13 @@ function sendLoveWave() {
         setTimeout(() => heart.remove(), 4000);
     }
     alert("Love Wave Sent! 🌊❤️");
+}
+
+/* LIGHTBOX */
+function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('active');
+}
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
 }
