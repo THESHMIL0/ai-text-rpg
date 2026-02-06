@@ -5,37 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ayuuu's Gift</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#FFF0F5">
-    
     <link rel="preload" as="image" href="wallpaper.jpg">
     <link rel="preload" as="image" href="lockscreen.jpg">
-    <link rel="preload" as="image" href="kuchu.jpg">
-    <link rel="preload" as="image" href="us.jpg">
-    
-    <link rel="stylesheet" href="style.css?v=40">
+    <link rel="stylesheet" href="style.css?v=41">
 </head>
 <body onload="init()">
 
     <div class="screen active" id="lock-screen">
-        <div style="flex:1; display:flex; flex-direction:column; align-items:center;" onclick="showPasscode()">
+        
+        <div id="lock-main" style="width:100%; height:100%; display:flex; flex-direction:column; justify-content:space-between; padding-bottom:50px;" onclick="showPasscode()">
             <div class="lock-content">
                 <div class="lock-time" id="lock-clock">12:00</div>
                 <div style="font-size:1.1rem; opacity:0.9;">Saturday, Feb 14</div>
-            </div>
-            <div class="lock-notification">
-                <div class="notif-icon">❤️</div>
-                <div class="notif-text">
-                    <div style="font-weight:bold;">Theshuuu</div>
-                    <div style="opacity:0.9;">I have a surprise for you... 👀</div>
+                
+                <div class="lock-notification">
+                    <div class="notif-icon">❤️</div>
+                    <div class="notif-text">
+                        <div class="notif-title">Theshuuu</div>
+                        <div class="notif-msg">I have a surprise for you... 👀</div>
+                    </div>
                 </div>
             </div>
+            <div class="lock-hint">Tap to unlock</div>
         </div>
-        <div class="lock-hint" onclick="showPasscode()">Tap to unlock</div>
 
         <div id="lock-passcode" class="hidden">
             <div class="pass-container">
-                <div style="background-image: url('us.jpg'); width:90px; height:90px; margin:0 auto 15px auto; border-radius:50%; background-size:cover; border:3px solid white;"></div>
+                <div class="pass-avatar" style="background-image: url('us.jpg');"></div>
                 <h3>Enter Password</h3>
                 <p style="opacity:0.8; margin-bottom:20px;">Hint: The cute one 😽</p>
                 <input type="text" id="pass-input" placeholder="Type here..." autocomplete="off">
@@ -94,6 +91,19 @@
             <div class="magic-ball" id="magic-ball" onclick="askOracle()">TAP ME 🔮</div>
         </div>
     </div>
+
+    <div class="screen" id="app-music">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Music</span><div></div></div>
+        <div class="music-player">
+            <div class="album-art" id="album-art" style="background-image: url('wallpaper.jpg');"></div>
+            <div style="text-align:center; margin-top:20px;"><h2 id="song-title" style="margin:0;">Hawayein</h2><p style="color:#888;">Theshu Radio 📻</p></div>
+            <div class="music-controls" style="margin-top:20px;">
+                <div onclick="prevSong()">⏮️</div>
+                <div id="play-btn" onclick="togglePlay()" style="font-size:3.5rem;">▶️</div>
+                <div onclick="nextSong()">⏭️</div>
+            </div>
+        </div>
+    </div>
     <div class="screen" id="app-msg">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹</div><span>Theshuuu ❤️</span><div style="width:20px;"></div></div>
         <div class="chat-container" id="chat-box">
@@ -104,19 +114,6 @@
         <div class="chat-footer" id="chat-opts">
             <div class="chat-btn" onclick="reply(1)">Happy Valentine's Theshuuu! ❤️</div>
             <div class="chat-btn" onclick="reply(2)">I miss you Theshuuu! 🥺</div>
-        </div>
-    </div>
-
-    <div class="screen" id="app-music">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Music</span><div></div></div>
-        <div class="music-player">
-            <div class="album-art" id="album-art" style="background-image: url('wallpaper.jpg');"></div>
-            <div style="text-align:center; margin-top:20px;"><h2 id="song-title" style="margin:0;">Hawayein</h2><p style="color:#888;">Theshu Radio 📻</p></div>
-            <div class="music-controls" style="margin-top:20px;">
-                <div onclick="prevSong()">⏮️</div>
-                <div id="play-btn" style="font-size:3.5rem;" onclick="togglePlay()">▶️</div>
-                <div onclick="nextSong()">⏭️</div>
-            </div>
         </div>
     </div>
 
@@ -145,9 +142,9 @@
     <div class="screen" id="app-gallery">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Memories</span><div></div></div>
         <div class="gallery-scroll">
-            <div class="polaroid fade-in-up" style="transform: rotate(2deg);"><img src="us.jpg"><div class="caption">Night 🌙</div></div>
-            <div class="polaroid fade-in-up" style="transform: rotate(-2deg); animation-delay:0.1s;"><img src="wallpaper.jpg"><div class="caption">Us ❤️</div></div>
-            <div class="polaroid fade-in-up" style="transform: rotate(1deg); animation-delay:0.2s;"><img src="kuchu.jpg"><div class="caption">Kuchu 👑</div></div>
+            <div class="polaroid fade-in-up" onclick="toggleZoom(this)" style="transform: rotate(2deg);"><img src="us.jpg"><div class="caption">Night 🌙</div></div>
+            <div class="polaroid fade-in-up" onclick="toggleZoom(this)" style="transform: rotate(-2deg); animation-delay:0.1s;"><img src="wallpaper.jpg"><div class="caption">Us ❤️</div></div>
+            <div class="polaroid fade-in-up" onclick="toggleZoom(this)" style="transform: rotate(1deg); animation-delay:0.2s;"><img src="kuchu.jpg"><div class="caption">Kuchu 👑</div></div>
         </div>
     </div>
 
@@ -192,6 +189,13 @@
         </div>
     </div>
 
+    <div class="screen" id="app-notes">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Notes</span><div></div></div>
+        <div class="settings-list">
+            <div class="settings-card fade-in-up" onclick="alert('Remember I love you! ❤️')"><div class="settings-row"><span>☀️ Morning Reminder</span><span>›</span></div></div>
+        </div>
+    </div>
+
     <div class="screen" id="app-settings">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Settings</span><div></div></div>
         <div class="settings-list">
@@ -199,6 +203,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=40"></script>
+    <script src="script.js?v=41"></script>
 </body>
 </html>
