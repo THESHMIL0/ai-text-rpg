@@ -228,7 +228,27 @@ function showOpts(arr) {
 
 function toggleZoom(el) { el.classList.toggle('zoomed'); }
 
+/* NEW DATE LOGIC */
 function calcDays() {
-    document.getElementById('days-me').innerText = "0 Days";
-    document.getElementById('days-her').innerText = "0 Days";
+    const now = new Date();
+    const startDate = new Date("2023-02-14"); // EDIT THIS DATE
+    const diff = now - startDate;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const el = document.getElementById('together-time');
+    if(el) el.innerText = days + " Days";
+
+    updateCountdown('days-me', 11, 25); // Theshu Bday (Dec 25)
+    updateCountdown('days-her', 7, 22); // Ayuuu Bday (Aug 22)
+    updateCountdown('days-anni', 1, 14); // Anniversary (Feb 14)
+}
+
+function updateCountdown(id, month, day) {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    let nextDate = new Date(currentYear, month, day);
+    if (now > nextDate) nextDate.setFullYear(currentYear + 1);
+    const diff = nextDate - now;
+    const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
+    const el = document.getElementById(id);
+    if(el) el.innerText = daysLeft + " Days";
 }
