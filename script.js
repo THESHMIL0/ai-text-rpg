@@ -157,7 +157,6 @@ function openLightbox(src) {
     document.getElementById('lightbox').classList.add('active'); 
 }
 function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
-function downloadImage() { alert("Image Saved! 📸"); }
 
 /* DATES & TIMELINE */
 function calcDays() {
