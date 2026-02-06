@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ayuuu's Gift</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="style.css?v=43">
+    <meta name="theme-color" content="#FFF0F5">
+    <link rel="preload" as="image" href="wallpaper.jpg">
+    <link rel="preload" as="image" href="lockscreen.jpg">
+    <link rel="preload" as="image" href="kuchu.jpg">
+    <link rel="preload" as="image" href="us.jpg">
+    <link rel="stylesheet" href="style.css?v=44">
 </head>
 <body onload="init()">
 
@@ -15,11 +20,8 @@
                 <div class="lock-time" id="lock-clock">12:00</div>
                 <div style="font-size:1.1rem; opacity:0.9;">Saturday, Feb 14</div>
                 <div class="lock-notification">
-                    <div style="background:white; width:35px; height:35px; border-radius:8px; display:flex; align-items:center; justify-content:center;">❤️</div>
-                    <div style="margin-left:10px; text-align:left;">
-                        <div style="font-weight:bold;">Theshuuu</div>
-                        <div style="opacity:0.9;">I have a surprise for you... 👀</div>
-                    </div>
+                    <div class="notif-icon">❤️</div>
+                    <div class="notif-text"><div style="font-weight:bold;">Theshuuu</div><div>I have a surprise for you... 👀</div></div>
                 </div>
             </div>
             <div class="lock-hint">Tap to unlock</div>
@@ -41,11 +43,12 @@
         <div class="status-bar"><div id="clock">12:00</div><div>Love 5G • 100%</div></div>
         <div class="widget">
             <div>
-                <div style="font-size:0.75rem; font-weight:bold; opacity:0.7;">STATUS</div>
+                <div style="font-size:0.75rem; font-weight:bold; opacity:0.7; letter-spacing:1px;">STATUS</div>
                 <div style="font-size:1.2rem; font-weight:800; color:#E91E63;">Miss You 3000 ❤️</div>
             </div>
             <div style="font-size:2rem;">😽</div>
         </div>
+
         <div class="app-grid">
             <div class="app-icon-wrapper" onclick="openApp('msg')"><div class="app-icon" style="background:#E0F7FA;">💌</div><div class="app-name">Messages</div></div>
             <div class="app-icon-wrapper" onclick="openApp('events')"><div class="app-icon" style="background:#E3F2FD;">📅</div><div class="app-name">Events</div></div>
@@ -55,7 +58,10 @@
             <div class="app-icon-wrapper" onclick="openApp('ask')"><div class="app-icon" style="background:#E1BEE7;">🔮</div><div class="app-name">Ask Me</div></div>
             <div class="app-icon-wrapper" onclick="openApp('coupons')"><div class="app-icon" style="background:#FFE0B2;">🎟️</div><div class="app-name">Coupons</div></div>
             <div class="app-icon-wrapper" onclick="openApp('heart')"><div class="app-icon" style="background:#FFCDD2;">💖</div><div class="app-name">My Heart</div></div>
+            <div class="app-icon-wrapper" onclick="openApp('notes')"><div class="app-icon" style="background:#C8E6C9;">📝</div><div class="app-name">Notes</div></div>
+            <div class="app-icon-wrapper" onclick="openApp('settings')"><div class="app-icon" style="background:#F3E5F5;">⚙️</div><div class="app-name">Settings</div></div>
         </div>
+
         <div class="dock-container">
             <div class="app-icon-wrapper" onclick="openApp('call')"><div class="app-icon" style="background:#E8F5E9;">📞</div></div>
             <div class="app-icon-wrapper" onclick="openApp('global')"><div class="app-icon" style="background:#E1BEE7;">🌐</div></div>
@@ -96,13 +102,12 @@
             <div class="magic-ball" id="magic-ball" onclick="askOracle()">TAP ME 🔮</div>
         </div>
     </div>
-
     <div class="screen" id="app-music">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Music</span><div></div></div>
         <div class="music-player">
             <div class="album-art" id="album-art" style="background-image: url('wallpaper.jpg');"></div>
-            <div style="text-align:center; margin-top:20px;"><h2 id="song-title">Hawayein</h2><p>Theshu Radio 📻</p></div>
-            <div class="music-controls">
+            <div style="text-align:center; margin-top:20px;"><h2 id="song-title" style="margin:0;">Hawayein</h2><p style="color:#888;">Theshu Radio 📻</p></div>
+            <div class="music-controls" style="margin-top:20px;">
                 <div onclick="prevSong()">⏮️</div>
                 <div id="play-btn" style="font-size:3.5rem;" onclick="togglePlay()">▶️</div>
                 <div onclick="nextSong()">⏭️</div>
@@ -115,19 +120,7 @@
         <div class="settings-list">
             <div class="settings-card fade-in-up"><div class="settings-row"><span>🎂 Theshu's Bday</span><span id="days-me">0 Days</span></div></div>
             <div class="settings-card fade-in-up" style="animation-delay:0.1s"><div class="settings-row"><span>🥳 Ayuuu's Bday</span><span id="days-her">0 Days</span></div></div>
-        </div>
-    </div>
-
-    <div class="screen" id="app-gift">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>My Gift</span><div></div></div>
-        <div class="gift-container">
-            <div id="gift-lock"><div style="font-size: 5rem;">🔒</div><h2>Gift Locked</h2><p>Check messages! 💌</p></div>
-            <div id="gift-open" class="ticket hidden" style="border: 3px solid #FFD700; background: #FFFBE6;">
-                <div style="font-size: 4rem;">💍</div>
-                <h2 style="color:#D4AF37;">BE MY VALENTINE?</h2>
-                <p>You said YES! ❤️</p>
-                <div style="margin-top: 20px; background: white; padding: 10px; border-radius: 10px; font-weight:bold; color:#D4AF37;">PROMISE RING</div>
-            </div>
+            <div class="settings-card fade-in-up" style="animation-delay:0.2s"><div class="settings-row"><span>💍 Proposal Day</span><span>TODAY!</span></div></div>
         </div>
     </div>
 
@@ -169,11 +162,11 @@
     </div>
 
     <div class="screen" id="app-heart">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>To Ayuuu</span><div></div></div>
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>My Dearest Ayuuu</span><div></div></div>
         <div class="settings-list">
             <div class="settings-card fade-in-up" style="padding: 25px; line-height: 1.6; color: #444;">
                 <p><b>My Ayuuu,</b></p>
-                <p>I built this phone just to tell you: <b>You are my everything.</b> 🌎❤️</p>
+                <p>You are my everything. 🌎❤️</p>
                 <p>You, me, and Kuchu... that is my dream. 🏡🐈</p>
                 <br><p style="text-align:right;"><b>Forever Yours,<br>Theshuuu</b> ❤️</p>
             </div>
@@ -181,13 +174,35 @@
         </div>
     </div>
 
+    <div class="screen" id="app-notes">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Notes</span><div></div></div>
+        <div class="settings-list">
+            <div class="settings-card fade-in-up" onclick="alert('You are beautiful. You are smart. You are loved! ❤️')"><div class="settings-row"><span>☀️ Morning Reminder</span><span>›</span></div></div>
+            <div class="settings-card fade-in-up" style="animation-delay:0.1s" onclick="alert('1. Adopt 10 cats 🐈\n2. Travel ✈️\n3. Build our house 🏡')"><div class="settings-row"><span>📝 Bucket List</span><span>›</span></div></div>
+        </div>
+    </div>
+
     <div class="screen" id="app-settings">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Settings</span><div></div></div>
         <div class="settings-list">
             <div class="settings-card fade-in-up"><div class="settings-row"><span>❤️ Status</span><span>Taken 💍</span></div></div>
+            <div class="settings-card fade-in-up" style="animation-delay:0.1s"><div class="settings-row"><span>🔔 Notifications</span><span style="color:green;">Miss You ON</span></div></div>
         </div>
     </div>
 
-    <script src="script.js?v=43"></script>
+    <div class="screen" id="app-gift">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>My Gift</span><div></div></div>
+        <div class="gift-container">
+            <div id="gift-lock"><div style="font-size: 5rem;">🔒</div><h2>Gift Locked</h2><p>Check messages! 💌</p></div>
+            <div id="gift-open" class="ticket hidden" style="border: 3px solid #FFD700; background: #FFFBE6;">
+                <div style="font-size: 4rem;">💍</div>
+                <h2 style="color:#D4AF37;">BE MY VALENTINE?</h2>
+                <p>You said YES! ❤️</p>
+                <div style="margin-top: 20px; background: white; padding: 10px; border-radius: 10px; font-weight:bold; color:#D4AF37;">PROMISE RING</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=44"></script>
 </body>
 </html>
