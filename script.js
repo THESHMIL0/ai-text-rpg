@@ -6,11 +6,20 @@ function init() {
 }
 
 function updateClock() {
-    let d = new Date();
-    let m = d.getMinutes().toString().padStart(2,'0');
-    let t = d.getHours() + ":" + m;
+    const now = new Date();
+    
+    // Time
+    let m = now.getMinutes().toString().padStart(2,'0');
+    let t = now.getHours() + ":" + m;
     document.getElementById('clock').innerText = t;
     if(document.getElementById('lock-clock')) document.getElementById('lock-clock').innerText = t;
+
+    // Real Date for Lock Screen
+    const dateOptions = { weekday: 'long', month: 'short', day: 'numeric' };
+    const dateString = now.toLocaleDateString('en-US', dateOptions);
+    const lockDateEl = document.getElementById('lock-date');
+    if(lockDateEl) lockDateEl.innerText = dateString;
+
     setTimeout(updateClock, 1000);
 }
 
@@ -161,106 +170,4 @@ function reply(selectedText) {
             showOpts(["Omg my Kuchu!! 🥺", "He's so cute!"]);
             chatStep = 1;
         }, 1500);
-    } else if(chatStep === 1) {
-        simulateTyping(() => {
-            addBubble("He is guarding your spot on the bed. 😂", 'chat-them');
-            addBubble("We both miss you so much Ayuuu.", 'chat-them');
-            showOpts(["Tell him I love him! ❤️", "I miss you both!"]);
-            chatStep = 2;
-        }, 2000);
-    } else if(chatStep === 2) {
-        simulateTyping(() => {
-            addBubble("I will. ❤️", 'chat-them');
-            addBubble("But hey... Theshuuu has a serious question.", 'chat-them');
-            showOpts(["What is it? 😳", "Tell me!"]);
-            chatStep = 3;
-        }, 2000);
-    } else if(chatStep === 3) {
-        simulateTyping(() => {
-            addBubble("Since I can't be there in person...", 'chat-them');
-            let row = document.createElement('div'); row.className = "chat-row";
-            let avatar = document.createElement('div'); avatar.className = "chat-avatar"; avatar.style.backgroundImage = "url('us.jpg')";
-            let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-them"; 
-            bubble.style.background = "#FFFBE6"; bubble.style.border = "2px solid #FFD700";
-            bubble.innerHTML = `<div style="font-size:3rem;">🌹</div><h3 style="color:#D4AF37; margin:5px 0;">BE MY VALENTINE?</h3>`;
-            row.appendChild(avatar); row.appendChild(bubble);
-            chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
-            showOpts(["YESSS THESHUUU! ❤️", "ALWAYS! 🥺❤️"]);
-            chatStep = 4;
-        }, 2000);
-    } else if(chatStep === 4) {
-        simulateTyping(() => {
-            addBubble("I love you Ayuuu! ❤️", 'chat-them');
-            // REMOVED THE GIFT MESSAGE
-            
-            // CLEAN BUTTON TO GO HOME
-            opts.innerHTML = "";
-            let btn = document.createElement('div'); 
-            btn.className = "chat-btn"; 
-            btn.innerText = "🏠 Go Home"; 
-            btn.onclick = () => goHome(); 
-            opts.appendChild(btn);
-            opts.classList.remove('hidden');
-        }, 1500);
-    }
-}
-
-function simulateTyping(callback, delay) {
-    typing.innerText = "Theshuuu is typing...";
-    typing.style.display = 'block'; chatBox.scrollTop = chatBox.scrollHeight;
-    setTimeout(() => { typing.style.display = 'none'; callback(); }, delay || 1500);
-}
-
-function addBubble(text, className) {
-    let row = document.createElement('div'); row.className = "chat-row";
-    if(className === 'chat-them') {
-        let avatar = document.createElement('div'); avatar.className = "chat-avatar"; avatar.style.backgroundImage = "url('us.jpg')"; 
-        row.appendChild(avatar);
-    }
-    let bubble = document.createElement('div'); bubble.className = `chat-bubble ${className}`;
-    bubble.innerHTML = text;
-    row.appendChild(bubble); chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-function showOpts(arr) {
-    opts.innerHTML = ""; opts.classList.remove('hidden');
-    arr.forEach((t) => {
-        let btn = document.createElement('div'); btn.className = "chat-btn"; btn.innerText = t; 
-        btn.onclick = () => reply(t); 
-        opts.appendChild(btn);
-    });
-}
-
-function toggleZoom(el) { el.classList.toggle('zoomed'); }
-
-/* DATES */
-function calcDays() {
-    const now = new Date();
-    // START: Jan 18, 2026 (19 Days from Feb 6)
-    const startDate = new Date("2026-01-18"); 
-    
-    const diff = now - startDate;
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    
-    const el = document.getElementById('together-time');
-    if(el) el.innerText = days + " Days";
-
-    updateCountdown('days-me', 2, 14);   // Mar 14
-    updateCountdown('days-her', 8, 22);  // Sept 22
-    updateCountdown('days-anni', 0, 18); // Jan 18
-
-    // 100th Day: Apr 28, 2026
-    const el100 = document.getElementById('date-100');
-    if(el100) el100.innerText = "Apr 28, 2026";
-}
-
-function updateCountdown(id, month, day) {
-    const now = new Date();
-    const currentYear = now.getFullYear();
-    let nextDate = new Date(currentYear, month, day);
-    if (now > nextDate) nextDate.setFullYear(currentYear + 1);
-    const diff = nextDate - now;
-    const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
-    const el = document.getElementById(id);
-    if(el) el.innerText = daysLeft + " Days";
-}
+    } else if(chatStep === 1)
