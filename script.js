@@ -2,18 +2,16 @@
 document.addEventListener('DOMContentLoaded', init);
 
 let chatStep = 0;
-const chatBox = document.getElementById('chat-box'); // Defined globally for safety
+const chatBox = document.getElementById('chat-box');
 
 function init() {
     updateClock();
     calcDays();
 }
 
-/* --- AUTO SCROLL FUNCTION (THE FIX) --- */
 function scrollToBottom() {
     if(chatBox) {
         chatBox.scrollTop = chatBox.scrollHeight;
-        // Force it again after a tiny delay just to be sure
         setTimeout(() => { chatBox.scrollTop = chatBox.scrollHeight; }, 50);
     }
 }
@@ -34,6 +32,17 @@ function updateClock() {
     if(lockDateEl) lockDateEl.innerText = dateString;
 
     setTimeout(updateClock, 1000);
+}
+
+/* SETTINGS & THEMES */
+function toggleTheme(el) {
+    el.classList.toggle('active');
+    document.body.classList.toggle('dark-mode');
+}
+
+function setTheme(color) {
+    document.documentElement.style.setProperty('--primary', color);
+    document.documentElement.style.setProperty('--accent', color);
 }
 
 /* LOCK SCREEN */
@@ -87,10 +96,109 @@ function goHome() {
 
 function openApp(id) {
     document.getElementById('app-' + id).classList.add('active');
-    if(id === 'msg') scrollToBottom(); // Scroll when opening chat
+    if(id === 'msg') scrollToBottom();
 }
 
-/* CHAT LOGIC (FIXED) */
+/* GLOBAL TELEPORT */
+function teleport() {
+    alert("Initiating Teleport sequence... 🚀");
+    setTimeout(() => { alert("Loading... ▓▓▓▓▒▒▒▒▒▒ 40%"); }, 1000);
+    setTimeout(() => { alert("Loading... ▓▓▓▓▓▓▓▓▒▒ 80%"); }, 2000);
+    setTimeout(() => { alert("❌ ERROR: Teleport Failed! Reason: You need to hug Theshuuu in real life to recharge! 🥺❤️"); }, 3000);
+}
+
+/* GAMES */
+function interactPet(action) {
+    const msg = document.getElementById('pet-bubble');
+    const img = document.getElementById('pet-img');
+    img.style.transform = "scale(1.1)";
+    setTimeout(() => img.style.transform = "scale(1)", 200);
+    if(action === 'feed') {
+        msg.innerText = "Yummy! 🐟 Burp!";
+        document.getElementById('bar-hunger').style.width = "100%";
+    }
+    if(action === 'play') {
+        msg.innerText = "Zoomies!! 🐈💨";
+        document.getElementById('bar-happy').style.width = "100%";
+    }
+    if(action === 'love') {
+        msg.innerText = "Purr... I love Ayuuu! ❤️";
+        document.getElementById('bar-love').style.width = "100%";
+    }
+}
+
+function askOracle() {
+    const input = document.getElementById('oracle-input');
+    const ball = document.getElementById('magic-ball');
+    if(input.value.trim() === "") {
+        ball.innerText = "Type something first! 🔮";
+        ball.classList.add('shake');
+        setTimeout(() => ball.classList.remove('shake'), 500);
+        return;
+    }
+    const answers = ["Theshuuu says YES! ❤️", "Absolutely 100% 😽", "Kuchu says maybe... 🐈", "Ask me later with a kiss 😘", "My heart says YES! 💖", "Only if you hug me! 🤗"];
+    ball.classList.add('shake');
+    ball.innerText = "Thinking...";
+    setTimeout(() => {
+        ball.classList.remove('shake');
+        ball.innerText = answers[Math.floor(Math.random() * answers.length)];
+        ball.style.background = "white";
+        ball.style.color = "#E91E63";
+    }, 1000);
+}
+
+/* MUSIC */
+const songs = [{ title: "Hawayein", src: "song.mp3", art: "wallpaper.jpg" }, { title: "Like My Father", src: "song3.mp3", art: "kuchu.jpg" }];
+let currentSongIndex = 0;
+const audioPlayer = document.getElementById('audio-player');
+const playBtn = document.getElementById('play-btn');
+const songTitle = document.getElementById('song-title');
+const albumArt = document.getElementById('album-art');
+const musicFill = document.getElementById('music-fill');
+let musicTimer;
+
+function loadSong(index) {
+    if(!audioPlayer) return;
+    currentSongIndex = index;
+    const song = songs[currentSongIndex];
+    audioPlayer.src = song.src;
+    if(songTitle) songTitle.innerText = song.title;
+    if(albumArt) albumArt.style.backgroundImage = `url('${song.art}')`;
+    if(musicFill) musicFill.style.width = "0%";
+}
+
+function togglePlay() {
+    if (!audioPlayer) return;
+    if (!audioPlayer.src || audioPlayer.src === "") loadSong(0);
+    if (audioPlayer.paused) { 
+        audioPlayer.play().catch(e => alert("Please make sure 'song.mp3' and 'song3.mp3' are in the folder! 🎵")); 
+        playBtn.innerText = "⏸️"; 
+        albumArt.classList.add('rotating');
+        musicTimer = setInterval(updateMusicProgress, 500);
+    } else { 
+        audioPlayer.pause(); 
+        playBtn.innerText = "▶️"; 
+        albumArt.classList.remove('rotating');
+        clearInterval(musicTimer);
+    }
+}
+
+function updateMusicProgress() {
+    if(audioPlayer.duration) {
+        const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        if(musicFill) musicFill.style.width = percent + "%";
+        let min = Math.floor(audioPlayer.currentTime / 60);
+        let sec = Math.floor(audioPlayer.currentTime % 60);
+        if(sec < 10) sec = "0" + sec;
+        const currTime = document.getElementById('curr-time');
+        if(currTime) currTime.innerText = min + ":" + sec;
+    }
+}
+
+function prevSong() { currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length; loadSong(currentSongIndex); togglePlay(); }
+function nextSong() { currentSongIndex = (currentSongIndex + 1) % songs.length; loadSong(currentSongIndex); togglePlay(); }
+
+/* CHAT LOGIC */
 const opts = document.getElementById('chat-opts');
 const typing = document.getElementById('typing');
 
@@ -98,32 +206,22 @@ function reply(selectedText) {
     addBubble(selectedText, 'chat-me'); 
     opts.classList.add('hidden');
     
-    // Auto-advance logic
     if(chatStep === 0) {
         simulateTyping(() => {
             addBubble("Happy Valentine's Day Ayuuu! ❤️", 'chat-them');
             addBubble("I wish I was there to hug you... but look who is here!", 'chat-them');
-            
-            // Image Bubble
             let row = document.createElement('div'); row.className = "chat-row";
             let avatar = document.createElement('div'); avatar.className = "chat-avatar"; avatar.style.backgroundImage = "url('us.jpg')";
             let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-them";
-            
-            let img = document.createElement('img'); 
-            img.src = "kuchu.jpg"; 
-            img.className = "chat-img";
-            // THIS FIXES THE SCROLL WHEN IMAGE LOADS
+            let img = document.createElement('img'); img.src = "kuchu.jpg"; img.className = "chat-img";
             img.onload = scrollToBottom; 
             img.onclick = function() { this.classList.toggle('zoomed'); }; 
             img.onerror = function() { this.src = 'https://placekitten.com/300/300'; }; 
-            
             bubble.appendChild(img);
             bubble.innerHTML += `<div class="time-tick">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
             row.appendChild(avatar); row.appendChild(bubble);
             chatBox.appendChild(row); 
-            
-            scrollToBottom(); // Scroll immediately
-            
+            scrollToBottom();
             showOpts(["Omg my Kuchu!! 🥺", "He's so cute!"]);
             chatStep = 1;
         }, 1500);
@@ -152,7 +250,6 @@ function reply(selectedText) {
             row.appendChild(avatar); row.appendChild(bubble);
             chatBox.appendChild(row); 
             scrollToBottom();
-            
             showOpts(["YESSS THESHUUU! ❤️", "ALWAYS! 🥺❤️"]);
             chatStep = 4;
         }, 2000);
@@ -184,7 +281,7 @@ function addBubble(text, className) {
     let bubble = document.createElement('div'); bubble.className = `chat-bubble ${className}`;
     bubble.innerHTML = text;
     row.appendChild(bubble); chatBox.appendChild(row); 
-    scrollToBottom(); // Scroll after adding text
+    scrollToBottom();
 }
 
 function showOpts(arr) {
@@ -192,10 +289,12 @@ function showOpts(arr) {
     arr.forEach((t) => {
         let btn = document.createElement('div'); btn.className = "chat-btn"; btn.innerText = t; btn.onclick = () => reply(t); opts.appendChild(btn);
     });
-    scrollToBottom(); // Scroll to show buttons
+    scrollToBottom();
 }
 
-/* OTHER APPS & UTILS */
+function toggleZoom(el) { el.classList.toggle('zoomed'); }
+
+/* DATES & TIMELINE */
 function calcDays() {
     const now = new Date();
     const startDate = new Date("2026-01-18"); 
@@ -265,103 +364,4 @@ function openLightbox(src) {
 }
 function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
-}
-
-/* MUSIC */
-const songs = [{ title: "Hawayein", src: "song.mp3", art: "wallpaper.jpg" }, { title: "Like My Father", src: "song3.mp3", art: "kuchu.jpg" }];
-let currentSongIndex = 0;
-const audioPlayer = document.getElementById('audio-player');
-const playBtn = document.getElementById('play-btn');
-const songTitle = document.getElementById('song-title');
-const albumArt = document.getElementById('album-art');
-const musicFill = document.getElementById('music-fill');
-let musicTimer;
-
-function loadSong(index) {
-    if(!audioPlayer) return;
-    currentSongIndex = index;
-    const song = songs[currentSongIndex];
-    audioPlayer.src = song.src;
-    if(songTitle) songTitle.innerText = song.title;
-    if(albumArt) albumArt.style.backgroundImage = `url('${song.art}')`;
-    if(musicFill) musicFill.style.width = "0%";
-}
-
-function togglePlay() {
-    if (!audioPlayer) return;
-    if (!audioPlayer.src || audioPlayer.src === "") loadSong(0);
-    if (audioPlayer.paused) { 
-        audioPlayer.play().catch(e => alert("Please make sure 'song.mp3' and 'song3.mp3' are in the folder! 🎵")); 
-        playBtn.innerText = "⏸️"; 
-        albumArt.classList.add('rotating');
-        musicTimer = setInterval(updateMusicProgress, 500);
-    } else { 
-        audioPlayer.pause(); 
-        playBtn.innerText = "▶️"; 
-        albumArt.classList.remove('rotating');
-        clearInterval(musicTimer);
-    }
-}
-
-function updateMusicProgress() {
-    if(audioPlayer.duration) {
-        const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-        if(musicFill) musicFill.style.width = percent + "%";
-        let min = Math.floor(audioPlayer.currentTime / 60);
-        let sec = Math.floor(audioPlayer.currentTime % 60);
-        if(sec < 10) sec = "0" + sec;
-        const currTime = document.getElementById('curr-time');
-        if(currTime) currTime.innerText = min + ":" + sec;
-    }
-}
-
-function prevSong() { currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length; loadSong(currentSongIndex); togglePlay(); }
-function nextSong() { currentSongIndex = (currentSongIndex + 1) % songs.length; loadSong(currentSongIndex); togglePlay(); }
-
-/* GLOBAL TELEPORT */
-function teleport() {
-    alert("Initiating Teleport sequence... 🚀");
-    setTimeout(() => { alert("Loading... ▓▓▓▓▒▒▒▒▒▒ 40%"); }, 1000);
-    setTimeout(() => { alert("Loading... ▓▓▓▓▓▓▓▓▒▒ 80%"); }, 2000);
-    setTimeout(() => { alert("❌ ERROR: Teleport Failed! Reason: You need to hug Theshuuu in real life to recharge! 🥺❤️"); }, 3000);
-}
-
-/* GAMES */
-function interactPet(action) {
-    const msg = document.getElementById('pet-bubble');
-    const img = document.getElementById('pet-img');
-    img.style.transform = "scale(1.1)";
-    setTimeout(() => img.style.transform = "scale(1)", 200);
-    if(action === 'feed') {
-        msg.innerText = "Yummy! 🐟 Burp!";
-        document.getElementById('bar-hunger').style.width = "100%";
-    }
-    if(action === 'play') {
-        msg.innerText = "Zoomies!! 🐈💨";
-        document.getElementById('bar-happy').style.width = "100%";
-    }
-    if(action === 'love') {
-        msg.innerText = "Purr... I love Ayuuu! ❤️";
-        document.getElementById('bar-love').style.width = "100%";
-    }
-}
-
-function askOracle() {
-    const input = document.getElementById('oracle-input');
-    const ball = document.getElementById('magic-ball');
-    if(input.value.trim() === "") {
-        ball.innerText = "Type something first! 🔮";
-        ball.classList.add('shake');
-        setTimeout(() => ball.classList.remove('shake'), 500);
-        return;
-    }
-    const answers = ["Theshuuu says YES! ❤️", "Absolutely 100% 😽", "Kuchu says maybe... 🐈", "Ask me later with a kiss 😘", "My heart says YES! 💖", "Only if you hug me! 🤗"];
-    ball.classList.add('shake');
-    ball.innerText = "Thinking...";
-    setTimeout(() => {
-        ball.classList.remove('shake');
-        ball.innerText = answers[Math.floor(Math.random() * answers.length)];
-        ball.style.background = "white";
-        ball.style.color = "#E91E63";
-    }, 1000);
 }
