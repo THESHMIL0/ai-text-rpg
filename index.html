@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ayuuu's Gift</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="style.css?v=65">
+    <link rel="stylesheet" href="style.css?v=66">
 </head>
 <body onload="init()">
 
@@ -72,6 +72,7 @@
             <div class="app-icon-wrapper" onclick="openApp('msg')"><div class="app-icon" style="background:#ffebee;">❤️</div></div>
         </div>
     </div>
+
     <div class="screen" id="app-call">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Contact Info</span><div></div></div>
         <div class="contact-profile">
@@ -182,6 +183,7 @@
             </div>
         </div>
     </div>
+
     <div class="screen" id="app-gallery">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Memories</span><div></div></div>
         <div class="gallery-scroll">
@@ -208,10 +210,29 @@
     </div>
 
     <div class="screen" id="app-coupons">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Coupons</span><div></div></div>
-        <div class="settings-list">
-            <div class="settings-card fade-in-up" onclick="alert('Redeemed! 🥞')"><div class="settings-row"><span>🥞 Breakfast in Bed</span><span>Redeem ›</span></div></div>
-            <div class="settings-card fade-in-up" style="animation-delay:0.1s" onclick="alert('Redeemed! 💆‍♂️')"><div class="settings-row"><span>💆‍♂️ Free Massage</span><span>Redeem ›</span></div></div>
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Love Wallet</span><div></div></div>
+        <div class="coupon-list">
+            <p style="font-size:0.8rem; color:#888; text-align:center; margin-bottom:5px;">TAP TO REDEEM 🎟️</p>
+            <div class="coupon-ticket fade-in-up" onclick="redeemCoupon(this)">
+                <div class="coupon-left">💆‍♂️</div>
+                <div class="coupon-right"><div class="coupon-title">Free Massage</div><div class="coupon-desc">20 minutes. No complaining.</div><div class="coupon-valid">Valid: Forever</div></div>
+                <div class="stamp-mark">USED</div>
+            </div>
+            <div class="coupon-ticket fade-in-up" onclick="redeemCoupon(this)" style="animation-delay:0.1s">
+                <div class="coupon-left">🥞</div>
+                <div class="coupon-right"><div class="coupon-title">Breakfast in Bed</div><div class="coupon-desc">Pancakes & Coffee served by me.</div><div class="coupon-valid">Valid: Any Sunday</div></div>
+                <div class="stamp-mark">YUM!</div>
+            </div>
+            <div class="coupon-ticket fade-in-up" onclick="redeemCoupon(this)" style="animation-delay:0.2s">
+                <div class="coupon-left">🎬</div>
+                <div class="coupon-right"><div class="coupon-title">Movie Choice</div><div class="coupon-desc">I watch whatever YOU want.</div><div class="coupon-valid">One use only</div></div>
+                <div class="stamp-mark">USED</div>
+            </div>
+            <div class="coupon-ticket fade-in-up" onclick="redeemCoupon(this)" style="animation-delay:0.3s">
+                <div class="coupon-left">🏳️</div>
+                <div class="coupon-right"><div class="coupon-title">End Argument</div><div class="coupon-desc">I admit I was wrong.</div><div class="coupon-valid">Emergency Only 🚨</div></div>
+                <div class="stamp-mark">SAVED</div>
+            </div>
         </div>
     </div>
 
@@ -304,6 +325,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=65"></script>
+    <script src="script.js?v=66"></script>
 </body>
 </html>
