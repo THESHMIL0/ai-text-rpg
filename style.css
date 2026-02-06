@@ -1,5 +1,14 @@
-:root { --bg-color: #FFF0F5; --primary: #FF69B4; --accent: #E91E63; --text: #333; }
+:root { 
+    --bg-color: #FFF0F5; 
+    --primary: #FF69B4; 
+    --accent: #E91E63; 
+    --text: #333; 
+    --bubble-me: #E91E63; 
+    --bubble-her: #FFFFFF; 
+}
+
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
+
 body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; overflow: hidden; position: fixed; color: var(--text); }
 
 /* ANIMATIONS */
@@ -11,7 +20,11 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 @keyframes fly { 0% { left: 15%; transform: translateY(0) rotate(10deg); } 50% { transform: translateY(-10px) rotate(10deg); } 100% { left: 75%; transform: translateY(0) rotate(10deg); } }
 
 /* SCREENS */
-.screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: none; flex-direction: column; padding-top: env(safe-area-inset-top); z-index: 10; }
+.screen { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+    background: var(--bg-color); display: none; flex-direction: column; 
+    padding-top: env(safe-area-inset-top); z-index: 10;
+}
 .screen.active { display: flex; z-index: 20; animation: popIn 0.25s ease-out; }
 
 /* LOCK SCREEN */
@@ -33,7 +46,7 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .pass-btn { background: white; color: var(--accent); padding: 12px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; }
 .shake { animation: shake 0.4s; }
 
-/* APPS */
+/* HOME & APPS */
 #home-screen { background-image: url('wallpaper.jpg'); background-size: cover; background-position: center; z-index: 5; }
 .status-bar { padding: 10px 20px; display: flex; justify-content: space-between; font-weight: bold; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 .widget { margin: 10px 20px; padding: 20px; background: rgba(255,255,255,0.9); border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -42,6 +55,10 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .app-icon { width: 60px; height: 60px; border-radius: 15px; background: white; display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 .app-name { font-size: 11px; font-weight: bold; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.8); white-space: nowrap; }
 .dock-container { position: absolute; bottom: 30px; left: 15px; right: 15px; background: rgba(255,255,255,0.5); border-radius: 20px; padding: 15px; display: flex; justify-content: space-around; backdrop-filter: blur(10px); z-index: 30; }
+
+/* CHAT */
+.nav-bar { height: 50px; display: flex; align-items: center; padding: 0 15px; background: white; border-bottom: 1px solid #eee; justify-content: space-between; font-weight: bold; color: var(--accent); flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.back-btn { color: #333; padding: 10px; font-size: 1.2rem; cursor: pointer; }
 .chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 220px; background: #FFF0F5; }
 .chat-row { display: flex; align-items: flex-end; gap: 8px; animation: slideUp 0.3s; }
 .chat-avatar { width: 35px; height: 35px; border-radius: 50%; background-size: cover; background-position: center; border: 1px solid #eee; flex-shrink: 0; background-color: white; }
@@ -54,9 +71,12 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .chat-btn { background: #FFF; border: 2px solid var(--accent); color: var(--accent); padding: 14px; border-radius: 25px; font-weight: bold; text-align: center; font-size: 0.95rem; }
 .chat-btn:active { background: var(--accent); color: white; }
 .typing { font-size: 0.8rem; color: #666; margin-left: 55px; display: none; margin-bottom: 10px; font-style: italic;}
+
+/* COMPONENTS */
 .pet-view, .magic-container, .music-player { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
 .pet-avatar { width: 180px; height: 180px; border-radius: 50%; background-image: url('kuchu.jpg'); background-size: cover; border: 5px solid white; transition: transform 0.2s; }
-.pet-btn { background: white; border: 2px solid var(--primary); padding: 15px; border-radius: 50%; font-size: 2rem; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; }
+.pet-btn { background: white; border: 2px solid var(--primary); padding: 15px; border-radius: 50%; font-size: 2rem; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.pet-btn:active { transform: scale(0.9); }
 .magic-ball { width: 220px; height: 220px; background: radial-gradient(circle at 30% 30%, #FF69B4, #E91E63); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.3rem; border: 5px solid white; padding: 20px; text-align: center; }
 .album-art { width: 240px; height: 240px; border-radius: 20px; background-size: cover; background-position: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 .album-art.rotating { animation: spin 5s linear infinite; border-radius: 50%; }
@@ -78,8 +98,8 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .dot { width: 12px; height: 12px; background: #FF1493; border-radius: 50%; border: 2px solid white; }
 .label { font-size: 0.7rem; font-weight: bold; color: #555; margin-top: 5px; background: rgba(255,255,255,0.8); padding: 2px 5px; border-radius: 5px; }
 .map-plane { position: absolute; top: 40%; left: 20%; font-size: 1.5rem; animation: fly 4s infinite linear; }
-.nav-bar { height: 50px; display: flex; align-items: center; padding: 0 15px; background: white; border-bottom: 1px solid #eee; justify-content: space-between; font-weight: bold; color: var(--accent); flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-.back-btn { color: #333; padding: 10px; font-size: 1.2rem; cursor: pointer; }
+
+/* PHONE STYLES */
 .contact-profile { padding: 30px 20px; text-align: center; background: white; border-bottom: 1px solid #f0f0f0; }
 .contact-avatar { width: 100px; height: 100px; border-radius: 50%; background-size: cover; background-position: center; margin: 0 auto 15px; border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 .contact-profile h2 { margin: 0; font-size: 1.4rem; color: #333; }
@@ -88,6 +108,8 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .action-btn:active { transform: scale(0.9); }
 .action-btn .icon { width: 45px; height: 45px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #007AFF; }
 .action-btn span { font-size: 0.75rem; color: #007AFF; font-weight: 500; }
+
+/* KUCHU STATUS BARS */
 .pet-bubble { background: white; padding: 10px 20px; border-radius: 20px; margin-bottom: 15px; font-weight: bold; color: #555; position: relative; animation: bounce 2s infinite; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
 .pet-bubble::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); border-width: 10px 10px 0; border-style: solid; border-color: white transparent transparent; }
 .pet-stats { width: 80%; background: white; padding: 15px; border-radius: 15px; margin-top: 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); }
@@ -95,7 +117,7 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .progress-bar { width: 70%; height: 10px; background: #eee; border-radius: 5px; overflow: hidden; }
 .fill { height: 100%; background: #4CAF50; transition: width 0.5s; }
 
-/* NOTES APP STYLES */
+/* NOTES */
 .note-search-container { padding: 10px 15px; background: white; }
 .note-search { width: 100%; padding: 10px 15px; border-radius: 10px; border: none; background: #f0f0f0; font-size: 1rem; outline: none; }
 .note-row { display: flex; align-items: flex-start; gap: 12px; }
@@ -105,3 +127,18 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .note-text span { font-size: 0.85rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px; }
 .fab { position: absolute; bottom: 30px; right: 20px; width: 60px; height: 60px; background: #E91E63; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4); cursor: pointer; transition: transform 0.2s; }
 .fab:active { transform: scale(0.9); }
+
+/* COUPONS (TICKETS) */
+.coupon-list { padding: 20px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; padding-bottom: 80px; }
+.coupon-ticket { background: white; border-radius: 12px; display: flex; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.08); position: relative; transition: transform 0.2s; border: 1px solid #eee; }
+.coupon-ticket:active { transform: scale(0.98); }
+.coupon-left { background: #FFF0F5; width: 80px; display: flex; align-items: center; justify-content: center; font-size: 2rem; border-right: 2px dashed #ffb7b2; position: relative; }
+.coupon-left::before, .coupon-left::after { content: ''; position: absolute; width: 16px; height: 16px; background: var(--bg-color); border-radius: 50%; right: -8px; }
+.coupon-left::before { top: -8px; } .coupon-left::after { bottom: -8px; }
+.coupon-right { flex: 1; padding: 15px; display: flex; flex-direction: column; justify-content: center; }
+.coupon-title { font-weight: bold; color: #333; font-size: 1rem; margin-bottom: 4px; }
+.coupon-desc { font-size: 0.75rem; color: #888; }
+.coupon-valid { font-size: 0.65rem; color: #aaa; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
+.coupon-ticket.redeemed { filter: grayscale(100%); opacity: 0.6; pointer-events: none; }
+.stamp-mark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); border: 3px solid #D32F2F; color: #D32F2F; font-weight: 900; font-size: 1.5rem; padding: 5px 10px; border-radius: 8px; opacity: 0; transition: opacity 0.3s, transform 0.3s; z-index: 10; text-transform: uppercase; background: rgba(255, 255, 255, 0.8); }
+.coupon-ticket.redeemed .stamp-mark { opacity: 1; transform: translate(-50%, -50%) rotate(-15deg) scale(1); }
