@@ -5,25 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ayuuu's Gift</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="style.css?v=53">
+    <link rel="stylesheet" href="style.css?v=58">
 </head>
 <body onload="init()">
 
     <div class="screen active" id="lock-screen">
-        <div id="lock-main" style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center;" onclick="showPasscode()">
-            <div class="lock-content">
+        <div id="lock-main" style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding-top:60px; padding-bottom:40px;" onclick="showPasscode()">
+            
+            <div class="lock-header" style="text-align:center; width:100%;">
                 <div class="lock-time" id="lock-clock">12:00</div>
-                <div style="font-size:1.1rem; opacity:0.9;">Saturday, Feb 14</div>
-                <div class="lock-notification">
+                <div class="lock-date" id="lock-date">Loading...</div>
+            </div>
+
+            <div class="lock-notification">
+                <div class="notif-header"><span>MESSAGES • NOW</span></div>
+                <div class="notif-content">
                     <div class="notif-icon">❤️</div>
                     <div class="notif-text">
-                        <div style="font-weight:bold;">Theshuuu</div>
-                        <div style="opacity:0.9;">I have a surprise for you... 👀</div>
+                        <div style="font-weight:bold; font-size:0.95rem;">Theshuuu</div>
+                        <div style="opacity:0.9; font-size:0.9rem;">I have a surprise for you... 👀</div>
                     </div>
                 </div>
             </div>
-            <div class="lock-hint">Tap to unlock</div>
+
+            <div class="lock-hint">
+                <div style="font-size:1.5rem; animation: bounce 1.5s infinite;">🔓</div>
+                Tap to unlock
+            </div>
         </div>
+
         <div id="lock-passcode" class="hidden">
             <div class="pass-container">
                 <div class="pass-avatar" style="background-image: url('us.jpg');"></div>
@@ -117,12 +127,8 @@
             <div class="settings-list" style="width:100%; padding:0 20px;">
                 <p style="font-size:0.8rem; color:#888; margin-bottom:5px; text-align:left;">PLAYLIST</p>
                 <div class="settings-card fade-in-up">
-                    <div class="settings-row" onclick="loadSong(0); togglePlay();">
-                        <div style="display:flex; align-items:center; gap:10px;"><span>1️⃣</span> <b>Hawayein</b></div>
-                    </div>
-                    <div class="settings-row" onclick="loadSong(1); togglePlay();">
-                        <div style="display:flex; align-items:center; gap:10px;"><span>2️⃣</span> <b>Like My Father</b></div>
-                    </div>
+                    <div class="settings-row" onclick="loadSong(0); togglePlay();"><div style="display:flex; align-items:center; gap:10px;"><span>1️⃣</span> <b>Hawayein</b></div></div>
+                    <div class="settings-row" onclick="loadSong(1); togglePlay();"><div style="display:flex; align-items:center; gap:10px;"><span>2️⃣</span> <b>Like My Father</b></div></div>
                 </div>
             </div>
         </div>
@@ -131,7 +137,7 @@
     <div class="screen" id="app-events">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Our Timeline</span><div></div></div>
         <div class="settings-list">
-            <div class="settings-card fade-in-up" style="text-align:center; padding:25px; background:linear-gradient(135deg, #FF9A9E, #FECFEF); color:white; box-shadow:0 8px 20px rgba(255, 105, 180, 0.3);">
+            <div class="settings-card fade-in-up" style="text-align:center; padding:25px; background:linear-gradient(135deg, #FF9A9E, #FECFEF); color:white;">
                 <div style="font-size:0.8rem; font-weight:bold; letter-spacing:1px; opacity:0.9;">WE HAVE BEEN TOGETHER FOR</div>
                 <div id="together-time" style="font-size:2.5rem; font-weight:800; margin:10px 0; text-shadow:0 2px 5px rgba(0,0,0,0.1);">0 Days</div>
                 <div style="font-size:0.9rem;">and counting... ⏳</div>
@@ -141,7 +147,7 @@
             <div class="settings-card fade-in-up" style="animation-delay:0.1s">
                 <div class="settings-row"><span>🤴 Theshu's Bday</span><span id="days-me" style="color:#E91E63; font-weight:bold;">14 March</span></div>
                 <div class="settings-row"><span>👸 Ayuuu's Bday</span><span id="days-her" style="color:#E91E63; font-weight:bold;">22 Sept</span></div>
-                <div class="settings-row"><span>💑 Anniversary</span><span id="days-anni" style="color:#E91E63; font-weight:bold;">18 Aug</span></div>
+                <div class="settings-row"><span>💑 Anniversary</span><span id="days-anni" style="color:#E91E63; font-weight:bold;">18 Jan</span></div>
             </div>
 
             <p style="font-size:0.8rem; color:#888; margin-left:15px;">MEMORY LANE 🕰️</p>
@@ -235,6 +241,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=53"></script>
+    <script src="script.js?v=58"></script>
 </body>
 </html>
