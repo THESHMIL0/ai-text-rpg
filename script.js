@@ -228,38 +228,44 @@ function showOpts(arr) {
 
 function toggleZoom(el) { el.classList.toggle('zoomed'); }
 
-/* NEW DATE LOGIC */
+/* --- FIXED DATE LOGIC --- */
 function calcDays() {
     const now = new Date();
-    // START: Jan 18, 2026 (to match 19 Days)
+    
+    // 1. START DATE: Jan 18, 2026 (Calculated to show 19 Days from Feb 6)
     const startDate = new Date("2026-01-18"); 
     
     const diff = now - startDate;
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    
     const el = document.getElementById('together-time');
     if(el) el.innerText = days + " Days";
 
-    // UPCOMING DATES
-    updateCountdown('days-me', 2, 14);   // Mar 14
-    updateCountdown('days-her', 8, 22);  // Sept 22
+    // 2. UPCOMING COUNTDOWNS
+    updateCountdown('days-me', 2, 14);   // Theshu: Mar 14
+    updateCountdown('days-her', 8, 22);  // Ayuuu: Sept 22
     
-    // Anniversary: Jan 18 (Month 0)
+    // Anniversary: Changed to Jan 18 (Month 0) to avoid the "193 days" error
     updateCountdown('days-anni', 0, 18); 
 
-    // 100th Day Calc
-    const hundredth = new Date(startDate.getTime() + (100 * 86400000));
-    const hundredthStr = hundredth.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    // 3. 100th DAY: Fixed to April 25, 2026
     const el100 = document.getElementById('date-100');
-    if(el100) el100.innerText = hundredthStr;
+    if(el100) el100.innerText = "Apr 25, 2026";
 }
 
 function updateCountdown(id, month, day) {
     const now = new Date();
     const currentYear = now.getFullYear();
     let nextDate = new Date(currentYear, month, day);
-    if (now > nextDate) nextDate.setFullYear(currentYear + 1);
+    
+    // If date passed, show next year's date
+    if (now > nextDate) {
+        nextDate.setFullYear(currentYear + 1);
+    }
+    
     const diff = nextDate - now;
     const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
+    
     const el = document.getElementById(id);
     if(el) el.innerText = daysLeft + " Days";
 }
