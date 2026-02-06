@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ayuuu's Gift</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#FFF0F5">
+    
     <link rel="preload" as="image" href="wallpaper.jpg">
     <link rel="preload" as="image" href="lockscreen.jpg">
-    <link rel="stylesheet" href="style.css?v=39">
+    <link rel="preload" as="image" href="kuchu.jpg">
+    <link rel="preload" as="image" href="us.jpg">
+    
+    <link rel="stylesheet" href="style.css?v=40">
 </head>
 <body onload="init()">
 
@@ -16,7 +21,7 @@
         <div style="flex:1; display:flex; flex-direction:column; align-items:center;" onclick="showPasscode()">
             <div class="lock-content">
                 <div class="lock-time" id="lock-clock">12:00</div>
-                <div style="font-size:1.1rem; margin-top:5px;">Saturday, Feb 14</div>
+                <div style="font-size:1.1rem; opacity:0.9;">Saturday, Feb 14</div>
             </div>
             <div class="lock-notification">
                 <div class="notif-icon">❤️</div>
@@ -58,27 +63,14 @@
             <div class="app-icon-wrapper" onclick="openApp('music')"><div class="app-icon" style="background:#FFEBEE;">🎵</div><div class="app-name">Music</div></div>
             <div class="app-icon-wrapper" onclick="openApp('kuchu')"><div class="app-icon" style="background:#FFF9C4;">🐱</div><div class="app-name">Kuchu</div></div>
             <div class="app-icon-wrapper" onclick="openApp('ask')"><div class="app-icon" style="background:#E1BEE7;">🔮</div><div class="app-name">Ask Me</div></div>
+            <div class="app-icon-wrapper" onclick="openApp('coupons')"><div class="app-icon" style="background:#FFE0B2;">🎟️</div><div class="app-name">Coupons</div></div>
             <div class="app-icon-wrapper" onclick="openApp('heart')"><div class="app-icon" style="background:#FFCDD2;">💖</div><div class="app-name">My Heart</div></div>
-            <div class="app-icon-wrapper" onclick="openApp('settings')"><div class="app-icon" style="background:#F3E5F5;">⚙️</div><div class="app-name">Settings</div></div>
         </div>
 
         <div class="dock-container">
             <div class="app-icon-wrapper" onclick="openApp('call')"><div class="app-icon" style="background:#E8F5E9;">📞</div></div>
             <div class="app-icon-wrapper" onclick="openApp('global')"><div class="app-icon" style="background:#E1BEE7;">🌐</div></div>
             <div class="app-icon-wrapper" onclick="openApp('msg')"><div class="app-icon" style="background:#ffebee;">❤️</div></div>
-        </div>
-    </div>
-
-    <div class="screen" id="app-msg">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹</div><span>Theshuuu ❤️</span><div style="width:20px;"></div></div>
-        <div class="chat-container" id="chat-box">
-            <div style="text-align: center; color: #aaa; font-size: 0.7rem; margin: 10px 0;">Today 12:00 PM</div>
-            <div class="chat-row"><div class="chat-avatar" style="background-image: url('us.jpg');"></div><div class="chat-bubble chat-them">Happy Valentine's Day Ayuuu! ❤️<div class="time-tick">12:00</div></div></div>
-        </div>
-        <div class="typing" id="typing">Theshuuu is typing...</div>
-        <div class="chat-footer" id="chat-opts">
-            <div class="chat-btn" onclick="reply(1)">Happy Valentine's Theshuuu! ❤️</div>
-            <div class="chat-btn" onclick="reply(2)">I miss you Theshuuu! 🥺</div>
         </div>
     </div>
 
@@ -102,6 +94,18 @@
             <div class="magic-ball" id="magic-ball" onclick="askOracle()">TAP ME 🔮</div>
         </div>
     </div>
+    <div class="screen" id="app-msg">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹</div><span>Theshuuu ❤️</span><div style="width:20px;"></div></div>
+        <div class="chat-container" id="chat-box">
+            <div style="text-align: center; color: #aaa; font-size: 0.7rem; margin: 10px 0;">Today 12:00 PM</div>
+            <div class="chat-row"><div class="chat-avatar" style="background-image: url('us.jpg');"></div><div class="chat-bubble chat-them">Happy Valentine's Day Ayuuu! ❤️</div></div>
+        </div>
+        <div class="typing" id="typing">Theshuuu is typing...</div>
+        <div class="chat-footer" id="chat-opts">
+            <div class="chat-btn" onclick="reply(1)">Happy Valentine's Theshuuu! ❤️</div>
+            <div class="chat-btn" onclick="reply(2)">I miss you Theshuuu! 🥺</div>
+        </div>
+    </div>
 
     <div class="screen" id="app-music">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Music</span><div></div></div>
@@ -110,7 +114,7 @@
             <div style="text-align:center; margin-top:20px;"><h2 id="song-title" style="margin:0;">Hawayein</h2><p style="color:#888;">Theshu Radio 📻</p></div>
             <div class="music-controls" style="margin-top:20px;">
                 <div onclick="prevSong()">⏮️</div>
-                <div id="play-btn" onclick="togglePlay()" style="font-size:3.5rem;">▶️</div>
+                <div id="play-btn" style="font-size:3.5rem;" onclick="togglePlay()">▶️</div>
                 <div onclick="nextSong()">⏭️</div>
             </div>
         </div>
@@ -188,13 +192,6 @@
         </div>
     </div>
 
-    <div class="screen" id="app-notes">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Notes</span><div></div></div>
-        <div class="settings-list">
-            <div class="settings-card fade-in-up" onclick="alert('Remember I love you! ❤️')"><div class="settings-row"><span>☀️ Morning Reminder</span><span>›</span></div></div>
-        </div>
-    </div>
-
     <div class="screen" id="app-settings">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Settings</span><div></div></div>
         <div class="settings-list">
@@ -202,6 +199,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=39"></script>
+    <script src="script.js?v=40"></script>
 </body>
 </html>
