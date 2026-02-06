@@ -42,15 +42,12 @@ function checkPasscode() {
     }
 }
 
-/* CRITICAL FIX FOR NAVIGATION */
+/* NAV */
 function goHome() {
-    // 1. Hide ALL screens
-    const screens = document.querySelectorAll('.screen');
-    screens.forEach(s => s.classList.remove('active'));
-    
-    // 2. Show ONLY Home Screen
-    const home = document.getElementById('home-screen');
-    if(home) home.classList.add('active');
+    document.querySelectorAll('.screen').forEach(s => {
+        if(s.id !== 'lock-screen') s.classList.remove('active');
+    });
+    document.getElementById('home-screen').classList.add('active');
 }
 
 function openApp(id) {
