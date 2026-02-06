@@ -8,9 +8,7 @@
     <meta name="theme-color" content="#FFF0F5">
     <link rel="preload" as="image" href="wallpaper.jpg">
     <link rel="preload" as="image" href="lockscreen.jpg">
-    <link rel="preload" as="image" href="kuchu.jpg">
-    <link rel="preload" as="image" href="us.jpg">
-    <link rel="stylesheet" href="style.css?v=44">
+    <link rel="stylesheet" href="style.css?v=45">
 </head>
 <body onload="init()">
 
@@ -21,14 +19,17 @@
                 <div style="font-size:1.1rem; opacity:0.9;">Saturday, Feb 14</div>
                 <div class="lock-notification">
                     <div class="notif-icon">❤️</div>
-                    <div class="notif-text"><div style="font-weight:bold;">Theshuuu</div><div>I have a surprise for you... 👀</div></div>
+                    <div class="notif-text">
+                        <div class="notif-title">Theshuuu</div>
+                        <div class="notif-msg">I have a surprise for you... 👀</div>
+                    </div>
                 </div>
             </div>
             <div class="lock-hint">Tap to unlock</div>
         </div>
         <div id="lock-passcode" class="hidden">
             <div class="pass-container">
-                <div style="background-image: url('us.jpg'); width:90px; height:90px; margin:0 auto 15px auto; border-radius:50%; background-size:cover; border:3px solid white;"></div>
+                <div class="pass-avatar" style="background-image: url('us.jpg');"></div>
                 <h3>Enter Password</h3>
                 <p style="opacity:0.8; margin-bottom:20px;">Hint: The cute one 😽</p>
                 <input type="text" id="pass-input" placeholder="Type here..." autocomplete="off">
@@ -43,7 +44,7 @@
         <div class="status-bar"><div id="clock">12:00</div><div>Love 5G • 100%</div></div>
         <div class="widget">
             <div>
-                <div style="font-size:0.75rem; font-weight:bold; opacity:0.7; letter-spacing:1px;">STATUS</div>
+                <div style="font-size:0.75rem; font-weight:bold; opacity:0.7;">STATUS</div>
                 <div style="font-size:1.2rem; font-weight:800; color:#E91E63;">Miss You 3000 ❤️</div>
             </div>
             <div style="font-size:2rem;">😽</div>
@@ -104,6 +105,9 @@
     </div>
     <div class="screen" id="app-music">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Music</span><div></div></div>
+        
+        <audio id="audio-player"></audio>
+        
         <div class="music-player">
             <div class="album-art" id="album-art" style="background-image: url('wallpaper.jpg');"></div>
             <div style="text-align:center; margin-top:20px;"><h2 id="song-title" style="margin:0;">Hawayein</h2><p style="color:#888;">Theshu Radio 📻</p></div>
@@ -121,6 +125,19 @@
             <div class="settings-card fade-in-up"><div class="settings-row"><span>🎂 Theshu's Bday</span><span id="days-me">0 Days</span></div></div>
             <div class="settings-card fade-in-up" style="animation-delay:0.1s"><div class="settings-row"><span>🥳 Ayuuu's Bday</span><span id="days-her">0 Days</span></div></div>
             <div class="settings-card fade-in-up" style="animation-delay:0.2s"><div class="settings-row"><span>💍 Proposal Day</span><span>TODAY!</span></div></div>
+        </div>
+    </div>
+
+    <div class="screen" id="app-gift">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>My Gift</span><div></div></div>
+        <div class="gift-container">
+            <div id="gift-lock"><div style="font-size: 5rem;">🔒</div><h2>Gift Locked</h2><p>Check messages! 💌</p></div>
+            <div id="gift-open" class="ticket hidden" style="border: 3px solid #FFD700; background: #FFFBE6;">
+                <div style="font-size: 4rem;">💍</div>
+                <h2 style="color:#D4AF37;">BE MY VALENTINE?</h2>
+                <p>You said YES! ❤️</p>
+                <div style="margin-top: 20px; background: white; padding: 10px; border-radius: 10px; font-weight:bold; color:#D4AF37;">PROMISE RING</div>
+            </div>
         </div>
     </div>
 
@@ -177,7 +194,7 @@
     <div class="screen" id="app-notes">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Notes</span><div></div></div>
         <div class="settings-list">
-            <div class="settings-card fade-in-up" onclick="alert('You are beautiful. You are smart. You are loved! ❤️')"><div class="settings-row"><span>☀️ Morning Reminder</span><span>›</span></div></div>
+            <div class="settings-card fade-in-up" onclick="alert('Remember I love you! ❤️')"><div class="settings-row"><span>☀️ Morning Reminder</span><span>›</span></div></div>
             <div class="settings-card fade-in-up" style="animation-delay:0.1s" onclick="alert('1. Adopt 10 cats 🐈\n2. Travel ✈️\n3. Build our house 🏡')"><div class="settings-row"><span>📝 Bucket List</span><span>›</span></div></div>
         </div>
     </div>
@@ -190,19 +207,6 @@
         </div>
     </div>
 
-    <div class="screen" id="app-gift">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>My Gift</span><div></div></div>
-        <div class="gift-container">
-            <div id="gift-lock"><div style="font-size: 5rem;">🔒</div><h2>Gift Locked</h2><p>Check messages! 💌</p></div>
-            <div id="gift-open" class="ticket hidden" style="border: 3px solid #FFD700; background: #FFFBE6;">
-                <div style="font-size: 4rem;">💍</div>
-                <h2 style="color:#D4AF37;">BE MY VALENTINE?</h2>
-                <p>You said YES! ❤️</p>
-                <div style="margin-top: 20px; background: white; padding: 10px; border-radius: 10px; font-weight:bold; color:#D4AF37;">PROMISE RING</div>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js?v=44"></script>
+    <script src="script.js?v=45"></script>
 </body>
 </html>
