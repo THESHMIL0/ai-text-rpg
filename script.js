@@ -5,10 +5,6 @@ function init() {
     calcDays();
 }
 
-function vibrate() {
-    if (navigator.vibrate) navigator.vibrate(50);
-}
-
 function updateClock() {
     let d = new Date();
     let m = d.getMinutes().toString().padStart(2,'0');
@@ -18,16 +14,15 @@ function updateClock() {
     setTimeout(updateClock, 1000);
 }
 
-/* LOCK */
+function unlockPhone() {}
+
 function showPasscode() {
-    vibrate();
     document.getElementById('lock-main').classList.add('hidden');
     document.getElementById('lock-passcode').classList.remove('hidden');
     document.getElementById('pass-input').focus();
 }
 
 function showMainLock() {
-    vibrate();
     document.getElementById('lock-passcode').classList.add('hidden');
     document.getElementById('lock-main').classList.remove('hidden');
     document.getElementById('pass-msg').innerText = "";
@@ -35,12 +30,11 @@ function showMainLock() {
 }
 
 function checkPasscode() {
-    vibrate();
     const input = document.getElementById('pass-input');
     const msg = document.getElementById('pass-msg');
     if (input.value.toLowerCase().trim() === 'kushu') {
         document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
-        setTimeout(() => { document.getElementById('home-screen').classList.add('active'); }, 100);
+        document.getElementById('home-screen').classList.add('active');
         setTimeout(() => { document.getElementById('lock-screen').style.display = 'none'; }, 500);
     } else {
         msg.innerText = "Wrong Password 😿";
@@ -49,26 +43,20 @@ function checkPasscode() {
     }
 }
 
-/* NAVIGATION */
 function goHome() {
-    vibrate();
     document.querySelectorAll('.screen').forEach(s => {
         if(s.id !== 'lock-screen') s.classList.remove('active');
     });
+    document.getElementById('home-screen').classList.add('active');
 }
 
 function openApp(id) {
-    vibrate();
+    document.querySelectorAll('.screen').forEach(s => {
+        if(s.id !== 'lock-screen') s.classList.remove('active');
+    });
     document.getElementById('app-' + id).classList.add('active');
 }
 
-/* GALLERY ZOOM */
-function toggleZoom(el) {
-    vibrate();
-    el.classList.toggle('zoomed');
-}
-
-/* MUSIC */
 const songs = [
     { title: "Hawayein", src: "song.mp3", art: "wallpaper.jpg" },
     { title: "Like My Father", src: "song3.mp3", art: "kuchu.jpg" }
@@ -87,32 +75,21 @@ function loadSong(index) {
 }
 
 function togglePlay() {
-    vibrate();
     if (!audioPlayer.src || audioPlayer.src === window.location.href) { loadSong(currentSongIndex); }
-    if (audioPlayer.paused) { 
-        audioPlayer.play(); 
-        playBtn.innerText = "⏸️"; 
-        albumArt.classList.add('rotating'); 
-    } else { 
-        audioPlayer.pause(); 
-        playBtn.innerText = "▶️"; 
-        albumArt.classList.remove('rotating'); 
-    }
+    if (audioPlayer.paused) { audioPlayer.play(); playBtn.innerText = "⏸️"; albumArt.classList.add('rotating'); } 
+    else { audioPlayer.pause(); playBtn.innerText = "▶️"; albumArt.classList.remove('rotating'); }
 }
 
 function nextSong() {
-    vibrate();
     currentSongIndex = (currentSongIndex + 1) % songs.length;
     loadSong(currentSongIndex); audioPlayer.play(); playBtn.innerText = "⏸️"; albumArt.classList.add('rotating');
 }
 
 function prevSong() {
-    vibrate();
     currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
     loadSong(currentSongIndex); audioPlayer.play(); playBtn.innerText = "⏸️"; albumArt.classList.add('rotating');
 }
 
-/* CALC DAYS */
 function calcDays() {
     let now = new Date();
     let yr = now.getFullYear();
@@ -122,24 +99,20 @@ function calcDays() {
     document.getElementById('days-her').innerText = Math.ceil((her - now)/(1000*60*60*24)) + " Days";
 }
 
-/* CHAT LOGIC */
+/* --- CHAT LOGIC --- */
 const chatBox = document.getElementById('chat-box');
 const opts = document.getElementById('chat-opts');
 const typing = document.getElementById('typing');
 
 function reply(choice) {
-    vibrate();
     let txt = "";
-    
     if(chatStep === 0) {
         txt = choice === 1 ? "Happy Valentine's Theshuuu! ❤️" : "I miss you Theshuuu! 🥺";
         addBubble(txt, 'chat-me'); 
         opts.classList.add('hidden');
-        
         simulateTyping(() => {
             addBubble("Happy Valentine's Day Ayuuu! ❤️", 'chat-them');
             addBubble("I wish I was there to hug you... but look who is here!", 'chat-them');
-            
             let row = document.createElement('div'); row.className = "chat-row";
             let avatar = document.createElement('div'); avatar.className = "chat-avatar"; avatar.style.backgroundImage = "url('us.jpg')";
             let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-them";
@@ -148,7 +121,6 @@ function reply(choice) {
             bubble.innerHTML += `<div class="time-tick">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
             row.appendChild(avatar); row.appendChild(bubble);
             chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
-
             showOpts(["Omg my Kuchu!! 🥺", "He's so cute!"]);
             chatStep = 1;
         }, 1500);
@@ -196,7 +168,7 @@ function reply(choice) {
             addBubble("I love you Ayuuu! ❤️", 'chat-them');
             addBubble("Check your 'Gift' app now!", 'chat-them');
             document.getElementById('gift-lock').style.display = 'none';
-            document.getElementById('gift-open').classList.remove('hidden');
+            document.getElementById('gift-open').style.display = 'block';
             opts.innerHTML = `<div class="chat-btn" style="width:100%" onclick="goHome()">🏠 Check "Gift" App</div>`;
             opts.classList.remove('hidden');
         }, 1500);
