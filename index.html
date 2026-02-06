@@ -5,32 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ayuuu's Gift</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="style.css?v=58">
+    <link rel="stylesheet" href="style.css?v=60">
 </head>
 <body onload="init()">
 
     <div class="screen active" id="lock-screen">
-        <div id="lock-main" style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding-top:60px; padding-bottom:40px;" onclick="showPasscode()">
-            
+        <div id="lock-main" onclick="showPasscode()">
             <div class="lock-header" style="text-align:center; width:100%;">
                 <div class="lock-time" id="lock-clock">12:00</div>
                 <div class="lock-date" id="lock-date">Loading...</div>
             </div>
 
-            <div class="lock-notification">
-                <div class="notif-header"><span>MESSAGES • NOW</span></div>
-                <div class="notif-content">
-                    <div class="notif-icon">❤️</div>
-                    <div class="notif-text">
-                        <div style="font-weight:bold; font-size:0.95rem;">Theshuuu</div>
-                        <div style="opacity:0.9; font-size:0.9rem;">I have a surprise for you... 👀</div>
+            <div style="width:100%; display:flex; flex-direction:column; align-items:center;">
+                <div class="lock-notification">
+                    <div class="notif-header"><span>MESSAGES • NOW</span></div>
+                    <div class="notif-content">
+                        <div class="notif-icon">❤️</div>
+                        <div class="notif-text">
+                            <div style="font-weight:bold; font-size:0.95rem;">Theshuuu</div>
+                            <div style="opacity:0.9; font-size:0.9rem;">I have a surprise for you... 👀</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="lock-hint">
-                <div style="font-size:1.5rem; animation: bounce 1.5s infinite;">🔓</div>
-                Tap to unlock
+                <div class="lock-hint">
+                    <div style="font-size:1.5rem; animation: bounce 1.5s infinite;">🔓</div>
+                    Tap to unlock
+                </div>
             </div>
         </div>
 
@@ -110,6 +110,7 @@
             <div class="magic-ball" id="magic-ball" onclick="askOracle()">TAP ME 🔮</div>
         </div>
     </div>
+
     <div class="screen" id="app-music">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Music</span><div></div></div>
         <audio id="audio-player"></audio>
@@ -142,14 +143,12 @@
                 <div id="together-time" style="font-size:2.5rem; font-weight:800; margin:10px 0; text-shadow:0 2px 5px rgba(0,0,0,0.1);">0 Days</div>
                 <div style="font-size:0.9rem;">and counting... ⏳</div>
             </div>
-
             <p style="font-size:0.8rem; color:#888; margin-left:15px; margin-top:20px;">UPCOMING 🎂</p>
             <div class="settings-card fade-in-up" style="animation-delay:0.1s">
                 <div class="settings-row"><span>🤴 Theshu's Bday</span><span id="days-me" style="color:#E91E63; font-weight:bold;">14 March</span></div>
                 <div class="settings-row"><span>👸 Ayuuu's Bday</span><span id="days-her" style="color:#E91E63; font-weight:bold;">22 Sept</span></div>
                 <div class="settings-row"><span>💑 Anniversary</span><span id="days-anni" style="color:#E91E63; font-weight:bold;">18 Jan</span></div>
             </div>
-
             <p style="font-size:0.8rem; color:#888; margin-left:15px;">MEMORY LANE 🕰️</p>
             <div class="settings-card fade-in-up" style="animation-delay:0.2s">
                 <div class="settings-row"><span>💯 100th Day</span><span id="date-100" style="color:#888;">Calculating...</span></div>
@@ -241,6 +240,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=58"></script>
+    <script src="script.js?v=60"></script>
 </body>
 </html>
