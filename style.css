@@ -1,15 +1,5 @@
-:root { 
-    --bg-color: #FFF0F5; 
-    --primary: #FF69B4; 
-    --accent: #E91E63; 
-    --text: #333; 
-    --bubble-me: #E91E63; 
-    --bubble-her: #FFFFFF; 
-}
-
+:root { --bg-color: #FFF0F5; --primary: #FF69B4; --accent: #E91E63; --text: #333; --bubble-me: #E91E63; --bubble-her: #FFFFFF; }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; touch-action: manipulation; }
-
-/* BODY */
 body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; overflow: hidden; position: fixed; color: var(--text); }
 
 /* ANIMATIONS */
@@ -21,11 +11,7 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 @keyframes fly { 0% { left: 15%; transform: translateY(0) rotate(10deg); } 50% { transform: translateY(-10px) rotate(10deg); } 100% { left: 75%; transform: translateY(0) rotate(10deg); } }
 
 /* SCREENS */
-.screen { 
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-    background: var(--bg-color); display: none; flex-direction: column; 
-    padding-top: env(safe-area-inset-top); z-index: 10;
-}
+.screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: none; flex-direction: column; padding-top: env(safe-area-inset-top); z-index: 10; }
 .screen.active { display: flex; z-index: 20; animation: popIn 0.25s ease-out; }
 
 /* LOCK SCREEN */
@@ -77,7 +63,7 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .chat-btn:active { background: var(--accent); color: white; }
 .typing { font-size: 0.8rem; color: #666; margin-left: 55px; display: none; margin-bottom: 10px; font-style: italic;}
 
-/* APP COMPONENTS */
+/* OTHER APPS */
 .pet-view, .magic-container, .music-player { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
 .pet-avatar { width: 180px; height: 180px; border-radius: 50%; background-image: url('kuchu.jpg'); background-size: cover; border: 5px solid white; margin-bottom: 20px; transition: transform 0.2s; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 .pet-controls { display: flex; gap: 20px; margin-top: 20px; }
