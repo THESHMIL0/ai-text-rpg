@@ -191,10 +191,15 @@ function reply(selectedText) {
     } else if(chatStep === 4) {
         simulateTyping(() => {
             addBubble("I love you Ayuuu! ❤️", 'chat-them');
-            addBubble("Check your 'Gift' app now!", 'chat-them');
-            document.getElementById('gift-lock').style.display = 'none';
-            document.getElementById('gift-open').classList.remove('hidden');
-            opts.innerHTML = `<div class="chat-btn" style="width:100%" onclick="goHome()">🏠 Check "Gift" App</div>`;
+            
+            // REMOVED THE LINE ABOUT CHECKING THE GIFT APP
+            // Simply end with a Home button
+            opts.innerHTML = "";
+            let btn = document.createElement('div'); 
+            btn.className = "chat-btn"; 
+            btn.innerText = "🏠 Go Home"; 
+            btn.onclick = () => goHome(); 
+            opts.appendChild(btn);
             opts.classList.remove('hidden');
         }, 1500);
     }
@@ -228,11 +233,10 @@ function showOpts(arr) {
 
 function toggleZoom(el) { el.classList.toggle('zoomed'); }
 
-/* --- FIXED DATE LOGIC --- */
+/* DATES */
 function calcDays() {
     const now = new Date();
-    
-    // 1. START DATE: Jan 18, 2026 (Calculated to show 19 Days from Feb 6)
+    // START: Jan 18, 2026 (19 Days from Feb 6)
     const startDate = new Date("2026-01-18"); 
     
     const diff = now - startDate;
@@ -241,14 +245,11 @@ function calcDays() {
     const el = document.getElementById('together-time');
     if(el) el.innerText = days + " Days";
 
-    // 2. UPCOMING COUNTDOWNS
-    updateCountdown('days-me', 2, 14);   // Theshu: Mar 14
-    updateCountdown('days-her', 8, 22);  // Ayuuu: Sept 22
-    
-    // Anniversary: Changed to Jan 18 (Month 0) to avoid the "193 days" error
-    updateCountdown('days-anni', 0, 18); 
+    updateCountdown('days-me', 2, 14);   // Mar 14
+    updateCountdown('days-her', 8, 22);  // Sept 22
+    updateCountdown('days-anni', 0, 18); // Jan 18
 
-    // 3. 100th DAY: Fixed to April 25, 2026
+    // 100th Day: Apr 28, 2026
     const el100 = document.getElementById('date-100');
     if(el100) el100.innerText = "Apr 28, 2026";
 }
@@ -257,15 +258,9 @@ function updateCountdown(id, month, day) {
     const now = new Date();
     const currentYear = now.getFullYear();
     let nextDate = new Date(currentYear, month, day);
-    
-    // If date passed, show next year's date
-    if (now > nextDate) {
-        nextDate.setFullYear(currentYear + 1);
-    }
-    
+    if (now > nextDate) nextDate.setFullYear(currentYear + 1);
     const diff = nextDate - now;
     const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
-    
     const el = document.getElementById(id);
     if(el) el.innerText = daysLeft + " Days";
 }
