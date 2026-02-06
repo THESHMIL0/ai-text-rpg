@@ -14,7 +14,7 @@ function updateClock() {
     setTimeout(updateClock, 1000);
 }
 
-/* LOCK SCREEN */
+/* LOCK */
 function showPasscode() {
     document.getElementById('lock-main').classList.add('hidden');
     document.getElementById('lock-passcode').classList.remove('hidden');
@@ -42,21 +42,30 @@ function checkPasscode() {
     }
 }
 
-/* NAVIGATION */
+/* NAV */
 function goHome() {
     document.querySelectorAll('.screen').forEach(s => {
         if(s.id !== 'lock-screen') s.classList.remove('active');
     });
-    // Safely show Home
-    const home = document.getElementById('home-screen');
-    if(home) home.classList.add('active');
+    document.getElementById('home-screen').classList.add('active');
 }
 
 function openApp(id) {
     document.getElementById('app-' + id).classList.add('active');
 }
 
-/* KUCHU PET */
+/* GLOBAL TELEPORT */
+function teleport() {
+    alert("Initiating Teleport sequence... 🚀");
+    setTimeout(() => { alert("Loading... ▓▓▓▓▒▒▒▒▒▒ 40%"); }, 1000);
+    setTimeout(() => { alert("Loading... ▓▓▓▓▓▓▓▓▒▒ 80%"); }, 2000);
+    setTimeout(() => { 
+        alert("❌ ERROR: Teleport Failed!"); 
+        alert("Reason: You need to hug Theshuuu in real life to recharge! 🥺❤️"); 
+    }, 3000);
+}
+
+/* GAMES */
 function interactPet(action) {
     const msg = document.getElementById('pet-msg');
     const img = document.getElementById('pet-img');
@@ -68,7 +77,6 @@ function interactPet(action) {
     if(action === 'love') msg.innerText = "Purr... Kuchu loves Ayuuu! ❤️";
 }
 
-/* MAGIC BALL */
 function askOracle() {
     const answers = ["Yes, absolutely! ❤️", "Theshuuu says YES! 💍", "Without a doubt! 🌟", "Ask Kuchu 🐈", "100% Yes! 😽"];
     const ball = document.getElementById('magic-ball');
@@ -106,7 +114,7 @@ function togglePlay() {
     if (!audioPlayer.src || audioPlayer.src === "") loadSong(0);
     
     if (audioPlayer.paused) { 
-        audioPlayer.play().catch(e => alert("Make sure songs are in the folder! 🎵")); 
+        audioPlayer.play().catch(e => alert("Please make sure 'song.mp3' and 'song3.mp3' are in the folder! 🎵")); 
         playBtn.innerText = "⏸️"; 
         albumArt.classList.add('rotating'); 
     } else { 
@@ -126,31 +134,25 @@ function nextSong() {
     togglePlay();
 }
 
-/* CHAT LOGIC (FIXED) */
+/* CHAT LOGIC */
 const chatBox = document.getElementById('chat-box');
 const opts = document.getElementById('chat-opts');
 const typing = document.getElementById('typing');
 
-// The function now takes the TEXT, not the number
 function reply(selectedText) {
-    // 1. Show HER reply (The text she clicked)
     addBubble(selectedText, 'chat-me'); 
     opts.classList.add('hidden');
     
-    // 2. Logic for THESHUUU's response
     if(chatStep === 0) {
         simulateTyping(() => {
             addBubble("Happy Valentine's Day Ayuuu! ❤️", 'chat-them');
             addBubble("I wish I was there to hug you... but look who is here!", 'chat-them');
             
-            // Image Bubble
             let row = document.createElement('div'); row.className = "chat-row";
             let avatar = document.createElement('div'); avatar.className = "chat-avatar"; avatar.style.backgroundImage = "url('us.jpg')";
             let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-them";
-            let img = document.createElement('img'); 
-            img.src = "kuchu.jpg"; 
-            img.className = "chat-img";
-            img.onclick = function() { this.classList.toggle('zoomed'); };
+            let img = document.createElement('img'); img.src = "kuchu.jpg"; img.className = "chat-img";
+            img.onclick = function() { this.classList.toggle('zoomed'); }; 
             bubble.appendChild(img);
             bubble.innerHTML += `<div class="time-tick">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
             row.appendChild(avatar); row.appendChild(bubble);
@@ -176,8 +178,6 @@ function reply(selectedText) {
     } else if(chatStep === 3) {
         simulateTyping(() => {
             addBubble("Since I can't be there in person...", 'chat-them');
-            
-            // Proposal Card
             let row = document.createElement('div'); row.className = "chat-row";
             let avatar = document.createElement('div'); avatar.className = "chat-avatar"; avatar.style.backgroundImage = "url('us.jpg')";
             let bubble = document.createElement('div'); bubble.className = "chat-bubble chat-them"; 
@@ -185,7 +185,6 @@ function reply(selectedText) {
             bubble.innerHTML = `<div style="font-size:3rem;">🌹</div><h3 style="color:#D4AF37; margin:5px 0;">BE MY VALENTINE?</h3>`;
             row.appendChild(avatar); row.appendChild(bubble);
             chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
-            
             showOpts(["YESSS THESHUUU! ❤️", "ALWAYS! 🥺❤️"]);
             chatStep = 4;
         }, 2000);
@@ -193,18 +192,9 @@ function reply(selectedText) {
         simulateTyping(() => {
             addBubble("I love you Ayuuu! ❤️", 'chat-them');
             addBubble("Check your 'Gift' app now!", 'chat-them');
-            
-            // Unlock Gift
             document.getElementById('gift-lock').style.display = 'none';
             document.getElementById('gift-open').classList.remove('hidden');
-            
-            // Final button
-            opts.innerHTML = "";
-            let btn = document.createElement('div'); 
-            btn.className = "chat-btn"; 
-            btn.innerText = "🏠 Go to Home Screen"; 
-            btn.onclick = () => goHome(); 
-            opts.appendChild(btn);
+            opts.innerHTML = `<div class="chat-btn" style="width:100%" onclick="goHome()">🏠 Check "Gift" App</div>`;
             opts.classList.remove('hidden');
         }, 1500);
     }
@@ -227,14 +217,11 @@ function addBubble(text, className) {
     row.appendChild(bubble); chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Logic fix: Pass TEXT, not index
 function showOpts(arr) {
     opts.innerHTML = ""; opts.classList.remove('hidden');
     arr.forEach((t) => {
-        let btn = document.createElement('div'); 
-        btn.className = "chat-btn"; 
-        btn.innerText = t; 
-        btn.onclick = () => reply(t); // Pass the exact text
+        let btn = document.createElement('div'); btn.className = "chat-btn"; btn.innerText = t; 
+        btn.onclick = () => reply(t); 
         opts.appendChild(btn);
     });
 }
