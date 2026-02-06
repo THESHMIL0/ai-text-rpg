@@ -14,7 +14,7 @@ function updateClock() {
     setTimeout(updateClock, 1000);
 }
 
-/* LOCK */
+/* LOCK SCREEN */
 function showPasscode() {
     document.getElementById('lock-main').classList.add('hidden');
     document.getElementById('lock-passcode').classList.remove('hidden');
@@ -231,7 +231,7 @@ function toggleZoom(el) { el.classList.toggle('zoomed'); }
 /* NEW DATE LOGIC */
 function calcDays() {
     const now = new Date();
-    // SET TO JAN 18 TO SHOW "19 DAYS"
+    // START: Jan 18, 2026 (to match 19 Days)
     const startDate = new Date("2026-01-18"); 
     
     const diff = now - startDate;
@@ -239,9 +239,12 @@ function calcDays() {
     const el = document.getElementById('together-time');
     if(el) el.innerText = days + " Days";
 
+    // UPCOMING DATES
     updateCountdown('days-me', 2, 14);   // Mar 14
     updateCountdown('days-her', 8, 22);  // Sept 22
-    updateCountdown('days-anni', 7, 18); // Aug 18
+    
+    // Anniversary: Jan 18 (Month 0)
+    updateCountdown('days-anni', 0, 18); 
 
     // 100th Day Calc
     const hundredth = new Date(startDate.getTime() + (100 * 86400000));
