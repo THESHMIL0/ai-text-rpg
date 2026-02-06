@@ -191,9 +191,9 @@ function reply(selectedText) {
     } else if(chatStep === 4) {
         simulateTyping(() => {
             addBubble("I love you Ayuuu! ❤️", 'chat-them');
+            // REMOVED THE GIFT MESSAGE
             
-            // REMOVED THE LINE ABOUT CHECKING THE GIFT APP
-            // Simply end with a Home button
+            // CLEAN BUTTON TO GO HOME
             opts.innerHTML = "";
             let btn = document.createElement('div'); 
             btn.className = "chat-btn"; 
