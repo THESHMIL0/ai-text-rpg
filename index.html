@@ -13,41 +13,36 @@
     <link rel="preload" as="image" href="kuchu.jpg">
     <link rel="preload" as="image" href="us.jpg">
     
-    <link rel="stylesheet" href="style.css?v=35">
+    <link rel="stylesheet" href="style.css?v=36">
 </head>
 <body onload="init()">
 
-    <div id="boot-screen">
-        <div class="boot-logo">💖</div>
-    </div>
-
     <div class="screen active" id="lock-screen">
-        <div style="flex:1; display:flex; flex-direction:column; align-items:center;" onclick="showPasscode()">
+        <div id="lock-main" onclick="showPasscode()">
             <div class="lock-content">
                 <div class="lock-time" id="lock-clock">12:00</div>
                 <div class="lock-date">Saturday, February 14</div>
-            </div>
-            
-            <div class="lock-notification">
-                <div class="notif-icon">❤️</div>
-                <div class="notif-text">
-                    <div class="notif-title">Theshuuu</div>
-                    <div class="notif-msg">I have a surprise for you... 👀</div>
+                <div class="lock-notification">
+                    <div class="notif-icon">❤️</div>
+                    <div class="notif-text">
+                        <div class="notif-title">Theshuuu</div>
+                        <div class="notif-msg">I have a surprise for you... 👀</div>
+                    </div>
+                    <div class="notif-time">now</div>
                 </div>
-                <div class="notif-time">now</div>
             </div>
+            <div class="lock-hint">Tap to unlock</div>
         </div>
-        <div class="lock-hint" onclick="showPasscode()">Tap to unlock</div>
 
         <div id="lock-passcode" class="hidden">
             <div class="pass-container">
-                <div class="pass-avatar" style="background-image: url('us.jpg');"></div>
-                <h3 style="margin-bottom: 5px;">Enter Password</h3>
+                <div class="chat-avatar" style="background-image: url('us.jpg'); width:90px; height:90px; margin:0 auto 15px auto; border:3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.2);"></div>
+                <h3>Enter Password</h3>
                 <p style="font-size:0.9rem; opacity:0.8; margin-bottom:25px;">Hint: The cute one 😽</p>
                 <input type="text" id="pass-input" placeholder="Type here..." autocomplete="off">
                 <div class="pass-btn" onclick="checkPasscode()">Unlock 🔓</div>
-                <p id="pass-msg" style="height:20px; font-weight:bold; color:#FFCDD2; margin-top:15px;"></p>
-                <div style="margin-top:25px; opacity:0.8;" onclick="showMainLock()">Cancel</div>
+                <p id="pass-msg"></p>
+                <div style="margin-top:20px; font-size:0.9rem; opacity:0.8;" onclick="showMainLock()">Cancel</div>
             </div>
         </div>
     </div>
@@ -60,10 +55,10 @@
 
         <div class="widget">
             <div>
-                <div style="font-size:0.75rem; font-weight:700; opacity:0.7; letter-spacing:1px;">STATUS UPDATE</div>
-                <div style="font-size:1.3rem; font-weight:800; color:#E91E63; margin-top:2px;">Miss You 3000 ❤️</div>
+                <div style="font-size:0.8rem; font-weight:bold; opacity:0.8;">STATUS UPDATE</div>
+                <div style="font-size:1.2rem; font-weight:800; color:#FF1493;">Miss You 3000 ❤️</div>
             </div>
-            <div style="font-size:2.2rem;">😽</div>
+            <div style="font-size:2rem;">😽</div>
         </div>
 
         <div class="app-grid">
@@ -91,7 +86,7 @@
                 <p><b>My Ayuuu,</b></p>
                 <p>I built this phone just to tell you: <b>You are my everything.</b> 🌎❤️</p>
                 <p>Distance is hard, but we are looking at the same moon. 🌙</p>
-                <p>You, me, and Kuchu... that is my dream life. 🏡🐈</p>
+                <p>You, me, and Kuchu... that is my dream. 🏡🐈</p>
                 <p>I promise to love you, annoy you, and make you laugh every single day.</p>
                 <br>
                 <p style="text-align:right;"><b>Forever Yours,<br>Theshuuu</b> ❤️</p>
@@ -103,11 +98,12 @@
     <div class="screen" id="app-coupons">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Love Coupons</span><div></div></div>
         <div class="settings-list">
-            <p style="font-size:0.8rem; color:#888; margin-left:15px; margin-top:5px;">REDEEM ANYTIME 🎟️</p>
+            <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">REDEEM ANYTIME 🎟️</p>
             <div class="settings-card fade-in-up" onclick="alert('Redeemed: Breakfast in Bed! 🥞')"><div class="settings-row"><span>🥞 Breakfast in Bed</span><span>Redeem ›</span></div></div>
             <div class="settings-card fade-in-up" style="animation-delay:0.1s" onclick="alert('Redeemed: Massage! 💆‍♂️')"><div class="settings-row"><span>💆‍♂️ Free Massage</span><span>Redeem ›</span></div></div>
             <div class="settings-card fade-in-up" style="animation-delay:0.2s" onclick="alert('Redeemed: Dinner Date! 🍝')"><div class="settings-row"><span>🍝 Dinner Date</span><span>Redeem ›</span></div></div>
             <div class="settings-card fade-in-up" style="animation-delay:0.3s" onclick="alert('Redeemed: Argument Win! 🏳️')"><div class="settings-row"><span>🏳️ Win An Argument</span><span>Redeem ›</span></div></div>
+            <div class="settings-card fade-in-up" style="animation-delay:0.4s" onclick="alert('Redeemed: No Phones! 📵')"><div class="settings-row"><span>📵 No Phone Date</span><span>Redeem ›</span></div></div>
         </div>
     </div>
 
@@ -131,27 +127,27 @@
     <div class="screen" id="app-call">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Phone</span><div></div></div>
         <div class="settings-list">
-            <p style="font-size:0.8rem; color:#888; margin-left:15px; margin-top:5px;">FAVORITES ❤️</p>
+            <p style="font-size:0.8rem; color:#888; margin-left:10px;">FAVORITES ❤️</p>
             <div class="settings-card fade-in-up" onclick="alert('Calling Theshuuu... 📞')">
                 <div class="settings-row" style="justify-content: flex-start; gap: 15px;">
-                    <div class="chat-avatar" style="background-image: url('us.jpg'); width:45px; height:45px;"></div>
-                    <div style="flex:1;"><div style="font-weight:bold; font-size:1.05rem;">Theshuuu (Hubby) 💍</div><div style="font-size:0.85rem; color:#888;">Mobile • ❤️</div></div>
-                    <div style="font-size:1.5rem; color:#4CAF50;">📞</div>
+                    <div class="chat-avatar" style="background-image: url('us.jpg'); width:40px; height:40px;"></div>
+                    <div style="flex:1;"><div style="font-weight:bold;">Theshuuu (Hubby) 💍</div><div style="font-size:0.8rem; color:#888;">Mobile • ❤️</div></div>
+                    <div style="font-size:1.5rem;">📞</div>
                 </div>
             </div>
-            <p style="font-size:0.8rem; color:#888; margin-left:15px;">RECENT</p>
+            <p style="font-size:0.8rem; color:#888; margin-left:10px;">RECENT</p>
             <div class="settings-card fade-in-up" style="animation-delay:0.1s">
-                <div class="settings-row"><div><div style="font-weight:bold; color:#E91E63;">Theshuuu ❤️</div><div style="font-size:0.85rem; color:#888;">Yesterday • 4 hrs 32 mins</div></div><span style="font-size:0.85rem;">11:30 PM</span></div>
-                <div class="settings-row"><div><div style="font-weight:bold; color:#E91E63;">Theshuuu ❤️</div><div style="font-size:0.85rem; color:#888;">FaceTime • Sleepy talks</div></div><span style="font-size:0.85rem;">02:00 AM</span></div>
-                <div class="settings-row"><div><div style="font-weight:bold;">Mom</div><div style="font-size:0.85rem; color:#888;">Mobile • 5 mins</div></div><span style="font-size:0.85rem;">Yesterday</span></div>
+                <div class="settings-row"><div><div style="font-weight:bold; color:#E91E63;">Theshuuu ❤️</div><div style="font-size:0.8rem; color:#888;">Yesterday • 4 hrs</div></div><span>11:30 PM</span></div>
+                <div class="settings-row"><div><div style="font-weight:bold; color:#E91E63;">Theshuuu ❤️</div><div style="font-size:0.8rem; color:#888;">FaceTime • Sleepy</div></div><span>02:00 AM</span></div>
+                <div class="settings-row"><div><div style="font-weight:bold;">Mom</div><div style="font-size:0.8rem; color:#888;">Mobile • 5 mins</div></div><span>Yesterday</span></div>
             </div>
         </div>
     </div>
 
     <div class="screen" id="app-msg">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹</div><span>Theshuuu ❤️</span><div style="width:30px;"></div></div>
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹</div><span>Theshuuu ❤️</span><div style="width:20px;"></div></div>
         <div class="chat-container" id="chat-box">
-            <div style="text-align: center; color: #aaa; font-size: 0.75rem; margin-bottom: 10px;">Today 12:00 PM</div>
+            <div style="text-align: center; color: #aaa; font-size: 0.7rem; margin-bottom: 10px;">Today 12:00 PM</div>
             <div class="chat-row"><div class="chat-avatar" style="background-image: url('us.jpg');"></div><div class="chat-bubble chat-them">Happy Valentine's Day Ayuuu! ❤️<div class="time-tick">12:00</div></div></div>
         </div>
         <div class="typing" id="typing">Theshuuu is typing...</div>
@@ -164,39 +160,37 @@
     <div class="screen" id="app-music">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Music</span><div></div></div>
         <audio id="audio-player"></audio>
-        <div class="music-player">
-            <div class="album-art" id="album-art" style="background-image: url('wallpaper.jpg');"></div>
-            <div class="song-info"><h2 id="song-title" style="margin:0;">Hawayein</h2><p style="margin:5px 0; color:#888;">Theshu Radio 📻</p></div>
-            <div class="progress-bar"><div class="progress-fill"></div></div>
+        <div class="music-player" style="flex:0; padding-bottom:10px;">
+            <div class="album-art" id="album-art" style="background-image: url('wallpaper.jpg'); width:200px; height:200px;"></div>
+            <div class="song-info"><h2 id="song-title">Hawayein</h2><p>Theshu Radio 📻</p></div>
             <div class="music-controls">
-                <div onclick="prevSong()">⏮️</div>
-                <div id="play-btn" onclick="togglePlay()" style="font-size:3.5rem;">▶️</div>
-                <div onclick="nextSong()">⏭️</div>
+                <div style="font-size:2rem;" onclick="prevSong()">⏮️</div>
+                <div id="play-btn" style="font-size:3.5rem;" onclick="togglePlay()">▶️</div>
+                <div style="font-size:2rem;" onclick="nextSong()">⏭️</div>
             </div>
         </div>
-        <div class="settings-list" style="height:auto; min-height:200px; padding-top:0;">
-            <p style="font-size:0.8rem; color:#888; margin-left:15px; margin-bottom:10px;">UP NEXT 🎵</p>
+        <div class="settings-list" style="padding-top:0;">
+            <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-bottom:10px;">UP NEXT 🎵</p>
             <div class="settings-card fade-in-up">
                 <div class="settings-row" onclick="loadSong(1)">
-                    <div style="display:flex; gap:12px; align-items:center;">
-                        <div style="font-size:1.5rem;">💿</div>
-                        <div><div style="font-weight:bold;">Like My Father</div><div style="font-size:0.85rem; color:#888;">Our Song ❤️</div></div>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <div style="font-size:1.2rem;">💿</div>
+                        <div><div style="font-weight:bold;">Like My Father</div><div style="font-size:0.8rem; color:#888;">Our Song ❤️</div></div>
                     </div>
                     <span>3:45</span>
                 </div>
             </div>
         </div>
     </div>
-
     <div class="screen" id="app-notes">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Notes</span><div></div></div>
         <div class="settings-list">
-            <p style="font-size:0.8rem; color:#888; margin-left:15px; margin-top:5px;">REMINDERS 📌</p>
+            <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">REMINDERS 📌</p>
             <div class="settings-card fade-in-up" onclick="alert('You are beautiful. You are smart. You are loved! ❤️')"><div class="settings-row"><span>☀️ Morning Reminder</span><span>›</span></div></div>
-            <p style="font-size:0.8rem; color:#888; margin-left:15px;">OPEN WHEN...</p>
+            <p style="font-size:0.8rem; color:#888; margin-left:10px;">OPEN WHEN...</p>
             <div class="settings-card fade-in-up" style="animation-delay:0.1s" onclick="alert('Remember that no matter how far apart we are, we are looking at the same moon. 🌙')"><div class="settings-row"><span>💌 You Miss Me</span><span>›</span></div></div>
             <div class="settings-card fade-in-up" style="animation-delay:0.2s" onclick="alert('I wish I could be there to hug you right now. You are my favorite person! 🥺')"><div class="settings-row"><span>😢 You Are Sad</span><span>›</span></div></div>
-            <p style="font-size:0.8rem; color:#888; margin-left:15px;">PLANS</p>
+            <p style="font-size:0.8rem; color:#888; margin-left:10px;">PLANS</p>
             <div class="settings-card fade-in-up" style="animation-delay:0.3s" onclick="alert('1. Adopt 10 cats 🐈\n2. Japan Trip 🇯🇵\n3. Build our house 🏡\n4. Grow old together 👴👵')"><div class="settings-row"><span>📝 Bucket List</span><span>›</span></div></div>
         </div>
     </div>
@@ -204,12 +198,12 @@
     <div class="screen" id="app-events">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Events</span><div></div></div>
         <div class="settings-list">
-            <p style="font-size:0.8rem; color:#888; margin-left:15px; margin-top:5px;">COUNTDOWNS ⏳</p>
+            <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">COUNTDOWNS ⏳</p>
             <div class="settings-card fade-in-up">
                 <div class="settings-row"><span>🎂 Theshu's Bday</span><span style="font-weight:bold; color:#FF69B4;" id="days-me">0 Days</span></div>
                 <div class="settings-row"><span>🥳 Ayuuu's Bday</span><span style="font-weight:bold; color:#FF69B4;" id="days-her">0 Days</span></div>
             </div>
-            <p style="font-size:0.8rem; color:#888; margin-left:15px;">MILESTONES 🏆</p>
+            <p style="font-size:0.8rem; color:#888; margin-left:10px;">MILESTONES 🏆</p>
             <div class="settings-card fade-in-up" style="animation-delay:0.1s">
                 <div class="settings-row"><span>🗓️ Day We Met</span><span>Best Day Ever</span></div>
                 <div class="settings-row"><span>💏 First Kiss</span><span>Magical ✨</span></div>
@@ -222,11 +216,11 @@
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>My Gift</span><div></div></div>
         <div class="gift-container">
             <div id="gift-lock"><div style="font-size: 5rem;">🔒</div><h2>Gift Locked</h2><p>Check messages! 💌</p></div>
-            <div id="gift-open" class="ticket hidden" style="border: 3px solid #FFD700; background: #FFFBE6;">
+            <div id="gift-open" class="ticket" style="border: 3px solid #FFD700; background: #FFFBE6; display: none;">
                 <div style="font-size: 4rem;">💍</div>
                 <h2 style="color:#D4AF37;">BE MY VALENTINE?</h2>
                 <p>You said YES! ❤️</p>
-                <div style="margin-top: 20px; background: white; padding: 10px; border-radius: 10px; font-size: 0.8rem; font-weight:bold; letter-spacing:1px; color:#D4AF37;">PROMISE RING</div>
+                <div style="margin-top: 20px; background: white; padding: 10px; border-radius: 10px; font-size: 0.8rem;">PROMISE RING</div>
             </div>
         </div>
     </div>
@@ -234,19 +228,19 @@
     <div class="screen" id="app-settings">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Settings</span><div></div></div>
         <div class="settings-list">
-            <p style="font-size:0.8rem; color:#888; margin-left:15px; margin-top:5px;">ACCOUNT</p>
+            <p style="font-size:0.8rem; color:#888; margin-left:10px; margin-top:0;">ACCOUNT</p>
             <div class="settings-card fade-in-up">
                 <div class="settings-row"><span>👤 Name</span><span>Theshuuu & Ayuuu</span></div>
                 <div class="settings-row"><span>❤️ Status</span><span>Taken Forever 💍</span></div>
             </div>
-            <p style="font-size:0.8rem; color:#888; margin-left:15px;">PREFERENCES</p>
+            <p style="font-size:0.8rem; color:#888; margin-left:10px;">PREFERENCES</p>
             <div class="settings-card fade-in-up" style="animation-delay:0.1s">
                 <div class="settings-row"><span>🌙 Do Not Disturb</span><span>Except Ayuuu</span></div>
                 <div class="settings-row"><span>🔔 Miss You Alerts</span><span style="color:green;">ON</span></div>
                 <div class="settings-row"><span>😽 Kisses</span><span>Unlimited</span></div>
                 <div class="settings-row"><span>🐱 Cat</span><span>Kitchu</span></div>
             </div>
-            <p style="font-size:0.8rem; color:#888; margin-left:15px;">ABOUT PHONE</p>
+            <p style="font-size:0.8rem; color:#888; margin-left:10px;">ABOUT PHONE</p>
             <div class="settings-card fade-in-up" style="animation-delay:0.2s;">
                 <div class="settings-row"><span>📱 Model</span><span>LovePhone Pro Max</span></div>
                 <div class="settings-row"><span>🔐 Security</span><span>FaceID (Your Smile)</span></div>
@@ -258,13 +252,13 @@
     <div class="screen" id="app-gallery">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Memories</span><div></div></div>
         <div class="gallery-scroll">
-            <div class="polaroid fade-in-up" onclick="toggleZoom(this)" style="transform: rotate(2deg);"><img src="us.jpg"><div class="caption">Night 🌙</div></div>
-            <div class="polaroid fade-in-up" onclick="toggleZoom(this)" style="transform: rotate(-2deg); animation-delay:0.1s;"><img src="wallpaper.jpg"><div class="caption">Us ❤️</div></div>
-            <div class="polaroid fade-in-up" onclick="toggleZoom(this)" style="transform: rotate(1deg); animation-delay:0.2s;"><img src="kuchu.jpg"><div class="caption">Kuchu 👑</div></div>
-            <div class="polaroid fade-in-up" onclick="toggleZoom(this)" style="transform: rotate(-1deg); animation-delay:0.3s;"><img src="lockscreen.jpg"><div class="caption">Best Day 🌎</div></div>
+            <div class="polaroid fade-in-up" style="transform: rotate(2deg);"><img src="us.jpg"><div class="caption">Night 🌙</div></div>
+            <div class="polaroid fade-in-up" style="transform: rotate(-2deg); animation-delay:0.1s;"><img src="wallpaper.jpg"><div class="caption">Us ❤️</div></div>
+            <div class="polaroid fade-in-up" style="transform: rotate(1deg); animation-delay:0.2s;"><img src="kuchu.jpg"><div class="caption">Kuchu 👑</div></div>
+            <div class="polaroid fade-in-up" style="transform: rotate(-1deg); animation-delay:0.3s;"><img src="lockscreen.jpg"><div class="caption">Best Day 🌎</div></div>
         </div>
     </div>
 
-    <script src="script.js?v=35"></script>
+    <script src="script.js?v=34"></script>
 </body>
 </html>
