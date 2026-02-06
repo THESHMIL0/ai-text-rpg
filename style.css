@@ -54,9 +54,21 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .chat-btn { background: #FFF; border: 2px solid var(--accent); color: var(--accent); padding: 14px; border-radius: 25px; font-weight: bold; text-align: center; font-size: 0.95rem; }
 .chat-btn:active { background: var(--accent); color: white; }
 .typing { font-size: 0.8rem; color: #666; margin-left: 55px; display: none; margin-bottom: 10px; font-style: italic;}
-.pet-view, .magic-container, .music-player { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
-.pet-avatar { width: 180px; height: 180px; border-radius: 50%; background-image: url('kuchu.jpg'); background-size: cover; border: 5px solid white; transition: transform 0.2s; }
-.pet-btn { background: white; border: 2px solid var(--primary); padding: 15px; border-radius: 50%; font-size: 2rem; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; }
+
+/* KUCHU PET STYLES */
+.pet-view { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; }
+.pet-avatar { width: 200px; height: 200px; border-radius: 50%; background-image: url('kuchu.jpg'); background-size: cover; border: 6px solid white; box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: transform 0.2s; }
+.pet-controls { display: flex; gap: 20px; margin-top: 30px; }
+.pet-btn { background: white; border: 2px solid var(--primary); padding: 15px; border-radius: 50%; font-size: 2.2rem; width: 75px; height: 75px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.1s; }
+.pet-btn:active { transform: scale(0.9); background: var(--primary); }
+.pet-bubble { background: white; padding: 10px 20px; border-radius: 20px; margin-bottom: 15px; font-weight: bold; color: #555; position: relative; animation: bounce 2s infinite; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+.pet-bubble::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); border-width: 10px 10px 0; border-style: solid; border-color: white transparent transparent; }
+.pet-stats { width: 80%; background: white; padding: 15px; border-radius: 15px; margin-top: 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); }
+.stat-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; color: #666; font-weight: bold; }
+.progress-bar { width: 70%; height: 10px; background: #eee; border-radius: 5px; overflow: hidden; }
+.fill { height: 100%; background: #4CAF50; transition: width 0.5s; }
+
+/* MISC */
 .magic-ball { width: 220px; height: 220px; background: radial-gradient(circle at 30% 30%, #FF69B4, #E91E63); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.3rem; border: 5px solid white; padding: 20px; text-align: center; }
 .album-art { width: 240px; height: 240px; border-radius: 20px; background-size: cover; background-position: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 .album-art.rotating { animation: spin 5s linear infinite; border-radius: 50%; }
