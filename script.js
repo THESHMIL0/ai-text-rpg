@@ -250,7 +250,7 @@ function calcDays() {
 
     // 3. 100th DAY: Fixed to April 25, 2026
     const el100 = document.getElementById('date-100');
-    if(el100) el100.innerText = "Apr 25, 2026";
+    if(el100) el100.innerText = "Apr 28, 2026";
 }
 
 function updateCountdown(id, month, day) {
