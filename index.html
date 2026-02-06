@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ayuuu's Gift</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="style.css?v=68">
+    <link rel="stylesheet" href="style.css?v=69">
 </head>
 <body onload="init()">
+
+    <div class="home-indicator"></div>
+
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <div class="lightbox-close">×</div>
+        <img id="lightbox-img" src="">
+    </div>
 
     <div class="screen active" id="lock-screen">
         <div id="lock-main" onclick="showPasscode()">
@@ -98,7 +105,6 @@
             </div>
         </div>
     </div>
-
     <div class="screen" id="app-msg">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹</div><span>Theshuuu ❤️</span><div style="width:20px;"></div></div>
         <div class="chat-container" id="chat-box">
@@ -129,6 +135,7 @@
             </div>
         </div>
     </div>
+
     <div class="screen" id="app-ask">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Theshuuu Oracle</span><div></div></div>
         <div class="magic-container">
@@ -147,7 +154,11 @@
                 <h2 id="song-title" style="margin:0; font-size:1.5rem;">Hawayein</h2>
                 <p style="color:#888;">Theshu Radio 📻</p>
             </div>
-            <div class="music-controls" style="margin-top:15px; margin-bottom:20px;">
+            <div class="music-progress">
+                <div class="progress-bar-bg"><div class="progress-fill" id="music-fill"></div></div>
+                <div class="time-stamps"><span id="curr-time">0:00</span><span id="dur-time">3:45</span></div>
+            </div>
+            <div class="music-controls" style="margin-top:10px; margin-bottom:20px;">
                 <div onclick="prevSong()">⏮️</div>
                 <div id="play-btn" style="font-size:3.5rem;" onclick="togglePlay()">▶️</div>
                 <div onclick="nextSong()">⏭️</div>
@@ -187,10 +198,23 @@
 
     <div class="screen" id="app-gallery">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Memories</span><div></div></div>
-        <div class="gallery-scroll">
-            <div class="polaroid fade-in-up" onclick="toggleZoom(this)" style="transform: rotate(2deg);"><img src="us.jpg"><div class="caption">Night 🌙</div></div>
-            <div class="polaroid fade-in-up" onclick="toggleZoom(this)" style="transform: rotate(-2deg); animation-delay:0.1s;"><img src="wallpaper.jpg"><div class="caption">Us ❤️</div></div>
-            <div class="polaroid fade-in-up" onclick="toggleZoom(this)" style="transform: rotate(1deg); animation-delay:0.2s;"><img src="kuchu.jpg"><div class="caption">Kuchu 👑</div></div>
+        <div class="gallery-grid">
+            <div class="gallery-item fade-in-up" onclick="openLightbox('us.jpg')">
+                <img src="us.jpg" class="gallery-img">
+                <div class="gallery-caption">Us ❤️</div>
+            </div>
+            <div class="gallery-item fade-in-up" onclick="openLightbox('wallpaper.jpg')" style="animation-delay:0.1s">
+                <img src="wallpaper.jpg" class="gallery-img">
+                <div class="gallery-caption">Fav Spot 🏡</div>
+            </div>
+            <div class="gallery-item fade-in-up" onclick="openLightbox('kuchu.jpg')" style="animation-delay:0.2s">
+                <img src="kuchu.jpg" class="gallery-img">
+                <div class="gallery-caption">Kuchu 🐈</div>
+            </div>
+            <div class="gallery-item fade-in-up" onclick="openLightbox('lockscreen.jpg')" style="animation-delay:0.3s">
+                <img src="lockscreen.jpg" class="gallery-img">
+                <div class="gallery-caption">Trips ✈️</div>
+            </div>
         </div>
     </div>
 
@@ -322,6 +346,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=68"></script>
+    <script src="script.js?v=69"></script>
 </body>
 </html>
