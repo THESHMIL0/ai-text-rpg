@@ -228,20 +228,20 @@ function showOpts(arr) {
 
 function toggleZoom(el) { el.classList.toggle('zoomed'); }
 
-/* DATE LOGIC (AUG 18) */
+/* NEW DATE LOGIC */
 function calcDays() {
     const now = new Date();
-    // Start Date: Aug 18, 2025 (Set to past year to ensure positive days)
-    const startDate = new Date("2025-08-18"); 
+    // SET TO JAN 18 TO SHOW "19 DAYS"
+    const startDate = new Date("2026-01-18"); 
     
     const diff = now - startDate;
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const el = document.getElementById('together-time');
     if(el) el.innerText = days + " Days";
 
-    updateCountdown('days-me', 2, 14);   // Theshu: March 14 (Month 2)
-    updateCountdown('days-her', 8, 22);  // Ayuuu: Sept 22 (Month 8)
-    updateCountdown('days-anni', 7, 18); // Anni: Aug 18 (Month 7)
+    updateCountdown('days-me', 2, 14);   // Mar 14
+    updateCountdown('days-her', 8, 22);  // Sept 22
+    updateCountdown('days-anni', 7, 18); // Aug 18
 
     // 100th Day Calc
     const hundredth = new Date(startDate.getTime() + (100 * 86400000));
