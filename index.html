@@ -13,7 +13,7 @@
     <link rel="preload" as="image" href="kuchu.jpg">
     <link rel="preload" as="image" href="us.jpg">
     
-    <link rel="stylesheet" href="style.css?v=29">
+    <link rel="stylesheet" href="style.css?v=30">
 </head>
 <body onload="init()">
 
@@ -41,7 +41,7 @@
                 <p style="font-size:0.9rem; opacity:0.8; margin-bottom:25px;">Hint: The cute one 😽</p>
                 <input type="text" id="pass-input" placeholder="Type here..." autocomplete="off">
                 <div class="pass-btn" onclick="checkPasscode()">Unlock 🔓</div>
-                <p id="pass-msg"></p>
+                <p id="pass-msg" style="height:20px; font-weight:bold; color:#FFCDD2; margin-top:10px;"></p>
                 <div style="margin-top:20px; font-size:0.9rem; opacity:0.8;" onclick="showMainLock()">Cancel</div>
             </div>
         </div>
@@ -230,13 +230,12 @@
     <div class="screen" id="app-gallery">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Memories</span><div></div></div>
         <div class="gallery-scroll">
-            <div class="polaroid fade-in-up" style="transform: rotate(2deg);"><img src="us.jpg"><div class="caption">My Favorite Night 🌙</div></div>
-            <div class="polaroid fade-in-up" style="transform: rotate(-2deg); animation-delay:0.1s;"><img src="wallpaper.jpg"><div class="caption">Us Forever ❤️</div></div>
-            <div class="polaroid fade-in-up" style="transform: rotate(1deg); animation-delay:0.2s;"><img src="kuchu.jpg"><div class="caption">King Kuchu 👑</div></div>
-            <div class="polaroid fade-in-up" style="transform: rotate(-1deg); animation-delay:0.3s;"><img src="lockscreen.jpg"><div class="caption">Best Day 🌎</div></div>
+            <div class="polaroid fade-in-up" style="transform: rotate(2deg);"><img src="us.jpg"><div class="caption">Night 🌙</div></div>
+            <div class="polaroid fade-in-up" style="transform: rotate(-2deg); animation-delay:0.1s;"><img src="wallpaper.jpg"><div class="caption">Us ❤️</div></div>
+            <div class="polaroid fade-in-up" style="transform: rotate(1deg); animation-delay:0.2s;"><img src="kuchu.jpg"><div class="caption">Kuchu 👑</div></div>
         </div>
     </div>
 
-    <script src="script.js?v=29"></script>
+    <script src="script.js?v=30"></script>
 </body>
 </html>
