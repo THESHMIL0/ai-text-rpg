@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ayuuu's Gift</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="style.css?v=77">
+    <link rel="stylesheet" href="style.css?v=78">
 </head>
 <body onload="init()">
 
@@ -13,8 +13,8 @@
 
     <div class="lightbox" id="lightbox">
         <div class="lightbox-close" onclick="closeLightbox()">×</div>
-        <div class="lightbox-dl" onclick="downloadImage()">⬇️ Save</div>
         <img id="lightbox-img" src="">
+        <div class="lightbox-dl" onclick="downloadImage()">⬇️ Save Photo</div>
     </div>
 
     <div class="screen active" id="lock-screen">
@@ -97,10 +97,6 @@
                     <div class="settings-row"><span>📱 mobile</span><span style="color:#007AFF;">+91 1801 2026</span></div>
                     <div class="settings-row"><span>🏠 home</span><span style="color:#007AFF;">Our Dream House 🏡</span></div>
                     <div class="settings-row" style="border:none;"><span>🎂 birthday</span><span>March 14</span></div>
-                </div>
-                <div class="settings-card fade-in-up" style="animation-delay:0.1s">
-                    <div class="settings-row" onclick="alert('Added to Favorites! ⭐')"><span style="color:#007AFF;">Add to Favorites</span></div>
-                    <div class="settings-row" onclick="alert('Blocked? Never! 😽')" style="border:none;"><span style="color:#FF3B30;">Block this Caller</span></div>
                 </div>
             </div>
         </div>
@@ -189,12 +185,6 @@
                     <div class="settings-row"><span>👸 Ayuuu's Bday</span><span id="days-her" style="color:#E91E63; font-weight:bold;">22 Sept</span></div>
                     <div class="settings-row"><span>💑 Anniversary</span><span id="days-anni" style="color:#E91E63; font-weight:bold;">18 Jan</span></div>
                 </div>
-                <p style="font-size:0.8rem; color:#888; margin-left:15px;">MEMORY LANE 🕰️</p>
-                <div class="settings-card fade-in-up" style="animation-delay:0.2s">
-                    <div class="settings-row"><span>💯 100th Day</span><span id="date-100" style="color:#888;">Calculating...</span></div>
-                    <div class="settings-row"><span>💌 First I Love You</span><span style="color:#888;">Tap ›</span></div>
-                    <div class="settings-row"><span>💍 Proposal</span><span style="color:#E91E63; font-weight:bold;">TODAY!</span></div>
-                </div>
             </div>
         </div>
     </div>
@@ -215,8 +205,7 @@
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Our World</span><div></div></div>
         <div class="scroll-content">
             <div class="map-view">
-                <div class="map-line"></div>
-                <div class="map-plane">✈️</div>
+                <div class="map-line"></div><div class="map-plane">✈️</div>
                 <div class="map-point me"><div class="dot"></div><div class="label">Theshuuu</div></div>
                 <div class="map-point her"><div class="dot"></div><div class="label">Ayuuu</div></div>
             </div>
@@ -245,16 +234,6 @@
                     <div class="coupon-right"><div class="coupon-title">Breakfast in Bed</div><div class="coupon-desc">Pancakes & Coffee served by me.</div><div class="coupon-valid">Valid: Any Sunday</div></div>
                     <div class="stamp-mark">YUM!</div>
                 </div>
-                <div class="coupon-ticket fade-in-up" onclick="redeemCoupon(this)" style="animation-delay:0.2s">
-                    <div class="coupon-left">🎬</div>
-                    <div class="coupon-right"><div class="coupon-title">Movie Choice</div><div class="coupon-desc">I watch whatever YOU want.</div><div class="coupon-valid">One use only</div></div>
-                    <div class="stamp-mark">USED</div>
-                </div>
-                <div class="coupon-ticket fade-in-up" onclick="redeemCoupon(this)" style="animation-delay:0.3s">
-                    <div class="coupon-left">🏳️</div>
-                    <div class="coupon-right"><div class="coupon-title">End Argument</div><div class="coupon-desc">I admit I was wrong.</div><div class="coupon-valid">Emergency Only 🚨</div></div>
-                    <div class="stamp-mark">SAVED</div>
-                </div>
             </div>
         </div>
     </div>
@@ -279,22 +258,6 @@
                 <div class="settings-card fade-in-up" onclick="openNote('bucket')">
                     <div class="settings-row" style="padding:15px;">
                         <div class="note-row"><div class="note-icon">📌</div><div class="note-text"><b>Our Bucket List ✈️</b><span>Japan, Maldives, Northern Lights...</span></div></div>
-                    </div>
-                </div>
-                <div class="settings-card fade-in-up" onclick="openNote('love')" style="animation-delay:0.1s">
-                    <div class="settings-row" style="padding:15px;">
-                        <div class="note-row"><div class="note-icon">📝</div><div class="note-text"><b>10 Reasons I Love You ❤️</b><span>1. Your smile 2. Your eyes...</span></div></div>
-                    </div>
-                </div>
-                <p style="font-size:0.8rem; color:#888; margin-left:15px;">TODAY</p>
-                <div class="settings-card fade-in-up" onclick="openNote('shopping')" style="animation-delay:0.2s">
-                    <div class="settings-row" style="padding:15px;">
-                        <div class="note-row"><div class="note-icon">🛒</div><div class="note-text"><b>Shopping List</b><span>Cat food for Kuchu, Chocolates...</span></div></div>
-                    </div>
-                </div>
-                <div class="settings-card fade-in-up" onclick="openNote('date')" style="animation-delay:0.3s">
-                    <div class="settings-row" style="padding:15px;">
-                        <div class="note-row"><div class="note-icon">💡</div><div class="note-text"><b>Date Night Ideas</b><span>Pizza night, Movie marathon...</span></div></div>
                     </div>
                 </div>
             </div>
@@ -340,6 +303,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=76"></script>
+    <script src="script.js?v=78"></script>
 </body>
 </html>
