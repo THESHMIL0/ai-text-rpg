@@ -42,7 +42,7 @@ function checkPasscode() {
     }
 }
 
-/* NAVIGATION */
+/* NAV */
 function goHome() {
     document.querySelectorAll('.screen').forEach(s => {
         if(s.id !== 'lock-screen') s.classList.remove('active');
