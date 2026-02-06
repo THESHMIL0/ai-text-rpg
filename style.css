@@ -6,13 +6,32 @@
     --glass: rgba(255, 255, 255, 0.85);
 }
 
+/* DARK MODE VARIABLES */
+body.dark-mode {
+    --bg-color: #1a1a1a;
+    --text: #f0f0f0;
+    --glass: rgba(40, 40, 40, 0.85);
+}
+body.dark-mode .settings-card, 
+body.dark-mode .contact-profile, 
+body.dark-mode .note-search-container,
+body.dark-mode .chat-footer,
+body.dark-mode .coupon-ticket,
+body.dark-mode .pet-stats {
+    background: #2c2c2c;
+    color: white;
+}
+body.dark-mode .settings-row { border-bottom: 1px solid #444; }
+body.dark-mode .chat-them { background: #333; color: white; }
+body.dark-mode .chat-container { background: #121212; }
+
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; user-select: none; touch-action: manipulation; }
 
-/* HIDE SCROLLBARS BUT ALLOW SCROLLING */
+/* HIDE SCROLLBARS */
 ::-webkit-scrollbar { display: none; }
 * { -ms-overflow-style: none; scrollbar-width: none; }
 
-body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; overflow: hidden; position: fixed; color: var(--text); }
+body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; overflow: hidden; position: fixed; color: var(--text); transition: background 0.3s, color 0.3s; }
 
 /* ANIMATIONS */
 @keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
@@ -26,7 +45,7 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 @keyframes fly { 0% { left: 15%; transform: translateY(0) rotate(10deg); } 50% { transform: translateY(-10px) rotate(10deg); } 100% { left: 75%; transform: translateY(0) rotate(10deg); } }
 
 /* SCREENS */
-.screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: none; flex-direction: column; padding-top: env(safe-area-inset-top); z-index: 10; }
+.screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: none; flex-direction: column; padding-top: env(safe-area-inset-top); z-index: 10; transition: background 0.3s; }
 .screen.active { display: flex; z-index: 20; animation: popIn 0.2s ease-out; }
 
 /* HOME INDICATOR */
@@ -179,7 +198,7 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .fade-in-up { animation: slideUp 0.4s ease-out backwards; }
 .hidden { display: none !important; }
 
-/* TOGGLES & THEMES (SETTINGS) */
+/* TOGGLES & THEMES */
 .toggle-switch { width: 40px; height: 24px; background: #e9e9ea; border-radius: 20px; position: relative; transition: 0.3s; cursor: pointer; }
 .toggle-switch.active { background: #34C759; }
 .toggle-knob { width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
