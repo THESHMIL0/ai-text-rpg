@@ -18,7 +18,7 @@ function updateClock() {
     if(clockEl) clockEl.innerText = t;
     if(lockClockEl) lockClockEl.innerText = t;
 
-    // Real Date for Lock Screen
+    // Real Date
     const dateOptions = { weekday: 'long', month: 'short', day: 'numeric' };
     const dateString = now.toLocaleDateString('en-US', dateOptions);
     const lockDateEl = document.getElementById('lock-date');
@@ -27,7 +27,7 @@ function updateClock() {
     setTimeout(updateClock, 1000);
 }
 
-/* LOCK SCREEN & SHORTCUTS */
+/* LOCK SCREEN */
 function showPasscode() {
     document.getElementById('lock-main').classList.add('hidden');
     document.getElementById('lock-passcode').classList.remove('hidden');
@@ -42,13 +42,14 @@ function showMainLock() {
 }
 
 function toggleFlashlight(e) {
-    e.stopPropagation(); // Prevent opening passcode
+    e.stopPropagation();
     const btn = e.currentTarget;
     btn.classList.toggle('active');
+    if(navigator.vibrate) navigator.vibrate(50); // Feedback
 }
 
 function openCamera(e) {
-    e.stopPropagation(); // Prevent opening passcode
+    e.stopPropagation();
     alert("📸 Camera Locked!\nUnlock device to take cute selfies.");
 }
 
@@ -72,7 +73,8 @@ function goHome() {
         if(s.id !== 'lock-screen') s.classList.remove('active');
     });
     document.getElementById('home-screen').classList.add('active');
-    // Stop music visualizer
+    
+    // Reset states
     const albumArt = document.getElementById('album-art');
     if(albumArt) albumArt.classList.remove('rotating');
 }
@@ -269,7 +271,7 @@ function showOpts(arr) {
 
 function toggleZoom(el) { el.classList.toggle('zoomed'); }
 
-/* DATES & TIMELINE */
+/* DATES */
 function calcDays() {
     const now = new Date();
     const startDate = new Date("2026-01-18"); 
