@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ayuuu's Gift</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="style.css?v=62">
+    <link rel="stylesheet" href="style.css?v=63">
 </head>
 <body onload="init()">
 
@@ -75,28 +75,17 @@
 
     <div class="screen" id="app-call">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Contact Info</span><div></div></div>
-        
         <div class="contact-profile">
             <div class="contact-avatar" style="background-image: url('us.jpg');"></div>
             <h2>Theshuuu (Hubby) 💍</h2>
             <p style="color:#888;">Mobile • ❤️</p>
-            
             <div class="contact-actions">
-                <div class="action-btn" onclick="openApp('msg')">
-                    <div class="icon">💬</div><span>Message</span>
-                </div>
-                <div class="action-btn" onclick="alert('Calling Theshuuu... 📞\n(He misses you!)')">
-                    <div class="icon" style="background:#4CAF50; color:white; border:none;">📞</div><span>Call</span>
-                </div>
-                <div class="action-btn" onclick="alert('FaceTime unavailable.\nReason: He needs a hug first! 🥺')">
-                    <div class="icon">📹</div><span>Video</span>
-                </div>
-                <div class="action-btn" onclick="alert('Mail sent: I Love You! 💌')">
-                    <div class="icon">📧</div><span>Mail</span>
-                </div>
+                <div class="action-btn" onclick="openApp('msg')"><div class="icon">💬</div><span>Message</span></div>
+                <div class="action-btn" onclick="alert('Calling Theshuuu... 📞\n(He misses you!)')"><div class="icon" style="background:#4CAF50; color:white; border:none;">📞</div><span>Call</span></div>
+                <div class="action-btn" onclick="alert('FaceTime unavailable.\nReason: He needs a hug first! 🥺')"><div class="icon">📹</div><span>Video</span></div>
+                <div class="action-btn" onclick="alert('Mail sent: I Love You! 💌')"><div class="icon">📧</div><span>Mail</span></div>
             </div>
         </div>
-
         <div class="settings-list">
             <div class="settings-card fade-in-up">
                 <div class="settings-row"><span>📱 mobile</span><span style="color:#007AFF;">+91 1801 2026</span></div>
@@ -248,11 +237,35 @@
     <div class="screen" id="app-settings">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Settings</span><div></div></div>
         <div class="settings-list">
-            <div class="settings-card fade-in-up"><div class="settings-row"><span>❤️ Status</span><span>Taken 💍</span></div></div>
-            <div class="settings-card fade-in-up" style="animation-delay:0.1s"><div class="settings-row"><span>🔔 Notifications</span><span style="color:green;">Miss You ON</span></div></div>
+            <p style="font-size:0.8rem; color:#888; margin-left:15px; margin-top:10px;">ACCOUNT</p>
+            <div class="settings-card fade-in-up">
+                <div class="settings-row" style="padding: 10px 15px;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="width:50px; height:50px; background-image:url('us.jpg'); background-size:cover; border-radius:50%;"></div>
+                        <div><div style="font-weight:bold;">Theshuuu & Ayuuu</div><div style="font-size:0.8rem; color:#888;">Premium Couple ID</div></div>
+                    </div>
+                </div>
+            </div>
+            <p style="font-size:0.8rem; color:#888; margin-left:15px;">CONNECTIVITY</p>
+            <div class="settings-card fade-in-up" style="animation-delay:0.1s">
+                <div class="settings-row"><span>❤️ Love Signal</span><span style="color:green;">5G Full Bars 📶</span></div>
+                <div class="settings-row"><span>📍 Location Sharing</span><span>Always ON</span></div>
+                <div class="settings-row"><span>✈️ Travel Mode</span><span>Japan (Planned)</span></div>
+            </div>
+            <p style="font-size:0.8rem; color:#888; margin-left:15px;">NOTIFICATIONS</p>
+            <div class="settings-card fade-in-up" style="animation-delay:0.2s">
+                <div class="settings-row"><span>🔔 Miss You Alerts</span><span style="color:#E91E63; font-weight:bold;">Enabled</span></div>
+                <div class="settings-row"><span>💤 Good Night Kisses</span><span style="color:#E91E63; font-weight:bold;">Scheduled</span></div>
+            </div>
+            <p style="font-size:0.8rem; color:#888; margin-left:15px;">SYSTEM</p>
+            <div class="settings-card fade-in-up" style="animation-delay:0.3s">
+                <div class="settings-row" onclick="alert('No updates needed! You are already perfect! 😽')"><span>🔄 Software Update</span><span style="color:red; font-size:0.8rem;">1 Update Available</span></div>
+                <div class="settings-row"><span>ℹ️ About Love OS</span><span>v1.0.0</span></div>
+            </div>
+            <div style="text-align:center; margin-top:20px; color:#aaa; font-size:0.8rem;">Made with ❤️ by Theshuuu</div>
         </div>
     </div>
 
-    <script src="script.js?v=62"></script>
+    <script src="script.js?v=63"></script>
 </body>
 </html>
