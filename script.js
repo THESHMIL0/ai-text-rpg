@@ -93,16 +93,36 @@ function interactPet(action) {
     }
 }
 
+/* ORACLE (UPDATED) */
 function askOracle() {
-    const answers = ["Yes, absolutely! ❤️", "Theshuuu says YES! 💍", "Without a doubt! 🌟", "Ask Kuchu 🐈", "100% Yes! 😽"];
+    const input = document.getElementById('oracle-input');
     const ball = document.getElementById('magic-ball');
+    
+    if(input.value.trim() === "") {
+        ball.innerText = "Type something first! 🔮";
+        ball.classList.add('shake');
+        setTimeout(() => ball.classList.remove('shake'), 500);
+        return;
+    }
+
+    const answers = [
+        "Theshuuu says YES! ❤️",
+        "Absolutely 100% 😽",
+        "Kuchu says maybe... 🐈",
+        "Ask me later with a kiss 😘",
+        "My heart says YES! 💖",
+        "Only if you hug me! 🤗"
+    ];
+    
     ball.classList.add('shake');
+    ball.innerText = "Thinking...";
+    
     setTimeout(() => {
         ball.classList.remove('shake');
         ball.innerText = answers[Math.floor(Math.random() * answers.length)];
         ball.style.background = "white";
         ball.style.color = "#E91E63";
-    }, 500);
+    }, 1000);
 }
 
 /* MUSIC */
@@ -274,16 +294,9 @@ function redeemCoupon(element) {
     }
 }
 
-/* MY HEART APP LOGIC */
+/* MY HEART APP */
 function generateLoveNote() {
-    const notes = [
-        "You are my sunshine! ☀️",
-        "My heart beats only for you! 💓",
-        "I love you more than pizza! 🍕",
-        "You + Me = Forever ❤️",
-        "Can't wait to hug you! 🤗",
-        "You are perfect to me. ✨"
-    ];
+    const notes = ["You are my sunshine! ☀️", "My heart beats only for you! 💓", "I love you more than pizza! 🍕", "You + Me = Forever ❤️", "Can't wait to hug you! 🤗", "You are perfect to me. ✨"];
     const noteEl = document.getElementById('love-note-text');
     noteEl.style.opacity = 0;
     setTimeout(() => {
@@ -295,10 +308,8 @@ function generateLoveNote() {
 function sendLoveWave() {
     for (let i = 0; i < 10; i++) {
         let heart = document.createElement('div');
-        heart.innerText = "❤️";
-        heart.className = "floating-heart";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.top = "100vh";
+        heart.innerText = "❤️"; heart.className = "floating-heart";
+        heart.style.left = Math.random() * 100 + "vw"; heart.style.top = "100vh";
         heart.style.animationDuration = (Math.random() * 2 + 2) + "s";
         document.body.appendChild(heart);
         setTimeout(() => heart.remove(), 4000);
