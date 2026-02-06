@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ayuuu's Gift</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="style.css?v=67">
+    <link rel="stylesheet" href="style.css?v=68">
 </head>
 <body onload="init()">
 
@@ -98,6 +98,7 @@
             </div>
         </div>
     </div>
+
     <div class="screen" id="app-msg">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹</div><span>Theshuuu ❤️</span><div style="width:20px;"></div></div>
         <div class="chat-container" id="chat-box">
@@ -128,12 +129,12 @@
             </div>
         </div>
     </div>
-
     <div class="screen" id="app-ask">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Ask Theshuuu</span><div></div></div>
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Theshuuu Oracle</span><div></div></div>
         <div class="magic-container">
-            <p style="color:#888; margin-bottom:20px;">Think of a question then tap!</p>
-            <div class="magic-ball" id="magic-ball" onclick="askOracle()">TAP ME 🔮</div>
+            <div class="crystal-ball" id="magic-ball">🔮</div>
+            <input type="text" id="oracle-input" class="oracle-input" placeholder="Ask yes/no question...">
+            <div class="oracle-btn" onclick="askOracle()">Reveal Answer</div>
         </div>
     </div>
 
@@ -235,6 +236,7 @@
             </div>
         </div>
     </div>
+
     <div class="screen" id="app-heart">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>My Heart</span><div></div></div>
         <div class="heart-container">
@@ -320,6 +322,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=67"></script>
+    <script src="script.js?v=68"></script>
 </body>
 </html>
