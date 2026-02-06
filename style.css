@@ -3,11 +3,11 @@
     --primary: #FF69B4; 
     --accent: #E91E63; 
     --text: #333; 
-    --bubble-me: #E91E63; 
-    --bubble-her: #FFFFFF; 
+    --glass: rgba(255, 255, 255, 0.25);
+    --glass-border: rgba(255, 255, 255, 0.1);
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; user-select: none; }
 
 body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; overflow: hidden; position: fixed; color: var(--text); }
 
@@ -26,41 +26,85 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: none; flex-direction: column; padding-top: env(safe-area-inset-top); z-index: 10; }
 .screen.active { display: flex; z-index: 20; animation: popIn 0.25s ease-out; }
 
-/* HOME INDICATOR */
+/* HOME INDICATOR (Global) */
 .home-indicator { position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); width: 130px; height: 5px; background: #000; border-radius: 10px; opacity: 0.2; z-index: 9999; pointer-events: none; }
+#lock-screen .home-indicator { background: #fff; opacity: 0.5; } /* White on lock screen */
 
-/* LOCK SCREEN */
-#lock-screen { background-image: url('lockscreen.jpg'); background-size: cover; background-position: center; color: white; z-index: 1000; }
-#lock-main { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding-top: 60px; padding-bottom: 40px; }
-.lock-time { font-size: 5rem; font-weight: 200; line-height: 1; text-shadow: 0 4px 15px rgba(0,0,0,0.4); }
-.lock-date { font-size: 1.2rem; font-weight: 500; margin-top: 5px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-.lock-notification { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 18px; padding: 15px; width: 90%; max-width: 360px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); color: #333; margin-top: auto; margin-bottom: 20px; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }
-.notif-header { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 5px; font-size: 0.75rem; opacity: 0.7; font-weight: bold; }
-.notif-content { display: flex; align-items: center; gap: 12px; }
-.notif-icon { background: #FFEBEE; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: #D32F2F; }
-.notif-text { flex: 1; line-height: 1.3; text-align: left; }
-.lock-hint { text-align: center; opacity: 0.9; font-weight: 500; text-shadow: 0 1px 3px rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: 5px; }
+/* --- LOCK SCREEN 2.0 --- */
+#lock-screen { 
+    background-image: url('lockscreen.jpg'); 
+    background-size: cover; 
+    background-position: center; 
+    color: white; 
+    z-index: 1000; 
+}
+
+#lock-main { 
+    width: 100%; height: 100%; 
+    display: flex; flex-direction: column; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding-top: 60px; 
+    padding-bottom: 30px; 
+}
+
+/* Time & Date */
+.lock-header { text-align: center; width: 100%; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+.lock-date { font-size: 1.3rem; font-weight: 500; opacity: 0.9; margin-bottom: 5px; }
+.lock-time { font-size: 5.5rem; font-weight: 200; line-height: 1; letter-spacing: -2px; }
+
+/* Notification */
+.lock-notification { 
+    background: rgba(255, 255, 255, 0.65); 
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-radius: 18px; padding: 15px; width: 92%; max-width: 360px; 
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); color: #000; 
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    display: flex; gap: 12px; align-items: center; margin-bottom: auto; margin-top: 30px;
+}
+.notif-icon { width: 38px; height: 38px; background: #FF2D55; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; }
+.notif-content { flex: 1; text-align: left; }
+.notif-title { font-weight: bold; font-size: 0.95rem; display: flex; justify-content: space-between; }
+.notif-title span { font-weight: normal; font-size: 0.75rem; opacity: 0.6; }
+.notif-msg { font-size: 0.9rem; opacity: 0.8; line-height: 1.3; margin-top: 2px; }
+
+/* Bottom Shortcuts Area */
+.lock-footer { width: 100%; padding: 0 40px; display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; }
+.lock-shortcut { 
+    width: 50px; height: 50px; 
+    background: rgba(0,0,0,0.4); 
+    backdrop-filter: blur(10px);
+    border-radius: 50%; 
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 1.5rem; color: white; 
+    transition: background 0.2s, transform 0.1s; 
+    cursor: pointer;
+}
+.lock-shortcut:active { background: rgba(255,255,255,0.2); transform: scale(0.9); }
+.lock-shortcut.active { background: white; color: black; box-shadow: 0 0 15px rgba(255,255,255,0.5); }
 
 /* PASSCODE */
-#lock-passcode { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.7); backdrop-filter: blur(15px); position: absolute; top: 0; left: 0; z-index: 1001; }
+#lock-passcode { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: absolute; top: 0; left: 0; z-index: 1001; }
 .pass-container { padding: 20px; width: 85%; max-width: 320px; text-align: center; color: white; animation: popIn 0.3s; }
-#pass-input { width: 80%; padding: 15px; border-radius: 50px; border: 2px solid rgba(255,255,255,0.8); background: rgba(255,255,255,0.2); font-size: 1.2rem; text-align: center; margin-bottom: 20px; outline: none; color: white; font-weight: bold; }
+.pass-avatar { width: 80px; height: 80px; border-radius: 50%; background-size: cover; background-position: center; margin: 0 auto 15px; border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+#pass-input { width: 80%; padding: 15px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.2); font-size: 1.2rem; text-align: center; margin-bottom: 20px; outline: none; color: white; font-weight: bold; letter-spacing: 2px; }
+#pass-input::placeholder { color: rgba(255,255,255,0.6); letter-spacing: 0; }
 .pass-btn { background: white; color: var(--accent); padding: 12px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; }
 .shake { animation: shake 0.4s; }
 
 /* HOME & APPS */
 #home-screen { background-image: url('wallpaper.jpg'); background-size: cover; background-position: center; z-index: 5; }
-.status-bar { padding: 10px 20px; display: flex; justify-content: space-between; font-weight: bold; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
-.widget { margin: 10px 20px; padding: 20px; background: rgba(255,255,255,0.9); border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-.app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; align-content: flex-start; overflow-y: auto; padding-bottom: 100px; }
-.app-icon-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; } .app-icon-wrapper:active { transform: scale(0.95); opacity: 0.8; }
-.app-icon { width: 60px; height: 60px; border-radius: 15px; background: white; display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-.app-name { font-size: 11px; font-weight: bold; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.8); white-space: nowrap; }
-.dock-container { position: absolute; bottom: 30px; left: 15px; right: 15px; background: rgba(255,255,255,0.5); border-radius: 20px; padding: 15px; display: flex; justify-content: space-around; backdrop-filter: blur(10px); z-index: 30; }
+.status-bar { padding: 10px 25px; display: flex; justify-content: space-between; font-weight: 600; font-size: 0.9rem; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 1002; position: absolute; top: 0; width: 100%; }
+.widget { margin: 60px 20px 20px; padding: 20px; background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); border-radius: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+.app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px 10px; padding: 10px 20px; align-content: flex-start; overflow-y: auto; padding-bottom: 100px; }
+.app-icon-wrapper { display: flex; flex-direction: column; align-items: center; gap: 8px; } .app-icon-wrapper:active { transform: scale(0.95); opacity: 0.8; }
+.app-icon { width: 62px; height: 62px; border-radius: 16px; background: white; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+.app-name { font-size: 11px; font-weight: 500; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.8); white-space: nowrap; }
+.dock-container { position: absolute; bottom: 25px; left: 15px; right: 15px; background: rgba(255,255,255,0.4); border-radius: 24px; padding: 18px; display: flex; justify-content: space-around; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 30; }
+
+/* Standard Components */
 .nav-bar { height: 50px; display: flex; align-items: center; padding: 0 15px; background: white; border-bottom: 1px solid #eee; justify-content: space-between; font-weight: bold; color: var(--accent); flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 .back-btn { color: #333; padding: 10px; font-size: 1.2rem; cursor: pointer; }
-
-/* CHAT */
 .chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 220px; background: #FFF0F5; }
 .chat-row { display: flex; align-items: flex-end; gap: 8px; animation: slideUp 0.3s; }
 .chat-avatar { width: 35px; height: 35px; border-radius: 50%; background-size: cover; background-position: center; border: 1px solid #eee; flex-shrink: 0; background-color: white; }
@@ -73,8 +117,6 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .chat-btn { background: #FFF; border: 2px solid var(--accent); color: var(--accent); padding: 14px; border-radius: 25px; font-weight: bold; text-align: center; font-size: 0.95rem; }
 .chat-btn:active { background: var(--accent); color: white; }
 .typing { font-size: 0.8rem; color: #666; margin-left: 55px; display: none; margin-bottom: 10px; font-style: italic;}
-
-/* COMPONENTS */
 .pet-view, .magic-container, .music-player { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
 .pet-avatar { width: 180px; height: 180px; border-radius: 50%; background-image: url('kuchu.jpg'); background-size: cover; border: 5px solid white; transition: transform 0.2s; }
 .pet-btn { background: white; border: 2px solid var(--primary); padding: 15px; border-radius: 50%; font-size: 2rem; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -142,22 +184,16 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 .crystal-ball::before { content: ''; position: absolute; top: 15%; left: 20%; width: 40px; height: 20px; background: rgba(255,255,255,0.4); border-radius: 50%; transform: rotate(-45deg); }
 .oracle-input { width: 80%; padding: 12px; border-radius: 25px; border: 1px solid #E91E63; margin-top: 30px; outline: none; text-align: center; font-size: 1rem; color: #E91E63; background: rgba(255, 255, 255, 0.9); }
 .oracle-btn { margin-top: 15px; background: #E91E63; color: white; padding: 10px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(233, 30, 99, 0.3); }
-
-/* GALLERY 2.0 STYLES */
 .gallery-grid { padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; overflow-y: auto; padding-bottom: 80px; }
 .gallery-item { background: white; padding: 8px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.2s; cursor: pointer; }
 .gallery-item:active { transform: scale(0.95); }
 .gallery-img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; display: block; border: 1px solid #eee; }
 .gallery-caption { text-align: center; font-size: 0.8rem; color: #555; margin-top: 8px; font-weight: bold; font-family: 'Courier New', monospace; }
-
-/* LIGHTBOX */
 .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; animation: popIn 0.3s; }
 .lightbox.active { display: flex; }
 .lightbox img { max-width: 95%; max-height: 80%; border-radius: 10px; border: 4px solid white; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
 .lightbox-close { position: absolute; top: 30px; right: 20px; color: white; font-size: 2rem; cursor: pointer; padding: 10px; }
-
-/* MUSIC PLAYER 2.0 */
 .music-progress { width: 85%; margin-top: 20px; }
 .progress-bar-bg { width: 100%; height: 5px; background: rgba(0,0,0,0.1); border-radius: 10px; position: relative; overflow: hidden; }
 .progress-fill { height: 100%; width: 0%; background: var(--accent); border-radius: 10px; transition: width 0.5s linear; }
-.time-stamps { display: flex; justify-content: space-between; width: 85%; margin-top: 5px; font-size: 0.75rem; color: #888; font-weight: bold; }
+.time-stamps { display: flex; justify-content: space-between; width: 85%
