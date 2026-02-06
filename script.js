@@ -65,7 +65,7 @@ function openApp(id) {
     document.getElementById('app-' + id).classList.add('active');
 }
 
-/* TELEPORT */
+/* GLOBAL TELEPORT */
 function teleport() {
     alert("Initiating Teleport sequence... 🚀");
     setTimeout(() => { alert("Loading... ▓▓▓▓▒▒▒▒▒▒ 40%"); }, 1000);
@@ -73,36 +73,15 @@ function teleport() {
     setTimeout(() => { alert("❌ ERROR: Teleport Failed! Reason: You need to hug Theshuuu in real life to recharge! 🥺❤️"); }, 3000);
 }
 
-/* KUCHU GAME LOGIC */
-let petStats = { hunger: 40, happy: 60, love: 90 };
-
+/* GAMES */
 function interactPet(action) {
     const msg = document.getElementById('pet-bubble');
     const img = document.getElementById('pet-img');
-    
-    // Animate
     img.style.transform = "scale(1.1)";
     setTimeout(() => img.style.transform = "scale(1)", 200);
-
-    // Logic
-    if(action === 'feed') {
-        petStats.hunger = Math.min(100, petStats.hunger + 20);
-        msg.innerText = "Yummy! 🐟 Burp!";
-    }
-    if(action === 'play') {
-        petStats.happy = Math.min(100, petStats.happy + 15);
-        petStats.hunger = Math.max(0, petStats.hunger - 5); // Playing makes him hungry
-        msg.innerText = "Zoomies!! 🐈💨";
-    }
-    if(action === 'love') {
-        petStats.love = Math.min(100, petStats.love + 10);
-        msg.innerText = "Purr... I love Ayuuu! ❤️";
-    }
-
-    // Update Bars
-    document.getElementById('bar-hunger').style.width = petStats.hunger + "%";
-    document.getElementById('bar-happy').style.width = petStats.happy + "%";
-    document.getElementById('bar-love').style.width = petStats.love + "%";
+    if(action === 'feed') msg.innerText = "Yum! Kuchu is happy! 🐟";
+    if(action === 'play') msg.innerText = "Zoomies! 🐈💨";
+    if(action === 'love') msg.innerText = "Purr... Kuchu loves Ayuuu! ❤️";
 }
 
 function askOracle() {
@@ -266,4 +245,12 @@ function updateCountdown(id, month, day) {
     const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
     const el = document.getElementById(id);
     if(el) el.innerText = daysLeft + " Days";
+}
+
+/* OPEN NOTES */
+function openNote(type) {
+    if(type === 'bucket') alert("✈️ Japan\n🏝️ Maldives\n🌌 Northern Lights\n🏡 Build a House\n🐈 Adopt 10 Cats");
+    if(type === 'love') alert("1. Your smile\n2. Your kindness\n3. How you love Kuchu\n4. Your laugh\n5. Everything! ❤️");
+    if(type === 'shopping') alert("1. Cat food 🐟\n2. Ice cream 🍦\n3. Chocolates 🍫\n4. Pizza 🍕");
+    if(type === 'date') alert("1. Pizza & Movie Night 🍕\n2. Stargazing 🌌\n3. Cooking together 🍝");
 }
