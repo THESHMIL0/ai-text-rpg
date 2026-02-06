@@ -14,7 +14,10 @@ function updateClock() {
     setTimeout(updateClock, 1000);
 }
 
-function unlockPhone() {}
+/* --- LOCK SCREEN & PASSCODE LOGIC --- */
+function unlockPhone() {
+    // Tap to unlock is disabled, handled by passcode now
+}
 
 function showPasscode() {
     document.getElementById('lock-main').classList.add('hidden');
@@ -32,11 +35,17 @@ function showMainLock() {
 function checkPasscode() {
     const input = document.getElementById('pass-input');
     const msg = document.getElementById('pass-msg');
+    
+    // Normalize input to lowercase and remove spaces
     if (input.value.toLowerCase().trim() === 'kushu') {
+        // CORRECT PASSWORD
         document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
         document.getElementById('home-screen').classList.add('active');
-        setTimeout(() => { document.getElementById('lock-screen').style.display = 'none'; }, 500);
+        setTimeout(() => {
+            document.getElementById('lock-screen').style.display = 'none';
+        }, 500);
     } else {
+        // WRONG PASSWORD
         msg.innerText = "Wrong Password 😿";
         input.classList.add('shake');
         setTimeout(() => input.classList.remove('shake'), 500);
@@ -57,6 +66,7 @@ function openApp(id) {
     document.getElementById('app-' + id).classList.add('active');
 }
 
+/* --- MUSIC --- */
 const songs = [
     { title: "Hawayein", src: "song.mp3", art: "wallpaper.jpg" },
     { title: "Like My Father", src: "song3.mp3", art: "kuchu.jpg" }
@@ -75,19 +85,34 @@ function loadSong(index) {
 }
 
 function togglePlay() {
-    if (!audioPlayer.src || audioPlayer.src === window.location.href) { loadSong(currentSongIndex); }
-    if (audioPlayer.paused) { audioPlayer.play(); playBtn.innerText = "⏸️"; albumArt.classList.add('rotating'); } 
-    else { audioPlayer.pause(); playBtn.innerText = "▶️"; albumArt.classList.remove('rotating'); }
+    if (!audioPlayer.src || audioPlayer.src === window.location.href) {
+        loadSong(currentSongIndex);
+    }
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+        playBtn.innerText = "⏸️";
+        albumArt.classList.add('rotating');
+    } else {
+        audioPlayer.pause();
+        playBtn.innerText = "▶️";
+        albumArt.classList.remove('rotating');
+    }
 }
 
 function nextSong() {
     currentSongIndex = (currentSongIndex + 1) % songs.length;
-    loadSong(currentSongIndex); audioPlayer.play(); playBtn.innerText = "⏸️"; albumArt.classList.add('rotating');
+    loadSong(currentSongIndex);
+    audioPlayer.play();
+    playBtn.innerText = "⏸️";
+    albumArt.classList.add('rotating');
 }
 
 function prevSong() {
     currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-    loadSong(currentSongIndex); audioPlayer.play(); playBtn.innerText = "⏸️"; albumArt.classList.add('rotating');
+    loadSong(currentSongIndex);
+    audioPlayer.play();
+    playBtn.innerText = "⏸️";
+    albumArt.classList.add('rotating');
 }
 
 function calcDays() {
@@ -99,7 +124,7 @@ function calcDays() {
     document.getElementById('days-her').innerText = Math.ceil((her - now)/(1000*60*60*24)) + " Days";
 }
 
-/* --- UPDATED CHAT LOGIC --- */
+/* --- CHAT LOGIC (CUSTOM NAMES: Theshuuuuu & Ayuuuuuu) --- */
 const chatBox = document.getElementById('chat-box');
 const opts = document.getElementById('chat-opts');
 const typing = document.getElementById('typing');
@@ -107,15 +132,15 @@ const typing = document.getElementById('typing');
 function reply(choice) {
     let txt = "";
     
-    // STEP 0: START
+    // STEP 0: SHE REPLIES (HER TURN)
     if(chatStep === 0) {
         txt = choice === 1 ? "Happy Valentine's! ❤️" : "I miss you! 🥺";
         addBubble(txt, 'chat-me'); 
         opts.classList.add('hidden');
         
         simulateTyping(() => {
-            addBubble("Happy Valentine's Day love! ❤️", 'chat-them');
-            addBubble("I wish I was there to hug you. 🥺 But look who is here!", 'chat-them');
+            addBubble("Happy Valentine's Day Ayuuuuuu! ❤️", 'chat-them');
+            addBubble("I wish I was there to hug you right now... 🥺", 'chat-them');
             
             // SEND KUCHU PIC
             let row = document.createElement('div'); row.className = "chat-row";
@@ -127,34 +152,38 @@ function reply(choice) {
             row.appendChild(avatar); row.appendChild(bubble);
             chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
 
-            showOpts(["Omg my baby!! 🥺", "He's so cute!"]);
-            chatStep = 1;
+            // YOU SAY THIS:
+            simulateTyping(() => {
+                addBubble("But look who is waiting for you! 🐈", 'chat-them');
+                showOpts(["Omg my Kuchu!! 🥺", "He's so cute!"]);
+                chatStep = 1;
+            }, 1000); // Small delay for the text after image
         }, 1500);
     } 
     
     // STEP 1: KUCHU JOKE
     else if(chatStep === 1) {
-        txt = choice === 1 ? "Omg my baby!! 🥺" : "He's so cute!";
+        txt = choice === 1 ? "Omg my Kuchu!! 🥺" : "He's so cute!";
         addBubble(txt, 'chat-me');
         opts.classList.add('hidden');
         
         simulateTyping(() => {
             addBubble("He is guarding your spot on the bed. 😂", 'chat-them');
-            addBubble("He misses you... we both do.", 'chat-them');
-            showOpts(["Tell him I love him! ❤️", "I miss you both!"]);
+            addBubble("We both miss you so much Ayuuuuuu.", 'chat-them');
+            showOpts(["Tell him I love him! ❤️", "I miss my boys! 🥺"]);
             chatStep = 2;
         }, 2000);
     } 
     
     // STEP 2: SERIOUS QUESTION
     else if(chatStep === 2) {
-        txt = choice === 1 ? "Tell him I love him! ❤️" : "I miss you both!";
+        txt = choice === 1 ? "Tell him I love him! ❤️" : "I miss my boys! 🥺";
         addBubble(txt, 'chat-me');
         opts.classList.add('hidden');
         
         simulateTyping(() => {
             addBubble("I will. ❤️", 'chat-them');
-            addBubble("But hey... I have something serious to ask.", 'chat-them');
+            addBubble("But hey Theshuuuuu has a serious question...", 'chat-them');
             showOpts(["What is it? 😳", "Tell me!"]);
             chatStep = 3;
         }, 2000);
@@ -167,7 +196,7 @@ function reply(choice) {
         opts.classList.add('hidden');
         
         simulateTyping(() => {
-            addBubble("Since I can't be there in person...", 'chat-them');
+            addBubble("Since I can't be there in person yet...", 'chat-them');
             
             // SEND VALENTINE CARD
             let row = document.createElement('div'); row.className = "chat-row";
@@ -178,21 +207,28 @@ function reply(choice) {
             row.appendChild(avatar); row.appendChild(bubble);
             chatBox.appendChild(row); chatBox.scrollTop = chatBox.scrollHeight;
             
-            showOpts(["YES! FOREVER! ❤️🌹"]);
+            showOpts(["YESSS THESHUUUUU! ❤️", "ALWAYS! 🥺❤️"]);
             chatStep = 4;
         }, 2000);
     } 
     
     // STEP 4: CONCLUSION
     else if(chatStep === 4) {
-        addBubble("YES! FOREVER! ❤️🌹", 'chat-me');
+        // HER REPLY
+        txt = choice === 1 ? "YESSS THESHUUUUU! ❤️" : "ALWAYS! 🥺❤️";
+        addBubble(txt, 'chat-me');
         opts.classList.add('hidden');
+        
         simulateTyping(() => {
-            addBubble("I love you Ayuuu! ❤️", 'chat-them');
+            addBubble("I love you Ayuuuuuu! ❤️", 'chat-them');
             addBubble("Check your 'Gift' app now!", 'chat-them');
+            
+            // Unlock Gift
             document.getElementById('gift-lock').style.display = 'none';
             document.getElementById('gift-open').style.display = 'block';
-            opts.innerHTML = `<div class="chat-btn" style="width:100%" onclick="goHome()">🏠 Check "Gift" App</div>`;
+            
+            // Final button to leave chat
+            opts.innerHTML = `<div class="chat-btn" style="width:100%" onclick="goHome()">🏠 Go Check "Gift" App</div>`;
             opts.classList.remove('hidden');
         }, 1500);
     }
@@ -200,7 +236,7 @@ function reply(choice) {
 
 function simulateTyping(callback, delay) {
     typing.style.display = 'block'; chatBox.scrollTop = chatBox.scrollHeight;
-    setTimeout(() => { typing.style.display = 'none'; callback(); }, delay);
+    setTimeout(() => { typing.style.display = 'none'; callback(); }, delay || 1500);
 }
 
 function addBubble(text, className) {
