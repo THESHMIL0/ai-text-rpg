@@ -1,19 +1,13 @@
-:root { --bg-color: #FFF0F5; --primary: #FF69B4; --accent: #FF1493; --text: #333; --bubble-me: #FF69B4; --bubble-her: #FFFFFF; }
+:root { --bg-color: #FFF0F5; --primary: #FF69B4; --accent: #FF1493; --text: #333; }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; touch-action: manipulation; }
-img { pointer-events: none; }
 body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; overflow: hidden; position: fixed; color: var(--text); overscroll-behavior: none; }
 
-/* --- ANIMATIONS --- */
-@keyframes popIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+/* ANIMATIONS */
+@keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes spin { 100% { transform: rotate(360deg); } }
-@keyframes fly { 0% { left: 15%; transform: translateY(0) rotate(10deg); } 50% { transform: translateY(-10px) rotate(10deg); } 100% { left: 75%; transform: translateY(0) rotate(10deg); } }
-@keyframes gentlePulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
-@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
-
-/* UTILS */
-.fade-in-up { animation: fadeInUp 0.5s ease-out backwards; }
-.hidden { display: none !important; }
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
 /* SCREENS */
 .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: none; flex-direction: column; padding-top: env(safe-area-inset-top); }
@@ -21,80 +15,64 @@ body { margin: 0; padding: 0; width: 100vw; height: 100dvh; background: #000; ov
 
 /* LOCK SCREEN */
 #lock-screen { background-image: url('lockscreen.jpg'); background-size: cover; background-position: center; color: white; justify-content: space-between; padding-bottom: 50px; text-shadow: 0 1px 5px rgba(0,0,0,0.5); z-index: 999; }
-.lock-content { text-align: center; margin-top: 60px; display:flex; flex-direction:column; align-items:center;}
+.lock-content { text-align: center; margin-top: 60px; }
 .lock-time { font-size: 5rem; font-weight: 200; line-height: 1; }
-.lock-hint { text-align: center; opacity: 0.8; animation: pulse 2s infinite; font-size:0.9rem; margin-top:10px; }
-
-/* PASSCODE (GLASSY) */
-#lock-passcode { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); position: absolute; top: 0; left: 0; z-index: 1000; }
-.pass-container { background: transparent; padding: 20px; width: 85%; max-width: 320px; text-align: center; color: white; animation: popIn 0.3s; }
-#pass-input { width: 80%; padding: 15px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.2); font-size: 1.2rem; text-align: center; margin-bottom: 20px; outline: none; color: white; }
-.pass-btn { background: rgba(255, 255, 255, 0.9); color: var(--accent); padding: 12px 30px; border-radius: 50px; font-weight: bold; font-size: 1rem; cursor: pointer; display: inline-block; }
-.shake { animation: shake 0.4s; }
-
-/* NOTIFICATION (PULSE) */
-.lock-notification { margin-top: 30px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border-radius: 12px; padding: 10px 15px; width: 85%; max-width: 350px; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.3); text-align: left; animation: gentlePulse 3s infinite; }
+.lock-notification { margin-top: 30px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border-radius: 12px; padding: 10px 15px; width: 85%; max-width: 350px; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.3); margin-left: auto; margin-right: auto; text-align: left; animation: pulse 3s infinite; }
 .notif-icon { background: white; width: 35px; height: 35px; border-radius: 8px; display:flex; align-items:center; justify-content:center; font-size: 1.2rem; }
 .notif-text { flex: 1; color: white; text-shadow: none; }
-.notif-title { font-weight: bold; font-size: 0.9rem; }
-.notif-msg { font-size: 0.8rem; opacity: 0.9; }
-.notif-time { font-size: 0.7rem; opacity: 0.7; align-self: flex-start; margin-top: 2px; }
+
+/* PASSCODE */
+#lock-passcode { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(15px); position: absolute; top: 0; left: 0; z-index: 1000; }
+.pass-container { padding: 20px; width: 85%; text-align: center; color: white; animation: popIn 0.3s; }
+#pass-input { width: 80%; padding: 15px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.2); font-size: 1.2rem; text-align: center; margin-bottom: 20px; outline: none; color: white; }
+.pass-btn { background: rgba(255, 255, 255, 0.9); color: var(--accent); padding: 12px 30px; border-radius: 50px; font-weight: bold; }
+.shake { animation: shake 0.4s; }
 
 /* HOME */
 #home-screen { background-image: url('wallpaper.jpg'); background-size: cover; background-position: center; }
 .status-bar { padding: 10px 20px; display: flex; justify-content: space-between; font-weight: bold; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 .widget { margin: 10px 20px; padding: 20px; background: rgba(255,255,255,0.85); border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-.app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; }
-.app-icon-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; transition: transform 0.1s; }
-.app-icon-wrapper:active { transform: scale(0.9); opacity: 0.8; }
-.app-icon { width: 60px; height: 60px; border-radius: 15px; background: white; display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+.app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; align-content: flex-start; }
+.app-icon-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.app-icon { width: 60px; height: 60px; border-radius: 15px; background: white; display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.1s; }
+.app-icon:active { transform: scale(0.9); }
 .app-name { font-size: 11px; font-weight: bold; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
-.dock-container { position: absolute; bottom: 30px; left: 15px; right: 15px; background: rgba(255,255,255,0.4); border-radius: 20px; padding: 15px; display: flex; justify-content: space-around; margin-bottom: env(safe-area-inset-bottom); backdrop-filter: blur(10px); }
+.dock-container { position: absolute; bottom: 30px; left: 15px; right: 15px; background: rgba(255,255,255,0.4); border-radius: 20px; padding: 15px; display: flex; justify-content: space-around; backdrop-filter: blur(10px); }
 
 /* APPS COMMON */
 .nav-bar { height: 50px; display: flex; align-items: center; padding: 0 15px; background: white; border-bottom: 1px solid #eee; justify-content: space-between; font-weight: bold; color: var(--accent); }
 .back-btn { color: var(--primary); padding: 10px; font-size: 1.5rem; }
-
-/* MUSIC (SPINNING) */
-.music-player { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; gap: 20px; }
-.album-art { width: 220px; height: 220px; border-radius: 20px; background-size: cover; background-position: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: border-radius 0.5s; }
-.album-art.rotating { animation: spin 5s linear infinite; border-radius: 50%; }
-.song-info { text-align: center; }
-.progress-bar { width: 100%; height: 5px; background: #eee; border-radius: 10px; overflow: hidden; }
-.progress-fill { width: 30%; height: 100%; background: var(--primary); }
-.music-controls { display: flex; align-items: center; gap: 40px; color: var(--accent); font-size: 2rem; }
-
-/* CHAT */
-.chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 180px; -webkit-overflow-scrolling: touch; }
-.chat-row { display: flex; align-items: flex-end; gap: 8px; animation: fadeInUp 0.3s ease-out; }
-.chat-avatar { width: 35px; height: 35px; border-radius: 50%; background-size: cover; background-position: center; border: 1px solid #eee; }
-.chat-bubble { max-width: 75%; padding: 10px 15px; border-radius: 18px; font-size: 0.95rem; line-height: 1.4; position: relative; }
-.chat-them { background: white; border-bottom-left-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-.chat-me { background: var(--bubble-me); color: white; border-bottom-right-radius: 4px; margin-left: auto; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-.time-tick { font-size: 0.65rem; text-align: right; opacity: 0.6; margin-top: 4px; }
-.chat-img { width: 100%; border-radius: 10px; margin-top: 5px; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-.chat-footer { position: absolute; bottom: 0; left: 0; width: 100%; background: white; padding: 15px; border-top: 1px solid #eee; display: flex; flex-direction: column; gap: 10px; padding-bottom: max(20px, env(safe-area-inset-bottom)); }
-.chat-btn { background: #FFF0F5; border: 2px solid var(--primary); color: var(--accent); padding: 16px; border-radius: 25px; font-weight: bold; text-align: center; }
-.typing { font-size: 0.8rem; color: #888; margin-left: 55px; display: none; margin-bottom: 10px;}
-
-/* LISTS & SETTINGS */
-.settings-list { padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; height: 100%; }
+.settings-list { padding: 20px; overflow-y: auto; height: 100%; padding-bottom: 80px; }
 .settings-card { background: white; border-radius: 12px; padding: 0; overflow: hidden; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 .settings-row { padding: 15px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+.fade-in-up { animation: fadeInUp 0.5s ease-out backwards; }
 
-/* GALLERY & MAP */
-.gallery-scroll { padding: 30px 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; align-items: center; gap: 30px; padding-bottom: 100px; }
-.polaroid { background: white; padding: 10px 10px 40px 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); width: 85%; max-width: 300px; text-align: center; transition: transform 0.2s; }
-.polaroid:active { transform: scale(1.02) rotate(0deg) !important; z-index: 10; }
-.polaroid img { width: 100%; height: auto; display: block; border: 1px solid #eee; }
-.caption { font-family: 'Courier New', monospace; font-size: 1rem; color: #555; margin-top: 15px; font-weight: bold; }
-.map-view { position: relative; height: 250px; background: linear-gradient(to bottom, #87CEEB, #E0F7FA); border-radius: 20px; margin: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 2px solid white; }
-.map-line { position: absolute; top: 50%; left: 20%; right: 20%; height: 2px; background: white; border-bottom: 2px dashed #FF69B4; }
-.map-point { position: absolute; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; }
-.map-point.me { left: 15%; }
-.map-point.her { right: 15%; }
-.dot { width: 12px; height: 12px; background: #FF1493; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-.label { font-size: 0.7rem; font-weight: bold; color: #555; margin-top: 5px; background: rgba(255,255,255,0.8); padding: 2px 5px; border-radius: 5px; }
-.map-plane { position: absolute; top: 40%; left: 20%; font-size: 1.5rem; animation: fly 4s infinite linear; }
+/* KUCHU PET APP */
+.pet-view { display: flex; flex-direction: column; align-items: center; padding: 20px; }
+.pet-avatar { width: 180px; height: 180px; border-radius: 50%; background-image: url('kuchu.jpg'); background-size: cover; background-position: center; border: 5px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px; transition: transform 0.2s; }
+.pet-status { font-size: 1.2rem; font-weight: bold; color: #555; margin-bottom: 30px; text-align: center; height: 30px; }
+.pet-controls { display: flex; gap: 15px; width: 100%; justify-content: center; }
+.pet-btn { background: white; border: 2px solid var(--primary); padding: 15px; border-radius: 15px; font-size: 2rem; flex: 1; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.1s; }
+.pet-btn:active { transform: scale(0.9); background: var(--bg-color); }
+.bounce { animation: bounce 0.5s; }
+
+/* MAGIC BALL APP */
+.magic-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80%; padding: 20px; text-align: center; }
+.magic-ball { width: 200px; height: 200px; background: radial-gradient(circle at 30% 30%, #FF69B4, #E91E63); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.2rem; box-shadow: 0 10px 30px rgba(233, 30, 99, 0.4); cursor: pointer; padding: 20px; transition: transform 0.2s; margin-bottom: 30px; border: 4px solid white; }
+.magic-ball:active { transform: scale(0.95); }
+.magic-hint { color: #888; font-size: 0.9rem; }
+
+/* CHAT, MUSIC, GALLERY (Existing) */
+.chat-container { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 100px; }
+.chat-row { display: flex; align-items: flex-end; gap: 8px; margin-bottom: 10px; animation: fadeInUp 0.3s; }
+.chat-bubble { max-width: 75%; padding: 10px 15px; border-radius: 18px; font-size: 0.95rem; }
+.chat-them { background: white; }
+.chat-me { background: var(--bubble-me); color: white; margin-left: auto; }
+.music-player { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; }
+.album-art { width: 200px; height: 200px; border-radius: 20px; background-size: cover; background-position: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+.gallery-scroll { padding: 30px 20px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; gap: 30px; padding-bottom: 100px; }
+.polaroid { background: white; padding: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); width: 90%; text-align: center; }
+.polaroid img { width: 100%; display: block; }
 .gift-container { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
 .ticket { background: white; padding: 20px; border-radius: 15px; width: 100%; border: 2px dashed #FFD700; }
+.hidden { display: none !important; }
