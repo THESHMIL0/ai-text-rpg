@@ -78,21 +78,52 @@ function askOracle() {
     }, 500);
 }
 
-/* MUSIC */
-const songs = [{ title: "Hawayein", src: "song.mp3", art: "wallpaper.jpg" }];
+/* MUSIC (FIXED - 2 SONGS) */
+const songs = [
+    { title: "Hawayein", src: "song.mp3", art: "wallpaper.jpg" },
+    { title: "Like My Father", src: "song3.mp3", art: "kuchu.jpg" }
+];
 let currentSongIndex = 0;
 const audioPlayer = document.getElementById('audio-player');
 const playBtn = document.getElementById('play-btn');
+const songTitle = document.getElementById('song-title');
 const albumArt = document.getElementById('album-art');
 
-function loadSong(index) { audioPlayer.src = songs[index].src; }
-function togglePlay() {
-    if (!audioPlayer.src) loadSong(0);
-    if (audioPlayer.paused) { audioPlayer.play(); playBtn.innerText = "⏸️"; albumArt.classList.add('rotating'); } 
-    else { audioPlayer.pause(); playBtn.innerText = "▶️"; albumArt.classList.remove('rotating'); }
+function loadSong(index) {
+    if(!audioPlayer) return;
+    currentSongIndex = index;
+    const song = songs[currentSongIndex];
+    audioPlayer.src = song.src;
+    if(songTitle) songTitle.innerText = song.title;
+    if(albumArt) albumArt.style.backgroundImage = `url('${song.art}')`;
 }
-function prevSong() { togglePlay(); }
-function nextSong() { togglePlay(); }
+
+function togglePlay() {
+    if (!audioPlayer) return;
+    if (!audioPlayer.src || audioPlayer.src === "") loadSong(0);
+    
+    if (audioPlayer.paused) { 
+        audioPlayer.play().catch(e => alert("Please make sure 'song.mp3' and 'song3.mp3' are in the folder! 🎵")); 
+        playBtn.innerText = "⏸️"; 
+        albumArt.classList.add('rotating'); 
+    } else { 
+        audioPlayer.pause(); 
+        playBtn.innerText = "▶️"; 
+        albumArt.classList.remove('rotating'); 
+    }
+}
+
+function nextSong() {
+    currentSongIndex = (currentSongIndex + 1) % songs.length;
+    loadSong(currentSongIndex);
+    togglePlay();
+}
+
+function prevSong() {
+    currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+    loadSong(currentSongIndex);
+    togglePlay();
+}
 
 /* CHAT LOGIC */
 const chatBox = document.getElementById('chat-box');
