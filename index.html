@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ayuuu's Gift</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="style.css?v=50">
+    <link rel="stylesheet" href="style.css?v=51">
 </head>
 <body onload="init()">
 
@@ -128,28 +128,27 @@
         </div>
     </div>
 
-    <div class="screen" id="app-global">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Our World</span><div></div></div>
-        <div class="map-view">
-            <div class="map-line"></div><div class="map-plane">✈️</div>
-            <div class="map-point me"><div class="dot"></div><div class="label" style="background:#E3F2FD;">Theshuuu</div></div>
-            <div class="map-point her"><div class="dot"></div><div class="label" style="background:#FCE4EC;">Ayuuu</div></div>
-        </div>
-        <div class="settings-list">
-            <div class="settings-card fade-in-up">
-                <div class="settings-row"><span>📏 Distance</span><span>Too far 🥺</span></div>
-                <div class="settings-row"><span>❤️ Heart Connection</span><span style="color:green; font-weight:bold;">Strong 📶</span></div>
-            </div>
-            <div class="chat-btn fade-in-up" style="animation-delay:0.2s;" onclick="teleport()">🚀 Teleport to Ayuuu</div>
-        </div>
-    </div>
-
     <div class="screen" id="app-events">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Events</span><div></div></div>
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Our Timeline</span><div></div></div>
         <div class="settings-list">
-            <div class="settings-card fade-in-up"><div class="settings-row"><span>🎂 Theshu's Bday</span><span id="days-me">0 Days</span></div></div>
-            <div class="settings-card fade-in-up" style="animation-delay:0.1s"><div class="settings-row"><span>🥳 Ayuuu's Bday</span><span id="days-her">0 Days</span></div></div>
-            <div class="settings-card fade-in-up" style="animation-delay:0.2s"><div class="settings-row"><span>💍 Proposal Day</span><span>TODAY!</span></div></div>
+            <div class="settings-card fade-in-up" style="text-align:center; padding:25px; background:linear-gradient(135deg, #FF9A9E, #FECFEF); color:white; box-shadow:0 8px 20px rgba(255, 105, 180, 0.3);">
+                <div style="font-size:0.8rem; font-weight:bold; letter-spacing:1px; opacity:0.9;">WE HAVE BEEN TOGETHER FOR</div>
+                <div id="together-time" style="font-size:2.5rem; font-weight:800; margin:10px 0; text-shadow:0 2px 5px rgba(0,0,0,0.1);">0 Days</div>
+                <div style="font-size:0.9rem;">and counting... ⏳</div>
+            </div>
+
+            <p style="font-size:0.8rem; color:#888; margin-left:15px; margin-top:20px;">UPCOMING 🎂</p>
+            <div class="settings-card fade-in-up" style="animation-delay:0.1s">
+                <div class="settings-row"><span>🤴 Theshu's Bday</span><span id="days-me" style="color:#E91E63; font-weight:bold;">Calculating...</span></div>
+                <div class="settings-row"><span>👸 Ayuuu's Bday</span><span id="days-her" style="color:#E91E63; font-weight:bold;">Calculating...</span></div>
+                <div class="settings-row"><span>💑 Anniversary</span><span id="days-anni" style="color:#E91E63; font-weight:bold;">Calculating...</span></div>
+            </div>
+
+            <p style="font-size:0.8rem; color:#888; margin-left:15px;">MEMORY LANE 🕰️</p>
+            <div class="settings-card fade-in-up" style="animation-delay:0.2s">
+                <div class="settings-row" onclick="alert('The best day of my life! 😽')"><span>💌 First I Love You</span><span style="color:#888;">Tap ›</span></div>
+                <div class="settings-row"><span>💍 Proposal</span><span style="color:#E91E63; font-weight:bold;">TODAY!</span></div>
+            </div>
         </div>
     </div>
 
@@ -172,6 +171,22 @@
             <div class="polaroid fade-in-up" onclick="toggleZoom(this)" style="transform: rotate(2deg);"><img src="us.jpg"><div class="caption">Night 🌙</div></div>
             <div class="polaroid fade-in-up" onclick="toggleZoom(this)" style="transform: rotate(-2deg); animation-delay:0.1s;"><img src="wallpaper.jpg"><div class="caption">Us ❤️</div></div>
             <div class="polaroid fade-in-up" onclick="toggleZoom(this)" style="transform: rotate(1deg); animation-delay:0.2s;"><img src="kuchu.jpg"><div class="caption">Kuchu 👑</div></div>
+        </div>
+    </div>
+
+    <div class="screen" id="app-global">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Our World</span><div></div></div>
+        <div class="map-view">
+            <div class="map-line"></div><div class="map-plane">✈️</div>
+            <div class="map-point me"><div class="dot"></div><div class="label" style="background:#E3F2FD;">Theshuuu</div></div>
+            <div class="map-point her"><div class="dot"></div><div class="label" style="background:#FCE4EC;">Ayuuu</div></div>
+        </div>
+        <div class="settings-list">
+            <div class="settings-card fade-in-up">
+                <div class="settings-row"><span>📏 Distance</span><span>Too far 🥺</span></div>
+                <div class="settings-row"><span>❤️ Heart Connection</span><span style="color:green; font-weight:bold;">Strong 📶</span></div>
+            </div>
+            <div class="chat-btn fade-in-up" style="animation-delay:0.2s;" onclick="teleport()">🚀 Teleport to Ayuuu</div>
         </div>
     </div>
 
@@ -219,6 +234,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=50"></script>
+    <script src="script.js?v=51"></script>
 </body>
 </html>
