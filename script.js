@@ -65,26 +65,44 @@ function openApp(id) {
     document.getElementById('app-' + id).classList.add('active');
 }
 
-/* GLOBAL TELEPORT */
+/* TELEPORT */
 function teleport() {
     alert("Initiating Teleport sequence... 🚀");
     setTimeout(() => { alert("Loading... ▓▓▓▓▒▒▒▒▒▒ 40%"); }, 1000);
     setTimeout(() => { alert("Loading... ▓▓▓▓▓▓▓▓▒▒ 80%"); }, 2000);
-    setTimeout(() => { 
-        alert("❌ ERROR: Teleport Failed!"); 
-        alert("Reason: You need to hug Theshuuu in real life to recharge! 🥺❤️"); 
-    }, 3000);
+    setTimeout(() => { alert("❌ ERROR: Teleport Failed! Reason: You need to hug Theshuuu in real life to recharge! 🥺❤️"); }, 3000);
 }
 
-/* GAMES */
+/* KUCHU GAME LOGIC */
+let petStats = { hunger: 40, happy: 60, love: 90 };
+
 function interactPet(action) {
-    const msg = document.getElementById('pet-msg');
+    const msg = document.getElementById('pet-bubble');
     const img = document.getElementById('pet-img');
+    
+    // Animate
     img.style.transform = "scale(1.1)";
     setTimeout(() => img.style.transform = "scale(1)", 200);
-    if(action === 'feed') msg.innerText = "Yum! Kuchu is happy! 🐟";
-    if(action === 'play') msg.innerText = "Zoomies! 🐈💨";
-    if(action === 'love') msg.innerText = "Purr... Kuchu loves Ayuuu! ❤️";
+
+    // Logic
+    if(action === 'feed') {
+        petStats.hunger = Math.min(100, petStats.hunger + 20);
+        msg.innerText = "Yummy! 🐟 Burp!";
+    }
+    if(action === 'play') {
+        petStats.happy = Math.min(100, petStats.happy + 15);
+        petStats.hunger = Math.max(0, petStats.hunger - 5); // Playing makes him hungry
+        msg.innerText = "Zoomies!! 🐈💨";
+    }
+    if(action === 'love') {
+        petStats.love = Math.min(100, petStats.love + 10);
+        msg.innerText = "Purr... I love Ayuuu! ❤️";
+    }
+
+    // Update Bars
+    document.getElementById('bar-hunger').style.width = petStats.hunger + "%";
+    document.getElementById('bar-happy').style.width = petStats.happy + "%";
+    document.getElementById('bar-love').style.width = petStats.love + "%";
 }
 
 function askOracle() {
