@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ayuuu's Gift</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="style.css?v=64">
+    <link rel="stylesheet" href="style.css?v=65">
 </head>
 <body onload="init()">
 
@@ -72,25 +72,6 @@
             <div class="app-icon-wrapper" onclick="openApp('msg')"><div class="app-icon" style="background:#ffebee;">❤️</div></div>
         </div>
     </div>
-
-    <div class="screen" id="app-kuchu">
-        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Kuchu's World</span><div></div></div>
-        <div class="pet-view">
-            <div class="pet-bubble" id="pet-bubble">Meow! I missed you! 😽</div>
-            <div class="pet-avatar" id="pet-img"></div>
-            <div class="pet-stats">
-                <div class="stat-row"><span>Hunger</span><div class="progress-bar"><div class="fill" id="bar-hunger" style="width:40%; background:#FF9800;"></div></div></div>
-                <div class="stat-row"><span>Happy</span><div class="progress-bar"><div class="fill" id="bar-happy" style="width:60%; background:#4CAF50;"></div></div></div>
-                <div class="stat-row"><span>Love</span><div class="progress-bar"><div class="fill" id="bar-love" style="width:90%; background:#E91E63;"></div></div></div>
-            </div>
-            <div class="pet-controls">
-                <div class="pet-btn" onclick="interactPet('feed')">🐟</div>
-                <div class="pet-btn" onclick="interactPet('play')">🧶</div>
-                <div class="pet-btn" onclick="interactPet('love')">✋</div>
-            </div>
-        </div>
-    </div>
-
     <div class="screen" id="app-call">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Contact Info</span><div></div></div>
         <div class="contact-profile">
@@ -130,6 +111,23 @@
         </div>
     </div>
 
+    <div class="screen" id="app-kuchu">
+        <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Kuchu's World</span><div></div></div>
+        <div class="pet-view">
+            <div class="pet-bubble" id="pet-bubble">Meow! I missed you! 😽</div>
+            <div class="pet-avatar" id="pet-img"></div>
+            <div class="pet-stats">
+                <div class="stat-row"><span>Hunger</span><div class="progress-bar"><div class="fill" id="bar-hunger" style="width:40%; background:#FF9800;"></div></div></div>
+                <div class="stat-row"><span>Happy</span><div class="progress-bar"><div class="fill" id="bar-happy" style="width:60%; background:#4CAF50;"></div></div></div>
+                <div class="stat-row"><span>Love</span><div class="progress-bar"><div class="fill" id="bar-love" style="width:90%; background:#E91E63;"></div></div></div>
+            </div>
+            <div class="pet-controls">
+                <div class="pet-btn" onclick="interactPet('feed')">🐟</div>
+                <div class="pet-btn" onclick="interactPet('play')">🧶</div>
+                <div class="pet-btn" onclick="interactPet('love')">✋</div>
+            </div>
+        </div>
+    </div>
     <div class="screen" id="app-ask">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Ask Theshuuu</span><div></div></div>
         <div class="magic-container">
@@ -184,7 +182,6 @@
             </div>
         </div>
     </div>
-
     <div class="screen" id="app-gallery">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Memories</span><div></div></div>
         <div class="gallery-scroll">
@@ -233,10 +230,46 @@
 
     <div class="screen" id="app-notes">
         <div class="nav-bar"><div class="back-btn" onclick="goHome()">‹ Home</div><span>Notes</span><div></div></div>
-        <div class="settings-list">
-            <div class="settings-card fade-in-up" onclick="alert('Remember I love you! ❤️')"><div class="settings-row"><span>☀️ Morning Reminder</span><span>›</span></div></div>
-            <div class="settings-card fade-in-up" style="animation-delay:0.1s" onclick="alert('1. Adopt 10 cats 🐈\n2. Travel ✈️\n3. Build our house 🏡')"><div class="settings-row"><span>📝 Bucket List</span><span>›</span></div></div>
+        <div class="note-search-container">
+            <input type="text" class="note-search" placeholder="Search">
         </div>
+        <div class="settings-list">
+            <p style="font-size:0.8rem; color:#888; margin-left:15px; margin-top:10px;">PINNED</p>
+            <div class="settings-card fade-in-up" onclick="openNote('bucket')">
+                <div class="settings-row" style="padding:15px;">
+                    <div class="note-row">
+                        <div class="note-icon">📌</div>
+                        <div class="note-text"><b>Our Bucket List ✈️</b><span>Japan, Maldives, Northern Lights...</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-card fade-in-up" onclick="openNote('love')" style="animation-delay:0.1s">
+                <div class="settings-row" style="padding:15px;">
+                    <div class="note-row">
+                        <div class="note-icon">📝</div>
+                        <div class="note-text"><b>10 Reasons I Love You ❤️</b><span>1. Your smile 2. Your eyes...</span></div>
+                    </div>
+                </div>
+            </div>
+            <p style="font-size:0.8rem; color:#888; margin-left:15px;">TODAY</p>
+            <div class="settings-card fade-in-up" onclick="openNote('shopping')" style="animation-delay:0.2s">
+                <div class="settings-row" style="padding:15px;">
+                    <div class="note-row">
+                        <div class="note-icon">🛒</div>
+                        <div class="note-text"><b>Shopping List</b><span>Cat food for Kuchu, Chocolates...</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-card fade-in-up" onclick="openNote('date')" style="animation-delay:0.3s">
+                <div class="settings-row" style="padding:15px;">
+                    <div class="note-row">
+                        <div class="note-icon">💡</div>
+                        <div class="note-text"><b>Date Night Ideas</b><span>Pizza night, Movie marathon...</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fab" onclick="alert('New Note Created! 📝')">+</div>
     </div>
 
     <div class="screen" id="app-settings">
@@ -271,6 +304,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=64"></script>
+    <script src="script.js?v=65"></script>
 </body>
 </html>
